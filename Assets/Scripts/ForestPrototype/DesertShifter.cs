@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DesertShifter : MonoBehaviour
 {
-    public float MinDesertLine = 3f;
-    public float MinTreeLine = -3f;
+    public float MinDesertLine = 7f;
+    public float MinTreeLine = -6f;
+    public float DesertGrowthRate = 1f;
 
     private Vector3 ShiftTargetPos;
     private bool MoveMePlease;
@@ -21,6 +22,13 @@ public class DesertShifter : MonoBehaviour
     {
         if (MoveMePlease)
             MoveHelper();
+        else
+        {
+            Vector3 CurrPos = transform.position;
+            CurrPos.x = CurrPos.x - DesertGrowthRate * Time.deltaTime;
+
+            transform.position = CurrPos;
+        }
     }
 
     private void MoveHelper()
@@ -28,40 +36,40 @@ public class DesertShifter : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, ShiftTargetPos, 1.3f * Time.deltaTime);
         //Debug.Log("Position: " + transform.position.y);
 
-        if(Mathf.Abs(transform.position.y - ShiftTargetPos.y) < .1f)
+        if(Mathf.Abs(transform.position.x - ShiftTargetPos.x) < .1f)
         {
             MoveMePlease = false;
         }
     }
 
-    public void ShiftUp()
+    public void ShiftRight(float dist = 1f)
     {
         Vector3 CurrPos = transform.position;
 
-        if (CurrPos.y + 1f <= MinDesertLine)
+        if (CurrPos.x + dist <= MinDesertLine)
         {
-            ShiftTargetPos = new Vector3(CurrPos.x, CurrPos.y + 1f, CurrPos.z);
+            ShiftTargetPos = new Vector3(CurrPos.x + dist, CurrPos.y, CurrPos.z);
             MoveMePlease = true;
         }
-        else if (Mathf.Abs(CurrPos.y - MinDesertLine) > .1f)
+        else if (Mathf.Abs(CurrPos.x - MinDesertLine) > .1f)
         {
-            ShiftTargetPos = new Vector3(CurrPos.x, MinDesertLine, CurrPos.z);
+            ShiftTargetPos = new Vector3(MinDesertLine, CurrPos.y, CurrPos.z);
             MoveMePlease = true;
         }
     }
 
-    public void ShiftDown()
+    public void ShiftLeft(float dist = 1f)
     {
         Vector3 CurrPos = transform.position;
 
-        if (CurrPos.y - 1f >= MinTreeLine)
+        if (CurrPos.x - dist >= MinTreeLine)
         {
-            ShiftTargetPos = new Vector3(CurrPos.x, CurrPos.y - 1f, CurrPos.z);
+            ShiftTargetPos = new Vector3(CurrPos.x - dist, CurrPos.y, CurrPos.z);
             MoveMePlease = true;
         }
-        else if (Mathf.Abs(CurrPos.y - MinTreeLine) > .1f)
+        else if (Mathf.Abs(CurrPos.x - MinTreeLine) > .1f)
         {
-            ShiftTargetPos = new Vector3(CurrPos.x, MinTreeLine, CurrPos.z);
+            ShiftTargetPos = new Vector3(MinTreeLine, CurrPos.y, CurrPos.z);
             MoveMePlease = true;
         }
     }
