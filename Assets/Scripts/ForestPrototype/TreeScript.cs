@@ -9,12 +9,16 @@ public class TreeScript : MonoBehaviour
     // An array of the sprites to choose from when displaying the tree
     public Sprite[] Sprites;
 
+    // A reference to the stat controller
+    private StatController sc;
     // Whether or not a tree is fully grown
     private bool bGrown = false;
     // Keeps track of how long the tree has been growing. Increments with time
     private float GrowthTime = 0f;
     // Reference to the DesertShifter object
     private DesertShifter ds;
+
+    public ParticleSystem ps;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +29,8 @@ public class TreeScript : MonoBehaviour
 
         // Find the desert shifter
         ds = GameObject.FindGameObjectWithTag("Water").GetComponent<DesertShifter>();
+
+        sc = (StatController)Object.FindObjectOfType(typeof(StatController));
     }
 
     // Update is called once per frame
@@ -38,17 +44,18 @@ public class TreeScript : MonoBehaviour
 
             // Lerp the current scale GrowthTime/GrowthRate percent. 
             // 4s / 8s would be 50% grown, so make it 50% as big as a grown tree
-            currScale = Mathf.Lerp(.3f, .6f, GrowthTime / GrowthRate);
+            currScale = Mathf.Lerp(.18f, .3f, GrowthTime / GrowthRate);
             transform.localScale = new Vector3(currScale, currScale, currScale);
 
             // The moment the tree matures see if it's close to the desert line and then shift it
             if(GrowthTime >= GrowthRate)
             {
                 bGrown = true;
+                ps.Play();
 
                 if (transform.position.x > ds.transform.position.x - 5f)
                 {
-                    ds.ShiftRight(.4f);
+                    ds.ShiftRight(.5f);
                 }
             }
         }
@@ -66,6 +73,8 @@ public class TreeScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1) && bGrown)
         {
+            GlobalStatics.CashMoney += 45;
+            sc.CashChange(45);
             Destroy(this.gameObject);
         }
     }

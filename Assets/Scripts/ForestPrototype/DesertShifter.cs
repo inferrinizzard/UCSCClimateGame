@@ -28,13 +28,21 @@ public class DesertShifter : MonoBehaviour
             CurrPos.x = CurrPos.x - DesertGrowthRate * Time.deltaTime;
 
             transform.position = CurrPos;
+            GlobalStatics.Temperature += 2f * DesertGrowthRate * Time.deltaTime;
         }
+
+        float GrowthEff = Mathf.Pow(GlobalStatics.Temperature - 85f, 2f)/120f + 1f;
+        DesertGrowthRate = .14f * GrowthEff;
+        //Debug.Log(GrowthEff - 2.4f);
     }
 
     private void MoveHelper()
     {
+        Vector3 NewPos = Vector3.Lerp(transform.position, ShiftTargetPos, 1.3f * Time.deltaTime);
+
+        GlobalStatics.Temperature += 2f*(transform.position.x - NewPos.x);
+
         transform.position = Vector3.Lerp(transform.position, ShiftTargetPos, 1.3f * Time.deltaTime);
-        //Debug.Log("Position: " + transform.position.y);
 
         if(Mathf.Abs(transform.position.x - ShiftTargetPos.x) < .1f)
         {
