@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 4498037699765712007}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.79, y: 1.57, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 721378ee2059a0941a3989e53a3588ae, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2e46bf0b8fbb6f044aee88c08baaae5f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,13 +95,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IdealTemp: 73
-  size: 1
-  idealGrowRate: 1
-  Rain: {fileID: 21300000, guid: d9acfeed9ea51ee498dea990f915bae9, type: 3}
-  Cloud1: {fileID: 21300000, guid: 721378ee2059a0941a3989e53a3588ae, type: 3}
+  size: 0.5
+  idealGrowRate: 0.5
+  Rain: {fileID: 21300000, guid: ef2a033a0f60eaa4b93b85178efb64d5, type: 3}
+  Cloud1: {fileID: 21300000, guid: 2e46bf0b8fbb6f044aee88c08baaae5f, type: 3}
   Cloud2: {fileID: 21300000, guid: e3e9ce297350e4d44bce1c23efafeae3, type: 3}
-  shrinkRate: 0.25
+  shrinkRate: 0.125
   prefab: {fileID: 4498037699765712004}
+  Suprised: 0
 --- !u!61 &4498037699765712003
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -115,18 +116,18 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.07563615, y: 0.012605667}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.28, y: 1.28}
+    oldSize: {x: 3, y: 3}
     newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 2.6918826, y: 2.4145484}
   m_EdgeRadius: 0
 --- !u!50 &425374984968826916
 Rigidbody2D:

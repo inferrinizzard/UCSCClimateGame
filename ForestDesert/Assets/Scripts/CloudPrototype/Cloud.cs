@@ -5,7 +5,7 @@ using UnityEngine;
 public class Cloud : MonoBehaviour
 {
     public float IdealTemp = 73f;
-    public float size = 2f;
+    public float size = .7f;
     public float idealGrowRate = 1f;
     public Sprite Rain;
     public Sprite Cloud1;
@@ -62,8 +62,12 @@ public class Cloud : MonoBehaviour
         {
             if (overlap[i].tag == "Water")
             {
-                avgTemp += overlap[i].GetComponent<Water>().Temperature;
+                Water obj = overlap[i].GetComponent<Water>();
+                avgTemp += obj.Temperature;
                 numWater++;
+
+                if (TimeAlive > 12f)
+                    obj.Temperature -= 2f * Time.deltaTime;
             }
         }
 
@@ -74,9 +78,10 @@ public class Cloud : MonoBehaviour
         {
             sr.sprite = Rain;
             size -= shrinkRate*Time.deltaTime;
+            transform.Rotate(new Vector3(0f, 0f, 12f * Time.deltaTime));
         }
 
-        if (size < .5f)
+        if (size < .25f)
         {
             Destroy(this.gameObject);
         }
