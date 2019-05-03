@@ -14,11 +14,11 @@ public class Cloud : MonoBehaviour
     public Cloud prefab;
     public bool Suprised = false;
 
-    private SpriteRenderer sr;
-    private BoxCollider2D bc;
-    private bool bFollowing;
-    private float TimeAlive = 0f;
-    private float TimeSuprised = 0f;
+    protected SpriteRenderer sr;
+    protected BoxCollider2D bc;
+    protected bool bFollowing;
+    protected float TimeAlive = 0f;
+    protected float TimeSuprised = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,17 +42,6 @@ public class Cloud : MonoBehaviour
             }
         }
         TimeAlive += Time.deltaTime;
-        Vector3 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseLocation.z = 0;
-
-        if (false && sr.bounds.Contains(mouseLocation) && Input.GetMouseButtonDown(0))
-            bFollowing = true;
-
-        if (Input.GetMouseButtonUp(0))
-            bFollowing = false;
-
-        if (bFollowing)
-            transform.position = Vector3.Lerp(transform.position, mouseLocation, .3f);
 
         Collider2D[] overlap = Physics2D.OverlapAreaAll(bc.bounds.min, bc.bounds.max);
 
@@ -63,21 +52,30 @@ public class Cloud : MonoBehaviour
             if (overlap[i].tag == "Water")
             {
                 Water obj = overlap[i].GetComponent<Water>();
-                avgTemp += obj.Temperature;
-                numWater++;
+                if (obj)
+                {
+                    avgTemp += obj.Temperature;
+                    numWater++;
 
-                if (TimeAlive > 12f)
-                    obj.Temperature -= 2f * Time.deltaTime;
+                    if (TimeAlive > 12f)
+                        obj.Deviate(-2f * Time.deltaTime * Mathf.Clamp(size / 2.3f, 0f, 1f));
+                }
             }
         }
 
-        avgTemp /= numWater;
+        if(numWater > 0)
+            avgTemp /= numWater;
         CloudCalculations(avgTemp);
 
+        RainCheck();
+    }
+
+    protected virtual void RainCheck()
+    {
         if (TimeAlive > 12f)
         {
             sr.sprite = Rain;
-            size -= shrinkRate*Time.deltaTime;
+            size -= shrinkRate * Time.deltaTime;
             transform.Rotate(new Vector3(0f, 0f, 12f * Time.deltaTime));
         }
 
@@ -86,15 +84,14 @@ public class Cloud : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        transform.localScale = new Vector3(size, size);
+        transform.localScale = new Vector3(size, size, size);
     }
 
-    void CloudCalculations(float temp)
+    protected virtual void CloudCalculations(float temp)
     {
         float diff = temp - IdealTemp;
 
         float effRatio = (Mathf.Clamp(diff, -10f, 10f) + 10f)/200f;
-
         size += idealGrowRate * effRatio * Time.deltaTime;
     }
 
@@ -106,16 +103,18 @@ public class Cloud : MonoBehaviour
             //float avgLife = (otherCloud.TimeAlive + TimeAlive) / 2f;
             float combinedSize = Mathf.Sqrt(otherCloud.size*otherCloud.size + size*size);
 
-            if (TimeAlive > otherCloud.TimeAlive)
+            if(TimeAlive > otherCloud.TimeAlive)
             {
-                Cloud newCloud = Instantiate(prefab, transform.position, transform.rotation) as Cloud;
-                newCloud.size = combinedSize;
-                newCloud.TimeAlive = TimeAlive;
-
-                newCloud.Suprised = true;
+                Suprised = true;
+                transform.position = Vector3.Lerp(transform.position, other.transform.position, 0.5f);
+                Rigidbody2D rb = GetComponent<Rigidbody2D>();
+                rb.velocity = (rb.velocity*(size/combinedSize) + other.GetComponent<Rigidbody2D>().velocity*(otherCloud.size/combinedSize)) / 2f;
+                size = combinedSize;
             }
-
-            Destroy(this.gameObject);
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 }

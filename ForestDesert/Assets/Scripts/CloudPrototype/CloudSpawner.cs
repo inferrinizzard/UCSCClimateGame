@@ -5,6 +5,13 @@ using UnityEngine;
 public class CloudSpawner : MonoBehaviour
 {
     public Cloud prefab;
+    public AnimationCurve SpawnCurve;
+
+    public float PityTime = 6f;
+    public float CurrentChance = 0f;
+    public bool bHorizontal = false;
+
+    private float currPityTime = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,18 +21,25 @@ public class CloudSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < 20; ++i)
+        currPityTime += Time.deltaTime;
+
+        CurrentChance = SpawnCurve.Evaluate(currPityTime / PityTime) * 100f;
+
+        if (Random.Range(0f, 100f) < CurrentChance * Time.deltaTime)
         {
-            for(int j = 0; j < 10; ++j)
+            Vector3 spawnPos = transform.position;
+            if(bHorizontal)
             {
-                if(Random.Range(0f, 1000f) < .05)
-                {
-                    Vector3 spawnPos = transform.position;
-                    spawnPos.x += i;
-                    spawnPos.y -= j;
-                    Cloud newSpawn = Instantiate(prefab, spawnPos, transform.rotation) as Cloud;
-                }
+                spawnPos.x += Random.Range(0, 20f);
+                spawnPos.y -= Random.Range(5, 8f);
             }
+            else
+            {
+                spawnPos.x += Random.Range(0, 20f);
+                spawnPos.y -= Random.Range(0, 10f);
+            }
+            Cloud newSpawn = Instantiate(prefab, spawnPos, transform.rotation) as Cloud;
+            currPityTime = 0f;
         }
     }
 }
