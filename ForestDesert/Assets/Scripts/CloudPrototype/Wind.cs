@@ -33,7 +33,6 @@ public class Wind : MonoBehaviour
             Rigidbody2D otherRB = other.GetComponent<Rigidbody2D>();
 
             otherRB.AddForce((Vector2)(transform.rotation * (Vector2.up*(Size/3f))));
-            Debug.Log("Moving!");
         }
     }
 }
