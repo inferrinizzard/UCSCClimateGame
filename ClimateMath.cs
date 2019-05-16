@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 public class ClimateMath{
 	//official scientific values from rcp graph projections
 	public static Dictionary<int, Dictionary<string,float>> refs = new Dictionary<int, Dictionary<string,float>>(){
