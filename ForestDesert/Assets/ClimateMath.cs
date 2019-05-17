@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-public class ClimateMath{
+using UnityEngine;
+
+public class ClimateMath : MonoBehaviour{
 	//official scientific values from rcp graph projections
 	public static Dictionary<int, Dictionary<string,float>> refs = new Dictionary<int, Dictionary<string,float>>(){
 		{2000, new Dictionary<string,float>(){{"8.5", 1.723f}, {"6.0", 1.723f}, {"4.5", 1.723f}, {"2.6", 1.723f}} },
@@ -38,6 +42,7 @@ public class ClimateMath{
     //wip, calc changes in temp
 	float[] CalcDeltas(float[] history){
 		float[] avgs = new float[history.Length];
+		return new float[1];
 	}
 
     //calc temp weighted average, may refactor inline
@@ -47,12 +52,12 @@ public class ClimateMath{
 
 	//weighted average of array of numbers, good for temp/emissions/etc
 	float EMA(float[] nums){
-        // float[] prev = nums.Aggregate((float[] acc, cur)=>Array.IndexOf(nums, float cur)<nums.Length-1 ? acc.Concat(cur).ToArray() : acc);
-        // return nums[nums.Length-1] * 2/(nums.Length+1) + EMA(nums.Aggregate((float[] acc, float cur)=>Array.IndexOf(nums, cur)<nums.Length-1 ? acc.Concat(cur).ToArray() : acc)) * (1-2/(nums.Length+1));
-		float[] prev = (float[])nums.Clone();
-		Array.Resize(ref prev, nums.Length-1);
-		float k = 2/(nums.Length+1);
-		return nums[nums.Length-1] * k + EMA(prev) * (1-k);
+        // float[] prev = (float[])(new float[nums.Length]).Zip(nums, (a, b)=>nums[Array.IndexOf(nums, b)]);
+        return nums[nums.Length-1] * 2/(nums.Length+1) + EMA((float[])(new float[nums.Length-1]).Zip(nums, (a, b)=>nums[Array.IndexOf(nums, b)])) * (1-2/(nums.Length+1));
+		// float[] prev = (float[])nums.Clone();
+		// Array.Resize(ref prev, nums.Length-1);
+		// float k = 2/(nums.Length+1);
+		// return nums[nums.Length-1] * k + EMA(prev) * (1-k);
 	}
     
     #region physicsEqs
@@ -65,15 +70,15 @@ public class ClimateMath{
     //outgoing longwave-radiation (reflected light)
     static readonly double sigma = 5.67E-8;
     static float tau = 0.61f; //will vary
-    float OLR(float temp){ return tau * sigma * Mathf.pow(temp,4); }
-    float Tau(float olr, float temp) { return olr / sigma / Mathf.pow(temp,4); }
+    float OLR(float temp){ return tau * (float)sigma * Mathf.Pow(temp, 4); }
+    float Tau(float olr, float temp) { return olr / (float)sigma / Mathf.Pow(temp, 4); }
 
     //absorbed shortwave radiation (light taken in)
     float ASR(){ return Q * (1 - alpha);}
     float ASR(float a /*custom alpha*/){ return Q * (1 - a);}
 
     //find equilibrium temp, where olr=asr
-    float FindEquilibrium(float asr) { return Mathf.Pow(asr / tau / sigma,.25f);}
+    float FindEquilibrium(float asr) { return Mathf.Pow(asr / tau / (float)sigma,.25f);}
 
     //get new temp given current conditions
     float FindTemp(float curTemp, float deltaT) {return curTemp + deltaT / (float)C * (ASR() - OLR(curTemp)); }
