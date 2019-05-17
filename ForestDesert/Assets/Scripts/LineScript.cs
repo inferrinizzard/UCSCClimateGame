@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LineScript : MonoBehaviour
 {
+    public Text text;
+
     private LineRenderer line;
 
     private float[] values;
@@ -12,6 +15,10 @@ public class LineScript : MonoBehaviour
     public void Start()
     {
         line = GetComponent<LineRenderer>();
+
+        ChangeValues(new float[]{65f, 73f, 76f, 70f});
+
+        BuildMesh();
     }
 
     public void ChangeValues(float[] n)
@@ -49,10 +56,12 @@ public class LineScript : MonoBehaviour
 
     private Vector3 FindClosestValue(Vector3 v)
     {
+        RectTransform r = GetComponent<RectTransform>();
+        v = v - Camera.main.WorldToScreenPoint(r.position);
         float closestDistance = Mathf.Infinity;
         int closestIndex = -1;
 
-        Vector3[] pos = new Vector3[line.numPositions];
+        Vector3[] pos = new Vector3[line.positionCount];
         line.GetPositions(pos);
 
         for (int i = 0; i < values.Length; ++i)
@@ -73,19 +82,27 @@ public class LineScript : MonoBehaviour
 
     private void OnMouseOver()
     {
-        Vector3 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseLocation.z = 0f;
+        //Debug.Log(FindClosestValue(Input.mousePosition));
+        Vector3 val = FindClosestValue(Input.mousePosition);
 
-        Debug.Log(mouseLocation);
+        text.text = "2005: " + val.y;
+        //text.rectTransform.rect.x = val.x;
+        text.rectTransform.anchoredPosition = val;
     }
 
     private void OnMouseEnter()
     {
-        line.SetWidth(.2f, .2f);
+        text.gameObject.SetActive(true);
+        line.startWidth = .23f;
+        line.endWidth = .23f;
+        BuildMesh();
     }
 
     private void OnMouseExit()
     {
-        line.SetWidth(.1f, .1f);
+        text.gameObject.SetActive(false);
+        line.startWidth = .1f;
+        line.endWidth = .1f;
+        BuildMesh();
     }
 }

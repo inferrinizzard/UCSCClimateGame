@@ -28,8 +28,7 @@ public class InfoController : MonoBehaviour
     {
         float start = line.GetComponent<RectTransform>().anchoredPosition.x;
         float width = GetComponent<RectTransform>().rect.width;
-
-        Debug.Log("Start: " + start + "\nWidth: " + width);
+        
         line.positionCount = vals.Length;
         Vector3[] positions = new Vector3[vals.Length];
 
