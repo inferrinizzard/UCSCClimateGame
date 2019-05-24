@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuController : MonoBehaviour
 {
     public GameObject SettingsReference;
-    public GameObject InfoReference;
+    public InfoController InfoReference;
     public GameObject NotificationReference;
 
     private bool SettingsOn = false;
@@ -37,7 +37,10 @@ public class MainMenuController : MonoBehaviour
         InfoOn = !InfoOn;
 
         if (InfoReference)
-            InfoReference.SetActive(InfoOn);
+        {
+            InfoReference.gameObject.SetActive(InfoOn);
+            InfoReference.bRenderOnNextFrame = true;
+        }
     }
 
     public void ToggleNotifications()

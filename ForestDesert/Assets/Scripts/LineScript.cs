@@ -7,57 +7,66 @@ using UnityEngine.UI;
 public class LineScript : MonoBehaviour
 {
     public Text text;
+    public CanvasGroup GraphGroup;
+    public string unit = "f";
 
     private LineRenderer line;
 
     private float[] values;
+    private int[] years;
 
     public void Start()
     {
-        line = GetComponent<LineRenderer>();
-
-        ChangeValues(new float[]{65f, 73f, 76f, 70f});
-
-        BuildMesh();
+        ChangeValues(new float[]{65f, 73f, 76f, 70f}, new int[] { 2001, 2002, 2003, 2004 });
     }
 
-    public void ChangeValues(float[] n)
+    public void ChangeValues(float[] n, int[] newYears)
     {
         values = new float[n.Length];
+        years = new int[newYears.Length];
 
         for (int i = 0; i < n.Length; ++i)
+        {
             values[i] = n[i];
+            years[i] = newYears[i];
+        }
     }
 
     public void BuildMesh()
     {
-        MeshCollider meshCollider = GetComponent<MeshCollider>();
-
-        Mesh mesh = new Mesh();
-        line.BakeMesh(mesh, true);
-
-        Vector3[] verts = mesh.vertices;
-        Vector3[] newVerts = new Vector3[verts.Length];
-
-        for(int i = 0; i < verts.Length; ++i)
+        RectTransform r = GraphGroup.GetComponent<RectTransform>();
+        line = GetComponent<LineRenderer>();
+        if (line)
         {
-            Vector3 curr = verts[i];
-            curr.x = curr.x * 53.5f;
-            curr.y = curr.y * 53.5f;
-            curr.z = curr.z * 53.5f;
+            MeshCollider meshCollider = GetComponent<MeshCollider>();
 
-            newVerts[i] = curr;
+            Mesh mesh = new Mesh();
+            line.BakeMesh(mesh, true);
+
+            Vector3[] verts = mesh.vertices;
+            Vector3[] newVerts = new Vector3[verts.Length];
+
+            for (int i = 0; i < verts.Length; ++i)
+            {
+                Vector3 curr = verts[i];
+                curr.x = curr.x * 54.7f / r.localScale.x;
+                curr.y = curr.y * 54.7f / r.localScale.x;
+                curr.z = curr.z * 54.7f / r.localScale.x;
+
+                newVerts[i] = curr;
+            }
+
+            mesh.vertices = newVerts;
+
+            meshCollider.sharedMesh = mesh;
         }
-
-        mesh.vertices = newVerts;
-
-        meshCollider.sharedMesh = mesh;
     }
 
-    private Vector3 FindClosestValue(Vector3 v)
+    private int FindClosestValue(Vector3 v)
     {
         RectTransform r = GetComponent<RectTransform>();
         v = v - Camera.main.WorldToScreenPoint(r.position);
+        v.z = 0;
         float closestDistance = Mathf.Infinity;
         int closestIndex = -1;
 
@@ -66,7 +75,11 @@ public class LineScript : MonoBehaviour
 
         for (int i = 0; i < values.Length; ++i)
         {
-            float dist = Vector3.Distance(v, pos[i]);
+            float dist = Vector3.Distance(v, pos[i]*0.8f);
+
+            /*if (i == values.Length - 1)
+                Debug.Log("v: " + v + "\npos: " + pos[i]);*/
+
             if (dist < closestDistance)
             {
                 closestDistance = dist;
@@ -74,20 +87,18 @@ public class LineScript : MonoBehaviour
             }
         }
 
-        if (closestIndex != -1)
-            return pos[closestIndex];
-        else
-            return new Vector3(0, 0, 0);
+        return closestIndex;       
     }
 
     private void OnMouseOver()
     {
-        //Debug.Log(FindClosestValue(Input.mousePosition));
-        Vector3 val = FindClosestValue(Input.mousePosition);
+        int index = FindClosestValue(Input.mousePosition);
 
-        text.text = "2005: " + val.y;
+        text.text = years[index] + ": " + values[index] + unit;
         //text.rectTransform.rect.x = val.x;
-        text.rectTransform.anchoredPosition = val;
+        Vector3[] pos = new Vector3[line.positionCount];
+        line.GetPositions(pos);
+        text.rectTransform.anchoredPosition = pos[index];
     }
 
     private void OnMouseEnter()
