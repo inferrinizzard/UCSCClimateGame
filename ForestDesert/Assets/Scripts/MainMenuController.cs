@@ -12,6 +12,8 @@ public class MainMenuController : MonoBehaviour
     private bool SettingsOn = false;
     private bool InfoOn = false;
     private bool NotificationsOn = false;
+
+    public static Dictionary<string, int> Scenes = new Dictionary<string, int>(){{"arctic",-1},{"forest",2},{"city",-1},{"tropics",3},{"desert",-1}};
     // Start is called before the first frame update
     void Start()
     {
@@ -64,5 +66,9 @@ public class MainMenuController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ReturnToMenu(){
+        SceneManager.LoadScene(0);
     }
 }
