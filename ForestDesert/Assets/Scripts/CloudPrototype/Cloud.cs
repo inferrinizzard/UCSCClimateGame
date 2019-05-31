@@ -106,7 +106,10 @@ public class Cloud : MonoBehaviour
             if(TimeAlive > otherCloud.TimeAlive)
             {
                 Suprised = true;
-                transform.position = Vector3.Lerp(transform.position, other.transform.position, 0.5f);
+                //transform.position = Vector3.Lerp(transform.position, other.transform.position, 0.5f);
+                if (size < otherCloud.size)
+                    transform.position = otherCloud.transform.position;
+
                 Rigidbody2D rb = GetComponent<Rigidbody2D>();
                 rb.velocity = (rb.velocity*(size/combinedSize) + other.GetComponent<Rigidbody2D>().velocity*(otherCloud.size/combinedSize)) / 2f;
                 size = combinedSize;
