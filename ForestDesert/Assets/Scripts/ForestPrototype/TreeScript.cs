@@ -48,7 +48,7 @@ public class TreeScript : MonoBehaviour
 
             // Lerp the current scale GrowthTime/GrowthRate percent. 
             // 4s / 8s would be 50% grown, so make it 50% as big as a grown tree
-            currScale = Mathf.Lerp(.1f*(Age - 1), .1f*(Age), GrowthTime / GrowthRate);
+            currScale = Mathf.Lerp(.075f*(Age - 1), .075f*(Age), GrowthTime / GrowthRate);
 
             transform.localScale = new Vector3(currScale, currScale, currScale);
 
@@ -57,7 +57,7 @@ public class TreeScript : MonoBehaviour
                 bGrowing = false;
                 GrowthTime = 0f;
 
-                if(Age >= 3)
+                if(Age >= 4)
                 {
                     ps.Play();
                     if (transform.position.x > ds.transform.position.x - 5f)
@@ -75,7 +75,7 @@ public class TreeScript : MonoBehaviour
         GrowthTime = 0f;
         Age++;
 
-        if (Age >= 3)
+        if (Age >= 4)
             bGrown = true;
     }
 

@@ -47,7 +47,7 @@ public class GrassScript : MonoBehaviour
         for(int i = 0; i < trees.Length; ++i)
         {
             TreeScript tree = trees[i].GetComponent<TreeScript>();
-            GlobalStatics.ForestTreeLocations.Add(trees[i].transform.position, tree.Age);
+            GlobalStatics.ForestTreeLocations.Add(new KeyValuePair<Vector3, int> (trees[i].transform.position, tree.Age));
         }
     }
 }

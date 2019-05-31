@@ -40,7 +40,6 @@ public class StaticWind : MonoBehaviour
     private void OnMouseDown()
     {
         RecentlyClicked = true;
-        Debug.Log("Clicked");
     }
 
     private void OnTriggerStay2D(Collider2D other)

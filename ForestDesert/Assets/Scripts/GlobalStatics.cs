@@ -10,5 +10,5 @@ public static class GlobalStatics
     public static int Turn = 1;
     public static int ActionsRemaining = 2;
 
-    public static Dictionary<Vector3, int> ForestTreeLocations = new Dictionary<Vector3, int>();
+    public static List<KeyValuePair<Vector3, int>> ForestTreeLocations = new List<KeyValuePair<Vector3, int>>();
 }
