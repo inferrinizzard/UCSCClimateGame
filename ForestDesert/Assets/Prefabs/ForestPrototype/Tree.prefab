@@ -4706,7 +4706,7 @@ ParticleSystem:
 --- !u!199 &3283111220552579643
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -4779,7 +4779,7 @@ GameObject:
   - component: {fileID: 9169067061381665221}
   m_Layer: 0
   m_Name: Tree
-  m_TagString: Untagged
+  m_TagString: Tree
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4885,9 +4885,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0e5945cad9a23419a1bbc3cbc42f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GrowthRate: 8
+  GrowthRate: 2
   Sprites:
   - {fileID: 21300000, guid: 59e3db9662991f547b86af3fb8ec6646, type: 3}
   - {fileID: 21300000, guid: e008a3d7dd41f4e42a3e360677b84fac, type: 3}
   - {fileID: 21300000, guid: 9c391047902415a45aa2822130644e7d, type: 3}
+  Age: 0
   ps: {fileID: 5009636961695144581}

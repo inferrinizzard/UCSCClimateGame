@@ -55,7 +55,7 @@ public class RainController : MonoBehaviour
     void CauseRain()
     {
         RainImage.SetActive(true);
-        ds.ShiftRight(2.5f);
+        ds.Shift(-3f);
         CurrPityTime = 0f;
         CurrRainTime = 0f;
         bRaining = true;

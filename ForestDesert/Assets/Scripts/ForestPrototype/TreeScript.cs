@@ -9,10 +9,14 @@ public class TreeScript : MonoBehaviour
     // An array of the sprites to choose from when displaying the tree
     public Sprite[] Sprites;
 
+    public int Age = 0;
+
     // A reference to the stat controller
     private StatController sc;
     // Whether or not a tree is fully grown
     private bool bGrown = false;
+
+    private bool bGrowing = false;
     // Keeps track of how long the tree has been growing. Increments with time
     private float GrowthTime = 0f;
     // Reference to the DesertShifter object
@@ -36,7 +40,7 @@ public class TreeScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!bGrown)
+        if(bGrowing)
         {
             // Increment GrowthTime. Keep it between 0 and GrowthRate
             GrowthTime = Mathf.Clamp(GrowthTime + Time.deltaTime, 0f, GrowthRate);
@@ -44,21 +48,35 @@ public class TreeScript : MonoBehaviour
 
             // Lerp the current scale GrowthTime/GrowthRate percent. 
             // 4s / 8s would be 50% grown, so make it 50% as big as a grown tree
-            currScale = Mathf.Lerp(.18f, .3f, GrowthTime / GrowthRate);
+            currScale = Mathf.Lerp(.1f*(Age - 1), .1f*(Age), GrowthTime / GrowthRate);
+
             transform.localScale = new Vector3(currScale, currScale, currScale);
 
-            // The moment the tree matures see if it's close to the desert line and then shift it
-            if(GrowthTime >= GrowthRate)
+            if (GrowthTime >= GrowthRate)
             {
-                bGrown = true;
-                ps.Play();
+                bGrowing = false;
+                GrowthTime = 0f;
 
-                if (transform.position.x > ds.transform.position.x - 5f)
+                if(Age >= 3)
                 {
-                    ds.ShiftRight(.5f);
+                    ps.Play();
+                    if (transform.position.x > ds.transform.position.x - 5f)
+                    {
+                        ds.Shift(-2f);
+                    }
                 }
             }
         }
+    }
+
+    public void GrowAYear()
+    {
+        bGrowing = true;
+        GrowthTime = 0f;
+        Age++;
+
+        if (Age >= 3)
+            bGrown = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

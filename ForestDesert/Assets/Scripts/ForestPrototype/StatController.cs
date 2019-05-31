@@ -8,7 +8,6 @@ public class StatController : MonoBehaviour
     public Text MoneyText;
     public Text MoneyChangeText;
     public Text TempText;
-    public Text GrowthRateText;
 
     public VertMoveText ChangeTextPrefab;
 
@@ -36,7 +35,6 @@ public class StatController : MonoBehaviour
     {
         MoneyText.text = "$" + string.Format("{0:0,0}", GlobalStatics.CashMoney);
         TempText.text = "Temperature: " + string.Format("{0:0,0.00}", GlobalStatics.Temperature);
-        GrowthRateText.text = "Growth Rate: " + string.Format("{0:0,0.00}", ShifterReference.DesertGrowthRate*10f) + "in/s";
 
         if (bMoneyBallooning)
             BalloonMoney();
