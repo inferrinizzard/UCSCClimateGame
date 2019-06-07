@@ -4,27 +4,41 @@ using UnityEngine;
 
 public class Water : MonoBehaviour
 {
+    // The temperature too start at. This value is set once and never changed
     public float StartTemperature = 75f;
+
+    // Holds the colors to display at max cold or max hot
     public Color HotRed;
     public Color IceBlue;
 
+    // Speed at which to sample perlin noise
     [Range(0, .1f)]
     public float SampleX = .0355f;
 
+    // Starting displacement of perlin noise
     [Range(0, 100)]
     public float Displacement = 0;
 
+    // Total amount temp can deviate. Starting temp would be halfway through the deviation range
     [Range(0, 100)]
     public float TempRange = 25f;
 
     private SpriteRenderer sr;
     private Color StartColor;
+
+    // Keeps track of current time for perlin noise
     private float CurrTime;
+    // The current temperature of this water
     public float Temperature;
+    // The base temperature (start temp + cloud deviation)
     private float baseTemperature;
+    // Short term temperature deviation cause by storms sucking up warm water
     public float Deviation = 0f;
+    // Whether or not we are currently deviating temperature
     private bool bDeviating = false;
+    // Time tracker for temp deviation
     private float DeviationTime = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,9 +58,9 @@ public class Water : MonoBehaviour
     {
         CurrTime += Time.deltaTime;
 
-        if(!bDeviating)
+        if(!bDeviating) // If we aren't deviating, quickly bring its value down to 0
             Deviation = Mathf.Lerp(Deviation, 0f, .45f * Time.deltaTime);
-        else
+        else // If we are deviating, SLOWLY bring its value down to 0
         {
             DeviationTime += Time.deltaTime;
             Deviation = Mathf.Lerp(Deviation, 0f, .2f * Time.deltaTime);
@@ -56,9 +70,14 @@ public class Water : MonoBehaviour
             }
         }
 
+        // Calculate base temperature
+        // StartTemp + PerlinNoise
         baseTemperature = StartTemperature + (Mathf.PerlinNoise(Displacement, CurrTime * SampleX) * TempRange - TempRange/2f);
+
+        // Final temp = basetemp + deviation value
         Temperature = baseTemperature + Deviation;
 
+        // Figure out what color we should be displaying based on deviation
         UpdateColor();
     }
 
@@ -69,9 +88,7 @@ public class Water : MonoBehaviour
 
         if (diff > 0f)
         {
-            //Debug.Log("Before: " + sr.color);
             sr.color = Color.Lerp(StartColor, HotRed, diff / 15f);
-            //Debug.Log("After: " + sr.color);
         }
         else
         {
@@ -79,6 +96,7 @@ public class Water : MonoBehaviour
         }
     }
 
+    // Called when a cloud is over this water. Deviates the temp by d degrees
     public void Deviate(float d)
     {
         bDeviating = true;

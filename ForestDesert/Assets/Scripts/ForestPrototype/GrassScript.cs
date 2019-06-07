@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class GrassScript : MonoBehaviour
 {
+    // Reference to the tree prefab to spawn on click
     public TreeScript TreePrefab;
+
+    // Reference to our stat controller for our UI widget
     public StatController sc;
     // Start is called before the first frame update
     void Start()
     {
+        // For each tree in forest tree locations, add it to the scene and increase it's age by one
         foreach(KeyValuePair<Vector3, int> kvp in GlobalStatics.ForestTreeLocations)
         {
             TreeScript NewTree = Instantiate(TreePrefab, kvp.Key, transform.rotation) as TreeScript;
@@ -16,6 +20,7 @@ public class GrassScript : MonoBehaviour
             NewTree.GrowAYear();
         }
 
+        // Empty out forest tree locations (we fill it back up when we leave the scene)
         GlobalStatics.ForestTreeLocations.Clear();
     }
 
@@ -25,6 +30,7 @@ public class GrassScript : MonoBehaviour
         
     }
 
+    // When the mouse is down, try to charge $25 and if successful spawn a tree
     private void OnMouseDown()
     {
         if (Input.GetKey("p") && GlobalStatics.CashMoney >= 25f)
@@ -40,6 +46,8 @@ public class GrassScript : MonoBehaviour
         }
     }
 
+    // Populates the forest tree locations dictionary with all the trees in the scene
+    // Call this when the back to main menu button is hit
     public void PopulateTreeDictionary()
     {
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");

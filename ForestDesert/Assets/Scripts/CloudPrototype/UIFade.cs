@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+// Simple class that fades out a up group over time based on a curve
 public class UIFade : MonoBehaviour
 {
     CanvasGroup cg;

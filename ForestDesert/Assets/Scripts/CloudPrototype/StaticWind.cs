@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Wind class used for puzzle prototype
 public class StaticWind : MonoBehaviour
 {
+    // Current scale
     public float Size = 1f;
 
+    // Whether or not we've been clicked on
+    // Set to false when the mouse is released
     private bool RecentlyClicked = false;
     // Start is called before the first frame update
     void Start()
@@ -16,6 +20,8 @@ public class StaticWind : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // If we've been clicked, update the scale and rotation of the wind
+        // Check wind class for more info
         if(RecentlyClicked)
         {
             Vector3 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -42,6 +48,7 @@ public class StaticWind : MonoBehaviour
         RecentlyClicked = true;
     }
 
+    // Move a cloud if they are overlapping with us
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.tag == "Cloud")
