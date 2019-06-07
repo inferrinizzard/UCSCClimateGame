@@ -16,7 +16,7 @@ public class IceCloud : MonoBehaviour
 
 	public bool active;
 
-	public GameObject lrHolder;
+	public GameObject lrHolder, click;
 
 	private GameObject[] models;
 
@@ -132,5 +132,13 @@ public class IceCloud : MonoBehaviour
 		yield return new WaitForSeconds(t);
 		g.SetActive(value: false);
 		UnityEngine.Object.Destroy(g);
+	}
+
+	void OnMouseOver(){
+		click.SetActive(true);
+		click.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+	}
+	void OnMouseExit(){
+		click.SetActive(false);
 	}
 }

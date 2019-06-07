@@ -16,7 +16,7 @@ public class Cam : MonoBehaviour
 	private Slider heat;
 
 	[SerializeField]
-	private LineRenderer lr;
+	private LineRenderer lr, tracer;
 
 	public GameObject markerSource;
 
@@ -41,6 +41,9 @@ public class Cam : MonoBehaviour
 
 	private void Update()
 	{
+		if(marker!=null){
+			tracer.SetPosition(1, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+		}
 		heat.GetComponentInChildren<Text>().text = (heat.GetComponent<Slider>().value - 50f).ToString();
 		Vector3 vector = default(Vector3);
 		RaycastHit hitInfo;
@@ -64,6 +67,8 @@ public class Cam : MonoBehaviour
 			if (hasRay)
 			{
 				marker = UnityEngine.Object.Instantiate(markerSource, ray.origin + ray.direction * 10f, Quaternion.identity);
+				tracer.gameObject.SetActive(true);
+				tracer.SetPosition(0, marker.transform.position);
 			}
 		}
 		if (hasRay && Input.GetButtonDown("Fire1"))
@@ -71,6 +76,7 @@ public class Cam : MonoBehaviour
 			if (Physics.Raycast(ray, out hitInfo))
 			{
 				UnityEngine.Object.Destroy(marker);
+				tracer.gameObject.SetActive(false);
 				target = hitInfo.transform.root;
 				if (lr != null)
 				{

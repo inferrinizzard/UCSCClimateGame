@@ -191,6 +191,9 @@ MonoBehaviour:
   SettingsReference: {fileID: 5934203068715727091}
   InfoReference: {fileID: 2338920197055865700}
   NotificationReference: {fileID: 5934203070564380504}
+  MoneyText: {fileID: 8520781015806107175}
+  TurnText: {fileID: 5204289764136928261}
+  ActionText: {fileID: 0}
 --- !u!1 &625821662
 GameObject:
   m_ObjectHideFlags: 0

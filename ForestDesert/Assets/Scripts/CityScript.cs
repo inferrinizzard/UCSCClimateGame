@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +9,19 @@ public class CityScript : MonoBehaviour
     // Start is called before the first frame update
     public Text left, right;
     [Range(0.01f,0.1f)]public float speed = .1f;
-    string filler = "LocationServiceStatus   [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = true)]   sealed class MyAttribute : System.Attribute    {       // See the attribute guidelines at   //  http://go.microsoft.com/fwlink/?LinkId=85236       readonly string positionalString;             // This is a positional argument       public MyAttribute(string positionalString)       {          this.positionalString = positionalString;                       // TODO: Implement code here            throw new System.NotImplementedException();        }               public string PositionalString        {            get { return positionalString; }        }                // This is a named argument        public int NamedInt { get; set; }    }".Trim();
+    List<string> bills = new List<string>();
+    public int billIndex = -2;
     void Start()
     {
-        StartCoroutine(Typewriter(left,filler,speed));
-        StartCoroutine(Typewriter(right,filler,speed));
+        string line, acc = "";
+        System.IO.StreamReader file = new System.IO.StreamReader(@"./Assets/Scripts/bills.txt");
+		while ((line = file.ReadLine()) != null){
+            acc += line + " \n";
+        }
+        acc.Split('#').ToList().ForEach(x=>bills.Add(x.TrimStart()));
+        nextBill();
+        // StartCoroutine(Typewriter(left,bills[billIndex],speed));
+        // StartCoroutine(Typewriter(right,bills[billIndex+1],speed));
     }
 
     // Update is called once per frame
@@ -23,10 +32,19 @@ public class CityScript : MonoBehaviour
 
     IEnumerator Typewriter(Text print, string text, float speed){
      
-     for (int i = 0; i < text.Length-1; i++)
-     {
-         print.text = text.Substring(0,i);
-         yield return new WaitForSeconds(speed);
-     }
- }
+        for (int i = 0; i < text.Length-1; i++)
+        {
+            print.text = text.Substring(0,i);
+            yield return new WaitForSeconds(speed);
+        }
+    }
+
+    public void nextBill(){
+        Debug.Log(billIndex);
+        left.text = right.text = "";
+        StopAllCoroutines();
+        StartCoroutine(Typewriter(left,bills[billIndex],speed));
+        StartCoroutine(Typewriter(right,bills[billIndex+1],speed));
+        billIndex+=2;
+    }
 }
