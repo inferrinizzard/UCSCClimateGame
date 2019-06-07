@@ -25,12 +25,9 @@ public class WorldRegion : MonoBehaviour
             if(i!=transform.GetSiblingIndex())
                 parent.GetChild(i).gameObject.SetActive(false);
         bg.gameObject.SetActive(false);
-        if (Input.GetMouseButtonDown(0) && GlobalStatics.ActionsRemaining > 0)
-            if (MainMenuController.Scenes[name] != -1)
-            {
-                GlobalStatics.ActionsRemaining--;
+        if(Input.GetMouseButtonDown(0))
+            if(MainMenuController.Scenes[name]!=-1)
                 SceneManager.LoadScene(MainMenuController.Scenes[name]);
-            }
     }
 
     void OnMouseExit(){

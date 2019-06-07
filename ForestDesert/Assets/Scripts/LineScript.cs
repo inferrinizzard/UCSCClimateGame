@@ -65,7 +65,7 @@ public class LineScript : MonoBehaviour
     private int FindClosestValue(Vector3 v)
     {
         RectTransform r = GetComponent<RectTransform>();
-        //v = v - Camera.main.WorldToScreenPoint(r.position);
+        v = v - Camera.main.WorldToScreenPoint(r.position);
         v.z = 0;
         float closestDistance = Mathf.Infinity;
         int closestIndex = -1;
@@ -75,13 +75,10 @@ public class LineScript : MonoBehaviour
 
         for (int i = 0; i < values.Length; ++i)
         {
-            Vector3 newPos = Camera.main.ScreenToWorldPoint(pos[i] + Camera.main.WorldToScreenPoint(r.position));
-            newPos.z = 0;
-            //float dist = Vector3.Distance(v, pos[i]*0.8f);
-            float dist = Vector3.Distance(v, newPos);
+            float dist = Vector3.Distance(v, pos[i]*0.8f);
 
-            //if (i == values.Length - 1)
-                //Debug.Log("v: " + v + "\npos: " + newPos);
+            /*if (i == values.Length - 1)
+                Debug.Log("v: " + v + "\npos: " + pos[i]);*/
 
             if (dist < closestDistance)
             {
@@ -95,7 +92,7 @@ public class LineScript : MonoBehaviour
 
     private void OnMouseOver()
     {
-        int index = FindClosestValue(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        int index = FindClosestValue(Input.mousePosition);
 
         text.text = years[index] + ": " + values[index] + unit;
         //text.rectTransform.rect.x = val.x;
