@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Water
   - Cloud
+  - Ice
   layers:
   - Default
   - TransparentFX

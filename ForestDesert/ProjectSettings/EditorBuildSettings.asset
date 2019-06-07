@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 2e6700a2e02ebd94cbde7ac0f6e71bec
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Overworld.unity
     guid: 6986dcf1a99e8f745a6548ce1ccc2ebe
   - enabled: 1
@@ -20,13 +20,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Tropics.unity
     guid: 9cbab7e2ad8eecd46b075a47375301ca
+  - enabled: 1
+    path: Assets/Scenes/Arctic.unity
+    guid: a4c93712153df9884ff359e4e8a899e3
+  - enabled: 1
+    path: Assets/Scenes/City.unity
+    guid: 3474e35aded05cf4ba7c53bbfdd37ec3
   - enabled: 0
-    path: Assets/Scenes/WaterScene.unity
-    guid: 7b9de842b0423fa41a5d6f3ae141c08c
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/PuzzleWater.unity
-    guid: 04c35816a14a8584f92662c7dd731dfa
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Scenes/SideWaterScene.unity
-    guid: 65d65045e32d66a4bbc48d25a60557b2
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}

@@ -53,7 +53,7 @@ public class ClimateMath : MonoBehaviour{
 	//weighted average of array of numbers, good for temp/emissions/etc
 	float EMA(float[] nums){
         // float[] prev = (float[])(new float[nums.Length]).Zip(nums, (a, b)=>nums[Array.IndexOf(nums, b)]);
-        return nums[nums.Length-1] * 2/(nums.Length+1) + EMA((float[])(new float[nums.Length-1]).Zip(nums, (a, b)=>nums[Array.IndexOf(nums, b)])) * (1-2/(nums.Length+1));
+        return nums[nums.Length-1] * 2/(nums.Length+1) + EMA((float[])(new float[nums.Length-1]).Select((a, b)=>nums[Array.IndexOf(nums, b)])) * (1-2/(nums.Length+1));
 		// float[] prev = (float[])nums.Clone();
 		// Array.Resize(ref prev, nums.Length-1);
 		// float k = 2/(nums.Length+1);

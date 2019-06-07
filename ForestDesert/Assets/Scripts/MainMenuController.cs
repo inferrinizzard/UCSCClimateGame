@@ -13,7 +13,7 @@ public class MainMenuController : MonoBehaviour
     private bool InfoOn = false;
     private bool NotificationsOn = false;
 
-    public static Dictionary<string, int> Scenes = new Dictionary<string, int>(){{"arctic",-1},{"forest",2},{"city",-1},{"tropics",3},{"desert",-1}};
+    public static Dictionary<string, int> Scenes = new Dictionary<string, int>(){{"arctic",3},{"forest",1},{"city",4},{"tropics",2},{"desert",-1}};
     // Start is called before the first frame update
     void Start()
     {
