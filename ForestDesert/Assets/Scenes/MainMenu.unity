@@ -947,6 +947,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1140729951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5934203070564380504, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+    type: 3}
+  m_PrefabInstance: {fileID: 5809442}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1158880527
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,6 +1684,17 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1140729951}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
