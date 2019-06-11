@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *  This class is an old class for a previous prototype.
+ *  The previous prototype was real time, and a key mechanic was to spawn a cloud every so often and shift the desert
+*/
+
 public class RainController : MonoBehaviour
 {
     public GameObject RainImage;
@@ -55,7 +60,7 @@ public class RainController : MonoBehaviour
     void CauseRain()
     {
         RainImage.SetActive(true);
-        ds.ShiftRight(2.5f);
+        ds.Shift(-3f);
         CurrPityTime = 0f;
         CurrRainTime = 0f;
         bRaining = true;

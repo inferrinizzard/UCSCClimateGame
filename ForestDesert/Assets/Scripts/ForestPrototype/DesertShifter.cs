@@ -4,81 +4,52 @@ using UnityEngine;
 
 public class DesertShifter : MonoBehaviour
 {
-    public float MinDesertLine = 7f;
-    public float MinTreeLine = -6f;
-    public float DesertGrowthRate = 1f;
-
-    private Vector3 ShiftTargetPos;
+    // True when we should be moving the desert in a direction
+    // We move the desert when a tree fully grows near the edge of the border
     private bool MoveMePlease;
+
     // Start is called before the first frame update
     void Start()
     {
-        ShiftTargetPos = transform.position;
         MoveMePlease = false;
+
+        // Calculate the x position of the border by the % coverage in global statics
+        float TargetPos = 18f * (1f - GlobalStatics.DesertCoverage/100f) - 9f;
+
+        // Move us to that target position
+        Vector3 newPos = transform.position;
+        newPos.x = TargetPos;
+
+        transform.position = newPos;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // If we should be shifting
         if (MoveMePlease)
-            MoveHelper();
-        else
         {
-            Vector3 CurrPos = transform.position;
-            CurrPos.x = CurrPos.x - DesertGrowthRate * Time.deltaTime;
+            // Calculate where we should be shifting to
+            float TargetPos = 18f * (1f - GlobalStatics.DesertCoverage / 100f) - 9f;
 
-            transform.position = CurrPos;
-            GlobalStatics.Temperature += 2f * DesertGrowthRate * Time.deltaTime;
-        }
+            Vector3 newPos = transform.position;
+            newPos.x = TargetPos;
 
-        float GrowthEff = Mathf.Pow(GlobalStatics.Temperature - 85f, 2f)/120f + 1f;
-        DesertGrowthRate = .14f * GrowthEff;
-        //Debug.Log(GrowthEff - 2.4f);
-    }
+            // Lerp us towards that targer position
+            transform.position = Vector3.Lerp(transform.position, newPos, 1.3f * Time.deltaTime);
 
-    private void MoveHelper()
-    {
-        Vector3 NewPos = Vector3.Lerp(transform.position, ShiftTargetPos, 1.3f * Time.deltaTime);
-
-        GlobalStatics.Temperature += 2f*(transform.position.x - NewPos.x);
-
-        transform.position = Vector3.Lerp(transform.position, ShiftTargetPos, 1.3f * Time.deltaTime);
-
-        if(Mathf.Abs(transform.position.x - ShiftTargetPos.x) < .1f)
-        {
-            MoveMePlease = false;
+            // If we are less than 0.1 units away, stop moving as we're close enough
+            if (Mathf.Abs(transform.position.x - newPos.x) < .1f)
+            {
+                MoveMePlease = false;
+            }
         }
     }
 
-    public void ShiftRight(float dist = 1f)
+    // Shifts the desert by adding the input parameter to the DesertCoverage percent stored in globalstatics
+    public void Shift(float xPercent)
     {
-        Vector3 CurrPos = transform.position;
-
-        if (CurrPos.x + dist <= MinDesertLine)
-        {
-            ShiftTargetPos = new Vector3(CurrPos.x + dist, CurrPos.y, CurrPos.z);
-            MoveMePlease = true;
-        }
-        else if (Mathf.Abs(CurrPos.x - MinDesertLine) > .1f)
-        {
-            ShiftTargetPos = new Vector3(MinDesertLine, CurrPos.y, CurrPos.z);
-            MoveMePlease = true;
-        }
-    }
-
-    public void ShiftLeft(float dist = 1f)
-    {
-        Vector3 CurrPos = transform.position;
-
-        if (CurrPos.x - dist >= MinTreeLine)
-        {
-            ShiftTargetPos = new Vector3(CurrPos.x - dist, CurrPos.y, CurrPos.z);
-            MoveMePlease = true;
-        }
-        else if (Mathf.Abs(CurrPos.x - MinTreeLine) > .1f)
-        {
-            ShiftTargetPos = new Vector3(MinTreeLine, CurrPos.y, CurrPos.z);
-            MoveMePlease = true;
-        }
+        GlobalStatics.DesertCoverage = Mathf.Clamp(xPercent + GlobalStatics.DesertCoverage, 15f, 85f);
+        MoveMePlease = true;
     }
 }

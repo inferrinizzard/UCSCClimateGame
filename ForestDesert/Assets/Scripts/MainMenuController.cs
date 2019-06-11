@@ -6,16 +6,26 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
+    // Reference to the settings UI canvas group
     public GameObject SettingsReference;
+    // Reference to the info UI canvas group
     public InfoController InfoReference;
+    // Reference to the notification UI canvas group
     public GameObject NotificationReference;
+
+    // Reference to the money text display
     public Text MoneyText;
+    // Reference to the current turn number display
     public Text TurnText;
+    // Reference to the amount of actions left display
     public Text ActionText;
 
+    // Bools containing whether or not each UI group is active
     private bool SettingsOn = false;
     private bool InfoOn = false;
     private bool NotificationsOn = false;
+
+    // Amount of actions you'll get at the start of a turn
     private int BaseActions = 2;
 
     public static Dictionary<string, int> Scenes = new Dictionary<string, int>(){{"arctic",3},{"forest",1},{"city",4},{"tropics",2},{"desert",-1}};
@@ -34,6 +44,7 @@ public class MainMenuController : MonoBehaviour
             ActionText.text = "Actions Remaining: " + GlobalStatics.ActionsRemaining;
     }
 
+    // Increments the turn by one. Resets actions remaining
     public void IncrementTurn()
     {
         GlobalStatics.Turn++;
@@ -41,6 +52,7 @@ public class MainMenuController : MonoBehaviour
         GlobalStatics.ActionsRemaining = BaseActions;
     }
 
+    // Turns the settings canvas group on or off
     public void ToggleSettings()
     {
         SettingsOn = !SettingsOn;
@@ -49,6 +61,7 @@ public class MainMenuController : MonoBehaviour
             SettingsReference.SetActive(SettingsOn);
     }
 
+    // Turns the info canvas group on or off
     public void ToggleInfo()
     {
         InfoOn = !InfoOn;
@@ -60,6 +73,7 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    // Turns the notifications canvas group on or off
     public void ToggleNotifications()
     {
         NotificationsOn = !NotificationsOn;
@@ -68,9 +82,17 @@ public class MainMenuController : MonoBehaviour
             NotificationReference.SetActive(NotificationsOn);
     }
 
+    // Sets the temperature by parsing the input string
     public void UpdateTemperature(string s)
     {
         GlobalStatics.Temperature = float.Parse(s);
+    }
+
+    // Sets the base actions by parsing the input string
+    public void UpdateActionAmount(string s)
+    {
+        GlobalStatics.ActionsRemaining = int.Parse(s);
+        BaseActions = int.Parse(s);
     }
 
     public void ChangeLevel(string name)
