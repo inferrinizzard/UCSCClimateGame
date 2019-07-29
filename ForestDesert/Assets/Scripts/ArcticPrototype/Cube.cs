@@ -2,28 +2,22 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-	public bool selected;
+    public bool selected;
 
-	private int step;
+    int step;
 
-	private void Start()
-	{
-	}
+    void Start() { }
 
-	private void Update()
-	{
-		step++;
-		if (selected)
-		{
-			if (step % 5 == 0)
-			{
-				base.transform.localScale *= 0.99f;
-			}
-			GetComponent<MeshRenderer>().material.color = Color.blue;
-			if (base.transform.lossyScale.sqrMagnitude < 0.85f)
-			{
-				UnityEngine.Object.Destroy(base.gameObject);
-			}
-		}
-	}
+    void Update()
+    {
+        step++;
+        if (selected)		//if hit by ray
+        {
+            if (step % 5 == 0)		//melt speed
+                base.transform.localScale *= 0.99f;
+            GetComponent<MeshRenderer>().material.color = Color.blue;		//show melting state
+            if (base.transform.lossyScale.sqrMagnitude < 0.85f)		//destroy below threshold
+                UnityEngine.Object.Destroy(base.gameObject);
+        }
+    }
 }

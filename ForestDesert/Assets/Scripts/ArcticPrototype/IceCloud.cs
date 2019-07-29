@@ -4,41 +4,36 @@ using UnityEngine.UI;
 
 public class IceCloud : MonoBehaviour
 {
-	public Vector3 origin;
+	public Vector3 origin, reflect;		//start of ray, reflection destination
 
-	public Vector3 reflect;
+	LineRenderer lr;		//placeholder linerenderer ref
 
-	private LineRenderer lr;
+	public Material mat, red;		//default material, red glow mat
 
-	public Material mat;
+	public bool active;		//if hit by ray
 
-	public Material red;
+	public GameObject lrHolder;		//ref for reflection ray
 
-	public bool active;
+	GameObject[] models;		//children GO
 
-	public GameObject lrHolder, click;
+	bool finish;		//enum finish
 
-	private GameObject[] models;
+	Vector3 pos;		//this.transform
 
-	private bool finish;
+	public GameObject heatObj;		//heat ray prefab
 
-	private Vector3 pos;
+	public Slider s;		//ui slider
 
-	public GameObject heatRay;
-
-	public Slider s;
-
-	private void Start()
+	void Start()
 	{
-		pos = base.transform.position;
-		models = new GameObject[base.transform.GetChild(0).childCount];
-		for (int i = 0; i < base.transform.GetChild(0).childCount; i++)
-		{
-			models[i] = base.transform.GetChild(0).GetChild(i).gameObject;
-		}
+		pos = transform.position;
+		//initialise array of children
+		models = new GameObject[transform.GetChild(0).childCount];
+		for (int i = 0; i < transform.GetChild(0).childCount; i++)
+			models[i] = transform.GetChild(0).GetChild(i).gameObject;
 	}
 
-	private void Update()
+	void Update()
 	{
 		if (active)
 		{
@@ -56,9 +51,7 @@ public class IceCloud : MonoBehaviour
 			lr.endColor = color2;
 			GameObject[] array = models;
 			foreach (GameObject obj in array)
-			{
 				StartCoroutine(EmissionLerp(obj, 3f, default(Color), Color.red));
-			}
 			active = false;
 		}
 		if (finish)
@@ -67,13 +60,11 @@ public class IceCloud : MonoBehaviour
 			Rays();
 			MeshRenderer[] componentsInChildren = GetComponentsInChildren<MeshRenderer>();
 			foreach (MeshRenderer meshRenderer in componentsInChildren)
-			{
 				StartCoroutine(EmissionLerp(meshRenderer.gameObject, 1f, Color.red, default(Color)));
-			}
 		}
 	}
 
-	private IEnumerator EmissionLerp(GameObject obj, float fadeTime, Color a, Color b)
+	IEnumerator EmissionLerp(GameObject obj, float fadeTime, Color a, Color b)		//lerps between natural and glow material
 	{
 		float start = Time.time;
 		bool fading = true;
@@ -92,26 +83,27 @@ public class IceCloud : MonoBehaviour
 		}
 	}
 
-	private void Rays()
+	void Rays()		//shoots heat rays from clouds
 	{
-		Heat component = UnityEngine.Object.Instantiate(heatRay, base.transform.position, Quaternion.identity).GetComponent<Heat>();
-		component.transform.SetParent(base.transform);
-		component.gameObject.SetActive(value: true);
-		component.up = true;
-		component.length = 25;
-		component.loop = false;
-		Heat component2 = UnityEngine.Object.Instantiate(heatRay, base.transform.position, Quaternion.identity).GetComponent<Heat>();
-		component2.transform.SetParent(base.transform);
-		component2.up = false;
-		component2.gameObject.SetActive(value: true);
-		component2.length = 25;
-		component2.loop = false;
-		StartCoroutine(WaitAndDisable(component.gameObject, 3f));
-		StartCoroutine(WaitAndDisable(component2.gameObject, 3f));
+		//spawn each and set params (use Linq next time)
+		Heat heatRay = UnityEngine.Object.Instantiate(heatObj, transform.position, Quaternion.identity).GetComponent<Heat>();
+		heatRay.transform.SetParent(transform);
+		heatRay.gameObject.SetActive(true);
+		heatRay.up = true;
+		heatRay.length = 25;
+		heatRay.loop = false;
+		Heat heatRay2 = UnityEngine.Object.Instantiate(heatObj, transform.position, Quaternion.identity).GetComponent<Heat>();
+		heatRay2.transform.SetParent(transform);
+		heatRay2.up = false;
+		heatRay2.gameObject.SetActive(true);
+		heatRay2.length = 25;
+		heatRay2.loop = false;
+		StartCoroutine(WaitAndDisable(heatRay.gameObject, 3f));
+		StartCoroutine(WaitAndDisable(heatRay2.gameObject, 3f));
 		s.GetComponent<Slider>().value += 5f;
 	}
 
-	public IEnumerator ShootRay(Vector3 i, Vector3 f, LineRenderer lr, float time)
+	public IEnumerator ShootRay(Vector3 i, Vector3 f, LineRenderer lr, float time)	//lerps heat rays over time
 	{
 		float start = Time.time;
 		bool inProgress = true;
@@ -121,24 +113,15 @@ public class IceCloud : MonoBehaviour
 			float num = Time.time - start;
 			lr.SetPosition(1, Vector3.Lerp(i, f, num));
 			if (num > time)
-			{
 				inProgress = false;
-			}
 		}
 	}
 
-	private IEnumerator WaitAndDisable(GameObject g, float t)
+	IEnumerator WaitAndDisable(GameObject g, float t)		//pause and destroy after time
 	{
 		yield return new WaitForSeconds(t);
-		g.SetActive(value: false);
+		g.SetActive(false);
 		UnityEngine.Object.Destroy(g);
 	}
 
-	void OnMouseOver(){
-		click.SetActive(true);
-		click.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-	}
-	void OnMouseExit(){
-		click.SetActive(false);
-	}
 }

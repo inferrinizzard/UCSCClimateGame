@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Child of cloud for the Horizontal prototype.
-// Evaluates whether or not it will start raining based on how high it is, not on how long it's been alive
 public class HorizCloud : Cloud
 {
     public AnimationCurve HeightRainChance;

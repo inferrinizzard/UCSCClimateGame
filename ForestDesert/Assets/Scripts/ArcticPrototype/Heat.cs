@@ -2,30 +2,30 @@ using UnityEngine;
 
 public class Heat : MonoBehaviour
 {
-	private int step;
+	int step;		//time iterator
 
-	private LineRenderer lr;
+	LineRenderer lr;		//linerenderer ref
 
-	public Material heat;
+	public Material heat;		//red glow material
 
-	public int length = 40;
+	public int length = 40;		//heat ray length
 
-	public int mod;
+	public int mod;		//sine step size
 
-	public bool up = true;
+	public bool up = true;		//heat ray direction
 
-	public bool loop = true;
+	public bool loop = true;		//repeats?
 
-	private bool over;
+	bool over;		//if reached length
 
-	private int count;
+	int count;
 
-	private Vector3 pos;
+	Vector3 pos;		//starting pos
 
-	private void Start()
+	void Start()
 	{
 		mod = 3;
-		pos = base.transform.position;
+		pos = transform.position;
 		Material material = new Material(heat);
 		material.color = Color.red;
 		lr = GetComponent<LineRenderer>();
@@ -34,19 +34,15 @@ public class Heat : MonoBehaviour
 		newLr();
 	}
 
-	private void Update()
+	void Update()		//update time and draw heat ray along sine curve
 	{
 		if (!over)
-		{
 			step++;
-		}
 		if (step % mod != 0 || over)
-		{
 			return;
-		}
 		count++;
 		lr.positionCount = count + 1;
-		lr.SetPosition(count, pos + new Vector3(Mathf.Sin((float)((up ? 1 : (-1)) * count) / 2f) / 4f, (float)((up ? 1 : (-1)) * count) / 10f, 0f));
+		lr.SetPosition(count, pos + new Vector3(Mathf.Sin((float)((up ? 1 : -1) * count) / 2f) / 4f, (float)((up ? 1 : -1) * count) / 10f, 0f));
 		if (step % ((mod * length == 0) ? 1 : length) == 0)
 		{
 			if (loop)
@@ -59,7 +55,7 @@ public class Heat : MonoBehaviour
 		}
 	}
 
-	private void newLr()
+	void newLr()		//create new heat ray
 	{
 		count = 1;
 		lr.positionCount = 2;

@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class Wind : MonoBehaviour
 {
-    // The position we were spawned at
     public Vector3 StartPos;
-    // Current scale
     public float Size = 1f;
-    // Whether or not we are active and influencing clouds
     public bool WindActive = false;
 
-    // total time we've been alive
     private float TimeAlive;
     // Start is called before the first frame update
     void Start()
@@ -19,7 +15,7 @@ public class Wind : MonoBehaviour
         TimeAlive = 0f;
     }
 
-    // Increment time alive, if we've been alive for too long destroy ourself
+    // Update is called once per frame
     void Update()
     {
         TimeAlive += Time.deltaTime;
@@ -30,7 +26,6 @@ public class Wind : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    // If we overlap with a cloud, move it based on our direction
     private void OnTriggerStay2D(Collider2D other)
     {
         if(other.tag == "Cloud")

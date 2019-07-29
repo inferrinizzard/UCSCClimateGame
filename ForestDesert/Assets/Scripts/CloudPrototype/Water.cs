@@ -4,104 +4,86 @@ using UnityEngine;
 
 public class Water : MonoBehaviour
 {
-    // The temperature too start at. This value is set once and never changed
-    public float StartTemperature = 75f;
+	public float StartTemperature = 75f;
+	public Color HotRed;
+	public Color IceBlue;
 
-    // Holds the colors to display at max cold or max hot
-    public Color HotRed;
-    public Color IceBlue;
+	[Range(0, .1f)]
+	public float SampleX = .0355f;
 
-    // Speed at which to sample perlin noise
-    [Range(0, .1f)]
-    public float SampleX = .0355f;
+	[Range(0, 100)]
+	public float Displacement = 0;
 
-    // Starting displacement of perlin noise
-    [Range(0, 100)]
-    public float Displacement = 0;
+	[Range(0, 100)]
+	public float TempRange = 25f;
 
-    // Total amount temp can deviate. Starting temp would be halfway through the deviation range
-    [Range(0, 100)]
-    public float TempRange = 25f;
+	private SpriteRenderer sr;
+	private Color StartColor;
+	private float CurrTime;
+	public float Temperature;
+	private float baseTemperature;
+	public float Deviation = 0f;
+	private bool bDeviating = false;
+	private float DeviationTime = 0f;
+	// Start is called before the first frame update
+	void Start()
+	{
+		sr = GetComponent<SpriteRenderer>();
+		StartColor = sr.color;
+		HotRed = new Color(169f / 255, 45f / 255, 135f / 255, 1f);
+		//IceBlue = new Color(120, 160, 195);
 
-    private SpriteRenderer sr;
-    private Color StartColor;
+		CurrTime = 0f;
+		Displacement = Random.Range(0f, 100f);
 
-    // Keeps track of current time for perlin noise
-    private float CurrTime;
-    // The current temperature of this water
-    public float Temperature;
-    // The base temperature (start temp + cloud deviation)
-    private float baseTemperature;
-    // Short term temperature deviation cause by storms sucking up warm water
-    public float Deviation = 0f;
-    // Whether or not we are currently deviating temperature
-    private bool bDeviating = false;
-    // Time tracker for temp deviation
-    private float DeviationTime = 0f;
+		StartTemperature = GlobalStatics.temperature;
+	}
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        sr = GetComponent<SpriteRenderer>();
-        StartColor = sr.color;
-        HotRed = new Color(169f/255, 45f/255, 135f/255, 1f);
-        //IceBlue = new Color(120, 160, 195);
+	// Update is called once per frame
+	void Update()
+	{
+		CurrTime += Time.deltaTime;
 
-        CurrTime = 0f;
-        Displacement = Random.Range(0f, 100f);
+		if (!bDeviating)
+			Deviation = Mathf.Lerp(Deviation, 0f, .45f * Time.deltaTime);
+		else
+		{
+			DeviationTime += Time.deltaTime;
+			Deviation = Mathf.Lerp(Deviation, 0f, .2f * Time.deltaTime);
+			if (DeviationTime > 3f)
+			{
+				bDeviating = false;
+			}
+		}
 
-        StartTemperature = GlobalStatics.Temperature;
-    }
+		baseTemperature = StartTemperature + (Mathf.PerlinNoise(Displacement, CurrTime * SampleX) * TempRange - TempRange / 2f);
+		Temperature = baseTemperature + Deviation;
 
-    // Update is called once per frame
-    void Update()
-    {
-        CurrTime += Time.deltaTime;
+		UpdateColor();
+	}
 
-        if(!bDeviating) // If we aren't deviating, quickly bring its value down to 0
-            Deviation = Mathf.Lerp(Deviation, 0f, .45f * Time.deltaTime);
-        else // If we are deviating, SLOWLY bring its value down to 0
-        {
-            DeviationTime += Time.deltaTime;
-            Deviation = Mathf.Lerp(Deviation, 0f, .2f * Time.deltaTime);
-            if (DeviationTime > 3f)
-            {
-                bDeviating = false;
-            }
-        }
+	void UpdateColor()
+	{
+		float diff = Temperature - 75f;
+		diff = Mathf.Clamp(diff, -15f, 15f);
 
-        // Calculate base temperature
-        // StartTemp + PerlinNoise
-        baseTemperature = StartTemperature + (Mathf.PerlinNoise(Displacement, CurrTime * SampleX) * TempRange - TempRange/2f);
+		if (diff > 0f)
+		{
+			//Debug.Log("Before: " + sr.color);
+			sr.color = Color.Lerp(StartColor, HotRed, diff / 15f);
+			//Debug.Log("After: " + sr.color);
+		}
+		else
+		{
+			sr.color = Color.Lerp(StartColor, IceBlue, -1f * diff / 15f);
+		}
+	}
 
-        // Final temp = basetemp + deviation value
-        Temperature = baseTemperature + Deviation;
+	public void Deviate(float d)
+	{
+		bDeviating = true;
+		Deviation += d;
 
-        // Figure out what color we should be displaying based on deviation
-        UpdateColor();
-    }
-
-    void UpdateColor()
-    {
-        float diff = Temperature - 75f;
-        diff = Mathf.Clamp(diff, -15f, 15f);
-
-        if (diff > 0f)
-        {
-            sr.color = Color.Lerp(StartColor, HotRed, diff / 15f);
-        }
-        else
-        {
-            sr.color = Color.Lerp(StartColor, IceBlue, -1f * diff / 15f);
-        }
-    }
-
-    // Called when a cloud is over this water. Deviates the temp by d degrees
-    public void Deviate(float d)
-    {
-        bDeviating = true;
-        Deviation += d;
-
-        DeviationTime = 0f;
-    }
+		DeviationTime = 0f;
+	}
 }

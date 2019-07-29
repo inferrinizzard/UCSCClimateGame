@@ -6,109 +6,121 @@ using UnityEngine.UI;
 [Serializable]
 public class Cam : MonoBehaviour
 {
-	private Ray ray;
+	Ray ray;    //stores ray from camera to world space
 
-	public Material m;
+	public Material m;      //default meterial
 
-	private Camera cam;
-
-	[SerializeField]
-	private Slider heat;
+	Camera cam;     //Main Camera
 
 	[SerializeField]
-	private LineRenderer lr, tracer;
+	Slider heat;        //reference to UI heat gauge
 
-	public GameObject markerSource;
+	[SerializeField]
+	LineRenderer lr, tracer;    //linerenderer prefab, tracing line reference
 
-	public GameObject lrHolder;
+	public GameObject markerSource;   //marker prefan
 
-	public GameObject heatRay;
+	public GameObject lrHolder, click;    //temp holder for reflection, 	ui click indicator
 
-	public GameObject or;
+	public GameObject heatObj;    //wavy ray prefab
 
-	private GameObject marker;
+	public GameObject or;   //ocean ray
 
-	private bool hasRay;
+	GameObject marker;    //reference to marker sphere
 
-	private bool rayDone;
+	bool hasRay;    //marker active
 
-	private Transform target;
+	bool rayDone;   //ray enum finished
 
-	private void Start()
+	Transform target;       //reference to ray end object
+	Vector3 vector;   //line from marker to target
+
+
+	void Start()
 	{
-		cam = GetComponent<Camera>();
+		cam = Camera.main;
 	}
 
-	private void Update()
+	void Update()
 	{
-		if(marker!=null){
-			tracer.SetPosition(1, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+		if (marker != null)   //if no marker active, spawn new and activate tracer
+		{
+			tracer.SetPosition(1, cam.ScreenToWorldPoint(Input.mousePosition));
+			// click.transform.position = cam.WorldToScreenPoint(Input.mousePosition);
+			// if (Physics.Raycast(ray))	
+			//     click.transform.position = Input.mousePosition;
 		}
-		heat.GetComponentInChildren<Text>().text = (heat.GetComponent<Slider>().value - 50f).ToString();
-		Vector3 vector = default(Vector3);
-		RaycastHit hitInfo;
+		// heat.GetComponentInChildren<Text>().text = (heat.GetComponent<Slider>().value - 50f).ToString();
+		RaycastHit hitInfo;   //raycast out
 		if (Input.GetButtonDown("Fire1"))
 		{
 			ray = cam.ScreenPointToRay(UnityEngine.Input.mousePosition);
-			vector = ray.origin + ray.direction * 10f;
-			UnityEngine.Debug.DrawRay(ray.origin, ray.direction * 10f, Color.yellow);
+			vector = ray.origin + ray.direction * 10;
+			// vector = cam.ScreenToWorldPoint(10);
+			// UnityEngine.Debug.DrawRay(ray.origin, ray.direction * 10f, Color.yellow);
 			hasRay = true;
 			if (Physics.Raycast(ray, out hitInfo) && marker == null && hitInfo.transform.gameObject.name == "Ocean")
 			{
-				Heat component = UnityEngine.Object.Instantiate(heatRay, hitInfo.point, Quaternion.identity, or.transform).GetComponent<Heat>();
+				//shoot heat ray up from ocean
+				Heat heatRay = UnityEngine.Object.Instantiate(heatObj, hitInfo.point, Quaternion.identity, or.transform).GetComponent<Heat>();
 				hasRay = false;
-				component.gameObject.SetActive(value: true);
-				component.up = true;
-				component.length = 25;
-				component.loop = false;
+				heatRay.gameObject.SetActive(value: true);
+				heatRay.up = true;
+				heatRay.length = 25;
+				heatRay.loop = false;
 				return;
 			}
 			UnityEngine.Object.Destroy(marker);
 			if (hasRay)
 			{
+				//draw tracer line
 				marker = UnityEngine.Object.Instantiate(markerSource, ray.origin + ray.direction * 10f, Quaternion.identity);
 				tracer.gameObject.SetActive(true);
 				tracer.SetPosition(0, marker.transform.position);
 			}
 		}
-		if (hasRay && Input.GetButtonDown("Fire1"))
+
+		if (hasRay)
 		{
-			if (Physics.Raycast(ray, out hitInfo))
+			if (Input.GetButtonDown("Fire1"))
 			{
-				UnityEngine.Object.Destroy(marker);
-				tracer.gameObject.SetActive(false);
-				target = hitInfo.transform.root;
-				if (lr != null)
+				if (Physics.Raycast(ray, out hitInfo))
 				{
-					Vector3 position = lr.GetPosition(0);
-					if (target.gameObject.name != "Ocean")
+					UnityEngine.Object.Destroy(marker);
+					tracer.gameObject.SetActive(false);
+					target = hitInfo.transform.root;
+					if (lr != null)
 					{
-						lr.SetPosition(0, new Vector3(position.x, position.y, target.position.z));
+						Vector3 position = lr.GetPosition(0);
+						if (target.gameObject.name != "Ocean")
+						{
+							lr.SetPosition(0, new Vector3(position.x, position.y, target.position.z));
+						}
+						StartCoroutine(ShootRay(lr.GetPosition(0), (target.gameObject.name == "Ocean") ? hitInfo.point : target.position, lr, 0.75f));
+						lr.transform.SetParent((target.gameObject.name != "Ocean") ? target : or.transform);
+						lr = null;
 					}
-					StartCoroutine(ShootRay(lr.GetPosition(0), (target.gameObject.name == "Ocean") ? hitInfo.point : target.position, lr, 0.75f));
-					lr.transform.SetParent((target.gameObject.name != "Ocean") ? target : or.transform);
-					lr = null;
 				}
-			}
-			else
-			{
-				if (lr == null)
+				else
 				{
-					lr = new GameObject().AddComponent<LineRenderer>();
+					if (lr == null)
+					{
+						lr = new GameObject().AddComponent<LineRenderer>();
+					}
+					lr.positionCount = 2;
+					lr.SetPosition(0, vector);
+					lr.SetPosition(1, vector + 0.001f * Vector3.down);
+					lr.widthMultiplier = 0.05f;
+					Material material = new Material(m);
+					Color color2 = material.color = new Color(1f, 1f, 0f, 1f);
+					lr.material = material;
+					lr.startColor = color2;
+					lr.endColor = color2;
 				}
-				lr.positionCount = 2;
-				lr.SetPosition(0, vector);
-				lr.SetPosition(1, vector + 0.001f * Vector3.down);
-				lr.widthMultiplier = 0.05f;
-				Material material = new Material(m);
-				Color color2 = material.color = new Color(1f, 1f, 0f, 1f);
-				lr.material = material;
-				lr.startColor = color2;
-				lr.endColor = color2;
 			}
 		}
 		hasRay = false;
-		if (rayDone)
+		if (rayDone)    //draw different rays depending on target
 		{
 			if (target.gameObject.tag == "Ice")
 			{
@@ -132,7 +144,7 @@ public class Cam : MonoBehaviour
 		}
 	}
 
-	public IEnumerator ShootRay(Vector3 i, Vector3 f, LineRenderer lr, float time)
+	public IEnumerator ShootRay(Vector3 i, Vector3 f, LineRenderer lr, float time)    //lerps between two points and draws a line in progress
 	{
 		float start = Time.time;
 		bool inProgress = true;

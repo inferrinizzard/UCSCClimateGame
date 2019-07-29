@@ -5,92 +5,82 @@ using UnityEngine.UI;
 
 public class StatController : MonoBehaviour
 {
-    // Text objects to display values for 
-    public Text MoneyText; // Money
-    public Text MoneyChangeText; // The amount charged when a tree is bought - NOT USED
-    public Text TempText; // Current temperature
+	public Text MoneyText;
+	public Text MoneyChangeText;
+	public Text TempText;
+	public Text GrowthRateText;
 
-    // Text that is spawned that moves upwards (for polish) when you are charged money
-    public VertMoveText ChangeTextPrefab;
+	public VertMoveText ChangeTextPrefab;
 
-    // Reference to the desert shifter
-    public DesertShifter ShifterReference;
+	public DesertShifter ShifterReference;
 
-    // The curve that controls the scale of MoneyText when you are charged
-    // Moneytext is ballooned and then slowly decreased to normal size over time
-    public AnimationCurve BalloonCurve;
+	public AnimationCurve BalloonCurve;
+	public AnimationCurve ChangeLerpCurve;
 
-    // A curve that would store the lerp progress of a the shifting money charged text - OLD 
-    public AnimationCurve ChangeLerpCurve;
+	private float MoneyBalloonCurrTime = 0f;
+	private float MoneyBalloonTotTime = .3f;
+	private bool bMoneyBallooning = false;
 
-    // Stores the current and total time it takes to balloon the money text
-    private float MoneyBalloonCurrTime = 0f;
-    private float MoneyBalloonTotTime = .3f;
-    // Whether or not we are tweening the moneytext
-    private bool bMoneyBallooning = false;
+	private float ChangeCurrTime = 0f;
+	private float ChangeTotTime = 1.5f;
+	private bool bChangeMoving = false;
 
-    // Stores the current and total time it takes to shift the charge text
-    private float ChangeCurrTime = 0f;
-    private float ChangeTotTime = 1.5f;
-    // Whether we are shifting the charge text
-    private bool bChangeMoving = false;
+	// Start is called before the first frame update
+	void Start()
+	{
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        MoneyText.text = "$" + string.Format("{0:0,0}", GlobalStatics.CashMoney);
-        TempText.text = "Temperature: " + string.Format("{0:0,0.00}", GlobalStatics.Temperature);
+	// Update is called once per frame
+	void Update()
+	{
+		MoneyText.text = "$" + string.Format("{0:0,0}", GlobalStatics.cashMoney);
+		TempText.text = "Temperature: " + string.Format("{0:0,0.00}", GlobalStatics.temperature);
+		GrowthRateText.text = "Growth Rate: " + string.Format("{0:0,0.00}", ShifterReference.DesertGrowthRate * 10f) + "in/s";
 
-        if (bMoneyBallooning)
-            BalloonMoney();
-        if (bChangeMoving)
-            MoveChange();
-    }
+		if (bMoneyBallooning)
+			BalloonMoney();
+		if (bChangeMoving)
+			MoveChange();
+	}
 
-    // Called when we spawn a tree
-    // Creates a vertmovetext object (amount charged that moves up)
-    // Sets money ballooning to true so we can tween it's scale
-    public void CashChange(float change)
-    {
-        MoneyBalloonCurrTime = 0f;
-        bMoneyBallooning = true;
+	public void CashChange(float change)
+	{
+		MoneyBalloonCurrTime = 0f;
+		bMoneyBallooning = true;
 
-        VertMoveText v = Instantiate(ChangeTextPrefab, transform) as VertMoveText;
-        v.Initialize(new Vector2(-110f, 160f), new Vector2(-110f, 200f), change);
-    }
+		//ChangeCurrTime = 0f;
+		//bChangeMoving = true;
+		// spawn change
 
-    // OLD WAY OF PANNING CHARGE TEXT
-    private void MoveChange()
-    {
-        float lerpY = Mathf.Lerp(160f, 200f, ChangeLerpCurve.Evaluate(ChangeCurrTime/ChangeTotTime));
-        MoneyChangeText.rectTransform.anchoredPosition = new Vector2(-110, lerpY);
+		VertMoveText v = Instantiate(ChangeTextPrefab, transform) as VertMoveText;
+		v.Initialize(new Vector2(-110f, 160f), new Vector2(-110f, 200f), change);
+	}
 
-        Color newC = MoneyChangeText.color;
-        newC.a = 1f - ChangeLerpCurve.Evaluate(ChangeCurrTime / ChangeTotTime);
-        MoneyChangeText.color = newC;
+	private void MoveChange()
+	{
+		float lerpY = Mathf.Lerp(160f, 200f, ChangeLerpCurve.Evaluate(ChangeCurrTime / ChangeTotTime));
+		MoneyChangeText.rectTransform.anchoredPosition = new Vector2(-110, lerpY);
 
-        ChangeCurrTime += Time.deltaTime;
+		Color newC = MoneyChangeText.color;
+		newC.a = 1f - ChangeLerpCurve.Evaluate(ChangeCurrTime / ChangeTotTime);
+		MoneyChangeText.color = newC;
 
-        if (ChangeCurrTime > ChangeTotTime)
-            bChangeMoving = false;
-    }
+		ChangeCurrTime += Time.deltaTime;
 
-    // Tweens the scale of the moneytext by evaluating a curve
-    private void BalloonMoney()
-    {
-        float targetScale = BalloonCurve.Evaluate( MoneyBalloonCurrTime / MoneyBalloonTotTime );
+		if (ChangeCurrTime > ChangeTotTime)
+			bChangeMoving = false;
+	}
 
-        MoneyText.rectTransform.localScale = new Vector3(targetScale, targetScale, targetScale);
+	private void BalloonMoney()
+	{
+		float targetScale = BalloonCurve.Evaluate(MoneyBalloonCurrTime / MoneyBalloonTotTime);
 
-        MoneyBalloonCurrTime += Time.deltaTime;
+		MoneyText.rectTransform.localScale = new Vector3(targetScale, targetScale, targetScale);
 
-        if (MoneyBalloonCurrTime >= MoneyBalloonTotTime)
-            bMoneyBallooning = false;
-    }
+		MoneyBalloonCurrTime += Time.deltaTime;
+
+		if (MoneyBalloonCurrTime >= MoneyBalloonTotTime)
+			bMoneyBallooning = false;
+	}
 }
