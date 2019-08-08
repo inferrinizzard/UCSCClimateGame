@@ -278,6 +278,7 @@ GameObject:
   - component: {fileID: 87}
   - component: {fileID: 277}
   - component: {fileID: 124}
+  - component: {fileID: 26}
   - component: {fileID: 217}
   m_Layer: 0
   m_Name: Main Camera
@@ -341,6 +342,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &26
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7719baf0fb1653e419171f1684506248, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &27
 GameObject:
   m_ObjectHideFlags: 1
@@ -3955,8 +3968,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 246}
-  - {fileID: 2027155011}
   - {fileID: 473852804}
+  - {fileID: 2027155011}
   - {fileID: 962837049}
   - {fileID: 1586923890}
   m_Father: {fileID: 0}
@@ -4785,7 +4798,7 @@ RectTransform:
   m_Children:
   - {fileID: 861061560}
   m_Father: {fileID: 255}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}

@@ -7,6 +7,8 @@ public static class GlobalStatics
 	public static string[] regions = new string[] { "arctic", "desert", "forest", "tropics" };
 	public static float temperature = 35f;
 	public static float cashMoney = 100f;
+	public static float desertCoverage = 0;
+	public static Dictionary<Vector3, int> forestTreeLocations = new Dictionary<Vector3, int>();
 	public static int turn = 1;
 	public static float co2 = 400;    //global CO2 in ppm
 	public static int actionsRemaining = 2;

@@ -9,9 +9,10 @@ public class MathClient : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		float[] sol = RunTemp(new float[3] { 10, 10, 10, }, 1000);
-		Debug.Log(String.Join(" ", sol));
-		RunTempF();
+		// float[] sol = RunTemp(new float[3] { 10, 10, 10, }, 1000);
+		// Debug.Log(String.Join(" ", sol));
+		// RunTempF();
+		ClimateMath.odeIce(new float[3] { 10, 10, 10, }, 1000);
 	}
 
 	// Update is called once per frame
