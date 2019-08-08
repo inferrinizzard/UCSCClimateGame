@@ -160,38 +160,20 @@ public static class ClimateMath
 	// 	return diffop;
 	// }
 
-	public static List<float> x(float dx, int n = 3)
-	{
-		List<float> arange = new List<float>();
-		for (int i = 0; i < n; i++)
-			arange.Add(dx / 2 + i * dx);
-		return arange;
-	}
+	public static List<float> x(float dx, int n = 3) => new List<float>(new float[n]).Select((a, k) => dx / 2 + k * dx).ToList();
 
-	public static List<float> xb(float dx, int n = 3)
-	{
-		List<float> arange = new List<float>();
-		for (int i = 1; i <= n; i++)
-			arange.Add(i * dx);
-		return arange;
-	}
+	public static List<float> xb(float dx, int n = 3) => new List<float>(new float[n]).Select((a, k) => (k + 1) * dx).ToList();
 
-	public static List<float> S(List<float> x) { return x.Select(n => ebmv.S0 - ebmv.S2 * n * n).ToList(); }
+	public static List<float> S(List<float> x) => x.Select(n => ebmv.S0 - ebmv.S2 * n * n).ToList();
 
-	public static List<float> aw(List<float> x) { return x.Select(n => ebmv.a0 - ebmv.a2 * n * n).ToList(); }
+	public static List<float> aw(List<float> x) => x.Select(n => ebmv.a0 - ebmv.a2 * n * n).ToList();
 
 	#endregion
 
 	struct ebm
 	{
-		public static List<float> x = new Func<List<float>>(() =>
-		{
-			List<float> linspace = new List<float>();
-			for (int i = 0; i < ebmv.bands; i++)
-				linspace.Add(i / (ebmv.bands - 1f));
-			return linspace;
-		})();
 		public static float dx = 1f / (ebmv.bands - 1f);
+		public static List<float> x = new List<float>(new float[ebmv.bands]).Select((n, k) => k * dx).ToList();
 
 		public static List<float> S = S(x);
 		public static List<float> aw = aw(x);
@@ -204,9 +186,7 @@ public static class ClimateMath
 		// Debug.Log("x: " + String.Join(" ", x));
 		// Debug.Log("aw: " + String.Join(" ", aw));
 		// return null;
-		List<float> alpha = new List<float>();
-		for (int i = 0; i < ebmv.bands; i++)
-			alpha.Add(temp[i] > 0 ? ebm.aw[i] : ebmv.aI); //aw * (temp > 0) + aI * (temp < 0);
+		List<float> alpha = temp.Select((n, k) => n > 0 ? ebm.aw[k] : ebmv.aI).ToList();
 		List<float> C = alpha.Zip(ebm.S, (a, b) => a * b - ebmv.A + ebmv.F).ToList();
 
 		float[] Tdot = new float[x.Count];
@@ -257,9 +237,7 @@ public static class ClimateMath
 	{
 		float dx = ebmf.dx;
 		// Debug.Log(String.Join("/", ebmf.invmat.Select(d => String.Join(" ", d))));
-		List<float> alpha = new List<float>();
-		for (int i = 0; i < ebmv.bands; i++)
-			alpha.Add(temp[i] > 0 ? ebm.aw[i] : ebmv.aI); //aw * (temp > 0) + aI * (temp < 0);
+		List<float> alpha = temp.Select((n, k) => n > 0 ? ebm.aw[k] : ebmv.aI).ToList();
 		List<float> C = alpha.Zip(ebm.S, (a, b) => a * b - ebmv.A + ebmv.F).ToList();
 		// List<float> T0 = temp.Zip(C, (a, b) => a + dt / ebmv.cw * b).ToList();
 		//temp = dot invMat, T0
@@ -275,7 +253,7 @@ public static class ClimateMath
 		public static readonly float k = 2;
 		public static readonly float Lf = 9.5f;
 		public static readonly float cg = ebmv.cw / 100f;
-		public static readonly float tau = 0.0001f;
+		public static readonly float tau = 0.00001f;
 		public static readonly int n = 4;
 		public static readonly int nt = 5;
 		public static readonly int dur = 30;
@@ -302,8 +280,8 @@ public static class ClimateMath
 				row[i++] = 1 + dt_tau;
 				return row;
 			}).ToList();
-			printMatrix(dt_tauMat);
-			printMatrix(diffop);
+			// printMatrix(dt_tauMat);
+			// printMatrix(diffop);
 			return dt_tauMat.Zip(diffop, (rowA, rowB) => rowA.Zip(rowB, (a, b) => a - dt * b / cg).ToList()).ToList();
 		})();
 
@@ -312,16 +290,8 @@ public static class ClimateMath
 		public static List<List<float>> initS = new Func<List<List<float>>>(() =>
 		{
 			// List<List<float>> sMat = new List<List<float>>(nt).Select(s => S(x));
-			int i = 0;
 			List<float> Sty = ty.Select(t => S1 * Mathf.Cos(2 * Mathf.PI * t)).ToList();
-			List<List<float>> add = new List<List<float>>(new List<float>[nt]).Select(row =>
-			{
-				//map Sty[i] to lists, scale by x[i]
-				List<float> sub = S(x).Zip(x(dx, n).Select(s => s * Sty[i]), (a, b) => a - b).ToList();
-				i++;
-				return sub;
-			}).ToList();
-			return add;
+			return new List<List<float>>(new List<float>[nt]).Select((row, k) => S(x).Zip(x(dx, n).Select(s => s * Sty[k]), (a, b) => a - b).ToList()).ToList();
 		})();
 		public static readonly float M = ebmv.B + cg_tau;
 
@@ -330,19 +300,67 @@ public static class ClimateMath
 		public static readonly float kLf = k * Lf;
 	}
 
-	public static float[] odeIce(float[] temp, float t)
+	public static float[] odeIce(out float[] temp)
 	{
+		List<float> T = ebmI.x.Select(n => 7.5f + 20 * (1 - 2 * n * n)).ToList();
+		List<float> Tg = new List<float>(T);
+		List<float> E = T.Select(n => n * ebmv.cw).ToList();
+		List<List<float>> E100 = new List<List<float>>(new List<float>[ebmI.n]).Select(n => new List<float>(new float[ebmI.dur * 100])).ToList();
+		List<List<float>> T100 = new List<List<float>>(new List<float>[ebmI.n]).Select(n => new List<float>(new float[ebmI.dur * 100])).ToList();
+		int p = -1, m = 1;
+		for (int j = 0; j < ebmI.dur; j++)
+		{
+			for (int i = 0; i < ebmI.nt; i++)
+			{
+				m++;
+				if ((p + 1) * 10 == m)
+				{
+					p++;
+					E100 = E100.Select((row, k) => row.Select((e, l) => l == p ? E[k] : e).ToList()).ToList();
+					T100 = T100.Select((row, k) => row.Select((t, l) => l == p ? T[k] : t).ToList()).ToList();
+				}
+				List<float> alpha = E.Select((n, k) => n > 0 ? ebmI.aw[k] : ebmv.aI).ToList();
+				List<float> C = ebmI.initS[i].Zip(alpha, (a, b) => a * b).Zip(Tg, (a, b) => a + ebmI.cg_tau * b - ebmv.A).ToList();
+				List<float> T0 = C.Zip(E, (a, b) => a / (ebmI.M - ebmI.kLf / b)).ToList();
+				T = E.Select((n, k) => Int(n >= 0) * n / ebmv.cw + Int(n < 0) * Int(T0[k] < 0) * T0[k]).ToList();
+				E = E.Select((n, k) => n + ebmI.dt * (C[k] - ebmI.M * T[k] + ebmI.Fb + ebmv.F)).ToList();
+				Tg = SolveMatrix(
+					new Func<List<List<float>>>(() =>
+					{
+						List<float> Ediag = E.Select((n, k) => ebmI.dc / (ebmI.M - ebmI.kLf / n) * Int(T0[k] < 0) * Int(n < 0)).ToList();
+						return ebmI.kappa.Select((n, k) =>
+							n.Select((o, l) => o + l == k ? Ediag[k] : 0).ToList()
+						).ToList();
+					})(),
+				E.Select((n, k) => Tg[k] + (ebmI.dt_tau * (n / ebmv.cw * Int(n >= 0) + (ebmv.aI * ebmI.initS[i][k] - ebmv.A) / (ebmI.M - ebmI.kLf / n) * Int(T0[k] < 0) * Int(n < 0)))).ToList());
+			}
+		}
+		temp = new float[3];
 		return new float[0];
 	}
 
-	public static void printVector(List<float> vec)
+	public static float[] findIce(List<List<float>> Efin)
 	{
-		Debug.Log(String.Join(" ", vec));
+		float[] xi = new float[ebmI.n];
+		for (int i = 0; i < ebmI.n; i++)
+		{
+			List<float> E = Efin.Select(n => n.Where((m, l) => l == i).ToArray()[0]).ToList();
+			if (E.Exists(n => n < 0))
+				xi[i] = ebmI.x[E.FindIndex(n => n < 0)];
+			else
+				xi[i] = ebmI.x.Max();
+		}
+		return xi;
+	}
 
-	}
-	public static void printMatrix(List<List<float>> mat)
+	public static int Int(bool b) => b ? 1 : 0;
+
+	public static List<float> SolveMatrix(List<List<float>> a, List<float> b)
 	{
-		Debug.Log(String.Join("\n", mat.Select(k => String.Join(" ", k))));
+		return new List<float>();
 	}
+
+	public static void printVector(List<float> vec) => Debug.Log(String.Join(" ", vec));
+	public static void printMatrix(List<List<float>> mat) => Debug.Log(String.Join("\n", mat.Select(k => String.Join(" ", k))));
 	#endregion
 }

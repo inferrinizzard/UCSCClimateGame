@@ -12,7 +12,8 @@ public class MathClient : MonoBehaviour
 		// float[] sol = RunTemp(new float[3] { 10, 10, 10, }, 1000);
 		// Debug.Log(String.Join(" ", sol));
 		// RunTempF();
-		ClimateMath.odeIce(new float[3] { 10, 10, 10, }, 1000);
+		float[] temp = new float[3] { 10, 10, 10 };
+		ClimateMath.odeIce(out temp);
 	}
 
 	// Update is called once per frame
