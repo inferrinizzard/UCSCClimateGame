@@ -1,3 +1,6 @@
+# Modification of Wagner and Eisenman's simple EBM to account for moist
+# processes, following Merlis and Henry (JCLI, 2018).
+#
 # Till Wagner's python version:
 #
 # Reference: "How Model Complexity Influences Sea Ice Stability",
@@ -37,55 +40,82 @@ a0 = 0.7  # ice-free co-albedo at equator
 a2 = 0.1  # ice=free co-albedo spatial dependence
 ai = 0.4  # co-albedo where there is sea ice
 F = 0  # radiative forcing (W m^-2)
+Lv = 2.5E6  # latent heat of vaporization (J kg^-1)
+cp = 1004.6  # heat capacity of air at constant pressure (J kg^-1 K^-1)
+Rh = 0.8  # relative humidity
+Ps = 1E5  # surface pressure (Pa)
 # -------------------------------------------------------------------------
 n = 3  # grid resolution (number of points between equator and pole)
 x = np.linspace(0, 1, n)
 dx = 1.0/(n-1)
 S = S0-S2*x**2  # insolation [WE15 eq. (3) with S_1 = 0]
 aw = a0-a2*x**2  # open water albedo
-j = 0
-# print(x)
-# print(x**2)
-# print(aw)
+
+
+def saturation_specific_humidity(temp, press):
+    """
+    We assume a single liquid-to-vapor phase transition with the parameter values 
+    of the Clausius–Clapeyron (CC) relation given in O’Gorman and Schneider (2008) 
+    to determine the saturation specific humidity qs(T).
+
+    """
+
+    es0 = 610.78  # saturation vapor pressure at t0 (Pa)
+    t0 = 273.16
+    Rv = 461.5
+    ep = 0.622  # ratio of gas constants of dry air and water vapor
+    temp = temp + 273.15  # convert to Kelvin
+    es = es0 * np.exp(-(Lv/Rv) * ((1/temp)-(1/t0)))
+    qs = ep * es / press
+    return qs
 
 # ODE with spatial finite differencing-------------------------------------
+
+
+j = 0
 
 
 def odefunc(T, t):
     global j
     alpha = aw*(T > 0)+ai*(T < 0)
     C = alpha*S-A+F
-    Tdot = np.zeros(x.shape)
+    hdot = np.zeros(x.shape)
+    qs = saturation_specific_humidity(T, Ps)
+    q = Rh * qs  # specific humidity
+    h = T + (Lv * q) / cp  # moist static energy in units of temperature
     # solve c_wdT/dt = D(1-x^2)d^
     for i in range(1, n-1):
-        Tdot[i] = (D/dx**2)*(1-x[i]**2)*(T[i+1]-2*T[i]+T[i-1]) - \
-            (D*x[i]/dx)*(T[i+1]-T[i-1])
+        hdot[i] = (D/dx**2)*(1-x[i]**2)*(h[i+1]-2*h[i]+h[i-1]) - \
+            (D*x[i]/dx)*(h[i+1]-h[i-1])
     # solve c_w dT/dt = D (1-x^2) d^2 T/dx^2 - 2 x D dT/dx + C - B T [cf. WE15 eq. (2)]
     # use central difference
-    Tdot[0] = D*2*(T[1]-T[0])/dx**2
-    Tdot[-1] = -D*2*x[-1]*(T[-1]-T[-2])/dx
-    f = (Tdot+C-B*T)/cw
-    # if(j < 3):
-    #     print(T)
-    #     print(t)
-    #     print(alpha)
-    #     print(C)
-    #     print(Tdot)
-    #     print(f)
-    #     print('\n')
-    #     j += 1
+    hdot[0] = D*2*(h[1]-h[0])/dx**2
+    hdot[-1] = -D*2*x[-1]*(h[-1]-h[-2])/dx
+    f = (hdot+C-B*T)/cw
+    print(h)
+    print(D)
+    print(x)
+    print(dx)
+    print(hdot)
+    # print(T)
+    # print(B)
+    # print(C)
+    # print(cw)
+    # print(f)
+    j = j+1
+    if(j == 3):
+        exit()
     return f
 
 
 T0 = 10*np.ones(x.shape)  # initial condition (constant temp. 10C everywhere)
 time = np.linspace(0.0, 30.0, 1000)  # time span in years
 sol = odeint(odefunc, T0, time)  # solve
-# print('\n')
 print(sol)
 
 exit()
 fig = plt.figure(1)
-fig.suptitle('EBM_simple_WE15')
+fig.suptitle('MEBM_simple')
 plt.subplot(121)
 plt.plot(time, sol)
 plt.xlabel('t (years)')
@@ -94,41 +124,3 @@ plt.subplot(122)
 plt.plot(x, sol[-1, :])
 plt.xlabel('x')
 plt.show()
-
-
-"""
-[0.  0.5 1. ]
-[0.   0.25 1.  ]
-[0.7   0.675 0.6  ]
-[10. 10. 10.]
-0.0
-[0.7   0.675 0.6  ]
-[101.  50. -85.]
-[ 0.  0. -0.]
-[  8.16326531   2.95918367 -10.81632653]
-
-
-[10.00002991 10.00001084  9.99996037]
-3.664182800878123e-06
-[0.7   0.675 0.6  ]
-[101.  50. -85.]
-[-9.15297908e-05 -1.48062897e-05  1.21142370e-04]
-[  8.16324956   2.95917984 -10.81630568]
-
-
-[10.00002991 10.00001084  9.99996037]
-3.664182800878123e-06
-[0.7   0.675 0.6  ]
-[101.  50. -85.]
-[-9.15295812e-05 -1.48062859e-05  1.21142153e-04]
-[  8.16324956   2.95917984 -10.81630568]
-
-
-[[ 10.          10.          10.        ]
- [ 10.24321632  10.08839368   9.67773874]
- [ 10.4826237   10.17585057   9.36053303]
- ...
- [ 25.48728235  15.59500469 -18.57015729]
- [ 25.48726333  15.59498563 -18.57017648]
- [ 25.48724444  15.5949667  -18.57019554]]
-"""

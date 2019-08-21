@@ -77,6 +77,8 @@ t = np.linspace(0, dur, dur*nt)
 
 I = np.identity(n)
 invMat = np.linalg.inv(I+dt/cw*(B*I-diffop))
+print(diffop)
+print(I+dt/cw*(B*I-diffop))
 print(invMat)
 
 # integration over time using implicit difference and

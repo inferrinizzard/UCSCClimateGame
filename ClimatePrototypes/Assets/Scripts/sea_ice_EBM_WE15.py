@@ -39,7 +39,7 @@ a0 = 0.7  # ice-free co-albedo at equator
 a2 = 0.1  # ice=free co-albedo spatial dependence
 ai = 0.4  # co-albedo where there is sea ice
 Fb = 4  # heat flux from ocean below (W m^-2)
-F = 0  # radiative forcing (W m^-2)
+F = 6  # radiative forcing (W m^-2)
 k = 2  # sea ice thermal conductivity (W m^-2 K^-1)
 Lf = 9.5  # sea ice latent heat of fusion (W yr m^-3)
 cg = 0.01*cw  # ghost layer heat capacity(W yr m^-2 K^-1)
@@ -49,10 +49,10 @@ tau = 1e-5  # ghost layer coupling timescale (yr)
 # nt=1e3 % # of timesteps per year (approx lower limit of stability)
 # dur=200 % # of years for the whole run
 # For a quicker computation, use the parameters: --------------------------
-n = 12
-nt = 1000
-# n = 4
-# nt = 5
+# n = 12
+# nt = 1000
+n = 4
+nt = 5
 dur = 30
 dt = 1/float(nt)
 # Spatial Grid -------------------------------------------------------------
@@ -74,6 +74,13 @@ kappa = (1+dt_tau)*np.identity(n)-dt*diffop/cg
 ty = np.arange(dt/2, 1+dt/2, dt)
 S = (np.tile(S0-S2*x**2, [nt, 1]) -
      np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
+print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T)
+# ^seasonal cycle
+print(np.tile(x, [nt, 1]))
+# ^change over lat
+print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
+print(S)
+exit()
 # Further definitions
 M = B+cg_tau
 aw = a0-a2*x**2  # open water albedo
@@ -110,13 +117,15 @@ for years in range(0, dur):
         # Implicit Euler on Tg
         Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
                              Tg+(dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
-    print('year %d complete' % (years))
+    # print('year %d complete' % (years))
 # -------------------------------------------------------------------------
 # output only converged, final year
 tfin = np.linspace(0, 1, 100)
 # reverse
 Efin = E100[:, -101:-1]
 Tfin = T100[:, -101:-1]
+
+print(np.mean(Tfin[:, :-12], axis=1))
 # ------------------------------------------------------------------------
 # WE15, Figure 2: Default Steady State Climatology ------------------------
 # ------------------------------------------------------------------------
@@ -132,6 +141,9 @@ for j in range(0, len(tfin)):
         xi[j] = x[ice[0]]
     else:
         xi[j] = max(x)
+
+print(np.mean(xi))
+exit(0)
 
 plt.figure(2)
 # plot enthalpy (Fig 2a)
