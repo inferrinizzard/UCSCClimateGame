@@ -67,6 +67,8 @@ def saturation_specific_humidity(temp, press):
     temp = temp + 273.15  # convert to Kelvin
     es = es0 * np.exp(-(Lv/Rv) * ((1/temp)-(1/t0)))
     qs = ep * es / press
+    # print(es)
+    # print(qs)
     return qs
 
 # ODE with spatial finite differencing-------------------------------------
@@ -76,13 +78,17 @@ j = 0
 
 
 def odefunc(T, t):
+    # print(T)
     global j
     alpha = aw*(T > 0)+ai*(T < 0)
     C = alpha*S-A+F
     hdot = np.zeros(x.shape)
     qs = saturation_specific_humidity(T, Ps)
+    # print(T)
     q = Rh * qs  # specific humidity
     h = T + (Lv * q) / cp  # moist static energy in units of temperature
+    # print(h)
+    # h = T  # moist static energy in units of temperature
     # solve c_wdT/dt = D(1-x^2)d^
     for i in range(1, n-1):
         hdot[i] = (D/dx**2)*(1-x[i]**2)*(h[i+1]-2*h[i]+h[i-1]) - \
@@ -92,24 +98,20 @@ def odefunc(T, t):
     hdot[0] = D*2*(h[1]-h[0])/dx**2
     hdot[-1] = -D*2*x[-1]*(h[-1]-h[-2])/dx
     f = (hdot+C-B*T)/cw
-    print(h)
-    print(D)
-    print(x)
-    print(dx)
-    print(hdot)
-    # print(T)
+    # print(hdot)
+    print(str(T)+" "+str(f) + " " + str(j))
     # print(B)
     # print(C)
     # print(cw)
-    # print(f)
     j = j+1
-    if(j == 3):
-        exit()
+    # if(j == 5):
+    #     exit()
     return f
 
 
 T0 = 10*np.ones(x.shape)  # initial condition (constant temp. 10C everywhere)
-time = np.linspace(0.0, 30.0, 1000)  # time span in years
+time = np.linspace(0.0, 30.0, 5)  # time span in years
+print(time)
 sol = odeint(odefunc, T0, time)  # solve
 print(sol)
 

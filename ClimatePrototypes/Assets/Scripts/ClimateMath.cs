@@ -60,7 +60,7 @@ public static class ClimateMath
 
 	#region ebm
 
-	struct ebmv
+	public struct ebmv
 	{
 		public static float A = 193;
 		public static readonly float B = 2.1f;
@@ -130,7 +130,7 @@ public static class ClimateMath
 
 	#endregion
 
-	struct ebm
+	public struct ebm
 	{
 		public static float dx = 1f / (ebmv.bands - 1f);
 		public static List<float> x = new List<float>(new float[ebmv.bands]).Select((n, k) => k * dx).ToList();
@@ -155,7 +155,7 @@ public static class ClimateMath
 		return f;
 	}
 
-	struct ebmf
+	public struct ebmf
 	{
 		public static int nt = 5;
 		public static float dt = 1f / nt;
@@ -203,7 +203,7 @@ public static class ClimateMath
 		//temp = dot invMat, T0
 	}
 
-	struct ebmI
+	public struct ebmI
 	{
 		public static readonly float S1 = 338;
 		public static readonly float Fb = 4;
@@ -314,8 +314,10 @@ public static class ClimateMath
 		float t0 = 273.16f;
 		float Rv = 461.5f;
 		float ep = 0.622f;
-		float[] es = temp.Select(t => Mathf.Exp(-(ebmv.Lv / Rv) * (1 / (t + 273.15f) - 1 / t0)) * es0).ToArray();
+		float[] es = temp.Select(t => Mathf.Exp(-(ebmv.Lv / Rv) * ((1 / (t + 273.15f)) - (1 / t0))) * es0).ToArray();
 		float[] qs = es.Select(e => ep * e / press).ToArray();
+		// printVector(es);
+		// printVector(qs);
 		return qs;
 	}
 
@@ -330,16 +332,23 @@ public static class ClimateMath
 		float[] qs = humidity(temp, ebmv.Ps);
 		float[] q = qs.Select(m => m * ebmv.Rh).ToArray();
 		float[] h = temp.Zip(q, (T, m) => T + m * ebmv.Lv / ebmv.cp).ToArray();
+		// printVector(h);
+
 		for (int i = 1; i < ebmv.bands - 1; i++)
+		{
+			// Debug.Log(i);
+			// Debug.Log(x.Count);
+			// Debug.Log(h.Length);
+			// Debug.Log(Hdot.Length);
 			Hdot[i] = (ebmv.D / dx / dx) * (1 - x[i] * x[i]) * (h[i + 1] - 2 * h[i] + h[i - 1]) - (ebmv.D * x[i] / dx) * (h[i + 1] - h[i - 1]);
+		}
 		Hdot[0] = ebmv.D * 2 * (h[1] - h[0]) / dx / dx;
 		Hdot[Hdot.Length - 1] = -ebmv.D * 2 * x[x.Count - 1] * (h[h.Length - 1] - h[h.Length - 2]) / dx;
-		float[] f = Hdot.Zip(C, (a, b) => a + b).Zip(temp, (float a, float b) => (a - b * ebmv.B) / ebmv.cw).ToArray();
+		float[] f = Hdot.Zip(C, (a, b) => a + b).Zip(temp.Select(n => ebmv.B * n), (float a, float b) => (a - b) / ebmv.cw).ToArray();
 		// printVector(h);
-		// Debug.Log(ebmv.D);
-		// printVector(x);
-		// Debug.Log(dx);
 		// printVector(Hdot);
+		// printVector(temp);
+		// printVector(f);
 		return f;
 	}
 

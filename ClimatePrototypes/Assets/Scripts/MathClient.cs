@@ -9,9 +9,14 @@ public class MathClient : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		float[] sol = RunTempH(new float[3] { 10, 10, 10, }, 1000);
-		Debug.Log(String.Join(" ", sol));
-		RunTempF();
+		EBM.printTest();
+		// float[] sol = RunTemp((new float[ClimateMath.ebmv.bands]).Select(x => 10f).ToArray(), 5, true);
+		// Debug.Log(String.Join(" ", sol));
+		// sol = RunTemp((new float[EBM.bands]).Select(x => 10f).ToArray(), 5, true, true);
+
+		// Debug.Log(String.Join(" ", EBM.simple.odeint((new float[EBM.bands]).Select(x => 10f).ToArray(), 5, true)));
+
+		// RunTempF();
 		// float[] temp = new float[3] { 10, 10, 10 };
 		// ClimateMath.odeIce(out temp);
 	}
@@ -21,36 +26,25 @@ public class MathClient : MonoBehaviour
 	{
 	}
 
-	float[] RunTemp(float[] temp, int steps)
+	float[] RunTemp(float[] temp, int steps, bool useMoisture = false, bool ebm = false)
 	{
 		float[] time = new float[steps];
 		for (int i = 0; i < steps; i++)
 			time[i] = i * 30f / steps;
 		float[] t = temp;
-		Debug.Log("t: " + String.Join(" ", t));
+		// Debug.Log("t: " + String.Join(" ", t));
 		for (int i = 0; i < steps; i++)
 		{
-			t = t.Zip(ClimateMath.ode(t, time[i]), (a, b) => a + b / (float)steps * (10)).ToArray();
-			Debug.Log("t" + (i + 1) + ": " + String.Join(" ", t));
+			if (!ebm)
+				if (useMoisture)
+					t = t.Zip(ClimateMath.odeMoist(t, time[i]), (a, b) => a + b / (float)steps * (10)).ToArray();
+				else
+					t = t.Zip(ClimateMath.ode(t, time[i]), (a, b) => a + b / (float)steps * (10)).ToArray();
+			// else
+			// 	t = t.Zip(EBM.simple.odefunc(t, time[i], useMoisture), (a, b) => a + b / (float)steps * (10)).ToArray();
+			// Debug.Log("t" + (i + 1) + ": " + String.Join(" ", t));
 		}
 		return t;
-	}
-
-	float[] RunTempH(float[] temp, int steps)
-	{
-		float[] time = new float[steps];
-		for (int i = 0; i < steps; i++)
-			time[i] = i * 30f / steps;
-		float[] h = temp;
-		Debug.Log("h: " + String.Join(" ", h));
-		for (int i = 0; i < steps; i++)
-		{
-			h = h.Zip(ClimateMath.odeMoist(h, time[i]), (a, b) => a + b / (float)steps * (10)).ToArray();
-			// Debug.Log("h" + (i + 1) + ": " + String.Join(" ", h));
-			if (i == 3)
-				return new float[0];
-		}
-		return h;
 	}
 
 	float[] RunTempF()

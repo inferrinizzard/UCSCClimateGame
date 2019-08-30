@@ -65,15 +65,14 @@ def odefunc(T, t):
     Tdot[0] = D*2*(T[1]-T[0])/dx**2
     Tdot[-1] = -D*2*x[-1]*(T[-1]-T[-2])/dx
     f = (Tdot+C-B*T)/cw
-    # if(j < 3):
-    #     print(T)
-    #     print(t)
-    #     print(alpha)
-    #     print(C)
-    #     print(Tdot)
-    #     print(f)
-    #     print('\n')
-    #     j += 1
+    if(j < 3):
+        print(T)
+        #     print(t)
+        #     print(alpha)
+        #     print(C)
+        # print(Tdot)
+        print(f)
+        j += 1
     return f
 
 

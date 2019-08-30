@@ -44,27 +44,18 @@ dt = 1/nt
 # Spatial Grid ---------------------------------------------------------
 dx = 1.0/n  # grid box width
 x = np.arange(dx/2, 1+dx/2, dx)  # native grid
-# print(x)
 xb = np.arange(dx, 1, dx)
-# print(xb)
 # Diffusion Operator (WE15, Appendix A) -----------------------------------
 lam = D/dx**2*(1-xb**2)
-# print(lam)
 L1 = np.append(0, -lam)
 L2 = np.append(-lam, 0)
 L3 = -L1-L2
-# print(L1)
-# print(L2)
-# print(L3)
-d3 = - np.diag(L3[:-1])
-# print(d3)
-d2 = - np.diag(L2[:n-1], 1)
-# print(d2)
-d1 = - np.diag(L1[1:n], -1)
-# print(d1)
+d3 = np.diag(L3[:-1] if n == 3 or n == 6 else L3)
+d2 = np.diag(L2[:n-1], 1)
+d1 = np.diag(L1[1:n], -1)
 
-diffop = d3+d2+d1
-# print(diffop)
+diffop = -d3-d2-d1
+# diffop = - np.diag(L3) - np.diag(L2[:n-1], 1) - np.diag(L1[1:n], -1)
 
 S = S0-S2*x**2  # insolation [WE15 eq. (3) with S_1 = 0]
 aw = a0-a2*x**2  # open water albedo
@@ -73,13 +64,9 @@ T = 10*np.ones(x.shape)  # initial condition (constant temp. 10C everywhere)
 allT = np.zeros([dur*nt, n])
 # print(allT)
 t = np.linspace(0, dur, dur*nt)
-# print(t)
 
 I = np.identity(n)
 invMat = np.linalg.inv(I+dt/cw*(B*I-diffop))
-print(diffop)
-print(I+dt/cw*(B*I-diffop))
-print(invMat)
 
 # integration over time using implicit difference and
 # over x using central difference (through diffop)
