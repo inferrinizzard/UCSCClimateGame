@@ -62,7 +62,6 @@ aw = a0-a2*x**2  # open water albedo
 
 T = 10*np.ones(x.shape)  # initial condition (constant temp. 10C everywhere)
 allT = np.zeros([dur*nt, n])
-# print(allT)
 t = np.linspace(0, dur, dur*nt)
 
 I = np.identity(n)
@@ -81,6 +80,9 @@ for i in range(0, int(dur*nt)):
     # -> T(n+1) = inv[1+dt/cw*(1+B-diff_op)]*(T(n)+dt/cw*C)
     T = np.dot(invMat, T0)
     allT[i, :] = T
+
+print(allT)
+exit()
 
 fig = plt.figure(1)
 fig.suptitle('EBM_fast_WE15')

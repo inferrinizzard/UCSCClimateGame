@@ -7,7 +7,7 @@ using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 using Extreme.Mathematics.Calculus.OrdinaryDifferentialEquations;
 
-public static class EBM
+public class EBM
 {
 	public static float A = 193;
 	public static readonly float B = 2.1f;
@@ -127,43 +127,54 @@ public static class EBM
 		public static readonly int dur = 100;
 		public static readonly float dt = 1f / nt;
 		public static readonly float dx = 1f / bands;
-		public static Vector<float> x = Vector<float>.Build.Dense(bands, i => dx / 2 + i++ * dx);
-		public static Vector<float> xb = Vector<float>.Build.Dense(bands, i => ++i * dx);
+		public static readonly Vector<float> x = Vector<float>.Build.Dense(bands, i => dx / 2 + i++ * dx);
+		public static readonly Vector<float> xb = Vector<float>.Build.Dense(bands, i => ++i * dx);
 
-		public static Vector<float> lam = D / dx / dx * (1 - xb.PointwisePower(2));
-		public static Vector<float> L1 = Vector<float>.Build.Dense(bands, i => i == 0 ? 0 : -lam[i++ - 1]);
-		public static Vector<float> L2 = Vector<float>.Build.Dense(bands, i => i >= bands ? 0 : -lam[i++]);
-		public static Vector<float> L3 = -L1 - L2;
-		public static Matrix<float> d3 = Matrix<float>.Build.DiagonalOfDiagonalVector(L3);
-		public static Matrix<float> d2 = new Func<Matrix<float>>(() =>
+		public static readonly Vector<float> lam = D / dx / dx * (1 - xb.PointwisePower(2));
+		public static readonly Vector<float> L1 = Vector<float>.Build.Dense(bands, i => i == 0 ? 0 : -lam[i++ - 1]);
+		public static readonly Vector<float> L2 = Vector<float>.Build.Dense(bands, i => i >= bands ? 0 : -lam[i++]);
+		public static readonly Vector<float> L3 = -L1 - L2;
+		public static readonly Matrix<float> d3 = Matrix<float>.Build.DiagonalOfDiagonalVector(L3);
+		public static readonly Matrix<float> d2 = new Func<Matrix<float>>(() =>
 		{
 			Matrix<float> mat = Matrix<float>.Build.Dense(bands, bands, 0);
 			mat.SetSubMatrix(0, 1, Matrix<float>.Build.DiagonalOfDiagonalVector(L2.SubVector(0, bands - 1)));
 			return mat;
 		})();
-		public static Matrix<float> d1 = new Func<Matrix<float>>(() =>
+		public static readonly Matrix<float> d1 = new Func<Matrix<float>>(() =>
 		{
 			Matrix<float> mat = Matrix<float>.Build.Dense(bands, bands, 0);
 			mat.SetSubMatrix(1, 0, Matrix<float>.Build.DiagonalOfDiagonalVector(L1.SubVector(1, bands - 1)));
 			return mat;
 		})();
 
-		public static Matrix<float> diffop = -d3 - d2 - d1;
-		public static Vector<float> simpleS = S0 - S2 * x.PointwisePower(2);
-		public static Vector<float> aw = a0 - a2 * x.PointwisePower(2);
-		public static Vector<float> T = Vector<float>.Build.Dense(bands, 10);
-		public static Matrix<float> allT = Matrix<float>.Build.Dense(bands, dur * nt, 0);
-		public static Vector<float> t = Vector<float>.Build.Dense(dur * nt, i => i++ / nt);
+		public static readonly Matrix<float> diffop = -d3 - d2 - d1;
+		public static readonly Vector<float> simpleS = S0 - S2 * x.PointwisePower(2);
+		public static readonly Vector<float> aw = a0 - a2 * x.PointwisePower(2);
+		public static readonly Vector<float> t = Vector<float>.Build.Dense(dur * nt, i => i++ / nt);
 		public static readonly Matrix<float> I = Matrix<float>.Build.DenseIdentity(bands);
-		public static Matrix<float> invMat = (I + dt / cw * (B * I - diffop)).Inverse();
+		public static readonly Matrix<float> invMat = (I + dt / cw * (B * I - diffop)).Inverse();
+
+		public static Matrix<float> integrate(int num = 0)
+		{
+			num = num == 0 ? dur * nt : num;
+			Vector<float> T = Vector<float>.Build.Dense(bands, 10);
+			Matrix<float> allT = Matrix<float>.Build.Dense(dur * nt, bands, 0);
+			for (int i = 0; i < num; i++)
+			{
+				Vector<float> alpha = T.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x);
+				Vector<float> C = alpha.PointwiseMultiply(simpleS) - A + F;
+				Vector<float> T0 = T + dt / cw * C;
+				T = invMat * T0;
+				allT.SetRow(i, T);
+			}
+			return allT;
+		}
 	}
 
 	public static void printTest()
 	{
-		Debug.Log(fast.diffop);
-		Debug.Log((fast.I + fast.dt / cw * (B * fast.I - fast.diffop)));
-
-		Debug.Log(fast.invMat);
+		Debug.Log(fast.integrate());
 	}
 
 }
