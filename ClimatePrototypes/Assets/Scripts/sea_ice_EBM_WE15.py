@@ -74,13 +74,12 @@ kappa = (1+dt_tau)*np.identity(n)-dt*diffop/cg
 ty = np.arange(dt/2, 1+dt/2, dt)
 S = (np.tile(S0-S2*x**2, [nt, 1]) -
      np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
-print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T)
+# print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T)
 # ^seasonal cycle
-print(np.tile(x, [nt, 1]))
+# print(np.tile(x, [nt, 1]))
 # ^change over lat
-print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
-print(S)
-exit()
+# print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
+# print(S)
 # Further definitions
 M = B+cg_tau
 aw = a0-a2*x**2  # open water albedo
@@ -94,6 +93,7 @@ m = -1
 T = 7.5+20*(1-2*x**2)
 Tg = T
 E = cw*T
+
 
 # Integration (see WE15_NumericIntegration.pdf)----------------------------
 # Loop over Years ---------------------------------------------------------
@@ -117,6 +117,8 @@ for years in range(0, dur):
         # Implicit Euler on Tg
         Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
                              Tg+(dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
+        print(np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)))
+    exit()
     # print('year %d complete' % (years))
 # -------------------------------------------------------------------------
 # output only converged, final year

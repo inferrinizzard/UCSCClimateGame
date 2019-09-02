@@ -15,13 +15,14 @@ public class EBM
 	public static readonly float D = 0.6f;
 
 	public static readonly float S0 = 420;
+	public static readonly float S1 = 338;
 	public static readonly float S2 = 240;
 	public static readonly float a0 = 0.7f;
 	public static readonly float a2 = 0.1f;
 	public static readonly float aI = 0.4f;
 	public static readonly float F = 0;
 
-	public static readonly int bands = 3;
+	public static readonly int bands = 4;
 
 	public static readonly float Lv = 2500000;
 	public static readonly float cp = 1004.6f;
@@ -170,11 +171,72 @@ public class EBM
 			}
 			return allT;
 		}
+
+		public static readonly int Fb = 4;
+		public static readonly int k = 2;
+		public static readonly float Lf = 9.5f;
+		public static readonly float cg = cw / 100f;
+		public static readonly float tau = 0.00001f;
+		public static readonly float cg_tau = cg / tau;
+		public static readonly float dt_tau = dt / tau;
+		public static readonly float dc = dt_tau * cg_tau;
+		public static readonly Matrix<float> kappa = (1 - dt_tau) * I - dt * diffop / cg;
+
+		public static readonly Vector<float> ty = Vector<float>.Build.Dense(bands + 1, i => dt / 2 + i++ * dt);
+		public static readonly Matrix<float> S =
+		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => simpleS).ToArray()) -
+		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt - 1].Select(v => S1 * (ty * 2 * Mathf.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
+		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => x).ToArray()));
+		//could optimise with indices if needed
+		public static readonly float M = B + cg_tau;
+		public static readonly float kLf = k * Lf;
+
+		public static Matrix<float>[] integrateM(int n = 0, int d = 0)
+		{
+			n = n == 0 ? nt : n;
+			d = d == 0 ? dur : d;
+			Matrix<float> T100 = Matrix<float>.Build.Dense(bands, dur * nt, 0);
+			Matrix<float> E100 = Matrix<float>.Build.Dense(bands, dur * nt, 0);
+			Vector<float> T = 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
+			Vector<float> Tg = Vector<float>.Build.DenseOfVector(T);
+			Vector<float> E = Tg * cw;
+			int p = 1, m = 1;
+			for (int i = 0; i < d; i++)
+				for (int j = 0; j < n; j++)
+				{
+					m++;
+					if ((p + 1) * 10 == m)
+					{
+						p++;
+						E100.SetColumn(p, E);
+						T100.SetColumn(p, T);
+					}
+					Vector<float> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x);
+					Vector<float> C = alpha.PointwiseMultiply(S.Row(j)) - A + cg_tau * Tg;
+					Vector<float> T0 = C / (M - kLf / E);
+					T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0));
+					E = E + dt * (C - M * T + Fb + F);
+					Tg = (kappa - Matrix<float>.Build.DiagonalOfDiagonalVector(
+						dc / Sign0(Less, Sign0(Less, E, T0), M - kLf / E)
+					)).Solve(Tg + dt_tau * (
+						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A) / Sign0(Less, Sign0(Less, E, T0), M - kLf / E)
+					));
+				}
+			return null;
+		}
 	}
 
 	public static void printTest()
 	{
-		Debug.Log(fast.integrate());
+		Debug.Log(fast.S);
+		Debug.Log(fast.aw);
+		Debug.Log(Sign0(Great, fast.aw));
 	}
+
+	static Func<double, double, bool> Less = (a, b) => a < b;
+	static Func<double, double, bool> Great = (a, b) => a > b;
+	static Func<double, double, bool> LessOrE = (a, b) => a <= b;
+	static Func<double, double, bool> GreatOrE = (a, b) => a >= b;
+	public static Vector<float> Sign0(Func<double, double, bool> op, Vector<float> vec, Vector<float> result = null) => (result == null ? vec : result).PointwiseMultiply(vec.Map(x => op(x, 0) ? 1f : 0));
 
 }
