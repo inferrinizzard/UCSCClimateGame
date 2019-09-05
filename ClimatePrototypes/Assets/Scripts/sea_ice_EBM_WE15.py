@@ -53,6 +53,7 @@ tau = 1e-5  # ghost layer coupling timescale (yr)
 # nt = 1000
 n = 4
 nt = 5
+# dur = 30
 dur = 30
 dt = 1/float(nt)
 # Spatial Grid -------------------------------------------------------------
@@ -74,12 +75,12 @@ kappa = (1+dt_tau)*np.identity(n)-dt*diffop/cg
 ty = np.arange(dt/2, 1+dt/2, dt)
 S = (np.tile(S0-S2*x**2, [nt, 1]) -
      np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
-# print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T)
+print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T)
 # ^seasonal cycle
-# print(np.tile(x, [nt, 1]))
+print(np.tile(x, [nt, 1]))
 # ^change over lat
-# print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
-# print(S)
+print(np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
+print(S)
 # Further definitions
 M = B+cg_tau
 aw = a0-a2*x**2  # open water albedo
@@ -117,8 +118,6 @@ for years in range(0, dur):
         # Implicit Euler on Tg
         Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
                              Tg+(dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
-        print(np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)))
-    exit()
     # print('year %d complete' % (years))
 # -------------------------------------------------------------------------
 # output only converged, final year
@@ -127,7 +126,10 @@ tfin = np.linspace(0, 1, 100)
 Efin = E100[:, -101:-1]
 Tfin = T100[:, -101:-1]
 
-print(np.mean(Tfin[:, :-12], axis=1))
+print(Tfin)
+print(Efin)
+
+# print(np.mean(Tfin[:, :-12], axis=1))
 # ------------------------------------------------------------------------
 # WE15, Figure 2: Default Steady State Climatology ------------------------
 # ------------------------------------------------------------------------
@@ -144,8 +146,8 @@ for j in range(0, len(tfin)):
     else:
         xi[j] = max(x)
 
-print(np.mean(xi))
-exit(0)
+# print(np.mean(xi))
+exit()
 
 plt.figure(2)
 # plot enthalpy (Fig 2a)

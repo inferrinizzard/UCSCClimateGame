@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using Extreme.Mathematics.Calculus.OrdinaryDifferentialEquations;
 
@@ -20,7 +21,7 @@ public class EBM
 	public static readonly float a0 = 0.7f;
 	public static readonly float a2 = 0.1f;
 	public static readonly float aI = 0.4f;
-	public static readonly float F = 0;
+	public static readonly float F = 6;
 
 	public static readonly int bands = 4;
 
@@ -125,7 +126,7 @@ public class EBM
 	public static class fast
 	{
 		public static readonly int nt = 5;
-		public static readonly int dur = 100;
+		public static readonly int dur = 30;
 		public static readonly float dt = 1f / nt;
 		public static readonly float dx = 1f / bands;
 		public static readonly Vector<float> x = Vector<float>.Build.Dense(bands, i => dx / 2 + i++ * dx);
@@ -180,12 +181,11 @@ public class EBM
 		public static readonly float cg_tau = cg / tau;
 		public static readonly float dt_tau = dt / tau;
 		public static readonly float dc = dt_tau * cg_tau;
-		public static readonly Matrix<float> kappa = (1 - dt_tau) * I - dt * diffop / cg;
-
-		public static readonly Vector<float> ty = Vector<float>.Build.Dense(bands + 1, i => dt / 2 + i++ * dt);
+		public static readonly Matrix<float> kappa = (1 + dt_tau) * I - dt * diffop / cg;
+		public static readonly Vector<float> ty = Vector<float>.Build.Dense(nt, i => dt / 2 + i++ * dt);
 		public static readonly Matrix<float> S =
 		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => simpleS).ToArray()) -
-		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt - 1].Select(v => S1 * (ty * 2 * Mathf.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
+		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[bands].Select(v => S1 * (ty * 2 * Mathf.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
 		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => x).ToArray()));
 		//could optimise with indices if needed
 		public static readonly float M = B + cg_tau;
@@ -195,12 +195,12 @@ public class EBM
 		{
 			n = n == 0 ? nt : n;
 			d = d == 0 ? dur : d;
-			Matrix<float> T100 = Matrix<float>.Build.Dense(bands, dur * nt, 0);
-			Matrix<float> E100 = Matrix<float>.Build.Dense(bands, dur * nt, 0);
+			Matrix<float> T100 = Matrix<float>.Build.Dense(bands, dur * 100, 0);
+			Matrix<float> E100 = Matrix<float>.Build.Dense(bands, dur * 100, 0);
 			Vector<float> T = 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
 			Vector<float> Tg = Vector<float>.Build.DenseOfVector(T);
 			Vector<float> E = Tg * cw;
-			int p = 1, m = 1;
+			int p = -1, m = -1;
 			for (int i = 0; i < d; i++)
 				for (int j = 0; j < n; j++)
 				{
@@ -217,20 +217,30 @@ public class EBM
 					T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0));
 					E = E + dt * (C - M * T + Fb + F);
 					Tg = (kappa - Matrix<float>.Build.DiagonalOfDiagonalVector(
-						dc / Sign0(Less, Sign0(Less, E, T0), M - kLf / E)
+						Sign0(Less, Sign0(Less, E, T0), dc / (M - kLf / E))
 					)).Solve(Tg + dt_tau * (
-						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A) / Sign0(Less, Sign0(Less, E, T0), M - kLf / E)
+						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A).Map2((a, b) => b != 0 ? a / b : 0, Sign0(Less, Sign0(Less, E, T0), M - kLf / E))
 					));
 				}
-			return null;
+			// Permutation reverse = new Permutation(new int[fast.dur * fast.nt].Select((x, k) => fast.dur * fast.nt - k - 1).ToArray());
+			// T100.PermuteRows(reverse);
+			// E100.PermuteRows(reverse);
+			return new Matrix<float>[] { T100, E100 };
 		}
 	}
 
 	public static void printTest()
 	{
-		Debug.Log(fast.S);
-		Debug.Log(fast.aw);
-		Debug.Log(Sign0(Great, fast.aw));
+
+		Matrix<float>[] TE100 = fast.integrateM();
+		Debug.Log(TE100[0]);
+		Debug.Log(TE100[1]);
+		// Permutation reverse = new Permutation(new int[fast.dur * fast.nt].Select((x, k) => fast.dur * fast.nt - k - 1).ToArray());
+		// T100.PermuteRows(reverse);
+		// E100.PermuteRows(reverse);
+		// Debug.Log(fast.S);
+		// Debug.Log(fast.aw);
+		// Debug.Log(Sign0(Great, fast.aw));
 	}
 
 	static Func<double, double, bool> Less = (a, b) => a < b;
@@ -240,3 +250,6 @@ public class EBM
 	public static Vector<float> Sign0(Func<double, double, bool> op, Vector<float> vec, Vector<float> result = null) => (result == null ? vec : result).PointwiseMultiply(vec.Map(x => op(x, 0) ? 1f : 0));
 
 }
+
+// public sealed class Lambda<T> { public static Func<T, T> Cast = x => x; }
+// cast lambda delegate
