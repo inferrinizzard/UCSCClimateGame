@@ -23,12 +23,26 @@ public class EBM
 	public static readonly float aI = 0.4f;
 	public static readonly float F = 6;
 
-	public static readonly int bands = 4;
+	public static readonly int bands = 6;
 
 	public static readonly float Lv = 2500000;
 	public static readonly float cp = 1004.6f;
 	public static readonly float Rh = 0.8f;
 	public static readonly float Ps = 100000;
+
+	public static Vector<float> humidity(float[] temp, float press) => humidity(Vector<float>.Build.Dense(temp), press);
+	public static Vector<float> humidity(Vector<float> temp, float press)
+	{
+		float es0 = 610.78f;
+		float t0 = 273.16f;
+		float Rv = 461.5f;
+		float ep = 0.622f;
+		Vector<float> es = es0 * (-Lv / Rv * (1 / (temp + 273.15f) - 1 / t0)).PointwiseExp();
+		Vector<float> qs = ep * es / press;
+		// Debug.Log(es);
+		// Debug.Log(qs);
+		return qs;
+	}
 
 	public static class simple
 	{
@@ -42,12 +56,15 @@ public class EBM
 		{
 			return Extreme.Mathematics.Vector.Create<double>(odefunc(Vector<float>.Build.DenseOfEnumerable(y.Select(n => (float)n)), (float)t).Select(n => (double)n).ToArray());
 		}
+		public static Vector<float> odefunc(float[] temp, float t, bool moist = false) =>
+			 odefunc(Vector<float>.Build.Dense(temp), t, moist);
 
 		public static Vector<float> odefunc(Vector<float> temp, float t, bool moist = false)
 		{
 			Vector<float> T = Vector<float>.Build.DenseOfVector(temp);
 
 			Vector<float> alpha = T.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x);
+
 			Vector<float> C = alpha.PointwiseMultiply(simpleS) - A + F;
 
 			if (moist)
@@ -68,18 +85,6 @@ public class EBM
 			Vector<float> f = (Tdot + C - B * temp) / cw;
 			// Debug.Log(String.Join(" ", f));
 			return f;
-		}
-		public static Vector<float> humidity(Vector<float> temp, float press)
-		{
-			float es0 = 610.78f;
-			float t0 = 273.16f;
-			float Rv = 461.5f;
-			float ep = 0.622f;
-			Vector<float> es = es0 * (-Lv / Rv * (1 / (temp + 273.15f) - 1 / t0)).PointwiseExp();
-			Vector<float> qs = ep * es / press;
-			// Debug.Log(es);
-			// Debug.Log(qs);
-			return qs;
 		}
 
 		//figure out odeint, it's kinda right at 100* steps
@@ -125,7 +130,7 @@ public class EBM
 
 	public static class fast
 	{
-		public static readonly int nt = 5;
+		public static readonly int nt = 10;
 		public static readonly int dur = 30;
 		public static readonly float dt = 1f / nt;
 		public static readonly float dx = 1f / bands;
@@ -189,7 +194,8 @@ public class EBM
 		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => x).ToArray()));
 		//could optimise with indices if needed
 		public static readonly float M = B + cg_tau;
-		public static readonly float kLf = k * Lf;
+		public static readonly float gms_scale = 1.06f;
+		public static readonly float sigma = .3f;
 
 		public static Matrix<float>[] integrateM(int n = 0, int d = 0)
 		{
@@ -202,6 +208,7 @@ public class EBM
 			Vector<float> E = Tg * cw;
 			int p = -1, m = -1;
 			for (int i = 0; i < d; i++)
+			{
 				for (int j = 0; j < n; j++)
 				{
 					m++;
@@ -213,19 +220,34 @@ public class EBM
 					}
 					Vector<float> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x);
 					Vector<float> C = alpha.PointwiseMultiply(S.Row(j)) - A + cg_tau * Tg;
-					Vector<float> T0 = C / (M - kLf / E);
+					Vector<float> T0 = C / (M - k * Lf / E);
 					T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0));
 					E = E + dt * (C - M * T + Fb + F);
+					Vector<float> q = Rh * humidity(Tg, Ps);
+					Debug.Log(q);
+					Vector<float> lht = dt * (diffop * (Lv * q / cp));
+					Debug.Log(lht);
 					Tg = (kappa - Matrix<float>.Build.DiagonalOfDiagonalVector(
-						Sign0(Less, Sign0(Less, E, T0), dc / (M - kLf / E))
-					)).Solve(Tg + dt_tau * (
-						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A).Map2((a, b) => b != 0 ? a / b : 0, Sign0(Less, Sign0(Less, E, T0), M - kLf / E))
+						Sign0(Less, Sign0(Less, E, T0), dc / (M - k * Lf / E))
+					)).Solve(Tg + lht + dt_tau * (
+						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A).Map2((a, b) => b != 0 ? a / b : 0, Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E))
 					));
+					Debug.Log(Tg);
+					return null;
+					// Debug.Log(Tg);
 				}
+			}
 			// Permutation reverse = new Permutation(new int[fast.dur * fast.nt].Select((x, k) => fast.dur * fast.nt - k - 1).ToArray());
 			// T100.PermuteRows(reverse);
 			// E100.PermuteRows(reverse);
 			return new Matrix<float>[] { T100, E100 };
+		}
+
+		public static Matrix<float>[] precip(Matrix<float>[] TEfin)
+		{
+			float[][] TfinArr = TEfin[0].ToRowArrays();
+			Matrix<float> qfin = Matrix<float>.Build.DenseOfRowVectors(TfinArr.Select(r => humidity(r, Ps)));
+			Matrix<float> hfin = TEfin[0] + Lv * q / cp;
 		}
 	}
 
@@ -233,11 +255,13 @@ public class EBM
 	{
 
 		Matrix<float>[] TE100 = fast.integrateM();
-		Debug.Log(TE100[0]);
-		Debug.Log(TE100[1]);
+		// Debug.Log(TE100[0]);
+		// Debug.Log(TE100[1]);
 		// Permutation reverse = new Permutation(new int[fast.dur * fast.nt].Select((x, k) => fast.dur * fast.nt - k - 1).ToArray());
 		// T100.PermuteRows(reverse);
 		// E100.PermuteRows(reverse);
+
+		// simple.odefunc(new float[bands].Select(x => 10f).ToArray(), 5, true);
 		// Debug.Log(fast.S);
 		// Debug.Log(fast.aw);
 		// Debug.Log(Sign0(Great, fast.aw));

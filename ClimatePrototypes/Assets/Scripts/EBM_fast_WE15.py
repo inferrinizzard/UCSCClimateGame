@@ -66,6 +66,7 @@ t = np.linspace(0, dur, dur*nt)
 
 I = np.identity(n)
 invMat = np.linalg.inv(I+dt/cw*(B*I-diffop))
+# print(I+dt/cw*(B*I-diffop))
 
 # integration over time using implicit difference and
 # over x using central difference (through diffop)
@@ -73,7 +74,13 @@ invMat = np.linalg.inv(I+dt/cw*(B*I-diffop))
 for i in range(0, int(dur*nt)):
     a = aw*(T > 0)+ai*(T < 0)  # WE15, eq.4
     C = a*S-A+F
+    print(np.dot(diffop , T))
+    print((diffop @ T))
+    # print(invMat)
+    # print(C)
     T0 = T+dt/cw*C
+    # print(T0)
+    # h0 = h + dt/cw*C
     # Governing equation [cf. WE15, eq. (2)]:
     # T(n+1) = T(n) + dt*(dT(n+1)/dt), with c_w*dT/dt=(C-B*T+diffop*T)
     # -> T(n+1) = T(n) + dt/cw*[C-B*T(n+1)+diff_op*T(n+1)]
@@ -82,7 +89,6 @@ for i in range(0, int(dur*nt)):
     allT[i, :] = T
 
 print(allT)
-exit()
 
 fig = plt.figure(1)
 fig.suptitle('EBM_fast_WE15')
