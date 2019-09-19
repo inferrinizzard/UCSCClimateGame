@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-
+using Extreme.Mathematics.Calculus.OrdinaryDifferentialEquations;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
-using Extreme.Mathematics.Calculus.OrdinaryDifferentialEquations;
+using UnityEngine;
 
 public class EBM
 {
@@ -57,7 +56,7 @@ public class EBM
 			return Extreme.Mathematics.Vector.Create<double>(odefunc(Vector<float>.Build.DenseOfEnumerable(y.Select(n => (float)n)), (float)t).Select(n => (double)n).ToArray());
 		}
 		public static Vector<float> odefunc(float[] temp, float t, bool moist = false) =>
-			 odefunc(Vector<float>.Build.Dense(temp), t, moist);
+			odefunc(Vector<float>.Build.Dense(temp), t, moist);
 
 		public static Vector<float> odefunc(Vector<float> temp, float t, bool moist = false)
 		{
@@ -130,7 +129,7 @@ public class EBM
 
 	public static class fast
 	{
-		public static readonly int nt = 10;
+		public static readonly int nt = 1000;
 		public static readonly int dur = 30;
 		public static readonly float dt = 1f / nt;
 		public static readonly float dx = 1f / bands;
@@ -189,9 +188,9 @@ public class EBM
 		public static readonly Matrix<float> kappa = (1 + dt_tau) * I - dt * diffop / cg;
 		public static readonly Vector<float> ty = Vector<float>.Build.Dense(nt, i => dt / 2 + i++ * dt);
 		public static readonly Matrix<float> S =
-		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => simpleS).ToArray()) -
-		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[bands].Select(v => S1 * (ty * 2 * Mathf.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
-		Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => x).ToArray()));
+			Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => simpleS).ToArray()) -
+			Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[bands].Select(v => S1 * (ty * 2 * Mathf.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
+				Matrix<float>.Build.DenseOfRowVectors(new Vector<float>[nt].Select(v => x).ToArray()));
 		//could optimise with indices if needed
 		public static readonly float M = B + cg_tau;
 		public static readonly float gms_scale = 1.06f;
@@ -207,6 +206,7 @@ public class EBM
 			Vector<float> Tg = Vector<float>.Build.DenseOfVector(T);
 			Vector<float> E = Tg * cw;
 			int p = -1, m = -1;
+			int k = 0;
 			for (int i = 0; i < d; i++)
 			{
 				for (int j = 0; j < n; j++)
@@ -224,30 +224,72 @@ public class EBM
 					T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0));
 					E = E + dt * (C - M * T + Fb + F);
 					Vector<float> q = Rh * humidity(Tg, Ps);
-					Debug.Log(q);
 					Vector<float> lht = dt * (diffop * (Lv * q / cp));
-					Debug.Log(lht);
 					Tg = (kappa - Matrix<float>.Build.DiagonalOfDiagonalVector(
 						Sign0(Less, Sign0(Less, E, T0), dc / (M - k * Lf / E))
 					)).Solve(Tg + lht + dt_tau * (
 						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A).Map2((a, b) => b != 0 ? a / b : 0, Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E))
 					));
+					Debug.Log(dc / (M - k * Lf / E));
+					Debug.Log(E);
+					Debug.Log(Tg + lht + dt_tau * (
+						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A).Map2((a, b) => b != 0 ? a / b : 0, Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E))
+					));
 					Debug.Log(Tg);
-					return null;
-					// Debug.Log(Tg);
+					if (k++ == 6)
+						return null;
 				}
 			}
-			// Permutation reverse = new Permutation(new int[fast.dur * fast.nt].Select((x, k) => fast.dur * fast.nt - k - 1).ToArray());
-			// T100.PermuteRows(reverse);
-			// E100.PermuteRows(reverse);
-			return new Matrix<float>[] { T100, E100 };
+			// Debug.Log(T100);
+			// Debug.Log(E100);
+			// Debug.Log(k);
+			return new Matrix<float>[] {
+				Matrix<float>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Reverse().Take(100).ToArray()),
+				Matrix<float>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Reverse().Take(100).ToArray())
+			};
 		}
 
 		public static Matrix<float>[] precip(Matrix<float>[] TEfin)
 		{
 			float[][] TfinArr = TEfin[0].ToRowArrays();
 			Matrix<float> qfin = Matrix<float>.Build.DenseOfRowVectors(TfinArr.Select(r => humidity(r, Ps)));
-			Matrix<float> hfin = TEfin[0] + Lv * q / cp;
+			Debug.Log(qfin);
+			Matrix<float> hfin = TEfin[0] + Lv * qfin / cp;
+			Debug.Log(hfin);
+
+			Matrix<float> gradVertical(Matrix<float> mat) => Matrix<float>.Build.DenseOfColumnArrays(mat.ToColumnArrays().Select(col =>
+			{
+				float[] gradCol = new float[col.Length];
+				gradCol[0] = col[1] - col[0];
+				for (int i = 1; i < col.Length - 1; i++)
+					gradCol[i] = (col[i + 1] - col[i - 1]) / 2f;
+				gradCol[col.Length - 1] = col[col.Length - 1] - col[col.Length - 2];
+				return gradCol;
+			}));
+
+			Matrix<float> MultiplyRowWise(Matrix<float> mat, Vector<float> vec) => mat.MapIndexed((x, y, i) => i * vec[x]);
+
+			//maybe zip with 1-x**2^0
+			Vector<float> OneMinusX2 = (1 - x.PointwisePower(2));
+			Matrix<float> Fa = -D * MultiplyRowWise(gradVertical(hfin), OneMinusX2) * bands;
+			Debug.Log(Fa);
+			Matrix<float> Fla = -D * MultiplyRowWise(gradVertical(Lv * qfin / cp), OneMinusX2) * bands;
+			Debug.Log(Fla);
+
+			Vector<float> w = (OneMinusX2 - 1) / sigma / sigma;
+			Matrix<float> F_hc = MultiplyRowWise(Fa, w);
+			Matrix<float> F_eddy = MultiplyRowWise(Fa, (1 - w));
+			Matrix<float> Fl_eddy = MultiplyRowWise(Fla, (1 - w));
+
+			Vector<float> hfin_eq = hfin.Row(0);
+			Matrix<float> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale)[x] - i);
+			Matrix<float> psi = F_hc.PointwiseDivide(gms);
+			Matrix<float> Fl_hc = -(Lv * qfin / cp) * psi;
+
+			Matrix<float> Fl = Fl_hc + Fl_eddy;
+			Matrix<float> EminusP = gradVertical(Fl) * bands;
+
+			return null;
 		}
 	}
 
@@ -255,11 +297,9 @@ public class EBM
 	{
 
 		Matrix<float>[] TE100 = fast.integrateM();
-		// Debug.Log(TE100[0]);
-		// Debug.Log(TE100[1]);
-		// Permutation reverse = new Permutation(new int[fast.dur * fast.nt].Select((x, k) => fast.dur * fast.nt - k - 1).ToArray());
-		// T100.PermuteRows(reverse);
-		// E100.PermuteRows(reverse);
+		Debug.Log(TE100[0]);
+		Debug.Log(TE100[1]);
+		fast.precip(TE100);
 
 		// simple.odefunc(new float[bands].Select(x => 10f).ToArray(), 5, true);
 		// Debug.Log(fast.S);
