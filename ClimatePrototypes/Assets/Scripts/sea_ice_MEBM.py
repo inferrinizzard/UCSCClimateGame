@@ -158,10 +158,6 @@ def main():
             # print(Tg)
             Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
                                  Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
-            print(dc/(M-kLf/E))
-            print(E)
-            print(Tg + lht + (dt_tau*(E/cw*(E >= 0) +
-              (ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
             print(Tg)
             j = j+1
             if(j == 6):
@@ -170,12 +166,14 @@ def main():
 
     # output only converged, final year
     tfin = np.linspace(0, 1, 100)
-    Efin = E100[:, -100:]
-    Tfin = T100[:, -100:]
+    # Efin = E100[:, -100:]
+    # Tfin = T100[:, -100:]
+
+    Efin = E100[:, :100] #test
+    Tfin = T100[:, :100]
     # print(Tfin)
-    # print(T100)
     # print(Efin)
-    # print(E100)
+    exit()
 
     # Compute hydrological cycle for final year
     # Calculate diffusive heat transport, latent and total
@@ -183,26 +181,13 @@ def main():
     qfin = RH * saturation_specific_humidity(Tfin, Ps)
     hfin = Tfin + Lv*qfin/cp  # in temperature units
     Fa = -D * (1-x**2) * np.gradient(hfin, axis=0) * n
-    # print(qfin)
-    # print(hfin)
-    # print(np.gradient(hfin, axis=0)*n)
-    # print((1-x**2))
-    # print((1-x**2) * np.gradient(hfin, axis=0) * n)
     Fla = -D * (1-x**2) * np.gradient(Lv*qfin/cp, axis=0) * n
-
-    # print(Fa)
-    # print(Fla)
 
     # Weighting function to partition transport into Hadley cell and eddy transports
     w = np.exp(-x**2 / sigma**2)
     F_hc = w*Fa
-    # print(w)
-    # print(Fa)
-    # print(F_hc)
     F_eddy = (1-w)*Fa
     Fl_eddy = (1-w)*Fla
-    # print(F_eddy)
-    # print(Fl_eddy)
 
     # Calculate latent heat transport by Hadley cell
     hfin_eq = hfin[0, :]
@@ -214,8 +199,6 @@ def main():
     Fl = Fl_hc + Fl_eddy
     EminusP = np.gradient(Fl, axis=0) * n
     x = np.reshape(x, (n,))  # for plotting
-
-    exit()
 
     # WE15, Figure 2: Default Steady State Climatology
     winter = 26  # time of coldest <T>

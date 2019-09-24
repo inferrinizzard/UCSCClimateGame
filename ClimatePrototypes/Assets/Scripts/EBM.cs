@@ -205,6 +205,7 @@ public class EBM
 			Vector<float> T = 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
 			Vector<float> Tg = Vector<float>.Build.DenseOfVector(T);
 			Vector<float> E = Tg * cw;
+
 			int p = -1, m = -1;
 			int k = 0;
 			for (int i = 0; i < d; i++)
@@ -218,10 +219,10 @@ public class EBM
 						E100.SetColumn(p, E);
 						T100.SetColumn(p, T);
 					}
-					Vector<float> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x);
-					Vector<float> C = alpha.PointwiseMultiply(S.Row(j)) - A + cg_tau * Tg;
+					Vector<float> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x); //aw*(E > 0) + ai*(E < 0)
+					Vector<float> C = alpha.PointwiseMultiply(S.Row(j)) + cg_tau * Tg - A; //alpha*S[i, :] + cg_tau*Tg - A
 					Vector<float> T0 = C / (M - k * Lf / E);
-					T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0));
+					T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0)); //E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)
 					E = E + dt * (C - M * T + Fb + F);
 					Vector<float> q = Rh * humidity(Tg, Ps);
 					Vector<float> lht = dt * (diffop * (Lv * q / cp));
@@ -230,32 +231,26 @@ public class EBM
 					)).Solve(Tg + lht + dt_tau * (
 						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A).Map2((a, b) => b != 0 ? a / b : 0, Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E))
 					));
-					Debug.Log(dc / (M - k * Lf / E));
-					Debug.Log(E);
-					Debug.Log(Tg + lht + dt_tau * (
-						Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A).Map2((a, b) => b != 0 ? a / b : 0, Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E))
-					));
 					Debug.Log(Tg);
-					if (k++ == 6)
+					if (k++ >= 6)
 						return null;
 				}
 			}
-			// Debug.Log(T100);
-			// Debug.Log(E100);
-			// Debug.Log(k);
+			// return new Matrix<float>[] {
+			// 	Matrix<float>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Reverse().Take(100).ToArray()), //Tfin
+			// 	Matrix<float>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Reverse().Take(100).ToArray())  //Efin
+			// };
 			return new Matrix<float>[] {
-				Matrix<float>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Reverse().Take(100).ToArray()),
-				Matrix<float>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Reverse().Take(100).ToArray())
+				Matrix<float>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Take(100).ToArray()), //Tfin
+				Matrix<float>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Take(100).ToArray())  //Efin
 			};
 		}
 
 		public static Matrix<float>[] precip(Matrix<float>[] TEfin)
 		{
 			float[][] TfinArr = TEfin[0].ToRowArrays();
-			Matrix<float> qfin = Matrix<float>.Build.DenseOfRowVectors(TfinArr.Select(r => humidity(r, Ps)));
-			Debug.Log(qfin);
+			Matrix<float> qfin = Rh * Matrix<float>.Build.DenseOfRowVectors(TfinArr.Select(r => humidity(r, Ps)));
 			Matrix<float> hfin = TEfin[0] + Lv * qfin / cp;
-			Debug.Log(hfin);
 
 			Matrix<float> gradVertical(Matrix<float> mat) => Matrix<float>.Build.DenseOfColumnArrays(mat.ToColumnArrays().Select(col =>
 			{
@@ -269,14 +264,11 @@ public class EBM
 
 			Matrix<float> MultiplyRowWise(Matrix<float> mat, Vector<float> vec) => mat.MapIndexed((x, y, i) => i * vec[x]);
 
-			//maybe zip with 1-x**2^0
 			Vector<float> OneMinusX2 = (1 - x.PointwisePower(2));
 			Matrix<float> Fa = -D * MultiplyRowWise(gradVertical(hfin), OneMinusX2) * bands;
-			Debug.Log(Fa);
 			Matrix<float> Fla = -D * MultiplyRowWise(gradVertical(Lv * qfin / cp), OneMinusX2) * bands;
-			Debug.Log(Fla);
 
-			Vector<float> w = (OneMinusX2 - 1) / sigma / sigma;
+			Vector<float> w = ((OneMinusX2 - 1) / sigma / sigma).PointwiseExp();
 			Matrix<float> F_hc = MultiplyRowWise(Fa, w);
 			Matrix<float> F_eddy = MultiplyRowWise(Fa, (1 - w));
 			Matrix<float> Fl_eddy = MultiplyRowWise(Fla, (1 - w));
@@ -284,7 +276,7 @@ public class EBM
 			Vector<float> hfin_eq = hfin.Row(0);
 			Matrix<float> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale)[x] - i);
 			Matrix<float> psi = F_hc.PointwiseDivide(gms);
-			Matrix<float> Fl_hc = -(Lv * qfin / cp) * psi;
+			Matrix<float> Fl_hc = -(Lv * qfin / cp).PointwiseMultiply(psi);
 
 			Matrix<float> Fl = Fl_hc + Fl_eddy;
 			Matrix<float> EminusP = gradVertical(Fl) * bands;
@@ -299,12 +291,7 @@ public class EBM
 		Matrix<float>[] TE100 = fast.integrateM();
 		Debug.Log(TE100[0]);
 		Debug.Log(TE100[1]);
-		fast.precip(TE100);
-
-		// simple.odefunc(new float[bands].Select(x => 10f).ToArray(), 5, true);
-		// Debug.Log(fast.S);
-		// Debug.Log(fast.aw);
-		// Debug.Log(Sign0(Great, fast.aw));
+		// fast.precip(TE100);
 	}
 
 	static Func<double, double, bool> Less = (a, b) => a < b;
