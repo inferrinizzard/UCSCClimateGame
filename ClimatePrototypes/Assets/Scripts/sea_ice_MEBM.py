@@ -30,7 +30,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 from matplotlib.backends.backend_pdf import PdfPages
 
-np.set_printoptions(precision=4, linewidth=200, suppress=True)
+import csv
+
+np.set_printoptions(precision=4, linewidth=200, suppress=True, edgeitems=5)
 
 
 def saturation_specific_humidity(temp, press):
@@ -53,9 +55,24 @@ def saturation_specific_humidity(temp, press):
     return qs
 
 
+def read(file):
+    with open(file, newline="") as csvfile:
+        return np.array(list(csv.reader(csvfile))).astype(float).flatten()
+
+
+def compare(name="", file="", real=""):
+    if(name is not ""):
+        print(name)
+    data = read(file)
+    print("Unity: " + str(data))
+    print("python: " + str(real))
+    print("diff: "+str(np.linalg.norm(real-data)))
+    print()
+
+
 def main():
 
-    D = 0.6  # diffusivity for heat transport (W m^-2 K^-1)
+    D = 0.5  # diffusivity for heat transport (W m^-2 K^-1)
     S1 = 338  # insolation seasonal dependence (W m^-2)
     A = 193  # OLR when T = 0 (W m^-2)
     B = 2.1  # OLR temperature dependence (W m^-2 K^-1)
@@ -75,8 +92,8 @@ def main():
     cp = 1004.6  # heat capacity of air at constant pressure (J kg^-1 K^-1)
     RH = 0.8  # relative humidity
     Ps = 1E5  # surface pressure (Pa)
-    gms_scale = 1.06  # ratio of MSE aloft to near surface, equatorial MSE
-    sigma = 0.3  # characteristic width for gaussian weighting function
+    gms_scale = 2  # ratio of MSE aloft to near surface, equatorial MSE
+    sigma = 0.4  # characteristic width for gaussian weighting function
 
     # The default run in WE15, Fig 2 uses the time-stepping parameters:
     # n=400 % # of evenly spaced latitudinal gridboxes (equator to pole)
@@ -155,24 +172,21 @@ def main():
             q = RH * saturation_specific_humidity(Tg, Ps)
             lht = dt * np.dot(diffop, Lv*q/cp)
             # Implicit Euler on Tg
-            # print(Tg)
             Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
                                  Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
-            print(Tg)
-            j = j+1
-            if(j == 6):
-                exit()
         print('year %d complete' % (years))
 
     # output only converged, final year
     tfin = np.linspace(0, 1, 100)
-    # Efin = E100[:, -100:]
-    # Tfin = T100[:, -100:]
+    Efin = E100[:, -100:]
+    Tfin = T100[:, -100:]
 
-    Efin = E100[:, :100] #test
-    Tfin = T100[:, :100]
-    # print(Tfin)
-    # print(Efin)
+    # Efin = E100[:, :100] #test
+    # Tfin = T100[:, :100]
+    print(T100)
+    print(E100)
+    print(Tfin)
+    print(Tfin)
     exit()
 
     # Compute hydrological cycle for final year
