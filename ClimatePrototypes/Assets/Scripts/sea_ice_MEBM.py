@@ -82,8 +82,8 @@ def main():
     a0 = 0.7  # ice-free co-albedo at equator
     a2 = 0.1  # ice=free co-albedo spatial dependence
     ai = 0.4  # co-albedo where there is sea ice
-    Fb = 4  # heat flux from ocean below (W m^-2)
     F = 0  # radiative forcing (W m^-2)
+    Fb = 4  # heat flux from ocean below (W m^-2)
     k = 2  # sea ice thermal conductivity (W m^-2 K^-1)
     Lf = 9.5  # sea ice latent heat of fusion (W yr m^-3)
     cg = 0.01*cw  # ghost layer heat capacity(W yr m^-2 K^-1)

@@ -11,30 +11,32 @@ using UnityEngine;
 
 public class EBM
 {
-	public static Vector<double> temp;
-	public static Vector<double> energy;
-	public static Vector<double> precip;
-	public static double A = 193;
-	static readonly double B = 2.1;
-	static readonly double cw = 9.8;
-	static readonly double D = 0.5;
+	public static Vector<double> temp; // public temperature
+	public static Vector<double> energy; // public energy
+	public static Vector<double> precip; // public energy
+	public static double A = 193; // OLR when T = 0 (W m^-2)
+	static readonly double B = 2.1; // OLR temperature dependence (W M^-2 K^-1)
+	static readonly double cw = 9.8; // ocean mixed layer heat capacity (W yr m^-2 K^-1) 
+	static readonly double D = 0.5; // diffusivity for heat transport (W m^-2 K^-1) 
 
-	static readonly double S0 = 420;
-	static readonly double S1 = 338;
-	static readonly double S2 = 240;
-	static readonly double a0 = 0.7;
-	static readonly double a2 = 0.1;
-	static readonly double aI = 0.4;
-	public static double F = 0; // 6
+	static readonly double S0 = 420; // insolation at equator (W m^-2) 
+	static readonly double S1 = 338; // insolation seasonal dependence (W m^-2) 
+	static readonly double S2 = 240; // insolation spatial dependence (W m^-2) 
+	static readonly double a0 = 0.7; // ice-free co-albedo at equator 
+	static readonly double a2 = 0.1; // ice=free co-albedo spatial dependence 
+	static readonly double aI = 0.4; // co-albedo where there is sea ice 
+	public static double F = 0; // radiative forcing (W m^-2)
 
-	static readonly int bands = 6;
+	static readonly int bands = 6; //number of latitudinal bands
 
-	static readonly double Lv = 2500000;
-	static readonly double cp = 1004.6;
-	static readonly double Rh = 0.8;
-	static readonly double Ps = 100000;
+	static readonly double Lv = 2500000; //  latent heat of vaporization (J kg^-1)
+	static readonly double cp = 1004.6; //  heat capacity of air at constant pressure (J kg^-1 K^-1)
+	static readonly double Rh = 0.8; //  relative humidity
+	static readonly double Ps = 100000; //  surface pressure (Pa)
 
+	// double overload
 	public static Vector<double> humidity(double[] temp, double press) => humidity(Vector<double>.Build.Dense(temp), press);
+	// calculates saturation specific humidity based on temperature
 	public static Vector<double> humidity(Vector<double> temp, double press)
 	{
 		double es0 = 610.78;
@@ -45,10 +47,10 @@ public class EBM
 		Vector<double> qs = ep * es / press;
 		return qs;
 	}
-	static readonly int nt = 1000;
-	static readonly int dur = 30;
-	static readonly double dt = 1f / nt;
-	static readonly double dx = 1f / bands;
+	static readonly int nt = 1000; // number of timesteps per year
+	static readonly int dur = 30; // number of years
+	static readonly double dt = 1f / nt; // change in time
+	static readonly double dx = 1f / bands; // change in position
 	static readonly Vector<double> x = Vector<double>.Build.Dense(bands, i => dx / 2 + i++ * dx);
 	static readonly Vector<double> xb = Vector<double>.Build.Dense(bands, i => ++i * dx);
 
@@ -74,11 +76,11 @@ public class EBM
 	static readonly Vector<double> simpleS = S0 - S2 * x.PointwisePower(2);
 	static readonly Vector<double> aw = a0 - a2 * x.PointwisePower(2);
 	static readonly Matrix<double> I = Matrix<double>.Build.DenseIdentity(bands);
-	static readonly int Fb = 4;
-	static readonly int k = 2;
-	static readonly double Lf = 9.5;
-	static readonly double cg = cw / 100;
-	static readonly double tau = 0.00001;
+	static readonly int Fb = 4; // heat flux from ocean below (W m^-2)
+	static readonly int k = 2; // sea ice thermal conductivity (W m^-2 K^-1)
+	static readonly double Lf = 9.5; // sea ice latent heat of fusion (W yr m^-3)
+	static readonly double cg = cw / 100; // ghost layer heat capacity(W yr m^-2 K^-1)
+	static readonly double tau = 0.00001; // ghost layer coupling timescale (yr)
 	static readonly double cg_tau = cg / tau;
 	static readonly double dt_tau = dt / tau;
 	static readonly double dc = dt_tau * cg_tau;
@@ -90,8 +92,8 @@ public class EBM
 			Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Select(v => x).ToArray()));
 	//could optimise with indices if needed
 	static readonly double M = B + cg_tau;
-	static readonly double gms_scale = 1.06;
-	static readonly double sigma = .3;
+	static readonly double gms_scale = 1.06; // ratio of MSE aloft to near surface, equatorial MSE
+	static readonly double sigma = .3; // characteristic width for gaussian weighting function
 
 	public static Matrix<double>[] integrate(Vector<double> T = null, int years = 0, int timesteps = 0)
 	{
