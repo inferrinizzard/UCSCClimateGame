@@ -136,57 +136,65 @@ def main():
     aw = a0-a2*x**2  # open water albedo
     kLf = k*Lf
 
-    # Set up output arrays, saving 100 timesteps/year
-    E100 = np.zeros([n, dur*100])
-    T100 = np.zeros([n, dur*100])
-    p = -1
-    m = -1
+    def calc(tin = None, years = 0, timesteps = 0):
+        # Set up output arrays, saving 100 timesteps/year
+        E100 = np.zeros([n, dur*100])
+        T100 = np.zeros([n, dur*100])
+        p = -1
+        m = -1
 
-    # Initial conditions
-    T = 7.5+20*(1-2*x**2)
-    Tg = T
-    E = cw*T
+        # Initial conditions
+        T = 7.5+20*(1-2*x**2) if tin is None else tin
+        Tg = T
+        E = cw*T
 
-    j = 0
+        years = range(0, dur) if years is 0 else years
+        timesteps = range(0, int(nt)) if timesteps is 0 else timesteps
 
-    # Integration (see WE15_NumericIntegration.pdf)
-    # Loop over Years
-    for years in range(0, dur):
-        # Loop within One Year
-        for i in range(0, int(nt)):
-            m = m+1
-            # store 100 timesteps per year
-            if (p+1)*10 == m:
-                p = p+1
-                E100[:, p] = E
-                T100[:, p] = T
-            # forcing
-            alpha = aw*(E > 0) + ai*(E < 0)  # WE15, eq.4
-            C = alpha*S[i, :] + cg_tau*Tg - A
-            # surface temperature
-            T0 = C/(M-kLf/E)  # WE15, eq.A3
-            T = E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)  # WE15, eq.9
-            # Forward Euler on E
-            E = E+dt*(C-M*T+Fb+F)  # WE15, eq.A2
-            # latent heat transport
-            q = RH * saturation_specific_humidity(Tg, Ps)
-            lht = dt * np.dot(diffop, Lv*q/cp)
-            # Implicit Euler on Tg
-            Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
-                                 Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
-        print('year %d complete' % (years))
+        # Integration (see WE15_NumericIntegration.pdf)
+        # Loop over Years
+        for year in years:
+            # Loop within One Year
+            for i in timesteps:
+                m = m+1
+                # store 100 timesteps per year
+                if (p+1)*10 == m:
+                    p = p+1
+                    E100[:, p] = E
+                    T100[:, p] = T
+                # forcing
+                alpha = aw*(E > 0) + ai*(E < 0)  # WE15, eq.4
+                C = alpha*S[i, :] + cg_tau*Tg - A
+                # surface temperature
+                T0 = C/(M-kLf/E)  # WE15, eq.A3
+                T = E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)  # WE15, eq.9
+                # Forward Euler on E
+                E = E+dt*(C-M*T+Fb+F)  # WE15, eq.A2
+                # latent heat transport
+                q = RH * saturation_specific_humidity(Tg, Ps)
+                lht = dt * np.dot(diffop, Lv*q/cp)
+                # Implicit Euler on Tg
+                Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
+                                    Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
+            # print('year %d complete' % (year))
 
-    # output only converged, final year
-    tfin = np.linspace(0, 1, 100)
-    Efin = E100[:, -100:]
-    Tfin = T100[:, -100:]
+        # output only converged, final year
+        tfin = np.linspace(0, 1, 100)
+        Tfin = T100[:, -100:]
+        Efin = E100[:, -100:]
+        return [Tfin, Efin]
 
-    # Efin = E100[:, :100] #test
-    # Tfin = T100[:, :100]
-    print(T100)
-    print(E100)
-    print(Tfin)
-    print(Tfin)
+    tout = calc()
+    Tfin = tout[0]
+    print(Tfin[:,-1:].flatten())
+    F = 4
+    tout = calc(Tfin[:,-1:].flatten())
+    Tfin = tout[0]
+    print(Tfin[:,-1:].flatten())
+    tout = calc()
+    Tfin = tout[0]
+    print(Tfin[:,-1:].flatten())
+
     exit()
 
     # Compute hydrological cycle for final year

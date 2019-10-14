@@ -9,16 +9,15 @@ public class MathClient : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		EBM.printTest();
-		// float[] sol = RunTemp((new float[ClimateMath.ebmv.bands]).Select(x => 10f).ToArray(), 5, true);
-		// Debug.Log(String.Join(" ", sol));
-		// sol = RunTemp((new float[EBM.bands]).Select(x => 10f).ToArray(), 5, true, true);
+		EBM.calc();
+		Debug.Log(EBM.temp);
+		EBM.F = 4;
+		EBM.calc(EBM.temp);
+		Debug.Log(EBM.temp);
+		EBM.clear();
+		EBM.calc();
+		Debug.Log(EBM.temp);
 
-		// Debug.Log(String.Join(" ", EBM.simple.odeint((new float[EBM.bands]).Select(x => 10f).ToArray(), 5, true)));
-
-		// RunTempF();
-		// float[] temp = new float[3] { 10, 10, 10 };
-		// ClimateMath.odeIce(out temp);
 	}
 
 	// Update is called once per frame
