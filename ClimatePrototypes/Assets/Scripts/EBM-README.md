@@ -48,9 +48,11 @@ You can just assign new values based on game conditions and rerun the model with
 ie. `EBM.F = 4; // assigns new forcing value`
 
 `EBM.calc()` takes the following parameters:<br>
+
 | Param | Data Type | Description | Default |
 | --- | --- | --- | --- |
 | `input`     | `Vector<double>` | Starting temperature             | `null`          |
 | `years`     | `int`            | number of years to run the model | `EBM.dur = 30`  |
 | `timesteps` | `int`            | number of interations per year   | `EBM.nt = 1000` |
+
 After adjusting parameters and rerun-ing the model with `EBM.calc()`, temp, energy, and precip will be updated with new values.
