@@ -102,7 +102,7 @@ def main():
     # For a quicker computation, use the parameters:
     # n = 100
     # nt = 1000
-    n = 6
+    n = 50
     nt = 1000
     dur = 30
     dt = 1/float(nt)
@@ -176,26 +176,28 @@ def main():
                 # Implicit Euler on Tg
                 Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
                                     Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
-            # print('year %d complete' % (year))
+            print('year %d complete' % (year))
 
         # output only converged, final year
         tfin = np.linspace(0, 1, 100)
         Tfin = T100[:, -100:]
         Efin = E100[:, -100:]
-        return [Tfin, Efin]
+        return [Tfin, Efin,tfin]
 
     tout = calc()
     Tfin = tout[0]
-    print(Tfin[:,-1:].flatten())
-    F = 4
-    tout = calc(Tfin[:,-1:].flatten())
-    Tfin = tout[0]
-    print(Tfin[:,-1:].flatten())
-    tout = calc()
-    Tfin = tout[0]
-    print(Tfin[:,-1:].flatten())
+    Efin = tout[1]
+    tfin = tout[2]
+    # print(Tfin[:,-1:].flatten())
+    # F = 4
+    # tout = calc(Tfin[:,-1:].flatten())
+    # Tfin = tout[0]
+    # print(Tfin[:,-1:].flatten())
+    # tout = calc()
+    # Tfin = tout[0]
+    # print(Tfin[:,-1:].flatten())
 
-    exit()
+    # exit()
 
     # Compute hydrological cycle for final year
     # Calculate diffusive heat transport, latent and total

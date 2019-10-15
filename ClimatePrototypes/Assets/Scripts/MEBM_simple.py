@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 D = 0.6  # diffusivity for heat transport (W m^-2 K^-1)
 A = 193  # OLR when T = 0 (W m^-2)
 B = 2.1  # OLR temperature dependence (W m^-2 K^-1)
-cw = 9.8  # ocean mixed layer heat capacity (W yr m^-2 K^-1)
+cw = .98  # ocean mixed layer heat capacity (W yr m^-2 K^-1)
 S0 = 420  # insolation at equator (W m^-2)
 S2 = 240  # insolation spatial dependence (W m^-2)
 a0 = 0.7  # ice-free co-albedo at equator
@@ -45,7 +45,7 @@ cp = 1004.6  # heat capacity of air at constant pressure (J kg^-1 K^-1)
 Rh = 0.8  # relative humidity
 Ps = 1E5  # surface pressure (Pa)
 # -------------------------------------------------------------------------
-n = 3  # grid resolution (number of points between equator and pole)
+n = 50  # grid resolution (number of points between equator and pole)
 x = np.linspace(0, 1, n)
 dx = 1.0/(n-1)
 S = S0-S2*x**2  # insolation [WE15 eq. (3) with S_1 = 0]
@@ -99,7 +99,7 @@ def odefunc(T, t):
     hdot[-1] = -D*2*x[-1]*(h[-1]-h[-2])/dx
     f = (hdot+C-B*T)/cw
     # print(hdot)
-    print(str(T)+" "+str(f) + " " + str(j))
+    # print(str(T)+" "+str(f) + " " + str(j))
     # print(B)
     # print(C)
     # print(cw)
@@ -110,12 +110,9 @@ def odefunc(T, t):
 
 
 T0 = 10*np.ones(x.shape)  # initial condition (constant temp. 10C everywhere)
-time = np.linspace(0.0, 30.0, 5)  # time span in years
-print(time)
+time = np.linspace(0.0, 30.0, 100)  # time span in years
 sol = odeint(odefunc, T0, time)  # solve
-print(sol)
 
-exit()
 fig = plt.figure(1)
 fig.suptitle('MEBM_simple')
 plt.subplot(121)
