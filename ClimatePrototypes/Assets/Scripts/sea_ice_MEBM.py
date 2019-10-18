@@ -102,7 +102,7 @@ def main():
     # For a quicker computation, use the parameters:
     # n = 100
     # nt = 1000
-    n = 50
+    n = 24
     nt = 1000
     dur = 30
     dt = 1/float(nt)
@@ -117,7 +117,7 @@ def main():
     L1 = np.append(0, -lam)
     L2 = np.append(-lam, 0)
     L3 = -L1-L2
-    diffop = - np.diag(L3[:-1] if n == 3 or n == 6 else L3) - \
+    diffop = - np.diag(L3[:-1] if n == 3 or n == 6 or n == 24 else L3) - \
         np.diag(L2[:n-1], 1) - np.diag(L1[1:n], -1)
 
     # Definitions for implicit scheme on Tg
@@ -204,8 +204,8 @@ def main():
     x = np.reshape(x, (n, 1))
     qfin = RH * saturation_specific_humidity(Tfin, Ps)
     hfin = Tfin + Lv*qfin/cp  # in temperature units
-    Fa = -D * (1-x**2) * np.gradient(hfin, axis=0) * n
-    Fla = -D * (1-x**2) * np.gradient(Lv*qfin/cp, axis=0) * n
+    Fa = -D * (1-x**2) * np.gradient(hfin, axis=0, edge_order=2) * n
+    Fla = -D * (1-x**2) * np.gradient(Lv*qfin/cp, axis=0, edge_order=2) * n
 
     # Weighting function to partition transport into Hadley cell and eddy transports
     w = np.exp(-x**2 / sigma**2)
@@ -221,7 +221,7 @@ def main():
 
     # Calculate E-P as the convergence of latent heat transport
     Fl = Fl_hc + Fl_eddy
-    EminusP = np.gradient(Fl, axis=0) * n
+    EminusP = np.gradient(Fl, axis=0, edge_order=2) * n
     x = np.reshape(x, (n,))  # for plotting
 
     # WE15, Figure 2: Default Steady State Climatology

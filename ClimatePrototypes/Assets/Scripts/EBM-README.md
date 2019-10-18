@@ -37,20 +37,19 @@ The following values may be adjusted during runtime:
 
 These values are to be adjusted before runtime:
 
-- `EBM.n` \<int> <br>
-  (Latitudinal bands, number of data points to calculate)
-- `EBM.cw` \<double> <br>
-  (Ocean Heat Capacity, controls the speed of model stabilisation)<br>
-- `EBM.D` \<double> <br>
-  (Heat Transport Diffusivity, adjusts sea ice boundaries)
+| Variable | Data Type | Description                                                    | Default | Alt Value |
+| -------- | --------- | -------------------------------------------------------------- | ------- | --------- |
+| `EBM.n`  | `int`     | Latitudinal bands, number of data points to calculate          | `12`    | `24`      |
+| `EBM.cw` | `double`  | Ocean Heat Capacity, controls the speed of model stabilisation | `9.8`   | `0.098`   |
+| `EBM.D`  | `double`  | Heat Transport Diffusivity, adjusts sea ice boundaries         | `0.5`   | `0.45`    |
 
 You can just assign new values based on game conditions and rerun the model with `EBM.calc()`<br>
 ie. `EBM.F = 4; // assigns new forcing value`
 
 `EBM.calc()` takes the following parameters:<br>
 
-| Param | Data Type | Description | Default |
-| --- | --- | --- | --- |
+| Param       | Data Type        | Description                      | Default         |
+| ----------- | ---------------- | -------------------------------- | --------------- |
 | `input`     | `Vector<double>` | Starting temperature             | `null`          |
 | `years`     | `int`            | number of years to run the model | `EBM.dur = 30`  |
 | `timesteps` | `int`            | number of interations per year   | `EBM.nt = 1000` |
