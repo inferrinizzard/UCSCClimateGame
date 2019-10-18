@@ -136,7 +136,7 @@ def main():
     aw = a0-a2*x**2  # open water albedo
     kLf = k*Lf
 
-    def calc(tin = None, years = 0, timesteps = 0):
+    def calc(tin=None, years=0, timesteps=0):
         # Set up output arrays, saving 100 timesteps/year
         E100 = np.zeros([n, dur*100])
         T100 = np.zeros([n, dur*100])
@@ -175,14 +175,14 @@ def main():
                 lht = dt * np.dot(diffop, Lv*q/cp)
                 # Implicit Euler on Tg
                 Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
-                                    Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
+                                     Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
             print('year %d complete' % (year))
 
         # output only converged, final year
         tfin = np.linspace(0, 1, 100)
         Tfin = T100[:, -100:]
         Efin = E100[:, -100:]
-        return [Tfin, Efin,tfin]
+        return [Tfin, Efin, tfin]
 
     tout = calc()
     Tfin = tout[0]

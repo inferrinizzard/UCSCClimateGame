@@ -152,6 +152,8 @@ public class EBM
 			for (int i = 1; i < col.Length - 1; i++)
 				gradCol[i] = (col[i + 1] - col[i - 1]) / 2;
 			gradCol[col.Length - 1] = col[col.Length - 1] - col[col.Length - 2];
+			gradCol[0] -= gradCol[1] - gradCol[0];
+			gradCol[col.Length - 1] += gradCol[col.Length - 1] - gradCol[col.Length - 2];
 			return gradCol;
 		}));
 

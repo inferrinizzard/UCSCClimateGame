@@ -24,7 +24,7 @@ Three main values can be read from EBM
 - `EBM.precip`<br>
   `Vector<double>` of Precipitation of each region
 
- `Vector<T>` can be accessed like any array, documentation available [here](https://numerics.mathdotnet.com/api/MathNet.Numerics.LinearAlgebra.Double/Vector.htm).
+`Vector<T>` can be accessed like any array, documentation available [here](https://numerics.mathdotnet.com/api/MathNet.Numerics.LinearAlgebra.Double/Vector.htm).
 
 ## **Changing Values**
 
