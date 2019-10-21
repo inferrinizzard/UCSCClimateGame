@@ -52,7 +52,7 @@ Three main values can be read from EBM
 
 The following values may be adjusted during runtime:
 
-- ~~`EBM.A` \<double> <br> ~~
+- ~~`EBM.A` \<double>~~ <br>
   ~~(OLR, controls how much energy is released)~~
 - `EBM.F` \<double> <br>
   (Radiative Forcing, affected by amount of CO2)<br>
