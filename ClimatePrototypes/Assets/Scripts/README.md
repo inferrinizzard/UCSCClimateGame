@@ -2,17 +2,23 @@
 
 ## **Background**
 The energy balance model (EBM) is a moist version of the EBM described in Wagner and Eisenman (2015). The time evolution of E(t, x) is determined at each latitude by the net energy flux into the atmospheric column and surface below:
+
 ![equation](https://latex.codecogs.com/gif.latex?%5Cfrac%7B%5Cpartial%20E%7D%7B%5Cpartial%20t%7D%20%3D%20aS%20-%20L%20&plus;%20D%5Cnabla%5E2%20h%20&plus;%20F%20&plus;%20F_b)
 
 Solar radiation S(t,x) depends on season and latitude. The fraction of incident solar radiation that is absorbed is called the planetary co-albedo, a. It depends on factors including the solar zenith angle, clouds, and the presence of reflective ice.
 
-Outgoing longwave radiation is represented as a linear function of surface temperature 
+Outgoing longwave radiation is represented as a linear function of surface temperature
+
 ![equation](https://latex.codecogs.com/gif.latex?%5BA&plus;B%28T-T_m%29%5D)
 where A and B are empirical parameters and T_m the melting point.
 
 Atmospheric energy transport is governed by the diffusion of moist static energy. On a spherical Earth, meridional diffusion takes the form 
+
 ![equation](https://latex.codecogs.com/gif.latex?D%5Cnabla%5E2%20h%20%3D%20D%5Cfrac%7B%5Cpartial%7D%7B%5Cpartial%20x%7D%5Cbigg%5B%281-x%5E2%29%5Cfrac%7B%5Cpartial%20h%7D%7B%5Cpartial%20x%7D%5Cbigg%5D)
 
+D is the diffusivity, and moist static energy is defined in units of temperature as 
+![equation](https://latex.codecogs.com/gif.latex?%24h%3DT&plus;L%5Cmathcal%7BH%7Dc_p%5E%7B-1%7Dq_s%24)
+, assuming constant relative humidity H of 80% (Merlis and Henry, 2018). L is latent heat of vaporization, cp is specific heat of air at constant pressure, qs is saturation specific humidity.
 
 Radiative forcing, F, and heat flux into the model domain from the ocean below, Fb, are global parameters.
 
@@ -46,8 +52,8 @@ Three main values can be read from EBM
 
 The following values may be adjusted during runtime:
 
-- ~~`EBM.A` \<double> <br> ~~
-  ~~(OLR, controls how much energy is released)~~
+- ~~`EBM.A` \<double> <br> 
+  ~~(OLR, controls how much energy is released)
 - `EBM.F` \<double> <br>
   (Radiative Forcing, affected by amount of CO2)<br>
   
@@ -75,7 +81,7 @@ ie. `EBM.F = 4; // assigns new forcing value`
 | ----------- | ---------------- | -------------------------------- | --------------- |
 | `input`     | `Vector<double>` | Starting temperature             | `null`          |
 | `years`     | `int`            | number of years to run the model | `EBM.dur = 30`  |
-| `timesteps` | `int`            | number of interations per year   | `EBM.nt = 1000` |
+| `timesteps` | `int`            | number of iterations per year   | `EBM.nt = 1000` |
 
 After adjusting parameters and rerun-ing the model with `EBM.calc()`, temp, energy, and precip will be updated with new values.
 
