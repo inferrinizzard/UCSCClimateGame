@@ -51,9 +51,6 @@ Three main values can be read from EBM
 ## **Changing Values**
 
 The following values may be adjusted during runtime:
-
-- ~~`EBM.A` \<double>~~ <br>
-  ~~(OLR, controls how much energy is released)~~
   
 | Variable | Data Type | Description                                                         | Default |
 | -------- | --------- | ------------------------------------------------------------------- | ------- |
