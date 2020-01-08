@@ -36,7 +36,7 @@ public class Water : MonoBehaviour
 		CurrTime = 0f;
 		Displacement = Random.Range(0f, 100f);
 
-		StartTemperature = GlobalStatics.temperature;
+		StartTemperature = World.temperature;
 	}
 
 	// Update is called once per frame

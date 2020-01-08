@@ -19,8 +19,8 @@ public class CityScript : MonoBehaviour
 			acc += line + " \n";
 		}
 		acc.Split('#').ToList().ForEach(x => bills.Add(x.TrimStart()));     //split by '#'
-		StartCoroutine(Typewriter(left, bills[GlobalStatics.billIndex], speed));
-		StartCoroutine(Typewriter(right, bills[GlobalStatics.billIndex + 1], speed));
+		StartCoroutine(Typewriter(left, bills[World.billIndex], speed));
+		StartCoroutine(Typewriter(right, bills[World.billIndex + 1], speed));
 	}
 
 	// Update is called once per frame
@@ -42,6 +42,6 @@ public class CityScript : MonoBehaviour
 		StopAllCoroutines();
 		// StartCoroutine(Typewriter(left,bills[billIndex],speed));
 		// StartCoroutine(Typewriter(right,bills[billIndex+1],speed));
-		GlobalStatics.billIndex += 2;
+		World.billIndex += 2;
 	}
 }

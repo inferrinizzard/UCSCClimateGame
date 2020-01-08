@@ -73,7 +73,7 @@ public class TreeScript : MonoBehaviour
 	{
 		if (Input.GetMouseButtonDown(1) && bGrown)
 		{
-			GlobalStatics.cashMoney += 45;
+			World.money += 45;
 			sc.CashChange(45);
 			Destroy(this.gameObject);
 		}

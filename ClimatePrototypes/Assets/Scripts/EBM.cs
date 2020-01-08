@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,15 +18,16 @@ public class EBM
 	static readonly double cw = 9.8; // ocean mixed layer heat capacity (W yr m^-2 K^-1) 
 	static readonly double D = 0.5; // diffusivity for heat transport (W m^-2 K^-1) 
 
-	static readonly double S0 = 420; // insolation at equator (W m^-2) 
-	static readonly double S1 = 338; // insolation seasonal dependence (W m^-2) 
+	public static double S0 = 420; // insolation at equator (W m^-2) 
+	public static double S1 = 338; // insolation seasonal dependence (W m^-2) 
 	static readonly double S2 = 240; // insolation spatial dependence (W m^-2) 
 	static readonly double a0 = 0.7; // ice-free co-albedo at equator 
 	static readonly double a2 = 0.1; // ice=free co-albedo spatial dependence 
 	static readonly double aI = 0.4; // co-albedo where there is sea ice 
 	public static double F = 0; // radiative forcing (W m^-2)
 
-	static readonly int bands = 6; //number of latitudinal bands
+	static readonly int bands = 24; //number of latitudinal bands
+	public static int regions = 3;
 
 	static readonly double Lv = 2500000; //  latent heat of vaporization (J kg^-1)
 	static readonly double cp = 1004.6; //  heat capacity of air at constant pressure (J kg^-1 K^-1)
@@ -35,9 +35,9 @@ public class EBM
 	static readonly double Ps = 100000; //  surface pressure (Pa)
 
 	// double overload
-	public static Vector<double> humidity(double[] temp, double press) => humidity(Vector<double>.Build.Dense(temp), press);
+	public static Vector<double> Humidity(double[] temp, double press) => Humidity(Vector<double>.Build.Dense(temp), press);
 	// calculates saturation specific humidity based on temperature
-	public static Vector<double> humidity(Vector<double> temp, double press)
+	public static Vector<double> Humidity(Vector<double> temp, double press)
 	{
 		double es0 = 610.78;
 		double t0 = 273.16;
@@ -76,7 +76,7 @@ public class EBM
 	static readonly Vector<double> simpleS = S0 - S2 * x.PointwisePower(2);
 	static readonly Vector<double> aw = a0 - a2 * x.PointwisePower(2);
 	static readonly Matrix<double> I = Matrix<double>.Build.DenseIdentity(bands);
-	static readonly int Fb = 4; // heat flux from ocean below (W m^-2)
+	public static double Fb = 4; // heat flux from ocean below (W m^-2)
 	static readonly int k = 2; // sea ice thermal conductivity (W m^-2 K^-1)
 	static readonly double Lf = 9.5; // sea ice latent heat of fusion (W yr m^-3)
 	static readonly double cg = cw / 100; // ghost layer heat capacity(W yr m^-2 K^-1)
@@ -95,7 +95,7 @@ public class EBM
 	static readonly double gms_scale = 1.06; // ratio of MSE aloft to near surface, equatorial MSE
 	static readonly double sigma = .3; // characteristic width for gaussian weighting function
 
-	public static Matrix<double>[] integrate(Vector<double> T = null, int years = 0, int timesteps = 0)
+	public static (Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0)
 	{
 		T = T == null ? 7.5f + 20 * (1 - 2 * x.PointwisePower(2)) : T;
 		years = years == 0 ? dur : years;
@@ -122,7 +122,7 @@ public class EBM
 				Vector<double> T0 = C / (M - k * Lf / E);
 				T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0)); //E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)
 				E = E + dt * (C - M * T + Fb + F);
-				Vector<double> q = Rh * humidity(Tg, Ps);
+				Vector<double> q = Rh * Humidity(Tg, Ps);
 				Vector<double> lht = dt * (diffop * (Lv * q / cp));
 				Tg = (kappa - Matrix<double>.Build.DiagonalOfDiagonalVector(
 					Sign0(Less, Sign0(Less, E, T0), dc / (M - k * Lf / E)) //np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)
@@ -133,19 +133,20 @@ public class EBM
 				));
 			}
 		}
-		return new Matrix<double>[] {
-				Matrix<double>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Skip(T100.ColumnCount-100).ToArray()), //Tfin
-				Matrix<double>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Skip(E100.ColumnCount-100).ToArray())  //Efin
-			};
+		return (
+				Matrix<double>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Skip(T100.ColumnCount - 100).ToArray()), //Tfin
+				Matrix<double>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Skip(E100.ColumnCount - 100).ToArray())  //Efin
+				)
+			;
 	}
 
-	public static Matrix<double> calcPrecip(Matrix<double>[] TEfin)
+	public static Matrix<double> CalcPrecip(Matrix<double> Tfin)
 	{
-		double[][] TfinArr = TEfin[0].ToRowArrays();
-		Matrix<double> qfin = Rh * Matrix<double>.Build.DenseOfRowVectors(TfinArr.Select(r => humidity(r, Ps)));
-		Matrix<double> hfin = TEfin[0] + Lv * qfin / cp;
+		double[][] TfinArr = Tfin.ToRowArrays();
+		Matrix<double> qfin = Rh * Matrix<double>.Build.DenseOfRowVectors(TfinArr.Select(r => Humidity(r, Ps)));
+		Matrix<double> hfin = Tfin + Lv * qfin / cp;
 
-		Matrix<double> gradVertical(Matrix<double> mat) => Matrix<double>.Build.DenseOfColumnArrays(mat.ToColumnArrays().Select(col =>
+		Matrix<double> GradVertical(Matrix<double> mat) => Matrix<double>.Build.DenseOfColumnArrays(mat.ToColumnArrays().Select(col =>
 		{
 			double[] gradCol = new double[col.Length];
 			gradCol[0] = col[1] - col[0];
@@ -160,8 +161,8 @@ public class EBM
 		Matrix<double> MultiplyRowWise(Matrix<double> mat, Vector<double> vec) => mat.MapIndexed((x, y, i) => i * vec[x]);
 
 		Vector<double> OneMinusX2 = (1 - x.PointwisePower(2));
-		Matrix<double> Fa = -D * MultiplyRowWise(gradVertical(hfin), OneMinusX2) * bands;
-		Matrix<double> Fla = -D * MultiplyRowWise(gradVertical(Lv * qfin / cp), OneMinusX2) * bands;
+		Matrix<double> Fa = -D * MultiplyRowWise(GradVertical(hfin), OneMinusX2) * bands;
+		Matrix<double> Fla = -D * MultiplyRowWise(GradVertical(Lv * qfin / cp), OneMinusX2) * bands;
 
 		Vector<double> w = ((OneMinusX2 - 1) / sigma / sigma).PointwiseExp();
 		Matrix<double> F_hc = MultiplyRowWise(Fa, w);
@@ -174,29 +175,38 @@ public class EBM
 		Matrix<double> Fl_hc = -(Lv * qfin / cp).PointwiseMultiply(psi);
 
 		Matrix<double> Fl = Fl_hc + Fl_eddy;
-		Matrix<double> EminusP = gradVertical(Fl) * bands;
+		Matrix<double> EminusP = GradVertical(Fl) * bands;
 
 		return EminusP;
 	}
 
-	public static void calc(Vector<double> input = null, int years = 0, int timesteps = 0)
+	public static (double[], double[], double[]) Calc(IEnumerable<double> input = null, int years = 0, int timesteps = 0)
 	{
-		Matrix<double>[] TE100 = integrate(input, years, timesteps);
-		temp = TE100[0].Column(99);
-		energy = TE100[1].Column(99);
-		precip = calcPrecip(TE100).Column(99);
+		var (T100, E100) = Integrate(input == null ? null : Vector<double>.Build.Dense(input.ToArray()), years, timesteps);
+		temp = T100.Column(99);
+		energy = E100.Column(99);
+		precip = CalcPrecip(T100).Column(99);
+		return (Reduce(temp, regions), Reduce(energy, regions), Reduce(precip, regions));
 	}
 
-	public static void clear()
-	{
-		temp = null;
-		energy = null;
-		precip = null;
-	}
+	public static void Clear() => (temp, energy, precip) = (null, null, null);
 
-	static Func<double, double, bool> Less = (a, b) => a < b;
-	static Func<double, double, bool> GreatOrE = (a, b) => a >= b;
-	public static Vector<double> Sign0(Func<double, double, bool> op, Vector<double> vec, Vector<double> result = null) => (result == null ? vec : result).PointwiseMultiply(vec.Map(x => op(x, 0d) ? 1d : 0d));
+	public static IEnumerable<IEnumerable<double>> Slice(IEnumerable<double> vec, int n = -1, int[] cuts = null, int j = 0) =>
+		new Func<int, IEnumerable<IEnumerable<double>>>(m => vec.Select((x, i) =>
+			new { Index = i, Value = x })
+				.GroupBy(x =>
+					cuts == null ?
+						x.Index / (vec.Count() / m) :
+						j == cuts.Length || x.Index <= cuts[j] ? j : ++j)
+				.Select(x => x.Select(v => v.Value)))
+		(n == -1 ? regions : n);
+	public static double[] Reduce(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => Average(x)).ToArray();
+	static double Average(IEnumerable<double> vec) { return x.Average(); }
+
+	static Predicate<(double, double)> Less = ((double, double) t) => t.Item1 < t.Item2;
+	static Predicate<(double, double)> GreatOrE = ((double, double) t) => t.Item1 >= t.Item2;
+	public static Vector<double> Sign0(Predicate<(double, double)> op, Vector<double> vec, Vector<double> result = null) => (result == null ? vec : result).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
+	static void Print(IEnumerable<double> nums) => Debug.Log(nums == null ? "null" : String.Join(" ", nums));
 }
 
 // public sealed class Lambda<T> { public static Func<T, T> Cast = x => x; }

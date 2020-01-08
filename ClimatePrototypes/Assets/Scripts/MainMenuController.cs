@@ -24,23 +24,24 @@ public class MainMenuController : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		TurnText.text = "Turn " + GlobalStatics.turn;
+		TurnText.text = "Turn " + World.turn;
+		World.Init();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		MoneyText.text = "Money: $" + string.Format("{0:0,0}", GlobalStatics.cashMoney);
+		MoneyText.text = "Money: $" + string.Format("{0:0,0}", World.money);
 
 		if (ActionText)
-			ActionText.text = "Actions Remaining: " + GlobalStatics.actionsRemaining;
+			ActionText.text = "Actions Remaining: " + World.actionsRemaining;
 	}
 
 	public void IncrementTurn()
 	{
-		GlobalStatics.turn++;
-		TurnText.text = "Turn " + GlobalStatics.turn;
-		GlobalStatics.actionsRemaining = BaseActions;
+		World.turn++;
+		TurnText.text = "Turn " + World.turn;
+		World.actionsRemaining = BaseActions;
 	}
 
 	public void ToggleSettings()
@@ -73,18 +74,18 @@ public class MainMenuController : MonoBehaviour
 	public void UpdateTemperature()
 	{
 
-		float[] deltaT = new float[GlobalStatics.regions.Length];
-		GlobalStatics.regions.ToList().ForEach(r => GlobalStatics.updateTemp(r, deltaT[Array.IndexOf(GlobalStatics.regions, r)]));
+		float[] deltaT = new float[World.regions.Length];
+		World.regions.ToList().ForEach(r => World.UpdateTemp(r, deltaT[Array.IndexOf(World.regions, r)]));
 
-		GlobalStatics.temperature = GlobalStatics.temps.Values.Aggregate((sum, r) => sum += r) / GlobalStatics.regions.Length;
-		// GlobalStatics.temperature = GlobalStatics.regions.Select(r => GlobalStatics.temps[r]).Aggregate((sum, r) => sum += r) / GlobalStatics.regions.Length;
-		// GlobalStatics.temperature = float.Parse(s);
+		// World.temperature = World.temps.Values.Aggregate((sum, r) => sum += r) / World.regions.Length;
+		// World.temperature = World.regions.Select(r => World.temps[r]).Aggregate((sum, r) => sum += r) / World.regions.Length;
+		// World.temperature = float.Parse(s);
 	}
 
 	public void UpdateCO2()
 	{
 		float change = 0;   //sum up contributions from regions
-		GlobalStatics.updateCO2(change);
+		World.UpdateCO2(change);
 	}
 
 	public void ChangeLevel(string name)

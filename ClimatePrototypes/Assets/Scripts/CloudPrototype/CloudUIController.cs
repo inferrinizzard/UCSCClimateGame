@@ -94,22 +94,22 @@ public class CloudUIController : MonoBehaviour
 		// Calculate the amount to shift the desert based on largest cloud
 		float ShiftAmt = 1f + 4f * Mathf.Clamp(LargestSizeConverted - 1200f, 0f, 700f) / 700f;
 
-		BodyText.text += "\nYou also shifted the desert coverage from " + string.Format("{0:0,0.00}", GlobalStatics.desertCoverage) + " % to ";
+		BodyText.text += "\nYou also shifted the desert coverage from " + string.Format("{0:0,0.00}", World.desertCoverage) + " % to ";
 
 		// Shift the desert
-		GlobalStatics.desertCoverage = Mathf.Clamp(GlobalStatics.desertCoverage - ShiftAmt, 15f, 85);
+		World.desertCoverage = Mathf.Clamp(World.desertCoverage - ShiftAmt, 15f, 85);
 
-		BodyText.text += string.Format("{0:0,0.00}", GlobalStatics.desertCoverage) + " % !";
+		BodyText.text += string.Format("{0:0,0.00}", World.desertCoverage) + " % !";
 	}
 
 	// Grow each tree by x ages
 	private void GrowTrees(int x)
 	{
-		for (int i = 0; i < GlobalStatics.forestTreeLocations.Count; ++i)
+		for (int i = 0; i < World.forestTreeLocations.Count; ++i)
 		{
-			// KeyValuePair<Vector3, int> kvp = GlobalStatics.forestTreeLocations[i];
+			// KeyValuePair<Vector3, int> kvp = World.forestTreeLocations[i];
 
-			// GlobalStatics.forestTreeLocations[i] = new KeyValuePair<Vector3, int>(kvp.Key, Mathf.FloorToInt(Mathf.Clamp(kvp.Value + 1, 1f, 3.1f)));
+			// World.forestTreeLocations[i] = new KeyValuePair<Vector3, int>(kvp.Key, Mathf.FloorToInt(Mathf.Clamp(kvp.Value + 1, 1f, 3.1f)));
 		}
 	}
 }

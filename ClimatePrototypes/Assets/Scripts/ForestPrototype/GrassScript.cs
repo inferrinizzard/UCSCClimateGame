@@ -20,9 +20,9 @@ public class GrassScript : MonoBehaviour
 
 	private void OnMouseDown()
 	{
-		if (Input.GetKey("p") && GlobalStatics.cashMoney >= 25f)
+		if (Input.GetKey("p") && World.money >= 25f)
 		{
-			GlobalStatics.cashMoney -= 25;
+			World.money -= 25;
 			sc.CashChange(-25f);
 
 			Vector3 mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);

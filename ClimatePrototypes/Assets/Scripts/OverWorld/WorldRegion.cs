@@ -22,11 +22,11 @@ public class WorldRegion : MonoBehaviour
 			if (i != transform.GetSiblingIndex())
 				parent.GetChild(i).gameObject.SetActive(false);
 		bg.gameObject.SetActive(false);     //sets solid bg to false
-		if (Input.GetMouseButtonDown(0) && GlobalStatics.actionsRemaining > 0)
+		if (Input.GetMouseButtonDown(0) && World.actionsRemaining > 0)
 			if (MainMenuController.Scenes[name] != -1)
 			{
 				SceneManager.LoadScene(MainMenuController.Scenes[name]);
-				GlobalStatics.actionsRemaining--;
+				World.actionsRemaining--;
 			}
 	}
 

@@ -30,8 +30,9 @@ Call the `EBM.calc()` method with no parameters to start the model with default 
 
 - `EBM.calc()`
   - wrapper for the main integration methods that also updates public variables
+  - also returns public variables as arrays
 - `EBM.integrate()`
-  - the main loop function that calculates and stabilises the model based on initial conditions
+  - internal loop function that calculates and stabilises the model based on initial conditions
 - `EBM.calcPrecip()`
   - takes resulting temperature and calculates precipitation
 
@@ -46,7 +47,7 @@ Three main values can be read from EBM
 - `EBM.precip`<br>
   `Vector<double>` of Precipitation of each region
 
-`Vector<T>` can be accessed like any array, documentation available [here](https://numerics.mathdotnet.com/api/MathNet.Numerics.LinearAlgebra.Double/Vector.htm).
+`Vector<T>` can be accessed like any array, documentation available [here](https://numerics.mathdotnet.com/api/MathNet.Numerics.LinearAlgebra.Double/Vector.htm) and [here](https://numerics.mathdotnet.com/api/MathNet.Numerics.LinearAlgebra/VectorBuilder%601.htm)(constructor).
 
 ## **Changing Values**
 
@@ -74,10 +75,11 @@ ie. `EBM.F = 4; // assigns new forcing value`
 
 | Param       | Data Type        | Description                      | Default         |
 | ----------- | ---------------- | -------------------------------- | --------------- |
-| `input`     | `Vector<double>` | Starting temperature             | `null`          |
+| `input`     | `Vector<double>` | Starting temperature             | `null`*         |
 | `years`     | `int`            | number of years to run the model | `EBM.dur = 30`  |
-| `timesteps` | `int`            | number of iterations per year   | `EBM.nt = 1000` |
+| `timesteps` | `int`            | number of iterations per year    | `EBM.nt = 1000` |
 
+\* Assigned internally to `7.5 + 20 * (1-x**2)`<br>
 After adjusting parameters and rerun-ing the model with `EBM.calc()`, temp, energy, and precip will be updated with new values.
 
 ### References

@@ -34,8 +34,8 @@ public class StatController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		MoneyText.text = "$" + string.Format("{0:0,0}", GlobalStatics.cashMoney);
-		TempText.text = "Temperature: " + string.Format("{0:0,0.00}", GlobalStatics.temperature);
+		MoneyText.text = "$" + string.Format("{0:0,0}", World.money);
+		TempText.text = "Temperature: " + string.Format("{0:0,0.00}", World.temperature);
 		GrowthRateText.text = "Growth Rate: " + string.Format("{0:0,0.00}", ShifterReference.DesertGrowthRate * 10f) + "in/s";
 
 		if (bMoneyBallooning)

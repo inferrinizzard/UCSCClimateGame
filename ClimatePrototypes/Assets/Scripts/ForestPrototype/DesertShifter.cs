@@ -28,10 +28,10 @@ public class DesertShifter : MonoBehaviour
 			CurrPos.x = CurrPos.x - DesertGrowthRate * Time.deltaTime;
 
 			transform.position = CurrPos;
-			GlobalStatics.temperature += 2f * DesertGrowthRate * Time.deltaTime;
+			World.temperature += 2f * DesertGrowthRate * Time.deltaTime;
 		}
 
-		float GrowthEff = Mathf.Pow(GlobalStatics.temperature - 85f, 2f) / 120f + 1f;
+		float GrowthEff = Mathf.Pow(World.temperature - 85f, 2f) / 120f + 1f;
 		DesertGrowthRate = .14f * GrowthEff;
 		//Debug.Log(GrowthEff - 2.4f);
 	}
@@ -40,7 +40,7 @@ public class DesertShifter : MonoBehaviour
 	{
 		Vector3 NewPos = Vector3.Lerp(transform.position, ShiftTargetPos, 1.3f * Time.deltaTime);
 
-		GlobalStatics.temperature += 2f * (transform.position.x - NewPos.x);
+		World.temperature += 2f * (transform.position.x - NewPos.x);
 
 		transform.position = Vector3.Lerp(transform.position, ShiftTargetPos, 1.3f * Time.deltaTime);
 
