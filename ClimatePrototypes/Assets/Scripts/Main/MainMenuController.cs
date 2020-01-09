@@ -21,21 +21,21 @@ public class MainMenuController : MonoBehaviour {
 
 	// Start is called before the first frame update
 	void Start() {
-		TurnText.text = "Turn " + World.turn;
+		TurnText.text = $"Turn {World.turn}";
 		World.Init();
 	}
 
 	// Update is called once per frame
 	void Update() {
-		MoneyText.text = "Money: $" + string.Format("{0:0,0}", World.money);
+		MoneyText.text = $"Money: ${World.money:0,0}";
 
 		if (ActionText)
-			ActionText.text = "Actions Remaining: " + World.actionsRemaining;
+			ActionText.text = $"Actions Remaining: {World.actionsRemaining}";
 	}
 
 	public void IncrementTurn() {
 		World.turn++;
-		TurnText.text = "Turn " + World.turn;
+		TurnText.text = $"Turn {World.turn}";
 		World.actionsRemaining = BaseActions;
 	}
 
