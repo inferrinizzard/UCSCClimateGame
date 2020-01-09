@@ -4,11 +4,6 @@ using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 public static class World {
-	public static string[] regions = new string[] { "arctic", "desert", "forest", "tropics" }; //old
-	public static float temperature = 35f; //old
-	public static float desertCoverage = 0; //old
-	public static Dictionary<Vector3, int> forestTreeLocations = new Dictionary<Vector3, int>(); //old
-
 	public static float money = 100f;
 	public static int turn = 1;
 	public static int actionsRemaining = 2;

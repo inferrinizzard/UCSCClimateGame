@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeatState : MonoBehaviour
-{
+public class HeatState : MonoBehaviour {
     [SerializeField]
-    private GameObject one;
+    private GameObject one = null;
     [SerializeField]
-    private GameObject two;
+    private GameObject two = null;
     [SerializeField]
-    private GameObject three;
-    
-    void Update()
-    {
-        switch (TempController.tempState)
-        {
+    private GameObject three = null;
+
+    void Update() {
+        switch (TempController.tempState) {
             case 1:
                 one.SetActive(true);
                 two.SetActive(false);
