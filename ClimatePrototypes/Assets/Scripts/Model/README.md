@@ -24,16 +24,16 @@ Radiative forcing, F, and heat flux into the model domain from the ocean below, 
 
 ## **Initialisation**
 
-Call the `EBM.calc()` method with no parameters to start the model with default values and initialise the temp, energy, and precip variables
+Call the `EBM.Calc()` method with no parameters to start the model with default values and initialise the temp, energy, and precip variables
 
 ## **Methods**
 
-- `EBM.calc()`
+- `EBM.Calc()`
   - wrapper for the main integration methods that also updates public variables
   - also returns public variables as arrays
-- `EBM.integrate()`
+- `EBM.Integrate()`
   - internal loop function that calculates and stabilises the model based on initial conditions
-- `EBM.calcPrecip()`
+- `EBM.CalcPrecip()`
   - takes resulting temperature and calculates precipitation
 
 ## **Fetching Values**
@@ -71,7 +71,7 @@ These values are to be adjusted before runtime:
 You can just assign new values based on game conditions and rerun the model with `EBM.calc()`<br>
 ie. `EBM.F = 4; // assigns new forcing value`
 
-`EBM.calc()` takes the following parameters:<br>
+`EBM.Calc()` takes the following parameters:<br>
 
 | Param       | Data Type        | Description                      | Default         |
 | ----------- | ---------------- | -------------------------------- | --------------- |
@@ -80,7 +80,7 @@ ie. `EBM.F = 4; // assigns new forcing value`
 | `timesteps` | `int`            | number of iterations per year    | `EBM.nt = 1000` |
 
 \* Assigned internally to `7.5 + 20 * (1-x**2)`<br>
-After adjusting parameters and rerun-ing the model with `EBM.calc()`, temp, energy, and precip will be updated with new values.
+After adjusting parameters and rerun-ing the model with `EBM.Calc()`, temp, energy, and precip will be updated with new values.
 
 ### References
 Wagner, T.J. and I. Eisenman, 2015: How Climate Model Complexity Influences Sea Ice Stability. J. Climate, 28, 3998–4014, https://doi.org/10.1175/JCLI-D-14-00654.1. Original code and documentation for dry model available at http://eisenman.ucsd.edu/code.html.

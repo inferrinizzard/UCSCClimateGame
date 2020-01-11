@@ -13,7 +13,15 @@ public class WorldBubble : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-
+		// if (active) {
+		// Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		// RaycastHit hit;
+		// if (bubble.GetComponent<Collider>().Raycast(ray, out hit)) {
+		// 	Debug.Log(hit.collider.name);
+		// 	if (Input.GetMouseButtonDown(0))
+		// 		Debug.Log("click");
+		// }
+		// }
 	}
 
 	void OnMouseEnter() {
@@ -24,10 +32,15 @@ public class WorldBubble : MonoBehaviour {
 	void OnMouseOver() {
 		if (!active)
 			StartCoroutine(Bubble(entering: true, dur: .25f));
+		if (Input.GetButtonDown("Fire1")) {
+			SceneController.Transition(gameObject.name.Replace("Node", string.Empty));
+			Debug.Log(gameObject.name.Replace("Node", string.Empty));
+		}
 	}
 
 	void OnMouseExit() {
-		StartCoroutine(Bubble(entering: false, dur: .25f));
+		if (active)
+			StartCoroutine(Bubble(entering: false, dur: .25f));
 	}
 
 	IEnumerator Bubble(bool entering, float dur, Vector2 pos = default(Vector2)) {

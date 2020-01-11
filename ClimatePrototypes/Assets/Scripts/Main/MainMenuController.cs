@@ -22,7 +22,7 @@ public class MainMenuController : MonoBehaviour {
 	// Start is called before the first frame update
 	void Start() {
 		TurnText.text = $"Turn {World.turn}";
-		World.Init();
+		// World.Init();
 	}
 
 	// Update is called once per frame

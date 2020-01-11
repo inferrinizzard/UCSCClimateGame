@@ -1,28 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 public static class World {
 	public static float money = 100f;
+	public static float publicOpinion = 5f;
 	public static int turn = 1;
 	public static int actionsRemaining = 2;
 	public static int billIndex = 0;
-	static double[] _temp;
-	public static double[] temp {
-		get { return _temp; }
-		set { _temp = value; }
-	}
-	static double[] _energy;
-	public static double[] energy {
-		get { return _energy; }
-		set { _energy = value; }
-	}
-	static double[] _precip;
-	public static double[] precip {
-		get { return _precip; }
-		set { _precip = value; }
-	}
+	public static double[] _temp;
+	public static double[] _energy;
+	public static double[] _precip;
 
 	public static void Init() {
 		Calc();
