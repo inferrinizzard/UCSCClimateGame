@@ -19,6 +19,7 @@ public static class World {
 	public static void Calc(bool useTemp = false) => (_temp, _energy, _precip) = EBM.Calc(useTemp ? EBM.temp : null);
 
 	public static void Update(double F = -1, double Fb = -1, double S0 = -1, double S1 = -1) {
+		// cw speed control
 		if (F != -1)
 			EBM.F = F;
 		if (Fb != -1)

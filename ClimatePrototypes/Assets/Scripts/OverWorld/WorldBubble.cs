@@ -33,7 +33,7 @@ public class WorldBubble : MonoBehaviour {
 		if (!active)
 			StartCoroutine(Bubble(entering: true, dur: .25f));
 		if (Input.GetButtonDown("Fire1")) {
-			SceneController.Transition(gameObject.name.Replace("Node", string.Empty));
+			GameManager.Transition(gameObject.name.Replace("Node", string.Empty));
 			Debug.Log(gameObject.name.Replace("Node", string.Empty));
 		}
 	}
