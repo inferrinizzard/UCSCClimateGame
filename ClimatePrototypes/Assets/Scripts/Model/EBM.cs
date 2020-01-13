@@ -7,47 +7,48 @@ using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 public class EBM {
-	///<summary> public temperature </summary>
+	/// <summary> public temperature </summary>
 	public static Vector<double> temp;
-	///<summary> public energy </summary>
+	/// <summary> public energy </summary>
 	public static Vector<double> energy;
-	///<summary> public energy </summary>
+	/// <summary> public energy </summary>
 	public static Vector<double> precip;
-	///<summary> OLR when T = 0 (W m^-2) </summary>
+	/// <summary> OLR when T = 0 (W m^-2) </summary>
 	public static double A = 193;
-	///<summary> OLR temperature dependence (W M^-2 K^-1) </summary>
+	/// <summary> OLR temperature dependence (W M^-2 K^-1) </summary>
 	static readonly double B = 2.1;
-	///<summary> ocean mixed layer heat capacity (W yr m^-2 K^-1)  </summary>
+	/// <summary> ocean mixed layer heat capacity (W yr m^-2 K^-1)  </summary>
+	/// <seealso> edit this to adjust model speed </seealso>
 	static readonly double cw = 9.8;
-	///<summary> diffusivity for heat transport (W m^-2 K^-1)  </summary>
+	/// <summary> diffusivity for heat transport (W m^-2 K^-1)  </summary>
 	static readonly double D = 0.5;
 
-	///<summary> insolation at equator (W m^-2)  </summary>
+	/// <summary> insolation at equator (W m^-2)  </summary>
 	public static double S0 = 420;
-	///<summary> insolation seasonal dependence (W m^-2)  </summary>
+	/// <summary> insolation seasonal dependence (W m^-2)  </summary>
 	public static double S1 = 338;
-	///<summary> insolation spatial dependence (W m^-2)  </summary>
+	/// <summary> insolation spatial dependence (W m^-2)  </summary>
 	static readonly double S2 = 240;
-	///<summary> ice-free co-albedo at equator  </summary>
+	/// <summary> ice-free co-albedo at equator  </summary>
 	static readonly double a0 = 0.7;
-	///<summary> ice=free co-albedo spatial dependence  </summary>
+	/// <summary> ice=free co-albedo spatial dependence  </summary>
 	static readonly double a2 = 0.1;
-	///<summary> co-albedo where there is sea ice  </summary>
+	/// <summary> co-albedo where there is sea ice  </summary>
 	static readonly double aI = 0.4;
-	///<summary> radiative forcing (W m^-2) </summary>
+	/// <summary> radiative forcing (W m^-2) </summary>
 	public static double F = 0;
 
-	///<summary>number of latitudinal bands </summary>
+	/// <summary>number of latitudinal bands </summary>
 	static readonly int bands = 24;
 	public static int regions = 3;
 
-	///<summary>  latent heat of vaporization (J kg^-1) </summary>
+	/// <summary>  latent heat of vaporization (J kg^-1) </summary>
 	static readonly double Lv = 2500000;
-	///<summary>  heat capacity of air at constant pressure (J kg^-1 K^-1) </summary>
+	/// <summary>  heat capacity of air at constant pressure (J kg^-1 K^-1) </summary>
 	static readonly double cp = 1004.6;
-	///<summary>  relative humidity </summary>
+	/// <summary>  relative humidity </summary>
 	static readonly double Rh = 0.8;
-	///<summary>  surface pressure (Pa) </summary>
+	/// <summary>  surface pressure (Pa) </summary>
 	static readonly double Ps = 100000;
 
 	// double overload

@@ -8,18 +8,17 @@ public static class World {
 	public static int turn = 1;
 	public static int actionsRemaining = 2;
 	public static int billIndex = 0;
-	public static double[] _temp;
-	public static double[] _energy;
-	public static double[] _precip;
+	public static double[] temp;
+	public static double[] energy;
+	public static double[] precip;
 
 	public static void Init() {
 		Calc();
 	}
 
-	public static void Calc(bool useTemp = false) => (_temp, _energy, _precip) = EBM.Calc(useTemp ? EBM.temp : null);
+	public static void Calc(bool useTemp = false) => (temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null);
 
 	public static void Update(double F = -1, double Fb = -1, double S0 = -1, double S1 = -1) {
-		// cw speed control
 		if (F != -1)
 			EBM.F = F;
 		if (Fb != -1)

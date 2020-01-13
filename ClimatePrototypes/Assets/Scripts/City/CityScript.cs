@@ -14,38 +14,45 @@ public class CityScript : MonoBehaviour {
 
 	Dictionary<string, Bill> bills = new Dictionary<string, Bill>();
 
-	public struct Bill {
+	public class Bill {
 		public string name;
 		public string left, right;
 
-		public string[] tags;
+		public string tags;
 
-		public Bill(string _name, string _left = "", string _right = "", string[] _tags = null) {
+		public Bill(string _name, string _left = "", string _right = "", string _tags = "") {
 			name = _name;
 			left = _left;
 			right = _right;
+			// tags = _tags ?? new string[0];
 			tags = _tags;
 		}
+
+		public object this [string prop] {
+			get => this.GetType().GetField(prop);
+			set => this.GetType().GetField(prop).SetValue(this, value);
+		}
+
+		public override string ToString() => $"name:{name}, left:{left}, right:{right}, tags:[{System.String.Join(" ",tags)}]";
 	}
 
 	void Start() {
 		JsonTextReader reader = new JsonTextReader(new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories) [0]));
 
-		int i = 0;
 		Bill curBill = new Bill("");
-		bool billFlag = true;
+		string prop = "name";
 		while (reader.Read()) {
-			if (reader.Value != null) {
-				if (billFlag) {
-					billFlag = false;
-					curBill.name = reader.Value.ToString();
+			if (reader.Value != null)
+				if (prop == "")
+					prop = reader.Value.ToString();
+				else {
+					curBill[prop] = reader.Value.ToString();
+					prop = "";
 				}
-			} else {
-				if (reader.TokenType == JsonToken.EndObject && curBill.name != "") {
-					billFlag = true;
-					bills[curBill.name] = curBill;
-					curBill = new Bill("");
-				}
+			else if (reader.TokenType == JsonToken.EndObject && prop != "name") {
+				prop = "name";
+				bills[curBill.name] = curBill;
+				curBill = new Bill("");
 			}
 		}
 
