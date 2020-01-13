@@ -7,29 +7,48 @@ using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 public class EBM {
-	public static Vector<double> temp; // public temperature
-	public static Vector<double> energy; // public energy
-	public static Vector<double> precip; // public energy
-	public static double A = 193; // OLR when T = 0 (W m^-2)
-	static readonly double B = 2.1; // OLR temperature dependence (W M^-2 K^-1)
-	static readonly double cw = 9.8; // ocean mixed layer heat capacity (W yr m^-2 K^-1) 
-	static readonly double D = 0.5; // diffusivity for heat transport (W m^-2 K^-1) 
+	///<summary> public temperature </summary>
+	public static Vector<double> temp;
+	///<summary> public energy </summary>
+	public static Vector<double> energy;
+	///<summary> public energy </summary>
+	public static Vector<double> precip;
+	///<summary> OLR when T = 0 (W m^-2) </summary>
+	public static double A = 193;
+	///<summary> OLR temperature dependence (W M^-2 K^-1) </summary>
+	static readonly double B = 2.1;
+	///<summary> ocean mixed layer heat capacity (W yr m^-2 K^-1)  </summary>
+	static readonly double cw = 9.8;
+	///<summary> diffusivity for heat transport (W m^-2 K^-1)  </summary>
+	static readonly double D = 0.5;
 
-	public static double S0 = 420; // insolation at equator (W m^-2) 
-	public static double S1 = 338; // insolation seasonal dependence (W m^-2) 
-	static readonly double S2 = 240; // insolation spatial dependence (W m^-2) 
-	static readonly double a0 = 0.7; // ice-free co-albedo at equator 
-	static readonly double a2 = 0.1; // ice=free co-albedo spatial dependence 
-	static readonly double aI = 0.4; // co-albedo where there is sea ice 
-	public static double F = 0; // radiative forcing (W m^-2)
+	///<summary> insolation at equator (W m^-2)  </summary>
+	public static double S0 = 420;
+	///<summary> insolation seasonal dependence (W m^-2)  </summary>
+	public static double S1 = 338;
+	///<summary> insolation spatial dependence (W m^-2)  </summary>
+	static readonly double S2 = 240;
+	///<summary> ice-free co-albedo at equator  </summary>
+	static readonly double a0 = 0.7;
+	///<summary> ice=free co-albedo spatial dependence  </summary>
+	static readonly double a2 = 0.1;
+	///<summary> co-albedo where there is sea ice  </summary>
+	static readonly double aI = 0.4;
+	///<summary> radiative forcing (W m^-2) </summary>
+	public static double F = 0;
 
-	static readonly int bands = 24; //number of latitudinal bands
+	///<summary>number of latitudinal bands </summary>
+	static readonly int bands = 24;
 	public static int regions = 3;
 
-	static readonly double Lv = 2500000; //  latent heat of vaporization (J kg^-1)
-	static readonly double cp = 1004.6; //  heat capacity of air at constant pressure (J kg^-1 K^-1)
-	static readonly double Rh = 0.8; //  relative humidity
-	static readonly double Ps = 100000; //  surface pressure (Pa)
+	///<summary>  latent heat of vaporization (J kg^-1) </summary>
+	static readonly double Lv = 2500000;
+	///<summary>  heat capacity of air at constant pressure (J kg^-1 K^-1) </summary>
+	static readonly double cp = 1004.6;
+	///<summary>  relative humidity </summary>
+	static readonly double Rh = 0.8;
+	///<summary>  surface pressure (Pa) </summary>
+	static readonly double Ps = 100000;
 
 	// double overload
 	public static Vector<double> Humidity(double[] temp, double press) => Humidity(Vector<double>.Build.Dense(temp), press);
@@ -43,10 +62,14 @@ public class EBM {
 		Vector<double> qs = ep * es / press;
 		return qs;
 	}
-	static readonly int nt = 1000; // number of timesteps per year
-	static readonly int dur = 30; // number of years
-	static readonly double dt = 1f / nt; // change in time
-	static readonly double dx = 1f / bands; // change in position
+	/// <summary> number of timesteps per year </summary>
+	static readonly int nt = 1000;
+	/// <summary> number of years </summary>
+	static readonly int dur = 30;
+	/// <summary> change in time </summary>
+	static readonly double dt = 1f / nt;
+	/// <summary> change in position </summary>
+	static readonly double dx = 1f / bands;
 	static readonly Vector<double> x = Vector<double>.Build.Dense(bands, i => dx / 2 + i++ * dx);
 	static readonly Vector<double> xb = Vector<double>.Build.Dense(bands, i => ++i * dx);
 
@@ -70,11 +93,16 @@ public class EBM {
 	static readonly Vector<double> simpleS = S0 - S2 * x.PointwisePower(2);
 	static readonly Vector<double> aw = a0 - a2 * x.PointwisePower(2);
 	static readonly Matrix<double> I = Matrix<double>.Build.DenseIdentity(bands);
-	public static double Fb = 4; // heat flux from ocean below (W m^-2)
-	static readonly int k = 2; // sea ice thermal conductivity (W m^-2 K^-1)
-	static readonly double Lf = 9.5; // sea ice latent heat of fusion (W yr m^-3)
-	static readonly double cg = cw / 100; // ghost layer heat capacity(W yr m^-2 K^-1)
-	static readonly double tau = 0.00001; // ghost layer coupling timescale (yr)
+	/// <summary> heat flux from ocean below (W m^-2) </summary>
+	public static double Fb = 4;
+	/// <summary> sea ice thermal conductivity (W m^-2 K^-1) </summary>
+	static readonly int k = 2;
+	/// <summary> sea ice latent heat of fusion (W yr m^-3) </summary>
+	static readonly double Lf = 9.5;
+	/// <summary> ghost layer heat capacity(W yr m^-2 K^-1) </summary>
+	static readonly double cg = cw / 100;
+	/// <summary> ghost layer coupling timescale (yr) </summary>
+	static readonly double tau = 0.00001;
 	static readonly double cg_tau = cg / tau;
 	static readonly double dt_tau = dt / tau;
 	static readonly double dc = dt_tau * cg_tau;
@@ -86,8 +114,10 @@ public class EBM {
 			Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Select(v => x).ToArray()));
 	//could optimise with indices if needed
 	static readonly double M = B + cg_tau;
-	static readonly double gms_scale = 1.06; // ratio of MSE aloft to near surface, equatorial MSE
-	static readonly double sigma = .3; // characteristic width for gaussian weighting function
+	/// <summary> ratio of MSE aloft to near surface, equatorial MSE </summary>
+	static readonly double gms_scale = 1.06;
+	/// <summary> characteristic width for gaussian weighting function </summary>
+	static readonly double sigma = .3;
 
 	public static(Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
 		T = T == null ? 7.5f + 20 * (1 - 2 * x.PointwisePower(2)) : T;
