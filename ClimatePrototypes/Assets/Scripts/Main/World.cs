@@ -7,7 +7,6 @@ public static class World {
 	public static float publicOpinion = 5f;
 	public static int turn = 1;
 	public static int actionsRemaining = 2;
-	public static int billIndex = 0;
 	public static double[] temp;
 	public static double[] energy;
 	public static double[] precip;

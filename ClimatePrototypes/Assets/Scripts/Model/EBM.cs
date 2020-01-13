@@ -121,7 +121,7 @@ public class EBM {
 	static readonly double sigma = .3;
 
 	public static(Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
-		T = T == null ? 7.5f + 20 * (1 - 2 * x.PointwisePower(2)) : T;
+		T = T ?? 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
 		years = years == 0 ? dur : years;
 		timesteps = timesteps == 0 ? nt : timesteps;
 		Matrix<double> T100 = Matrix<double>.Build.Dense(bands, dur * 100, 0);
@@ -222,7 +222,7 @@ public class EBM {
 
 	static Predicate < (double, double) > Less = ((double, double) t) => t.Item1 < t.Item2;
 	static Predicate < (double, double) > GreatOrE = ((double, double) t) => t.Item1 >= t.Item2;
-	public static Vector<double> Sign0(Predicate < (double, double) > op, Vector<double> vec, Vector<double> result = null) => (result == null ? vec : result).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
+	public static Vector<double> Sign0(Predicate < (double, double) > op, Vector<double> vec, Vector<double> result = null) => (result ?? vec).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
 	static void Print(IEnumerable<double> nums) => Debug.Log(nums == null ? "null" : String.Join(" ", nums));
 }
 
