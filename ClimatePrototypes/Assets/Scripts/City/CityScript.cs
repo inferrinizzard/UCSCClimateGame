@@ -5,13 +5,15 @@ using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Web;
 
 public class CityScript : MonoBehaviour {
 	// Start is called before the first frame update
 	public Text left, right;
 	[Range(0.01f, 0.1f)] public float speed = .1f;
-	// List<string> bills = new List<string>();
 
+	public string currBillTag;
+	public int currBillIndex;
 	Dictionary<string, Bill> bills = new Dictionary<string, Bill>();
 
 	public class Bill {
@@ -36,32 +38,55 @@ public class CityScript : MonoBehaviour {
 		public override string ToString() => $"name:{name}, left:{left}, right:{right}, tags:[{System.String.Join(" ",tags)}]";
 	}
 
-	void Start() {
-		JsonTextReader reader = new JsonTextReader(new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories) [0]));
+	void Start() 
+	{
+		currBillIndex = 0; // default
 
-		Bill curBill = new Bill("");
-		string prop = "name";
-		while (reader.Read()) {
-			if (reader.Value != null)
-				if (prop == "")
-					prop = reader.Value.ToString();
-				else {
-					curBill[prop] = reader.Value.ToString();
-					prop = "";
-				}
-			else if (reader.TokenType == JsonToken.EndObject && prop != "name") {
-				prop = "name";
-				bills[curBill.name] = curBill;
-				curBill = new Bill("");
-			}
+		using (StreamReader r = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories) [0]))
+		{
+			string json = r.ReadToEnd();
+			List<Bill> bills = JsonConvert.DeserializeObject<List<Bill>>(json);
+			StartCoroutine(Typewriter(left, bills[0].left, speed));
+			StartCoroutine(Typewriter(right, bills[0].right, speed));
 		}
 
-		// StartCoroutine(Typewriter(left, bills[World.billIndex], speed));
-		// StartCoroutine(Typewriter(right, bills[World.billIndex + 1], speed));
+		//JsonTextReader reader = new JsonTextReader(new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories) [0]));
+		//Bill curBill = new Bill("");
+		// string prop = "name";
+		// while (reader.Read()) {
+		// 	if (reader.Value != null)
+		// 		if (prop == "")
+		// 			prop = reader.Value.ToString();
+		// 		else {
+		// 			curBill[prop] = reader.Value.ToString();
+
+		// 			prop = "";
+		// 		}
+		// 	else if (reader.TokenType == JsonToken.EndObject && prop != "name") {
+		// 		prop = "name";
+		// 		bills[curBill.name] = curBill;
+		// 		curBill = new Bill("");
+		// 	}
+		// }
 	}
 
+	// public static BillInfo CreateFromJSON(string jsonString)
+	// {
+		
+	// 	return JsonUtility.FromJson<PlayerInfo>(jsonString);
+	// }
+
 	// Update is called once per frame
-	void Update() { }
+	void Update() 
+	{ 
+		determineCurrBill();
+	}
+
+	private void determineCurrBill()
+	{
+		currBillTag = "co2"; // default
+		// bill switching logic
+	}
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
 	{

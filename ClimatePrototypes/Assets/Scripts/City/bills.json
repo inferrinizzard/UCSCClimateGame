@@ -1,17 +1,27 @@
-{
-	"one": {
-		"left": "left text one",
-		"right": "right text one",
-		"tags": "co2 albedo"
-	},
-	"two": {
-		"left": "left text two",
-		"right": "right text two",
-		"tags": "opinion albedo"
-	},
-	"three": {
-		"left": "left text three",
-		"right": "right text three",
-		"tags": "co2 money"
-	}
-}
+	[
+		{
+			"name": "co2",
+			"left": "co2 bill left ",
+			"right": "co2 bill right",
+			"tags": "co2"
+		},
+		{
+			"name": "albedo",
+			"left": "albedo bill left",
+			"right": "albedo bill right",
+			"tags": "albedo"
+		},
+		{
+			"name": "money",
+			"left": "money bill left",
+			"right": "money bill right",
+			"tags": "money"
+		},
+		{
+			"name": "opinion",
+			"left": "opinion bill left",
+			"right": "opinion bill left",
+			"tags": "opinion"
+		}
+	]
+
