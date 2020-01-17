@@ -898,6 +898,10 @@ PrefabInstance:
       propertyPath: TempRange
       value: 30.6
       objectReference: {fileID: 0}
+    - target: {fileID: 397078737, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
+      propertyPath: opinionText
+      value: 
+      objectReference: {fileID: 1054463661}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9bf98e40b560ae0489c3710d8f315f2c, type: 3}
 --- !u!4 &277055516 stripped
@@ -1132,6 +1136,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 378419711}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< Updated upstream
 --- !u!1 &423480365
 GameObject:
   m_ObjectHideFlags: 0
@@ -3795,11 +3800,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987238474}
+=======
+--- !u!114 &1054463661 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1177492542560736358, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+    type: 3}
+  m_PrefabInstance: {fileID: 1054463659}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+>>>>>>> Stashed changes
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
@@ -4039,3 +4054,5 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+=======
+>>>>>>> Stashed changes
