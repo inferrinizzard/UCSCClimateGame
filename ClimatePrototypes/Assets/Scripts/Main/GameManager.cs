@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
 	public Text moneyText;
 	public Text turnText;
 	public Text actionText;
+	public Text opinionText;
 
 	bool settingsOn = false;
 	bool infoOn = false;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		moneyText.text = $"Money: ${World.money:0,0}";
+		opinionText.text = $"Public Opinion: {World.publicOpinion:0,0}";
 
 		if (actionText)
 			actionText.text = $"Actions Remaining: {World.actionsRemaining}";

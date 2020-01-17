@@ -382,6 +382,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: -7501704979478934602, guid: a287453c0c973a24ea8ff75d79477b7e,
+          type: 3}
+        m_MethodName: DecreasePublicOpinion
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: -7501704979478934602, guid: a287453c0c973a24ea8ff75d79477b7e,
+          type: 3}
+        m_MethodName: LoseMoney
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &436571731
@@ -1438,6 +1462,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: -7501704979478934602, guid: a287453c0c973a24ea8ff75d79477b7e,
+          type: 3}
+        m_MethodName: IncreasePublicOpinion
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: -7501704979478934602, guid: a287453c0c973a24ea8ff75d79477b7e,
+          type: 3}
+        m_MethodName: GainMoney
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1627311275
@@ -1925,6 +1973,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 397078737, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
+      propertyPath: opinionText
+      value: 
+      objectReference: {fileID: 1986502973}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
 --- !u!224 &1986502972 stripped
@@ -1933,6 +1985,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1986502971}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1986502973 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6227766670361262967, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+    type: 3}
+  m_PrefabInstance: {fileID: 1986502971}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1993193838
 GameObject:
   m_ObjectHideFlags: 0
