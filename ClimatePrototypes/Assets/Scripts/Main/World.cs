@@ -33,9 +33,15 @@ public static class World {
 
 	public static void UpdateTemp(string region, float deltaT) {
 		// temps[region]--;
+		
 	}
 
 	public static void UpdateCO2(float ppm) {
 		// co2 += ppm;
 	}
+
+	public static void UpdateAlbedo(float delta) {
+		// 
+	}
+
 }
