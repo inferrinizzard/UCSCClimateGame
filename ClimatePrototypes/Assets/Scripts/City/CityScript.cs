@@ -69,13 +69,7 @@ public class CityScript : MonoBehaviour {
 		// 	}
 		// }
 	}
-
-	// public static BillInfo CreateFromJSON(string jsonString)
-	// {
-		
-	// 	return JsonUtility.FromJson<PlayerInfo>(jsonString);
-	// }
-
+	
 	// Update is called once per frame
 	void Update() 
 	{ 
