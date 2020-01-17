@@ -3,20 +3,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-[Serializable]
+[System.Serializable]
 public class Cam : MonoBehaviour
 {
 	Ray ray;    //stores ray from camera to world space
-
 	public Material m;      //default meterial
-
 	Camera cam;     //Main Camera
 
-	[SerializeField]
-	Slider heat;        //reference to UI heat gauge
+	[SerializeField] Slider heat = default;        //reference to UI heat gauge
 
-	[SerializeField]
-	LineRenderer lr, tracer;    //linerenderer prefab, tracing line reference
+	[SerializeField] LineRenderer lr, tracer = null;    //linerenderer prefab, tracing line reference
 
 	public GameObject markerSource;   //marker prefan
 
@@ -54,10 +50,10 @@ public class Cam : MonoBehaviour
 		RaycastHit hitInfo;   //raycast out
 		if (Input.GetButtonDown("Fire1"))
 		{
-			ray = cam.ScreenPointToRay(UnityEngine.Input.mousePosition);
+			ray = cam.ScreenPointToRay(Input.mousePosition);
 			vector = ray.origin + ray.direction * 10;
 			// vector = cam.ScreenToWorldPoint(10);
-			// UnityEngine.Debug.DrawRay(ray.origin, ray.direction * 10f, Color.yellow);
+			// Debug.DrawRay(ray.origin, ray.direction * 10f, Color.yellow);
 			hasRay = true;
 			if (Physics.Raycast(ray, out hitInfo) && marker == null && hitInfo.transform.gameObject.name == "Ocean")
 			{

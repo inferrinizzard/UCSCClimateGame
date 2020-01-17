@@ -44,6 +44,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ocean
+    uniqueID: 2099409631
+    locked: 0
+  - name: Heat
+    uniqueID: 2852451603
+    locked: 0
+  - name: Land
+    uniqueID: 1065524269
+    locked: 0
+  - name: Green
+    uniqueID: 3329800033
+    locked: 0
+  - name: Cloud
+    uniqueID: 3329864947
+    locked: 0
   - name: Arrows
     uniqueID: 3995315625
     locked: 0

@@ -13,7 +13,10 @@ public class GameManager : MonoBehaviour {
 	public Text moneyText;
 	public Text turnText;
 	public Text actionText;
+<<<<<<< HEAD
 	public Text opinionText;
+=======
+>>>>>>> year2-fall-checkpoint
 
 	bool settingsOn = false;
 	bool infoOn = false;
@@ -28,7 +31,10 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
+<<<<<<< HEAD
 		opinionText.text = $"Public Opinion: ${World.publicOpinion:0,0}";
+=======
+>>>>>>> year2-fall-checkpoint
 		moneyText.text = $"Money: ${World.money:0,0}";
 
 		if (actionText)

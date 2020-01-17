@@ -310,7 +310,7 @@ RectTransform:
   m_Children:
   - {fileID: 616112959}
   m_Father: {fileID: 1848522230}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -532,7 +532,7 @@ RectTransform:
   m_LocalScale: {x: 1.4669926, y: 1.4669926, z: 1.4669926}
   m_Children: []
   m_Father: {fileID: 1848522230}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1089,7 +1089,7 @@ RectTransform:
   m_LocalScale: {x: 1.4669926, y: 1.4669926, z: 1.4669926}
   m_Children: []
   m_Father: {fileID: 1848522230}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1368,7 +1368,7 @@ RectTransform:
   m_Children:
   - {fileID: 1625393142}
   m_Father: {fileID: 1848522230}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1481,6 +1481,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627311272}
   m_CullTransparentMesh: 0
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 --- !u!1001 &1756540209
 PrefabInstance:
@@ -1717,6 +1718,8 @@ MonoBehaviour:
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 >>>>>>> Stashed changes
+=======
+>>>>>>> year2-fall-checkpoint
 --- !u!1 &1775967450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1749,7 +1752,7 @@ RectTransform:
   m_Children:
   - {fileID: 1059672948}
   m_Father: {fileID: 1848522230}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1799,7 +1802,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1756540211}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangeLevel
         m_Mode: 5
         m_Arguments:
@@ -1940,16 +1943,20 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   - {fileID: 1756540210}
 =======
   - {fileID: 1643137246}
 >>>>>>> Stashed changes
+=======
+>>>>>>> year2-fall-checkpoint
   - {fileID: 478389873}
   - {fileID: 1167681608}
   - {fileID: 1627311273}
   - {fileID: 436571729}
   - {fileID: 1775967451}
+  - {fileID: 1986502972}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2052,8 +2059,11 @@ Transform:
   m_Father: {fileID: 1212343442}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> year2-fall-checkpoint
 --- !u!1001 &1986502971
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2104,7 +2114,11 @@ PrefabInstance:
     - target: {fileID: 5934203070016002825, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
         type: 3}
       propertyPath: m_RootOrder
+<<<<<<< HEAD
       value: 6
+=======
+      value: 5
+>>>>>>> year2-fall-checkpoint
       objectReference: {fileID: 0}
     - target: {fileID: 5934203070016002825, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
         type: 3}
@@ -2171,10 +2185,13 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+<<<<<<< HEAD
     - target: {fileID: 397078737, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
       propertyPath: opinionText
       value: 
       objectReference: {fileID: 2020051009}
+=======
+>>>>>>> year2-fall-checkpoint
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
 --- !u!224 &1986502972 stripped
@@ -2183,7 +2200,10 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1986502971}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> year2-fall-checkpoint
 --- !u!1 &1993193838
 GameObject:
   m_ObjectHideFlags: 0
