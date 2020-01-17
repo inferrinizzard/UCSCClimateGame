@@ -608,7 +608,7 @@ PlayerSettings:
   cloudProjectId: 6c7f227a-3430-4fa6-8759-d8d7fa895ba0
   framebufferDepthMemorylessMode: 0
   projectName: ClimatePrototypes
-  organizationId: azyre
+  organizationId: ucsc-climate-game
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
