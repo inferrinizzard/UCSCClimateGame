@@ -481,12 +481,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-<<<<<<< HEAD
-<<<<<<< Updated upstream
---- !u!1 &1117662441828304653
-=======
-=======
->>>>>>> year2-fall-checkpoint
 --- !u!114 &8383397479489231899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,91 +559,7 @@ MonoBehaviour:
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
-<<<<<<< HEAD
---- !u!1 &2541341158517129746
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7584497753274011352}
-  - component: {fileID: 3000942569218102441}
-  - component: {fileID: 1177492542560736358}
-  m_Layer: 5
-  m_Name: PublicOpinionText
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &7584497753274011352
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2541341158517129746}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 5934203070016002825}
-  m_RootOrder: 13
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 44.9, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3000942569218102441
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2541341158517129746}
-  m_CullTransparentMesh: 0
---- !u!114 &1177492542560736358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2541341158517129746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 16
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 40
-    m_Alignment: 3
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 'Public Opinion: XX'
 --- !u!1 &2818313080038469660
->>>>>>> Stashed changes
-=======
---- !u!1 &2818313080038469660
->>>>>>> year2-fall-checkpoint
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1406,36 +1316,10 @@ RectTransform:
   m_GameObject: {fileID: 5934203069585705540}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-<<<<<<< Updated upstream
-  - {fileID: 316958874359917109}
-  m_Father: {fileID: 5934203069585705541}
-=======
   m_LocalScale: {x: 0.74301, y: 0.74301, z: 0.74301}
   m_Children: []
   m_Father: {fileID: 5934203070016002825}
->>>>>>> year2-fall-checkpoint
   m_RootOrder: 6
-=======
-  - {fileID: 8547018638720403267}
-  - {fileID: 5934203069604140458}
-  - {fileID: 5934203069785813284}
-  - {fileID: 5934203069527351751}
-  - {fileID: 5934203070562351330}
-  - {fileID: 5934203068715727088}
-  - {fileID: 5934203069585705541}
-  - {fileID: 5934203070564380505}
-  - {fileID: 8368809017932095479}
-  - {fileID: 4476699697359559454}
-  - {fileID: 2818989527039056327}
-  - {fileID: 397078738}
-  - {fileID: 390840597}
-  - {fileID: 7584497753274011352}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
->>>>>>> Stashed changes
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
