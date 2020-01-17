@@ -28,7 +28,7 @@ public class CityScript : MonoBehaviour {
 			tags = _tags;
 		}
 
-		public object this [string prop] {
+		public object this[string prop] {
 			get => this.GetType().GetField(prop);
 			set => this.GetType().GetField(prop).SetValue(this, value);
 		}
@@ -37,7 +37,7 @@ public class CityScript : MonoBehaviour {
 	}
 
 	void Start() {
-		JsonTextReader reader = new JsonTextReader(new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories) [0]));
+		JsonTextReader reader = new JsonTextReader(new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories)[0]));
 
 		Bill curBill = new Bill("");
 		string prop = "name";
@@ -61,7 +61,9 @@ public class CityScript : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update() { }
+	void Update() {
+		// add pen cursor to follow mouse
+	}
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
 	{

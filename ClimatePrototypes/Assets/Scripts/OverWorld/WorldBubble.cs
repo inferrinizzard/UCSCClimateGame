@@ -12,17 +12,7 @@ public class WorldBubble : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update() {
-		// if (active) {
-		// Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		// RaycastHit hit;
-		// if (bubble.GetComponent<Collider>().Raycast(ray, out hit)) {
-		// 	Debug.Log(hit.collider.name);
-		// 	if (Input.GetMouseButtonDown(0))
-		// 		Debug.Log("click");
-		// }
-		// }
-	}
+	void Update() { }
 
 	void OnMouseEnter() {
 		if (!active)
@@ -34,7 +24,6 @@ public class WorldBubble : MonoBehaviour {
 			StartCoroutine(Bubble(entering: true, dur: .25f));
 		if (Input.GetButtonDown("Fire1")) {
 			GameManager.Transition(gameObject.name.Replace("Node", string.Empty));
-			Debug.Log(gameObject.name.Replace("Node", string.Empty));
 		}
 	}
 
