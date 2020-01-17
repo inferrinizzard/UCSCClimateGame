@@ -269,7 +269,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1520004012}
 =======
->>>>>>> year2-fall-checkpoint
     - target: {fileID: 1581054697, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -389,7 +388,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
 <<<<<<< HEAD
->>>>>>> Stashed changes
 =======
     - target: {fileID: 8368809017932095479, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
         type: 3}
@@ -406,7 +404,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
->>>>>>> year2-fall-checkpoint
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
 --- !u!224 &5809443 stripped
@@ -2246,7 +2243,6 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1322553778}
->>>>>>> Stashed changes
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -2445,7 +2441,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
->>>>>>> year2-fall-checkpoint
   m_GameObject: {fileID: 1430256620}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -2473,10 +2468,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1530245796
->>>>>>> Stashed changes
 =======
 --- !u!1 &1530245796
->>>>>>> year2-fall-checkpoint
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
