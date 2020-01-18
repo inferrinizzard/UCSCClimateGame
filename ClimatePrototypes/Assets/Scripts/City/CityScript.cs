@@ -13,8 +13,13 @@ public class CityScript : MonoBehaviour
 	public Text left, right;
 	[Range(0.01f, 0.1f)] public float speed = .1f;
 
-	public string currBillTag;
+	public string currBillName;
 	public int currBillIndex;
+
+	private float ppm;
+	private float albedoDelta;
+
+	Dictionary<string, Bill> bills = new Dictionary<string, Bill>();
 
 	public static List<Bill> bills = new List<Bill>();
 
@@ -59,12 +64,27 @@ public class CityScript : MonoBehaviour
 	void Update()
 	{
 		DetermineCurrentBill();
+		NotifyWorldChange(currBillName);
 	}
 
 	private void DetermineCurrentBill()
 	{
-		currBillTag = "co2"; // default
-		// bill switching logic
+		currBillName = "co2"; // default
+		// bill switching logic, flow unknown
+	}
+
+	private void NotifyWorldChange(string billName)
+	{
+		switch (billName)
+		{
+			case "co2":
+				World.UpdateCO2(ppm);
+				break;
+			case "albedo":
+				World.UpdateAlbedo(albedoDelta);
+				break;
+		}
+
 	}
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
