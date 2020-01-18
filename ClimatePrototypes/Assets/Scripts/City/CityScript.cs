@@ -7,8 +7,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CityScript : MonoBehaviour
-{
+public class CityScript : MonoBehaviour {
 	// Start is called before the first frame update
 	public Text left, right;
 	[Range(0.01f, 0.1f)] public float speed = .1f;
@@ -23,20 +22,17 @@ public class CityScript : MonoBehaviour
 
 	public static List<Bill> bills = new List<Bill>();
 
-	public struct Bill
-	{
+	public struct Bill {
 		public string name;
 		public Dictionary<string, string> left, right;
 
-		public Bill(string _name, Dictionary<string, string> _left = null, Dictionary<string, string> _right = null)
-		{
+		public Bill(string _name, Dictionary<string, string> _left = null, Dictionary<string, string> _right = null) {
 			name = _name;
 			left = _left;
 			right = _right;
 		}
 
-		public object this[string prop]
-		{
+		public object this[string prop] {
 			get => this.GetType().GetField(prop);
 			set => this.GetType().GetField(prop).SetValue(this, value);
 		}
@@ -46,12 +42,10 @@ public class CityScript : MonoBehaviour
 			"{" + right.Select(kvp => $"{kvp.Key}:[{kvp.Value}]").Aggregate((acc, s) => $"{acc} {s}") + "}");
 	}
 
-	void Start()
-	{
+	void Start() {
 		currBillIndex = 0; // default
 
-		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories)[0]))
-		{
+		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories)[0])) {
 			string json = reader.ReadToEnd();
 			bills = JsonConvert.DeserializeObject<List<Bill>>(json);
 			Debug.Log(bills[0]);
@@ -61,22 +55,18 @@ public class CityScript : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
-	{
+	void Update() {
 		DetermineCurrentBill();
 		NotifyWorldChange(currBillName);
 	}
 
-	private void DetermineCurrentBill()
-	{
+	private void DetermineCurrentBill() {
 		currBillName = "co2"; // default
 		// bill switching logic, flow unknown
 	}
 
-	private void NotifyWorldChange(string billName)
-	{
-		switch (billName)
-		{
+	private void NotifyWorldChange(string billName) {
+		switch (billName) {
 			case "co2":
 				World.UpdateCO2(ppm);
 				break;
@@ -89,8 +79,7 @@ public class CityScript : MonoBehaviour
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
 	{
-		for (int i = 0; i < text.Length - 1; i++)
-		{
+		for (int i = 0; i < text.Length - 1; i++) {
 			print.text = text.Substring(0, i);
 			yield return new WaitForSeconds(speed);
 		}

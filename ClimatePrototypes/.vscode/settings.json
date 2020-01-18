@@ -53,5 +53,6 @@
 		"Temp/": true,
 		"Logs/": true,
 		".collabignore": true
-	}
+	},
+	"csharpfixformat.style.braces.onSameLine": true
 }
