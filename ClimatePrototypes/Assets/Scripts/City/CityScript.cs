@@ -18,7 +18,7 @@ public class CityScript : MonoBehaviour {
 	private float ppm;
 	private float albedoDelta;
 
-	Dictionary<string, Bill> bills = new Dictionary<string, Bill>();
+	// Dictionary<string, Bill> bills = new Dictionary<string, Bill>();
 
 	public static List<Bill> bills = new List<Bill>();
 
@@ -68,10 +68,10 @@ public class CityScript : MonoBehaviour {
 	private void NotifyWorldChange(string billName) {
 		switch (billName) {
 			case "co2":
-				World.UpdateCO2(ppm);
+				// World.UpdateCO2(ppm);
 				break;
 			case "albedo":
-				World.UpdateAlbedo(albedoDelta);
+				// World.UpdateAlbedo(albedoDelta);
 				break;
 		}
 
