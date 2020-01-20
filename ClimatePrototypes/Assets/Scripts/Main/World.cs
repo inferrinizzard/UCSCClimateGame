@@ -17,9 +17,9 @@ public static class World {
 
 	public static void Calc(bool useTemp = false, int years = 0, int steps = 0) => (temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);
 
-	static void UpdateCO2(double deltaF) => EBM.F += F;
-	static void UpdateMoney(double delta) => money += delta;
-	static void UpdateOpinion(double delta) => publicOpinion += delta;
-	static void UpdateAlbedo(double deltaS1) => EBM.S1 = S1;
+	static void UpdateCO2(double deltaF) => EBM.F += deltaF;
+	static void UpdateMoney(float delta) => money += delta;
+	static void UpdateOpinion(float delta) => publicOpinion += delta;
+	static void UpdateAlbedo(double deltaS1) => EBM.S1 = deltaS1;
 	// add other albedo?
 }
