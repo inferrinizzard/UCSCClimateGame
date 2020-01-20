@@ -16,6 +16,8 @@ Per file:
 			"tags" : "co2+1 land-0.1 money+2 opinion-1" // split by spaces
 		}
 	}, // end bill
-	...
+	.
+	.
+	.
 ]
 ```
