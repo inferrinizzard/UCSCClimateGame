@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class World
-{
+public static class World {
 	public static float money = 100f;
 	public static float publicOpinion = 5f;
 	public static int turn = 1;
@@ -12,25 +11,15 @@ public static class World
 	public static double[] energy;
 	public static double[] precip;
 
-	public static void Init()
-	{
+	public static void Init() {
 		Calc();
 	}
 
-	public static void Calc(bool useTemp = false) => (temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null);
+	public static void Calc(bool useTemp = false, int years = 0, int steps = 0) => (temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);
 
-	public static void Update(double F = -1, double Fb = -1, double S0 = -1, double S1 = -1)
-	{
-		if (F != -1)
-			EBM.F = F;
-		if (Fb != -1)
-			EBM.Fb = Fb;
-		if (S0 != -1)
-			EBM.S0 = S0;
-		if (S1 != -1)
-			EBM.S1 = S1;
-		Calc();
-	}
-
-	//will add other editor functions
+	static void UpdateCO2(double deltaF) => EBM.F += F;
+	static void UpdateMoney(double delta) => money += delta;
+	static void UpdateOpinion(double delta) => publicOpinion += delta;
+	static void UpdateAlbedo(double deltaS1) => EBM.S1 = S1;
+	// add other albedo?
 }
