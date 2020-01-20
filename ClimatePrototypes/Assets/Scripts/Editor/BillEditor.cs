@@ -1,34 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
-public class BillEditor : EditorWindow
-{
+public class BillEditor : EditorWindow {
     static Dictionary<string, List<CityScript.Bill>> bills = new Dictionary<string, List<CityScript.Bill>>();
     static int index = 0;
 
-    static CityScript.Bill newBill = new CityScript.Bill("", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
-    static Dictionary<string, Dictionary<string, float>> newTags = new Dictionary<string, Dictionary<string, float>>
-    { { "left", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } },
+    CityScript.Bill newBill = new CityScript.Bill("", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
+    Dictionary<string, Dictionary<string, float>> newTags = new Dictionary<string, Dictionary<string, float>> { { "left", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } },
         { "right", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } }
     };
-    Decks d;
+    Decks d = Decks.Easy;
 
-    enum Decks
-    {
+    enum Decks {
         Easy,
         Medium,
         Hard
     }
 
-    static Dictionary<string, List<CityScript.Bill>> bills2 = new Dictionary<string, List<CityScript.Bill>>
-    {
+    static Dictionary<string, List<CityScript.Bill>> bills2 = new Dictionary<string, List<CityScript.Bill>> {
         {
         "easy",
-        new List<CityScript.Bill>
-        {
+        new List<CityScript.Bill> {
         new CityScript.Bill("ae",
         new Dictionary<string, string> { { "title", "qwertyu" }, { "body", "qwertyu" }, { "tags", "" } },
         new Dictionary<string, string> { { "title", "qwertyu" }, { "body", "qwertyu" }, { "tags", "" } }),
@@ -39,8 +36,7 @@ public class BillEditor : EditorWindow
         },
         {
         "medium",
-        new List<CityScript.Bill>
-        {
+        new List<CityScript.Bill> {
         new CityScript.Bill("am",
         new Dictionary<string, string> { { "title", "qwertyu" }, { "body", "qwertyu" }, { "tags", "" } },
         new Dictionary<string, string> { { "title", "qwertyu" }, { "body", "qwertyu" }, { "tags", "" } }),
@@ -51,8 +47,7 @@ public class BillEditor : EditorWindow
         },
         {
         "hard",
-        new List<CityScript.Bill>
-        {
+        new List<CityScript.Bill> {
         new CityScript.Bill("ah",
         new Dictionary<string, string> { { "title", "qwertyu" }, { "body", "qwertyu" }, { "tags", "" } },
         new Dictionary<string, string> { { "title", "qwertyu" }, { "body", "qwertyu" }, { "tags", "" } }),
@@ -64,28 +59,26 @@ public class BillEditor : EditorWindow
     };
 
     [MenuItem("Window/Bill Editor")]
-    static void Awake()
-    {
-        // bills = CityScript.Parse();
-        // AssignBill(BillEditor.bills2["easy"][index]);
+    [ExecuteInEditMode] void OnEnable() {
+        if (!Application.isPlaying) {
+            // bills = CityScript.Parse();
+            AssignBill(BillEditor.bills2[d.ToString().ToLower()][index]);
+        }
     }
-    static void ShowWindow()
-    {
+    static void ShowWindow() {
         BillEditor window = GetWindow<BillEditor>();
         window.titleContent = new GUIContent("Bill Editor");
         window.Show();
     }
 
-    void OnGUI()
-    {
+    void OnGUI() {
         GUILayout.Label("Edit a Bill", EditorStyles.boldLabel);
         EditorGUI.BeginChangeCheck();
         d = (Decks)EditorGUILayout.EnumPopup("Bill Deck", d);
         string deckName = d.ToString().ToLower();
         if (EditorGUI.EndChangeCheck())
             AssignBill(BillEditor.bills2[deckName][index]);
-        if (BillEditor.bills2[deckName].Count > 0)
-        {
+        if (BillEditor.bills2[deckName].Count > 0) {
             CityScript.Bill bill = BillEditor.bills2[deckName][index];
 
             GUILayout.BeginHorizontal();
@@ -125,17 +118,20 @@ public class BillEditor : EditorWindow
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Save"))
-            {
+            if (GUILayout.Button("Save")) {
                 bill.name = newBill.name;
                 newBill.left["tags"] = System.String.Join(" ", newTags["left"].Where(kvp => kvp.Value != 0).Select(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
                 bill.left = newBill.left;
                 newBill.right["tags"] = System.String.Join(" ", newTags["right"].Where(kvp => kvp.Value != 0).Select(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
                 bill.right = newBill.right;
-                Debug.Log(bill);
+                // Debug.Log(bills2);
+                // Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories)[0]
+                using(StreamWriter writer = new StreamWriter(File.Open("test.json", FileMode.Truncate))) {
+                    writer.Write(JsonConvert.SerializeObject(bills2, Formatting.Indented));
+                }
+                Debug.Log("Saved!");
             }
-            if (GUILayout.Button("Reset"))
-            {
+            if (GUILayout.Button("Reset")) {
                 newBill.name = bill.name;
                 newBill.left["title"] = bill.left["title"];
                 newBill.left["body"] = bill.left["body"];
@@ -144,13 +140,11 @@ public class BillEditor : EditorWindow
                 newTags["left"]["co2"] = newTags["left"]["land"] = newTags["left"]["money"] = newTags["left"]["opinion"] = newTags["right"]["co2"] = newTags["right"]["land"] = newTags["right"]["money"] = newTags["right"]["opinion"] = 0f;
             }
             GUILayout.EndHorizontal();
-        }
-        else
+        } else
             GUILayout.Label("No Bills in this deck Found");
     }
 
-    void AssignBill(CityScript.Bill b)
-    {
+    void AssignBill(CityScript.Bill b) {
         newBill.name = b.name;
         newBill.left = b.left;
         newBill.right = b.right;

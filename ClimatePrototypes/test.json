@@ -1,0 +1,86 @@
+{
+  "easy": [
+    {
+      "name": "ae",
+      "left": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      },
+      "right": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      }
+    },
+    {
+      "name": "be",
+      "left": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      },
+      "right": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      }
+    }
+  ],
+  "medium": [
+    {
+      "name": "am",
+      "left": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      },
+      "right": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      }
+    },
+    {
+      "name": "bm",
+      "left": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      },
+      "right": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      }
+    }
+  ],
+  "hard": [
+    {
+      "name": "ah",
+      "left": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      },
+      "right": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      }
+    },
+    {
+      "name": "bh",
+      "left": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      },
+      "right": {
+        "title": "qwertyu",
+        "body": "qwertyu",
+        "tags": ""
+      }
+    }
+  ]
+}
