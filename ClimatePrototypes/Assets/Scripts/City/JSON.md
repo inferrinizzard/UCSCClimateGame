@@ -13,7 +13,7 @@ Per file:
 		"right": {
 			"title" : "title of right bill",
 			"body" : "body of right bill",
-			"tags" : "co2+1 land-0.1 money+2 opinion-1" // split by spaces
+			"tags" : "emission+1 land-0.1 economy+2 opinion-1" // split by spaces
 		}
 	}, // end bill
 	.

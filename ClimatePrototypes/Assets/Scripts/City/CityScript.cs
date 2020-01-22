@@ -8,19 +8,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CityScript : MonoBehaviour {
-	// Start is called before the first frame update
 	public Text left, right;
 	[Range(0.01f, 0.1f)] public float speed = .1f;
 
-	public string currBillName;
+	
+	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
+	//enum BillDifficulty {easy, med, hard};
+	public string currBillDifficulty;
+	private List<Bill> currBillList = new List<Bill>();
 	public int currBillIndex;
+	public Bill currBill;
 
 	private float ppm;
 	private float albedoDelta;
 
-	// Dictionary<string, Bill> bills = new Dictionary<string, Bill>();
-
-	public static List<Bill> bills = new List<Bill>();
 
 	public struct Bill {
 		public string name;
@@ -43,30 +44,78 @@ public class CityScript : MonoBehaviour {
 	}
 
 	void Start() {
-		currBillIndex = 0; // default
+		currBillDifficulty = "easy"; // default
+		currBillList = bills[currBillDifficulty];
+		currBillIndex = 0;
+		currBill = bills[currBillDifficulty][currBillIndex];
+		PrintBill(currBill);
 
-		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills.json", SearchOption.AllDirectories)[0])) {
+		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills_easy.json", SearchOption.AllDirectories)[0])) {
 			string json = reader.ReadToEnd();
-			bills = JsonConvert.DeserializeObject<List<Bill>>(json);
-			Debug.Log(bills[0]);
-			// StartCoroutine(Typewriter(left, bills[0].left, speed));
-			// StartCoroutine(Typewriter(right, bills[0].right, speed));
+			bills["easy"] = JsonConvert.DeserializeObject<List<Bill>>(json);
 		}
+
+		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills_med.json", SearchOption.AllDirectories)[0])) {
+			string json = reader.ReadToEnd();
+			bills["med"] = JsonConvert.DeserializeObject<List<Bill>>(json);
+		}
+
+		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills_hard.json", SearchOption.AllDirectories)[0])) {
+			string json = reader.ReadToEnd();
+			bills["hard"] = JsonConvert.DeserializeObject<List<Bill>>(json);
+		}
+
 	}
 
-	// Update is called once per frame
+	
+
 	void Update() {
-		DetermineCurrentBill();
-		NotifyWorldChange(currBillName);
+		currBill = GetNextBill();
+		PrintBill(currBill);
 	}
 
-	private void DetermineCurrentBill() {
-		currBillName = "co2"; // default
-		// bill switching logic, flow unknown
+	void PrintBill(Bill currBill) {
+		// StartCoroutine(Typewriter(left, currBill.left, speed));   //TODO: tostring method 
+		// StartCoroutine(Typewriter(right, currBill.right, speed));
 	}
 
-	private void NotifyWorldChange(string billName) {
-		switch (billName) {
+	Bill GetNextBill()
+	{
+		if ( currBillIndex < currBillList.Count - 1 )
+		{
+			currBillIndex += 1;
+		}
+		else
+		{
+			switch(currBillDifficulty)
+			{
+				case "easy":
+					currBillDifficulty = "med";
+					currBillIndex = 0;
+					break;
+				case "med":
+					currBillDifficulty = "hard";
+					currBillIndex = 0;
+					break;
+				case "hard":
+					currBillDifficulty = "easy";  // loop back?
+					currBillIndex = 0;
+					break;
+					  // null if exaust TODO: message
+				default:
+					break;
+
+			}
+		}
+
+		return bills[currBillDifficulty][currBillIndex];
+
+	}
+		
+	void NotifyWorldChange(string billName) 
+	{
+		switch (billName) 
+		{
 			case "co2":
 				// World.UpdateCO2(ppm);
 				break;
