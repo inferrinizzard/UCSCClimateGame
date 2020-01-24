@@ -18,7 +18,7 @@ public class BillEditor : EditorWindow {
 
 	enum Decks {
 		easy,
-		medium,
+		med,
 		hard
 	}
 
