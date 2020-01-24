@@ -13,7 +13,7 @@ public class BillEditor : EditorWindow {
 		{ "right", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } }
 	};
 
-	static BillEditor self;
+	static BillEditor self = null;
 	Decks d;
 
 	enum Decks {
@@ -25,19 +25,24 @@ public class BillEditor : EditorWindow {
 	[MenuItem("Window/Bill Editor")]
 	static void Awake() {
 		bills = CityScript.LoadBills();
+		self = GetWindow<BillEditor>();
 		self.AssignBill(BillEditor.bills["easy"][index]);
 		EditorStyles.textArea.wordWrap = true;
 		EditorStyles.textArea.clipping = TextClipping.Overflow;
 	}
 	static void ShowWindow() {
-		self = GetWindow<BillEditor>();
 		self.titleContent = new GUIContent("Bill Editor");
 		self.Show();
 	}
 
 	void OnGUI() {
-		if (bills.Count == 0)
+		if (self == null)
+			self = GetWindow<BillEditor>();
+
+		if (bills.Count == 0) {
 			bills = CityScript.LoadBills();
+			self.AssignBill(BillEditor.bills["easy"][index]);
+		}
 
 		GUILayout.Label("Edit a Bill", EditorStyles.boldLabel);
 
@@ -59,7 +64,6 @@ public class BillEditor : EditorWindow {
 			GUILayout.EndHorizontal();
 
 			newBill.name = EditorGUILayout.TextField("Name", newBill.name);
-			// GUILayout.BeginHorizontal(GUILayout.Width(position.width * .48f));
 			GUILayout.BeginHorizontal();
 			GUILayout.BeginVertical();
 			GUILayout.Label("Left", EditorStyles.boldLabel);
@@ -110,12 +114,17 @@ public class BillEditor : EditorWindow {
 	}
 
 	void AssignBill(CityScript.Bill b) {
-		// Debug.Log(b);
 		newBill.name = b.name;
 		newBill.left = b.left;
 		newBill.right = b.right;
-		b.left["tags"].Split().ToList().ForEach(tag => newTags["left"][tag] = float.Parse(Regex.Split(tag, @"([+]|-)")[2]));
-		b.right["tags"].Split().ToList().ForEach(tag => newTags["right"][tag] = float.Parse(Regex.Split(tag, @"([+]|-)")[2]));
+		b.left["tags"].Split().ToList().ForEach(tag => {
+			var match = Regex.Split(tag, @"([+]|-)");
+			newTags["left"][match[0]] = float.Parse(match[2]);
+		});
+		b.right["tags"].Split().ToList().ForEach(tag => {
+			var match = Regex.Split(tag, @"([+]|-)");
+			newTags["right"][match[0]] = float.Parse(match[2]);
+		});
 	}
 
 }

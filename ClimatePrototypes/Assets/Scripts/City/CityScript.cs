@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CityScript : MonoBehaviour {
-	public Text left, right;
+	public Text leftText, rightText;
 	[Range(0.01f, 0.1f)] public float speed = .1f;
 
 	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
@@ -63,8 +63,8 @@ public class CityScript : MonoBehaviour {
 	}
 
 	void PrintBill(Bill currentBill) {
-		// StartCoroutine(Typewriter(left, currentBill.left, speed));   //TODO: tostring method 
-		// StartCoroutine(Typewriter(right, currentBill.right, speed));
+		StartCoroutine(Typewriter(leftText, currentBill.left["body"], speed)); //TODO: tostring method 
+		StartCoroutine(Typewriter(rightText, currentBill.right["body"], speed));
 	}
 
 	Bill GetNextBill() {
