@@ -1,0 +1,33 @@
+left bill
+lorem ipsum dolor sit amet
+consecteturum alpha epsilon
+omega mu kappa sigma delta
+phi iota
+#
+right bill
+let's try this again,
+shall we?
+this time, let's not
+flood the house
+#
+left 2
+Lorem ipsum dolor sit amet,
+consectetur adipiscing elit,
+sed do eiusmod tempor incididunt
+ut labore et dolore magna aliqua. 
+#
+right 2
+Ut enim ad minim veniam, 
+quis nostrud exercitation ullamco 
+laboris nisi ut aliquip ex ea 
+commodo consequat. Duis aute irure 
+#
+left 3
+dolor in reprehenderit in voluptate 
+velit esse cillum dolore eu fugiat 
+nulla pariatur. Excepteur sint 
+#
+right 3
+occaecat cupidatat non proident, 
+sunt in culpa qui officia deserunt 
+mollit anim id est laborum.
