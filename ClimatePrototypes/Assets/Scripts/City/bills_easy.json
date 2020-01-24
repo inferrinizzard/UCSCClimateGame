@@ -1,15 +1,15 @@
 [
 	{
-		"name": "Reduce Reuse Recyle",
+		"name": "Reduce Reuse Recycle",
 		"left": {
 			"title": "Taxes on Single-Use Plastics",
-			"body": "To discorage business from using single-use plastics in packaging, this proposal would impose taxes on companies that manufacture items that can only be used once. Companies argue that they would lose buisness and money as a result.",
-			"tags": "opinion+1 economy-2 emission-3"
+			"body": "To discourage business from using single-use plastics in packaging, this proposal would impose taxes on companies that manufacture items that can only be used once. Companies argue that they would lose buisness and money as a result.",
+			"tags": "opinion+1 money-2 co2-3"
 		},
 		"right": {
-			"title": "Increase Funding for Single Stream Recyling Initiatives",
+			"title": "Increase Funding for Single Stream Recycling Initiatives",
 			"body": "A new public survey suggests the largest barrier to recycling is convenience. This proposal would increase government support for public recyling services that does not include sorting of materials.",
-			"tags": "opinion+1 economy-2 emission-1"
+			"tags": "opinion+1 money-2 co2-1"
 		}
 	},
 	{

@@ -4,12 +4,12 @@
 		"left": {
 			"title": "Jetpacks for all",
 			"body": "Fly where you want, when you want. Jetpacks INC wants to increase individual transportation.",
-			"tags": "opinion+4 economy+2 emission+10"
+			"tags": "opinion+4 money+2 co2+10"
 		},
 		"right": {
 			"title": "Hoverbus",
 			"body": "This proposal would increase the number of hoverbus stops as well as increase their frequency.",
-			"tags": "opinion+2 economy-3 emission-3"
+			"tags": "opinion+2 money-3 co2-3"
 		}
 	},
 	{

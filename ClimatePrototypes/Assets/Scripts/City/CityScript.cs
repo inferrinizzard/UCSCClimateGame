@@ -11,17 +11,15 @@ public class CityScript : MonoBehaviour {
 	public Text left, right;
 	[Range(0.01f, 0.1f)] public float speed = .1f;
 
-	
 	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
 	//enum BillDifficulty {easy, med, hard};
-	public string currBillDifficulty;
-	private List<Bill> currBillList = new List<Bill>();
-	public int currBillIndex;
-	public Bill currBill;
+	public string currentBillDifficulty;
+	private List<Bill> currentBillList = new List<Bill>();
+	public int currentBillIndex = 0;
+	public Bill currentBill;
 
 	private float ppm;
 	private float albedoDelta;
-
 
 	public struct Bill {
 		public string name;
@@ -44,78 +42,58 @@ public class CityScript : MonoBehaviour {
 	}
 
 	void Start() {
-		currBillDifficulty = "easy"; // default
-		currBillList = bills[currBillDifficulty];
-		currBillIndex = 0;
-		currBill = bills[currBillDifficulty][currBillIndex];
-		PrintBill(currBill);
-
-		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills_easy.json", SearchOption.AllDirectories)[0])) {
-			string json = reader.ReadToEnd();
-			bills["easy"] = JsonConvert.DeserializeObject<List<Bill>>(json);
-		}
-
-		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills_med.json", SearchOption.AllDirectories)[0])) {
-			string json = reader.ReadToEnd();
-			bills["med"] = JsonConvert.DeserializeObject<List<Bill>>(json);
-		}
-
-		using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), "bills_hard.json", SearchOption.AllDirectories)[0])) {
-			string json = reader.ReadToEnd();
-			bills["hard"] = JsonConvert.DeserializeObject<List<Bill>>(json);
-		}
-
+		bills = LoadBills();
+		currentBillDifficulty = "easy"; // default
+		currentBillList = bills[currentBillDifficulty];
+		currentBill = bills[currentBillDifficulty][currentBillIndex];
+		PrintBill(currentBill);
 	}
 
-	
+	public static Dictionary<string, List<Bill>> LoadBills() =>
+		new string[] { "easy", "med", "hard" }.Select(level => {
+			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories)[0])) {
+				string json = reader.ReadToEnd();
+				return (level, JsonConvert.DeserializeObject<List<Bill>>(json));
+			}
+		}).ToDictionary(x => x.Item1, x => x.Item2);
 
 	void Update() {
-		currBill = GetNextBill();
-		PrintBill(currBill);
+		// currentBill = GetNextBill();
+		PrintBill(currentBill);
 	}
 
-	void PrintBill(Bill currBill) {
-		// StartCoroutine(Typewriter(left, currBill.left, speed));   //TODO: tostring method 
-		// StartCoroutine(Typewriter(right, currBill.right, speed));
+	void PrintBill(Bill currentBill) {
+		// StartCoroutine(Typewriter(left, currentBill.left, speed));   //TODO: tostring method 
+		// StartCoroutine(Typewriter(right, currentBill.right, speed));
 	}
 
-	Bill GetNextBill()
-	{
-		if ( currBillIndex < currBillList.Count - 1 )
-		{
-			currBillIndex += 1;
-		}
-		else
-		{
-			switch(currBillDifficulty)
-			{
+	Bill GetNextBill() {
+		if (currentBillIndex < currentBillList.Count - 1) {
+			currentBillIndex += 1;
+		} else {
+			currentBillIndex = 0;
+			switch (currentBillDifficulty) {
 				case "easy":
-					currBillDifficulty = "med";
-					currBillIndex = 0;
+					currentBillDifficulty = "med";
 					break;
 				case "med":
-					currBillDifficulty = "hard";
-					currBillIndex = 0;
+					currentBillDifficulty = "hard";
 					break;
 				case "hard":
-					currBillDifficulty = "easy";  // loop back?
-					currBillIndex = 0;
+					currentBillDifficulty = "easy"; // loop back?
 					break;
-					  // null if exaust TODO: message
+					// null if exaust TODO: message
 				default:
 					break;
 
 			}
 		}
 
-		return bills[currBillDifficulty][currBillIndex];
-
+		return bills[currentBillDifficulty][currentBillIndex];
 	}
-		
-	void NotifyWorldChange(string billName) 
-	{
-		switch (billName) 
-		{
+
+	void NotifyWorldChange(string billName) {
+		switch (billName) {
 			case "co2":
 				// World.UpdateCO2(ppm);
 				break;
