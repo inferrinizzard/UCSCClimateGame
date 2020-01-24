@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class World {
 	public static float money = 100f;
-	public static float publicOpinion = 5f;
+	public static float publicOpinion = 50f;
 	public static int turn = 1;
 	public static int actionsRemaining = 2;
 	public static double[] temp;
