@@ -18,10 +18,11 @@ public class BadgesPublicOpinion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(World.publicOpinion > 50)
+        if (World.publicOpinion > 50)
         {
             myImageComponent.sprite = badge[2];
-        }else if(World.publicOpinion < 0)
+        }
+        else if (World.publicOpinion < 0)
         {
             myImageComponent.sprite = badge[1];
         }

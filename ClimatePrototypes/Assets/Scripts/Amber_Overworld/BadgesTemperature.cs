@@ -8,7 +8,7 @@ public class BadgesTemperature : MonoBehaviour
     // Start is called before the first frame update
     Image myImageComponent;
     public Sprite[] badge = new Sprite[3];
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +34,3 @@ public class BadgesTemperature : MonoBehaviour
         }*/
     }
 }
-
-
-
