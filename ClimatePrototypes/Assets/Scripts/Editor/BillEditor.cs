@@ -16,11 +16,7 @@ public class BillEditor : EditorWindow {
 	static BillEditor self = null;
 	Decks d;
 
-	enum Decks {
-		easy,
-		med,
-		hard
-	}
+	enum Decks { easy, med, hard }
 
 	[MenuItem("Window/Bill Editor")]
 	static void Awake() {
@@ -98,16 +94,10 @@ public class BillEditor : EditorWindow {
 				bill.left = newBill.left;
 				newBill.right["tags"] = System.String.Join(" ", newTags["right"].Where(kvp => kvp.Value != 0).Select(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
 				bill.right = newBill.right;
-				Debug.Log(bill);
+				Debug.Log("Saved: " + bill);
 			}
-			if (GUILayout.Button("Reset")) {
-				newBill.name = bill.name;
-				newBill.left["title"] = bill.left["title"];
-				newBill.left["body"] = bill.left["body"];
-				newBill.right["title"] = bill.right["title"];
-				newBill.right["body"] = bill.right["body"];
-				newTags["left"]["co2"] = newTags["left"]["land"] = newTags["left"]["money"] = newTags["left"]["opinion"] = newTags["right"]["co2"] = newTags["right"]["land"] = newTags["right"]["money"] = newTags["right"]["opinion"] = 0f;
-			}
+			if (GUILayout.Button("Reset"))
+				self.AssignBill(BillEditor.bills[deckName][index]);
 			GUILayout.EndHorizontal();
 		} else
 			GUILayout.Label("No Bills in this deck Found");
@@ -117,13 +107,12 @@ public class BillEditor : EditorWindow {
 		newBill.name = b.name;
 		newBill.left = b.left;
 		newBill.right = b.right;
-		b.left["tags"].Split().ToList().ForEach(tag => {
-			var match = Regex.Split(tag, @"([+]|-)");
-			newTags["left"][match[0]] = float.Parse(match[2]);
-		});
-		b.right["tags"].Split().ToList().ForEach(tag => {
-			var match = Regex.Split(tag, @"([+]|-)");
-			newTags["right"][match[0]] = float.Parse(match[2]);
+		newTags.Keys.ToList().ForEach(section => {
+			newTags[section] = newTags[section].ToDictionary(kvp => kvp.Key, kvp => 0f);
+			b.left["tags"].Split().ToList().ForEach(tag => {
+				var match = Regex.Split(tag, @"([+]|-)");
+				newTags[section][match[0]] = float.Parse(match[2]);
+			});
 		});
 	}
 

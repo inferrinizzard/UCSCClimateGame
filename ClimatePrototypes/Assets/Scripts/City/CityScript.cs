@@ -7,13 +7,16 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class CityScript : MonoBehaviour {
-	public Text leftText, rightText;
-	[Range(0.01f, 0.1f)] public float speed = .1f;
+	[SerializeField] Text mainTitle;
+	[SerializeField] Text leftText, rightText;
+	[SerializeField] Text leftTitle, rightTitle;
+	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
 	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
 	//enum BillDifficulty {easy, med, hard};
-	public string currentBillDifficulty;
+	public string currentBillDifficulty = "easy";
 	private List<Bill> currentBillList = new List<Bill>();
 	public int currentBillIndex = 0;
 	public Bill currentBill;
@@ -43,7 +46,6 @@ public class CityScript : MonoBehaviour {
 
 	void Start() {
 		bills = LoadBills();
-		currentBillDifficulty = "easy"; // default
 		currentBillList = bills[currentBillDifficulty];
 		currentBill = bills[currentBillDifficulty][currentBillIndex];
 		PrintBill(currentBill);
@@ -59,11 +61,18 @@ public class CityScript : MonoBehaviour {
 
 	void Update() {
 		// currentBill = GetNextBill();
-		PrintBill(currentBill);
+	}
+
+	void ChooseBill(string side) {
+
+		currentBill = GetNextBill();
 	}
 
 	void PrintBill(Bill currentBill) {
-		StartCoroutine(Typewriter(leftText, currentBill.left["body"], speed)); //TODO: tostring method 
+		StartCoroutine(Typewriter(mainTitle, currentBill.name, speed));
+		StartCoroutine(Typewriter(leftTitle, currentBill.left["title"], speed));
+		StartCoroutine(Typewriter(rightTitle, currentBill.right["title"], speed));
+		StartCoroutine(Typewriter(leftText, currentBill.left["body"], speed));
 		StartCoroutine(Typewriter(rightText, currentBill.right["body"], speed));
 	}
 
@@ -88,7 +97,6 @@ public class CityScript : MonoBehaviour {
 
 			}
 		}
-
 		return bills[currentBillDifficulty][currentBillIndex];
 	}
 
@@ -101,7 +109,6 @@ public class CityScript : MonoBehaviour {
 				// World.UpdateAlbedo(albedoDelta);
 				break;
 		}
-
 	}
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
