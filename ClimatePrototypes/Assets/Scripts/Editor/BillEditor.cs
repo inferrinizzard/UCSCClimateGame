@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,6 +16,8 @@ public class BillEditor : EditorWindow {
 	};
 
 	static BillEditor self = null;
+
+	static bool deletePrompt = false;
 	Decks d;
 
 	enum Decks { easy, med, hard }
@@ -95,10 +99,28 @@ public class BillEditor : EditorWindow {
 				newBill.right["tags"] = System.String.Join(" ", newTags["right"].Where(kvp => kvp.Value != 0).Select(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
 				bill.right = newBill.right;
 				Debug.Log("Saved: " + bill);
+				bills[deckName] = bills[deckName].Select((b, i) => i == index?bill : b).ToList();
+				WriteToFile(deckName);
 			}
 			if (GUILayout.Button("Reset"))
 				self.AssignBill(BillEditor.bills[deckName][index]);
+			if (GUILayout.Button("Add New Bill")) {
+				CityScript.Bill empty = new CityScript.Bill("new bill", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
+				bills[deckName].Add(empty);
+				// index = bill[deckName].Count - 1;
+			}
+			if (GUILayout.Button("Delete Bill"))
+				if (!deletePrompt)
+					deletePrompt = true;
+				else {
+					BillEditor.bills[deckName].RemoveAt(index);
+					index = 0;
+					WriteToFile(deckName);
+					deletePrompt = false;
+				}
 			GUILayout.EndHorizontal();
+			if (deletePrompt)
+				GUILayout.Label("Click the «Delete Bill» again to delete.");
 		} else
 			GUILayout.Label("No Bills in this deck Found");
 	}
@@ -109,11 +131,19 @@ public class BillEditor : EditorWindow {
 		newBill.right = b.right;
 		newTags.Keys.ToList().ForEach(section => {
 			newTags[section] = newTags[section].ToDictionary(kvp => kvp.Key, kvp => 0f);
-			b.left["tags"].Split().ToList().ForEach(tag => {
-				var match = Regex.Split(tag, @"([+]|-)");
-				newTags[section][match[0]] = float.Parse(match[2]);
-			});
+			if (b.name != "new bill")
+				(section == "left" ? b.left : b.right)["tags"].Split().ToList().ForEach(tag => {
+					var match = Regex.Split(tag, @"([+]|-)");
+					newTags[section][match[0]] = float.Parse(match[2]);
+				});
 		});
+	}
+
+	void WriteToFile(string deckName) {
+		string json = JsonConvert.SerializeObject(bills[deckName], Formatting.Indented);
+		using(StreamWriter writer = new StreamWriter(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{deckName}.json", SearchOption.AllDirectories)[0])) {
+			writer.Write(json);
+		}
 	}
 
 }
