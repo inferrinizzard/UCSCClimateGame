@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +13,7 @@ public class BillEditor : EditorWindow {
 	static Dictionary<string, Dictionary<string, float>> newTags = new Dictionary<string, Dictionary<string, float>> { { "left", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } },
 		{ "right", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } }
 	};
+	readonly static Dictionary<string, string> tagsVerbose = new Dictionary<string, string> { { "co2", "Emissions:" }, { "land", "Land Use:" }, { "money", "Money:" }, { "opinion", "Opinion:" } };
 
 	static BillEditor self = null;
 
@@ -65,30 +65,17 @@ public class BillEditor : EditorWindow {
 
 			newBill.name = EditorGUILayout.TextField("Name", newBill.name);
 			GUILayout.BeginHorizontal();
-			GUILayout.BeginVertical();
-			GUILayout.Label("Left", EditorStyles.boldLabel);
-			GUILayout.Label("Title");
-			newBill.left["title"] = EditorGUILayout.TextField(newBill.left["title"], EditorStyles.textArea);
-			GUILayout.Label("Body");
-			newBill.left["body"] = EditorGUILayout.TextArea(newBill.left["body"], EditorStyles.textArea, GUILayout.MinHeight(position.height / 2 - 100), GUILayout.MaxWidth(position.width * .49f));
-			GUILayout.Label("Tags");
-			newTags["left"]["co2"] = EditorGUILayout.FloatField("Emissions:", newTags["left"]["co2"]);
-			newTags["left"]["land"] = EditorGUILayout.FloatField("Land Use:", newTags["left"]["land"]);
-			newTags["left"]["money"] = EditorGUILayout.FloatField("Money:", newTags["left"]["money"]);
-			newTags["left"]["opinion"] = EditorGUILayout.FloatField("Opinion:", newTags["left"]["opinion"]);
-			GUILayout.EndVertical();
-			GUILayout.BeginVertical();
-			GUILayout.Label("Right", EditorStyles.boldLabel);
-			GUILayout.Label("Title");
-			newBill.right["title"] = EditorGUILayout.TextField(newBill.right["title"], EditorStyles.textArea);
-			GUILayout.Label("Body");
-			newBill.right["body"] = EditorGUILayout.TextArea(newBill.right["body"], EditorStyles.textArea, GUILayout.MinHeight(position.height / 2 - 100), GUILayout.MaxWidth(position.width * .49f));
-			GUILayout.Label("Tags");
-			newTags["right"]["co2"] = EditorGUILayout.FloatField("Emissions:", newTags["right"]["co2"]);
-			newTags["right"]["land"] = EditorGUILayout.FloatField("Land Use:", newTags["right"]["land"]);
-			newTags["right"]["money"] = EditorGUILayout.FloatField("Money:", newTags["right"]["money"]);
-			newTags["right"]["opinion"] = EditorGUILayout.FloatField("Opinion:", newTags["right"]["opinion"]);
-			GUILayout.EndVertical();
+			new List<string> { "left", "right" }.ForEach(section => {
+				GUILayout.BeginVertical();
+				GUILayout.Label(char.ToUpper(section[0]) + section.Substring(1), EditorStyles.boldLabel);
+				GUILayout.Label("Title");
+				newBill[section]["title"] = EditorGUILayout.TextField(newBill[section]["title"], EditorStyles.textArea);
+				GUILayout.Label("Body");
+				newBill[section]["body"] = EditorGUILayout.TextArea(newBill[section]["body"], EditorStyles.textArea, GUILayout.MinHeight(position.height / 2 - 100), GUILayout.MaxWidth(position.width * .49f));
+				GUILayout.Label("Tags");
+				newTags[section].Keys.ToList().ForEach(k => newTags[section][k] = EditorGUILayout.FloatField(tagsVerbose[k], newTags[section][k]));
+				GUILayout.EndVertical();
+			});
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
@@ -114,8 +101,8 @@ public class BillEditor : EditorWindow {
 					deletePrompt = true;
 				else {
 					BillEditor.bills[deckName].RemoveAt(index);
-					index = 0;
 					WriteToFile(deckName);
+					index = 0;
 					deletePrompt = false;
 				}
 			GUILayout.EndHorizontal();
@@ -132,8 +119,8 @@ public class BillEditor : EditorWindow {
 		newTags.Keys.ToList().ForEach(section => {
 			newTags[section] = newTags[section].ToDictionary(kvp => kvp.Key, kvp => 0f);
 			if (b.name != "new bill")
-				(section == "left" ? b.left : b.right)["tags"].Split().ToList().ForEach(tag => {
-					var match = Regex.Split(tag, @"([+]|-)");
+				b[section]["tags"].Split().ToList().ForEach(tag => {
+					var match = CityScript.SplitTag(tag);
 					newTags[section][match[0]] = float.Parse(match[2]);
 				});
 		});
