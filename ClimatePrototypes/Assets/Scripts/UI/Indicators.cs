@@ -19,7 +19,7 @@ public class Indicators : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if (World.publicOpinion > 50) {
+		if (World.publicOpinion > 1) {
 			opinionImage.sprite = opinionSprites[2];
 		} else if (World.publicOpinion < 0) {
 			opinionImage.sprite = opinionSprites[1];

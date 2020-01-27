@@ -237,10 +237,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 397078737, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
-      propertyPath: ActionText
-      value: 
-      objectReference: {fileID: 2068030253}
     - target: {fileID: 8368809017932095479, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -250,6 +246,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.000015258789
+      objectReference: {fileID: 0}
+    - target: {fileID: 6491990683130126886, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00002670288
       objectReference: {fileID: 0}
     - target: {fileID: 5934203068715727091, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
         type: 3}
@@ -261,6 +262,40 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: temperatureSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: b7cdb74522529e84eb9f4bb44c78c9d6,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: opinionSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 939e6019d3d7be84698be8212d394c53,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: temperatureSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 81a55039b2822d64983b98cced2df33c,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: opinionSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: b07a9d709aa29de489ffeb661cb864bc,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: opinionSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 2d877546c6a2a1b4b90e11d23371b1e7,
+        type: 3}
+    - target: {fileID: 397078737, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
+      propertyPath: ActionText
+      value: 
+      objectReference: {fileID: 2068030253}
     - target: {fileID: 1581054697, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -378,11 +413,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6491990683130126886, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.00002670288
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
