@@ -1,0 +1,28 @@
+[
+	{
+		"name": "Transit",
+		"left": {
+			"title": "Jetpacks for all",
+			"body": "Fly where you want, when you want. Jetpacks INC wants to increase individual transportation.",
+			"tags": "opinion+4 money+2 co2+10"
+		},
+		"right": {
+			"title": "Hoverbus",
+			"body": "This proposal would increase the number of hoverbus stops as well as increase their frequency.",
+			"tags": "opinion+2 money-3 co2-3"
+		}
+	},
+	{
+		"name": "land",
+		"left": {
+			"title": "land bill left title",
+			"body": "land bill left body",
+			"tags": "land+1 co2-2"
+		},
+		"right": {
+			"title": "land bill right title",
+			"body": "land bill right body",
+			"tags": "money+10 opinion-1"
+		}
+	}
+]
