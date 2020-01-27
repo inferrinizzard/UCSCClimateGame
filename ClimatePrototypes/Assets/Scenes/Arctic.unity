@@ -3894,7 +3894,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 44.75225, y: 14.917398}
+  m_AnchoredPosition: {x: 44.752197, y: 14.917389}
   m_SizeDelta: {x: 20, y: 160}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &251
@@ -4948,6 +4948,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.000015258789
       objectReference: {fileID: 0}
+    - target: {fileID: 6491990683130126886, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6491990683130126886, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -129
+      objectReference: {fileID: 0}
     - target: {fileID: 5934203068715727091, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
         type: 3}
       propertyPath: m_IsActive
@@ -4958,6 +4968,42 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: temperatureSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 939e6019d3d7be84698be8212d394c53,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: opinionSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 81a55039b2822d64983b98cced2df33c,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: opinionSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: b7cdb74522529e84eb9f4bb44c78c9d6,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: opinionSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 2fc8508ae3e32df419217aad571a63c9,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: temperatureSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 2d877546c6a2a1b4b90e11d23371b1e7,
+        type: 3}
+    - target: {fileID: 2615331906202243539, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
+        type: 3}
+      propertyPath: temperatureSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: b07a9d709aa29de489ffeb661cb864bc,
+        type: 3}
     - target: {fileID: 397078737, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
       propertyPath: ActionText
       value: 
@@ -4965,7 +5011,7 @@ PrefabInstance:
     - target: {fileID: 397078737, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
       propertyPath: opinionText
       value: 
-      objectReference: {fileID: 308233064}
+      objectReference: {fileID: 0}
     - target: {fileID: 1581054697, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -5098,18 +5144,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 308233061}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &308233064 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6227766670361262967, guid: cf6ccf3fa6bc4f44f8ca518ec065dc44,
-    type: 3}
-  m_PrefabInstance: {fileID: 308233061}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &473852800
 GameObject:
   m_ObjectHideFlags: 0
@@ -5261,7 +5295,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -14.917664, y: 14.917419}
+  m_AnchoredPosition: {x: -14.917603, y: 14.917419}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 1, y: 0}
 --- !u!1 &620108918
