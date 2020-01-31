@@ -1,12 +1,12 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3746164792499316892
+--- !u!114 &-1655004112472269693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683506866521222414}
+  m_GameObject: {fileID: 8624979341608234162}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
@@ -17,7 +17,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8042041871854338119}
+        - m_Target: {fileID: 1113519309696238075}
           m_MethodName: FadeOut
           m_Mode: 1
           m_Arguments:
@@ -34,7 +34,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8042041871854338119}
+        - m_Target: {fileID: 1113519309696238075}
           m_MethodName: FadeIn
           m_Mode: 1
           m_Arguments:
@@ -47,7 +47,23 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
---- !u!1001 &2287970711765575279
+--- !u!58 &-7556313711634486595
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8624979341608234162}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
+--- !u!1001 &9164702842429204435
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -62,7 +78,17 @@ PrefabInstance:
     - target: {fileID: 620799306699721569, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
       propertyPath: m_Name
-      value: BigFire
+      value: MediumFire
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383987233056339857, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
+        type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3604803503393638606, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3009737983147594594, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
@@ -122,12 +148,12 @@ PrefabInstance:
     - target: {fileID: 3009737983147594594, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -183.03949
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3009737983147594594, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -5.519684
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3009737983147594594, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
@@ -169,6 +195,21 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3009737983147594594, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3009737983147594594, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3009737983147594594, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8423540794766576523, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -186,29 +227,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8423540794766576523, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1113519309696238075}
+    - target: {fileID: 8423540794766576523, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartFade
       objectReference: {fileID: 0}
     - target: {fileID: 8423540794766576523, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8423540794766576523, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
+        type: 3}
+      propertyPath: m_Colors.m_ColorMultiplier
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fcfab87ecdbf78a4dbb146ed8dc2e521, type: 3}
---- !u!1 &1683506866521222414 stripped
+--- !u!1 &8624979341608234162 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 620799306699721569, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
     type: 3}
-  m_PrefabInstance: {fileID: 2287970711765575279}
+  m_PrefabInstance: {fileID: 9164702842429204435}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8042041871854338119 stripped
+--- !u!114 &1113519309696238075 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8096226676133520936, guid: fcfab87ecdbf78a4dbb146ed8dc2e521,
     type: 3}
-  m_PrefabInstance: {fileID: 2287970711765575279}
+  m_PrefabInstance: {fileID: 9164702842429204435}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683506866521222414}
+  m_GameObject: {fileID: 8624979341608234162}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6848c51437551b45bec32ebd414d820, type: 3}
