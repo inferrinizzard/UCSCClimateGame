@@ -12,7 +12,7 @@ public static class World {
 	public static double[] energy;
 	public static double[] precip;
 
-	public static double averageTemp;
+	public static double averageTemp = 80.0;
 
 	public static void Init() {
 		Calc();
