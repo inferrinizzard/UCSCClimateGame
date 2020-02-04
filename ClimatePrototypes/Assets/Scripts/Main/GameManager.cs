@@ -29,12 +29,13 @@ public class GameManager : Singleton<GameManager> {
 	static IEnumerator LoadScene(string name) {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
 		asyncLoad.allowSceneActivation = false;
-		while (!asyncLoad.isDone) {
+		float start = Time.time;
 
+		while (!asyncLoad.isDone) {
 			instance.loadingScreen.SetActive(true);
 			instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
-			if (asyncLoad.progress >= .9f) {
+			if (asyncLoad.progress >= .9f && Time.time - start > 1) {
 				asyncLoad.allowSceneActivation = true;
 				instance.loadingScreen.SetActive(false);
 			}
