@@ -120,22 +120,23 @@ public partial class EBM {
 
 	public static void Clear() => (temp, energy, precip) = (null, null, null);
 
-	public static IEnumerable<IEnumerable<double>> Slice(IEnumerable<double> vec, int n = -1, int[] cuts = null, int j = 0) =>
-		new Func<int, IEnumerable<IEnumerable<double>>>(m => vec.Select((x, i) =>
+	public static IEnumerable<IEnumerable<double>> Slice(IEnumerable<double> vec, int n = -1, int[] cuts = null) =>
+		Func.Lambda((int m, int j) => vec.Select((x, i) =>
 				new { Index = i, Value = x })
 			.GroupBy(x =>
 				cuts == null ?
 				x.Index / (vec.Count() / m) :
 				j == cuts.Length || x.Index <= cuts[j] ? j : ++j)
 			.Select(x => x.Select(v => v.Value)))
-		(n == -1 ? regions : n);
-	public static double[] Reduce(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => Average(x)).ToArray();
-	static double Average(IEnumerable<double> vec) { return x.Average(); }
+		(n == -1 ? regions : n, 0);
+	public static double[] Reduce(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => x.Average()).ToArray();
+	// static double Average(IEnumerable<double> vec) { return x.Average(); }
 
 	static Predicate < (double, double) > Less = ((double, double)t) => t.Item1 < t.Item2;
 	static Predicate < (double, double) > GreatOrE = ((double, double)t) => t.Item1 >= t.Item2;
 	public static Vector<double> Sign0(Predicate < (double, double) > op, Vector<double> vec, Vector<double> result = null) => (result ?? vec).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
 	static void Print(IEnumerable<double> nums) => UnityEngine.Debug.Log(nums == null ? "null" : String.Join(" ", nums));
+	static void Print(double num) => UnityEngine.Debug.Log(num);
 }
 
 // public sealed class Lambda<T> { public static Func<T, T> Cast = x => x; }

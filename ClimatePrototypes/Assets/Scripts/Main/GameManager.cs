@@ -10,10 +10,10 @@ public class GameManager : Singleton<GameManager> {
 	Slider loadingBar;
 
 	void Start() {
-		loadingScreen = transform.GetChild(0).GetChild(0).gameObject;
+		loadingScreen = transform.GetChild(0).GetChild(0).gameObject; //do better
 		loadingBar = loadingScreen.GetComponentInChildren<Slider>();
 
-		// World.Init();
+		World.Init();
 
 		// async?
 	}
@@ -30,6 +30,8 @@ public class GameManager : Singleton<GameManager> {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.time;
+
+		//update ebm here?
 
 		while (!asyncLoad.isDone) {
 			instance.loadingScreen.SetActive(true);

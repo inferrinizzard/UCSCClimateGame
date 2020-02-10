@@ -23,7 +23,7 @@ J. Climate, 31, 7481–7493, https://doi.org/10.1175/JCLI-D-18-0081.1
 """
 
 # import sys
-import xarray as xr
+# import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 # import cartopy.crs as ccrs
@@ -117,7 +117,7 @@ def main():
     L1 = np.append(0, -lam)
     L2 = np.append(-lam, 0)
     L3 = -L1-L2
-    diffop = - np.diag(L3[:-1] if n == 3 or n == 6 else L3) - \
+    diffop = - np.diag(L3[:-1] if n == 3 or n == 6 or n == 24 else L3) - \
         np.diag(L2[:n-1], 1) - np.diag(L1[1:n], -1)
 
     # Definitions for implicit scheme on Tg
@@ -186,7 +186,7 @@ def main():
     print(T100)
     print(E100)
     print(Tfin)
-    print(Tfin)
+    print(Efin)
 
     # Compute hydrological cycle for final year
     # Calculate diffusive heat transport, latent and total

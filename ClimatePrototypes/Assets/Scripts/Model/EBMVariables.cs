@@ -39,6 +39,7 @@ public partial class EBM {
 
 	/// <summary> Number of latitudinal bands </summary>
 	static readonly int bands = 24;
+	/// <summary> Number of game regions </summary>
 	public static int regions = 3;
 
 	/// <summary> Latent heat of vaporization (J kg^-1) </summary>
