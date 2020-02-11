@@ -135,7 +135,7 @@ public partial class EBM {
 	static Predicate < (double, double) > Less = ((double, double)t) => t.Item1 < t.Item2;
 	static Predicate < (double, double) > GreatOrE = ((double, double)t) => t.Item1 >= t.Item2;
 	public static Vector<double> Sign0(Predicate < (double, double) > op, Vector<double> vec, Vector<double> result = null) => (result ?? vec).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
-	static void Print(IEnumerable<double> nums) => UnityEngine.Debug.Log(nums == null ? "null" : String.Join(" ", nums));
+	static void Print(IEnumerable<double> nums) => UnityEngine.Debug.Log(nums == null ? "null" : nums.AsString());
 	static void Print(double num) => UnityEngine.Debug.Log(num);
 }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public static class World {
@@ -16,13 +17,21 @@ public static class World {
 
 	public static void Init() {
 		Calc();
+		// FinishCalc(StartCalc().Wait());
 	}
 
 	public static void Calc(bool useTemp = false, int years = 0, int steps = 0) {
 		(temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);
 		averageTemp = temp.Average();
 		Debug.Log(averageTemp);
-		Debug.Log(temp.String());
+		Debug.Log(temp.AsString());
+	}
+
+	public static async Task StartCalc(bool useTemp = false, int years = 0, int steps = 0) => await Task.Run(() => EBM.Calc(useTemp ? EBM.temp : null, years, steps));
+
+	public static void FinishCalc((double[], double[], double[])state) {
+		(temp, energy, precip) = state;
+		averageTemp = temp.Average();
 	}
 
 	public readonly static Dictionary<string, System.Action<float>> tagUpdates = new Dictionary<string, System.Action<float>> { { "co2", UpdateCO2 }, { "land", UpdateAlbedo }, { "money", UpdateMoney }, { "opinion", UpdateOpinion } };

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,6 +24,7 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	public static void Transition(string scene) {
+
 		instance.StartCoroutine(LoadScene(scene));
 	}
 
@@ -31,17 +33,28 @@ public class GameManager : Singleton<GameManager> {
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.time;
 
-		//update ebm here?
+		bool calcDone = false;
+		if (name == "Overworld") {
+			Thread calcThread = new Thread(() => { World.Calc(); calcDone = true; });
+			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
+			calcThread.Start();
+		}
 
-		while (!asyncLoad.isDone) {
-			instance.loadingScreen.SetActive(true);
+		instance.loadingScreen.SetActive(true);
+
+		while (!asyncLoad.isDone && !calcDone) {
 			instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
 			if (asyncLoad.progress >= .9f && Time.time - start > 1) {
+				if (name != "Overworld")
+					calcDone = true;
+
 				asyncLoad.allowSceneActivation = true;
 				instance.loadingScreen.SetActive(false);
+				yield break;
 			}
 			yield return null;
 		}
+		yield break;
 	}
 }
