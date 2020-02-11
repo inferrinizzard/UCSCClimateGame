@@ -49,8 +49,6 @@
             <e p="IceCloud.cs" t="Include" />
             <e p="UnitySystemConsoleRedirector.cs" t="Include" />
           </e>
-          <e p="BallBehavior.cs" t="Include" />
-          <e p="BufferBehavior.cs" t="Include" />
           <e p="City" t="Include">
             <e p="bills.txt" t="Include" />
             <e p="CityScript.cs" t="Include" />
@@ -85,13 +83,18 @@
             <e p="WorldNotification.cs" t="Include" />
             <e p="WorldRegion.cs" t="Include" />
           </e>
-          <e p="PaddleBehavior.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="Graph.cs" t="Include" />
             <e p="Indicators.cs" t="Include" />
             <e p="InfoController.cs" t="Include" />
             <e p="LineScript.cs" t="Include" />
             <e p="UIController.cs" t="Include" />
+          </e>
+          <e p="xueer-cloud" t="Include">
+            <e p="BallBehavior.cs" t="Include" />
+            <e p="BufferBehavior.cs" t="Include" />
+            <e p="PaddleBehavior.cs" t="Include" />
+            <e p="SolarRadiationSpawner.cs" t="Include" />
           </e>
           <e p="Xueer_Tropics" t="Include">
             <e p="CloudMovement.cs" t="Include" />

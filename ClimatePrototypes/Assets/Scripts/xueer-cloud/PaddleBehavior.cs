@@ -1,49 +1,41 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using MathNet.Numerics.Distributions;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 
 public class PaddleBehavior : MonoBehaviour
 {
     private Rigidbody2D paddleRb2d;
-    private bool canEmit = true;
-    public float ballEmitWaitSeconds = 1f;
-    public GameObject ballPrefab;
-    
-    // Start is called before the first frame update
+    public float paddleSpeed = 5f;
+    private float horizontalInput = 0f;
+    //public float stageWidth = 11f;
     void Start()
     {
         paddleRb2d = GetComponent<Rigidbody2D>();
-        paddleRb2d.velocity = new Vector2(-2, 0);
+    }
+    
 
-
+    private void Move(float input)
+    {
+        paddleRb2d.velocity = Vector3.right * input * paddleSpeed;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
-       Move();
-       if (canEmit) EmitBall();
+         horizontalInput = Input.GetAxis("Horizontal");
+        
+        
     }
 
-    private void Move()
+    private void FixedUpdate()
     {
-        if (Mathf.Abs(transform.position.x) >= 6.0f)
+        if (Mathf.Abs(horizontalInput) > 0.1f)
+            Move(horizontalInput);
+        else
         {
-            paddleRb2d.velocity = -paddleRb2d.velocity;
+            Move(0f);
         }
-    }
-
-    private void EmitBall()
-    {
-        Instantiate(ballPrefab, transform.position, Quaternion.identity);
-        StartCoroutine(EmitBallWait());
-    }
-
-    IEnumerator EmitBallWait()
-    {
-        canEmit = false;
-        yield return new WaitForSeconds(ballEmitWaitSeconds);
-        canEmit = true;
     }
 }

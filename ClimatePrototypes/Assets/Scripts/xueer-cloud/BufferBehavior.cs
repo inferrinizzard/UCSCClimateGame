@@ -5,36 +5,49 @@ using UnityEngine;
 
 public class BufferBehavior : MonoBehaviour
 {
-    public int bufferHealth = 2;
-    private void OnCollisionEnter2D (Collision2D collision)
+    public enum IceHealth
     {
-        if (collision.gameObject.tag == "Ball")
+        Full,
+        Damaged,
+        Melted
+    }
+
+    public IceHealth health = IceHealth.Full;
+    private void OnTriggerEnter2D (Collider2D collision)
+    {
+        Debug.Log("hit");
+        if (collision.gameObject.tag == "SolarRadiation")
         {
             TakeDamage();
-            Crack();
-            Destroy(collision.gameObject);
+            UpdateGraphics();
+            
         }
     }
 
     private void TakeDamage()
     {
-        bufferHealth -= 1;
+        
+        switch (health)
+        {
+            case IceHealth.Full:
+                health = IceHealth.Damaged;
+                break;
+            default:
+                health = IceHealth.Melted;
+                break;
+        }
     }
-    
-    private void Crack()
+
+    private void UpdateGraphics()
     {
-        if (bufferHealth <= 0)
+        switch (health)
         {
-            GetComponent<SpriteRenderer>().color = Color.black; 
+            case IceHealth.Damaged:
+                GetComponent<SpriteRenderer>().color = Color.black;
+                break;
+            case IceHealth.Melted:
+                Destroy(gameObject);
+                break;
         }
-        else
-        {
-            if (bufferHealth < 3 )
-            {
-                GetComponent<SpriteRenderer>().color = Color.gray; 
-            }
-        }
-        
-        
     }
 }

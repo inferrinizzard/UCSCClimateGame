@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1111486439586294896}
   - component: {fileID: 1111486439586294903}
   m_Layer: 0
-  m_Name: Ball
+  m_Name: SolarRadiation
   m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
