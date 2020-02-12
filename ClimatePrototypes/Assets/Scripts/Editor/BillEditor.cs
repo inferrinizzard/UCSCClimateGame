@@ -58,7 +58,7 @@ public class BillEditor : EditorWindow {
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Choose which Bill:");
 			EditorGUI.BeginChangeCheck();
-			index = EditorGUILayout.Popup(index, bills[deckName].Select((b, i) => $"{b.name} ({i})").ToArray());
+			index = EditorGUILayout.Popup(index, bills[deckName].Map((b, i) => $"{b.name} ({i})").ToArray());
 			if (EditorGUI.EndChangeCheck())
 				AssignBill(BillEditor.bills[deckName][index]);
 			GUILayout.EndHorizontal();
@@ -73,7 +73,7 @@ public class BillEditor : EditorWindow {
 				GUILayout.Label("Body");
 				newBill[section]["body"] = EditorGUILayout.TextArea(newBill[section]["body"], EditorStyles.textArea, GUILayout.MinHeight(position.height / 2 - 100), GUILayout.MaxWidth(position.width * .49f));
 				GUILayout.Label("Tags");
-				newTags[section].Keys.ToList().ForEach(k => newTags[section][k] = EditorGUILayout.FloatField(tagsVerbose[k], newTags[section][k]));
+				newTags[section].Keys.ForEach(k => newTags[section][k] = EditorGUILayout.FloatField(tagsVerbose[k], newTags[section][k]));
 				GUILayout.EndVertical();
 			});
 			GUILayout.EndHorizontal();
@@ -81,12 +81,12 @@ public class BillEditor : EditorWindow {
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Save")) {
 				bill.name = newBill.name;
-				newBill.left["tags"] = System.String.Join(" ", newTags["left"].Where(kvp => kvp.Value != 0).Select(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
+				newBill.left["tags"] = System.String.Join(" ", newTags["left"].Filter(kvp => kvp.Value != 0).Map(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
 				bill.left = newBill.left;
-				newBill.right["tags"] = System.String.Join(" ", newTags["right"].Where(kvp => kvp.Value != 0).Select(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
+				newBill.right["tags"] = System.String.Join(" ", newTags["right"].Filter(kvp => kvp.Value != 0).Map(kvp => kvp.Key + (kvp.Value > 0 ? "+" : "") + kvp.Value.ToString()));
 				bill.right = newBill.right;
 				Debug.Log("Saved: " + bill);
-				bills[deckName] = bills[deckName].Select((b, i) => i == index?bill : b).ToList();
+				bills[deckName] = bills[deckName].Map((b, i) => i == index ? bill : b).ToList();
 				WriteToFile(deckName);
 			}
 			if (GUILayout.Button("Reset"))
@@ -116,10 +116,10 @@ public class BillEditor : EditorWindow {
 		newBill.name = b.name;
 		newBill.left = b.left;
 		newBill.right = b.right;
-		newTags.Keys.ToList().ForEach(section => {
+		newTags.Keys.ForEach(section => {
 			newTags[section] = newTags[section].ToDictionary(kvp => kvp.Key, kvp => 0f);
 			if (b.name != "new bill")
-				b[section]["tags"].Split().ToList().ForEach(tag => {
+				b[section]["tags"].Split().ForEach(tag => {
 					var match = CityScript.SplitTag(tag);
 					newTags[section][match[0]] = float.Parse(match[2]);
 				});

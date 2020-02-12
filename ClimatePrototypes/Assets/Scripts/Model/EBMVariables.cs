@@ -100,9 +100,9 @@ public partial class EBM {
 	static readonly Matrix<double> kappa = (1 + dt_tau) * I - dt * diffop / cg;
 	static readonly Vector<double> ty = Vector<double>.Build.Dense(nt, i => dt / 2 + i++ * dt);
 	static readonly Matrix<double> S =
-		Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Select(v => simpleS).ToArray()) -
-		Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[bands].Select(v => S1 * (ty * 2 * Math.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
-			Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Select(v => x).ToArray()));
+		Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Map(v => simpleS).ToArray()) -
+		Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[bands].Map(v => S1 * (ty * 2 * Math.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
+			Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Map(v => x).ToArray()));
 	//could optimise with indices if needed
 	static readonly double M = B + cg_tau;
 	/// <summary> Ratio of MSE aloft to near surface, equatorial MSE </summary>

@@ -58,6 +58,18 @@ public partial class EBM {
 			Matrix<double>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Skip(E100.ColumnCount - 100).ToArray()) //Efin
 		);
 	}
+	static Matrix<double> MultiplyRowWise(Matrix<double> mat, Vector<double> vec) => mat.MapIndexed((x, y, i) => i * vec[x]);
+
+	static Matrix<double> GradVertical(Matrix<double> mat) => Matrix<double>.Build.DenseOfColumnArrays(mat.ToColumnArrays().Select(col => {
+		double[] gradCol = new double[col.Length];
+		gradCol[0] = col[1] - col[0];
+		for (int i = 1; i < col.Length - 1; i++)
+			gradCol[i] = (col[i + 1] - col[i - 1]) / 2;
+		gradCol[col.Length - 1] = col[col.Length - 1] - col[col.Length - 2];
+		gradCol[0] -= gradCol[1] - gradCol[0];
+		gradCol[col.Length - 1] += gradCol[col.Length - 1] - gradCol[col.Length - 2];
+		return gradCol;
+	}));
 
 	/// <summary> Calculates Precipitation of regions</summary>
 	/// <param name="Tfin"> <c>Matrix</c> of final temp </param>
@@ -66,19 +78,6 @@ public partial class EBM {
 		double[][] TfinArr = Tfin.ToRowArrays();
 		Matrix<double> qfin = Rh * Matrix<double>.Build.DenseOfRowVectors(TfinArr.Select(r => Humidity(r, Ps)));
 		Matrix<double> hfin = Tfin + Lv * qfin / cp;
-
-		Matrix<double> GradVertical(Matrix<double> mat) => Matrix<double>.Build.DenseOfColumnArrays(mat.ToColumnArrays().Select(col => {
-			double[] gradCol = new double[col.Length];
-			gradCol[0] = col[1] - col[0];
-			for (int i = 1; i < col.Length - 1; i++)
-				gradCol[i] = (col[i + 1] - col[i - 1]) / 2;
-			gradCol[col.Length - 1] = col[col.Length - 1] - col[col.Length - 2];
-			gradCol[0] -= gradCol[1] - gradCol[0];
-			gradCol[col.Length - 1] += gradCol[col.Length - 1] - gradCol[col.Length - 2];
-			return gradCol;
-		}));
-
-		Matrix<double> MultiplyRowWise(Matrix<double> mat, Vector<double> vec) => mat.MapIndexed((x, y, i) => i * vec[x]);
 
 		Vector<double> OneMinusX2 = (1 - x.PointwisePower(2));
 		Matrix<double> Fa = -D * MultiplyRowWise(GradVertical(hfin), OneMinusX2) * bands;
@@ -115,7 +114,7 @@ public partial class EBM {
 		temp = T100.Column(99);
 		energy = E100.Column(99);
 		precip = CalcPrecip(T100).Column(99);
-		return (Reduce(temp, regions), Reduce(energy, regions), Reduce(precip, regions));
+		return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
 	}
 
 	public static void Clear() => (temp, energy, precip) = (null, null, null);
@@ -129,7 +128,7 @@ public partial class EBM {
 				j == cuts.Length || x.Index <= cuts[j] ? j : ++j)
 			.Select(x => x.Select(v => v.Value)))
 		(n == -1 ? regions : n, 0);
-	public static double[] Reduce(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => x.Average()).ToArray();
+	public static double[] Condense(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => x.Average()).ToArray();
 	// static double Average(IEnumerable<double> vec) { return x.Average(); }
 
 	static Predicate < (double, double) > Less = ((double, double)t) => t.Item1 < t.Item2;

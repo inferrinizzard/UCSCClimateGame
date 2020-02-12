@@ -47,8 +47,8 @@ public class CityScript : MonoBehaviour {
 		}
 
 		public override string ToString() => System.String.Format("name:{0}, left:{1}, right:{2}", name,
-			"{" + left.Select(kvp => $"{kvp.Key}:[{kvp.Value}]").Aggregate((acc, s) => $"{acc} {s}") + "}",
-			"{" + right.Select(kvp => $"{kvp.Key}:[{kvp.Value}]").Aggregate((acc, s) => $"{acc} {s}") + "}");
+			"{" + left.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}",
+			"{" + right.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
 	}
 
 	void Start() {
@@ -59,7 +59,7 @@ public class CityScript : MonoBehaviour {
 	}
 
 	public static Dictionary<string, List<Bill>> LoadBills() =>
-		new string[] { "easy", "med", "hard" }.Select(level => {
+		new string[] { "easy", "med", "hard" }.Map(level => {
 			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories)[0])) {
 				string json = reader.ReadToEnd();
 				return (level, JsonConvert.DeserializeObject<List<Bill>>(json));
@@ -71,7 +71,10 @@ public class CityScript : MonoBehaviour {
 	}
 
 	public void ChooseBill(string side) {
-		currentBill[side]["tags"].Split().ToList().ForEach(tag => { var split = SplitTag(tag); World.UpdateFactor(split[0], float.Parse(split[1] + split[2])); });
+		currentBill[side]["tags"].Split().ForEach(
+			tag => Func.Lambda(
+				(string[] split) => World.UpdateFactor(split[0], float.Parse(split[1] + split[2])))
+			(SplitTag(tag)));
 		currentBill = GetNextBill();
 		coroutines.ForEach(co => StopCoroutine(co));
 		coroutines = new List<Coroutine>();
@@ -111,17 +114,6 @@ public class CityScript : MonoBehaviour {
 			}
 		}
 		return bills[currentBillDifficulty][currentBillIndex];
-	}
-
-	void NotifyWorldChange(string billName) {
-		switch (billName) {
-			case "co2":
-				// World.UpdateCO2(ppm);
-				break;
-			case "albedo":
-				// World.UpdateAlbedo(albedoDelta);
-				break;
-		}
 	}
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect

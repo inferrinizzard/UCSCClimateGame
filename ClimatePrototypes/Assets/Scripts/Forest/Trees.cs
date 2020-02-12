@@ -7,7 +7,8 @@ using UnityEngine;
 public class Trees : MonoBehaviour {
 	(int, GameObject)[, ] grid = new(int, GameObject)[6, 8];
 	(int, int)[] initTrees = new(int, int)[] {
-		(0, 4), (1, 1), (2, 3), (1, 5), (3, 0), (3, 7), (4, 2), (4, 5) };
+		(0, 4), (1, 1), (2, 3), (1, 5), (3, 0), (3, 7), (4, 2), (4, 5)
+	};
 
 	Vector3Int gridOffset = new Vector3Int(-4, +2, 0);
 
@@ -17,7 +18,7 @@ public class Trees : MonoBehaviour {
 	// Start is called before the first frame update
 	void Start() {
 		_grid = GetComponent<Grid>();
-		initTrees.ToList().ForEach(x => grid[x.Item1, x.Item2] = (2, PlantTree(x.Item2, -x.Item1)));
+		initTrees.ForEach(x => grid[x.Item1, x.Item2] = (2, PlantTree(x.Item2, -x.Item1)));
 
 		// foreach (Transform t in trees.GetComponentsInChildren<Transform>())
 		// 	Debug.Log($"{t.name}: {_grid.WorldToCell(t.position) + gridOffset}");

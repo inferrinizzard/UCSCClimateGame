@@ -51,6 +51,7 @@ public class GameManager : Singleton<GameManager> {
 
 				asyncLoad.allowSceneActivation = true;
 				instance.loadingScreen.SetActive(false);
+				World.turn++;
 				yield break;
 			}
 			yield return null;
