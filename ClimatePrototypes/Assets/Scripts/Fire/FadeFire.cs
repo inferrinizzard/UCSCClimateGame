@@ -17,8 +17,8 @@ public class FadeFire : MonoBehaviour {
 	}
 
 	void Update() {
-		if (step++ % 20 == 0)
-			WaterSpraying.damage += 1;
+		if (step++ % 30 == 0)
+			WaterSpraying.damage += fadeRate;
 		if (health <= 0)
 			Destroy(gameObject);
 	}

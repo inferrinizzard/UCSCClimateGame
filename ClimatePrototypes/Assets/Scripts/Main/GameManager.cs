@@ -15,8 +15,6 @@ public class GameManager : Singleton<GameManager> {
 		loadingBar = loadingScreen.GetComponentInChildren<Slider>();
 
 		World.Init();
-
-		// async?
 	}
 	public static void QuitGame() {
 		// prompt

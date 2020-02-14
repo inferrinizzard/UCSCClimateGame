@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class SpawnFire : MonoBehaviour {
-	public FireSpawnManager spawnValues;
+public class FireController : MonoBehaviour {
+	[SerializeField] int numFires = 5;
 	[SerializeField] GameObject firePrefab = default;
 	// Start is called before the first frame update
 	void Start() {
@@ -13,15 +13,20 @@ public class SpawnFire : MonoBehaviour {
 
 	// Update is called once per frame
 	void Spawn() {
-		for (int i = 0; i < spawnValues.prefabs; i++) {
-			GameObject newFire = Instantiate(firePrefab, RandomPoint(Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2)(firePrefab.GetComponent<SpriteRenderer>().bounds.max)), Quaternion.identity);
-			// GameObject newFire = Instantiate(mediumFire, spawnValues.spawnPoints[i % spawnValues.spawnPoints.Length], Quaternion.identity);
-			// if (World.averageTemp > 90) { // do nothing
-			if (World.averageTemp < 70) {
-				newFire.transform.localScale *= .75f;
-			} else {
+		for (int i = 0; i < numFires; i++) {
+			FadeFire newFire = Instantiate(firePrefab,
+				RandomPoint(
+					Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2)
+					(firePrefab.GetComponent<SpriteRenderer>().bounds.max)),
+				Quaternion.identity).GetComponent<FadeFire>();
+			if (World.averageTemp < 10) {
 				newFire.transform.localScale *= .5f;
+				newFire.health *= .5f;
+			} else if (World.averageTemp < 25) {
+				newFire.transform.localScale *= .75f;
+				newFire.health *= .75f;
 			}
+			// if (World.averageTemp > 25) // do nothing
 			newFire.transform.SetParent(transform);
 			newFire.name += $" {i}";
 		}
