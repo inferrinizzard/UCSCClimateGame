@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1111486439586294903}
   m_Layer: 0
   m_Name: SolarRadiation
-  m_TagString: Ball
+  m_TagString: SolarRadiation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1111486439586294892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.761404, y: -3.4548376, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -94,8 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da1b3463afa8e24290270f78c64033d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upForce: 10
-  sideForce: 5
+  upForce: 2
+  sideForce: 8
 --- !u!50 &1111486439586294896
 Rigidbody2D:
   serializedVersion: 4

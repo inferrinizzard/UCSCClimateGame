@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3330338654449602561}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3.76, z: 0}
-  m_LocalScale: {x: 5.5401564, y: 0.7875, z: 1}
+  m_LocalScale: {x: 4, y: 0.25, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -94,8 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b41756db53d1459097e967ee5ffc050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballEmitWaitSeconds: 1
-  ballPrefab: {fileID: 0}
+  paddleSpeed: 20
 --- !u!50 &3330338654449602565
 Rigidbody2D:
   serializedVersion: 4
@@ -115,7 +114,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 6
 --- !u!61 &3330338654449602564
 BoxCollider2D:
@@ -126,7 +125,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 3330338654449602561}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e2d87f8d91ff5b64987d513dd63a380c, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

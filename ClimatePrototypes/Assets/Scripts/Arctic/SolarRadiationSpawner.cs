@@ -2,34 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SolarRadiationSpawner : MonoBehaviour
-{
-    private bool canEmit = true;
-    public float ballEmitWaitSeconds = 1f;
-    public GameObject ballPrefab;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+public class SolarRadiationSpawner : MonoBehaviour {
+	private bool canEmit = true;
+	public float ballEmitWaitSeconds = 1f;
+	public GameObject ballPrefab;
+	[SerializeField] int numBalls = 3;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (canEmit) EmitBall();
-    }
-    private void EmitBall()
-    {
-        Instantiate(ballPrefab, transform.position, Quaternion.identity);
-        Instantiate(ballPrefab, transform.position, Quaternion.identity);
-        Instantiate(ballPrefab, transform.position, Quaternion.identity);
-        StartCoroutine(EmitBallWait());
-    }
+	Transform radiationParent;
+	// Start is called before the first frame update
+	void Start() {
+		radiationParent = new GameObject().transform;
+		radiationParent.name = "Solar Radiation";
+	}
 
-    IEnumerator EmitBallWait()
-    {
-        canEmit = false;
-        yield return new WaitForSeconds(ballEmitWaitSeconds);
-        canEmit = true;
-    }
+	// Update is called once per frame
+	void Update() {
+		if (canEmit)
+			EmitBall();
+	}
+	private void EmitBall() {
+		for (int i = 0; i < numBalls; i++)
+			Instantiate(ballPrefab, transform.position + Vector3.right * Random.Range(5, -5), Quaternion.identity, radiationParent);
+		StartCoroutine(EmitBallWait());
+	}
+
+	IEnumerator EmitBallWait() {
+		canEmit = false;
+		yield return new WaitForSeconds(ballEmitWaitSeconds);
+		canEmit = true;
+	}
 }
