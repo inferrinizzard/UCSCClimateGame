@@ -31,23 +31,16 @@
             </e>
           </e>
         </e>
-        <e p="Scenes" t="Include">
-          <e p="misc arctic assets" t="Include">
-            <e p="ICE_sushishop" t="Include">
-              <e p="Shader" t="Include">
-                <e p="Glass.shader" t="Include" />
-                <e p="Ice(break).shader" t="Include" />
-              </e>
-            </e>
-          </e>
-        </e>
         <e p="Scripts" t="Include">
-          <e p="ArcticPrototype" t="Include">
-            <e p="Cam.cs" t="Include" />
-            <e p="Cube.cs" t="Include" />
-            <e p="Heat.cs" t="Include" />
-            <e p="IceCloud.cs" t="Include" />
-            <e p="UnitySystemConsoleRedirector.cs" t="Include" />
+          <e p="Arctic" t="Include">
+            <e p="BallBehavior.cs" t="Include" />
+            <e p="BufferBehavior.cs" t="Include" />
+            <e p="HighCloud.cs" t="Include" />
+            <e p="HighCloudSpawner.cs" t="Include" />
+            <e p="LowCloud.cs" t="Include" />
+            <e p="LowCloudSpawner.cs" t="Include" />
+            <e p="PaddleBehavior.cs" t="Include" />
+            <e p="SolarRadiationSpawner.cs" t="Include" />
           </e>
           <e p="City" t="Include">
             <e p="bills.txt" t="Include" />
@@ -56,12 +49,10 @@
           <e p="Editor" t="Include">
             <e p="BillEditor.cs" t="Include" />
           </e>
+          <e p="Extensions.cs" t="Include" />
           <e p="Fire" t="Include">
             <e p="FadeFire.cs" t="Include" />
-            <e p="fillSlider.cs" t="Include" />
-            <e p="FireSpawnManager.cs" t="Include" />
-            <e p="SpawnFire.cs" t="Include" />
-            <e p="WaterManagement.cs" t="Include" />
+            <e p="FireController.cs" t="Include" />
             <e p="WaterSpraying.cs" t="Include" />
           </e>
           <e p="Forest" t="Include">
@@ -90,18 +81,40 @@
             <e p="LineScript.cs" t="Include" />
             <e p="UIController.cs" t="Include" />
           </e>
-          <e p="xueer-cloud" t="Include">
-            <e p="BallBehavior.cs" t="Include" />
-            <e p="BufferBehavior.cs" t="Include" />
-            <e p="PaddleBehavior.cs" t="Include" />
-            <e p="SolarRadiationSpawner.cs" t="Include" />
-          </e>
           <e p="Xueer_Tropics" t="Include">
             <e p="CloudMovement.cs" t="Include" />
             <e p="HeatState.cs" t="Include" />
             <e p="onHeatZoneEnter.cs" t="Include" />
             <e p="TempController.cs" t="Include" />
             <e p="TropicsCloudMovement.cs" t="Include" />
+          </e>
+        </e>
+        <e p="TextMesh Pro" t="Include">
+          <e p="Fonts" t="Include">
+            <e p="LiberationSans - OFL.txt" t="Include" />
+          </e>
+          <e p="Resources" t="Include">
+            <e p="LineBreaking Following Characters.txt" t="Include" />
+            <e p="LineBreaking Leading Characters.txt" t="Include" />
+            <e p="Shaders" t="Include">
+              <e p="TMP_Bitmap-Custom-Atlas.shader" t="Include" />
+              <e p="TMP_Bitmap-Mobile.shader" t="Include" />
+              <e p="TMP_Bitmap.shader" t="Include" />
+              <e p="TMP_SDF Overlay.shader" t="Include" />
+              <e p="TMP_SDF-Mobile Masking.shader" t="Include" />
+              <e p="TMP_SDF-Mobile Overlay.shader" t="Include" />
+              <e p="TMP_SDF-Mobile.shader" t="Include" />
+              <e p="TMP_SDF-Surface-Mobile.shader" t="Include" />
+              <e p="TMP_SDF-Surface.shader" t="Include" />
+              <e p="TMP_SDF.shader" t="Include" />
+              <e p="TMP_Sprite.shader" t="Include" />
+              <e p="TMPro.cginc" t="Include" />
+              <e p="TMPro_Properties.cginc" t="Include" />
+              <e p="TMPro_Surface.cginc" t="Include" />
+            </e>
+          </e>
+          <e p="Sprites" t="Include">
+            <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
       </e>

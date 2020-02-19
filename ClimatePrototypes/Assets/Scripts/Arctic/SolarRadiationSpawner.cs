@@ -21,8 +21,8 @@ public class SolarRadiationSpawner : MonoBehaviour {
 			EmitBall();
 	}
 	private void EmitBall() {
-		for (int i = 0; i < numBalls; i++)
-			Instantiate(ballPrefab, transform.position + Vector3.right * Random.Range(5, -5), Quaternion.identity, radiationParent);
+		//for (int i = 0; i < numBalls; i++)
+		Instantiate(ballPrefab, transform.position + Vector3.right * Random.Range(5, -5), Quaternion.identity, radiationParent);
 		StartCoroutine(EmitBallWait());
 	}
 

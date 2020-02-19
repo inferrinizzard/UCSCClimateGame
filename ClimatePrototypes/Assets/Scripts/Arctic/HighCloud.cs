@@ -6,10 +6,22 @@ public class HighCloud : MonoBehaviour {
 	int heatThreshold = 4;
 	int hits = 0;
 	new SpriteRenderer renderer;
-
+	Vector2 screenMin;
+	private Vector2 screenMax;
+	public float sideForce = 5f;
+	Rigidbody2D rb;
+	
 	void Start() {
 		renderer = GetComponent<SpriteRenderer>();
 		print(renderer.color);
+
+		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
+		screenMax = Camera.main.ViewportToWorldPoint(Vector2.one);
+		rb = GetComponent<Rigidbody2D>();
+
+		Vector2 force = new Vector2(sideForce, 0);
+		rb.velocity = force;
+
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
@@ -19,5 +31,11 @@ public class HighCloud : MonoBehaviour {
 			print("red");
 			renderer.color = Color.white;
 		}
+	}
+	
+	void Update() {
+
+		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
+			Destroy(gameObject);
 	}
 }
