@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldBubble : MonoBehaviour {
+
+	[SerializeField] float size = 8;
 	GameObject bubble;
 	bool active = false;
+
+	Vector3 startPos;
 
 	// Start is called before the first frame update
 	void Start() {
 		bubble = transform.GetChild(0).gameObject;
+		startPos = bubble.transform.localPosition;
+		bubble.transform.localScale = Vector3.one * .01f;
 	}
 
 	// Update is called once per frame
@@ -42,7 +48,8 @@ public class WorldBubble : MonoBehaviour {
 		while (inProgress) {
 			yield return null;
 			float step = Time.time - start;
-			bubble.transform.localScale = (entering ? Mathf.Lerp(.001f, 10, step / dur) : Mathf.Lerp(10, .001f, step / dur)) * Vector3.one;
+			bubble.transform.localScale = (entering ? Mathf.Lerp(.001f, size, step / dur) : Mathf.Lerp(size, .001f, step / dur)) * Vector3.one;
+			bubble.transform.localPosition = entering ? Vector3.Lerp(transform.position, startPos, step / dur) : Vector3.Lerp(startPos, transform.position, step / dur);
 			if (step > dur)
 				inProgress = false;
 		}
