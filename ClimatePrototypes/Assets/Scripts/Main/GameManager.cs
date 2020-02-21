@@ -10,6 +10,7 @@ public class GameManager : Singleton<GameManager> {
 	public bool runModel = true;
 	GameObject loadingScreen;
 	Slider loadingBar;
+	public List < (string, string) > lineToDraw = new List < (string, string) > ();
 
 	public override void Awake() {
 		if (runModel)

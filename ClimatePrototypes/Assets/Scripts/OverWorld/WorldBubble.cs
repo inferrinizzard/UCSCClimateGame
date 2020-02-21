@@ -7,14 +7,17 @@ public class WorldBubble : MonoBehaviour {
 	[SerializeField] float size = 8;
 	GameObject bubble;
 	bool active = false;
-
 	Vector3 startPos;
+	SpriteRenderer[] icons = new SpriteRenderer[4];
 
 	// Start is called before the first frame update
 	void Start() {
 		bubble = transform.GetChild(0).gameObject;
 		startPos = bubble.transform.localPosition;
 		bubble.transform.localScale = Vector3.one * .01f;
+		icons = transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>();
+		foreach (var i in icons)
+			i.gameObject.SetActive(false);
 	}
 
 	// Update is called once per frame

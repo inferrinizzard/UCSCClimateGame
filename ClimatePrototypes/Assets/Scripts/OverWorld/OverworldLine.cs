@@ -4,21 +4,29 @@ using System.Linq;
 using UnityEngine;
 
 public class OverworldLine : MonoBehaviour {
+	public float duration = .25f;
 	List<LineRenderer> arrows = new List<LineRenderer>();
 	Dictionary<string, Vector3> nodes = new Dictionary<string, Vector3>();
+	Dictionary<string, Color> nodeColours = new Dictionary<string, Color> { { "Forest", Color.green }, { "Arctic", Color.cyan }, { "Tropic", Color.red }, };
 	[SerializeField] Transform nodeParent = default;
 	[SerializeField] GameObject baseLine = default;
+
 	// Start is called before the first frame update
 	void Start() {
 		foreach (Transform child in nodeParent)
 			nodes.Add(child.name, child.position);
-		StartCoroutine(DrawLine(nodes["CityNode"], nodes["ForestNode"], .5f, Color.red));
+
+		// StartCoroutine(DrawLine(nodes["CityNode"], nodes["ForestNode"], .5f, Color.red));
+
+		foreach (var(from, to)in GameManager.Instance.lineToDraw) {
+			this.print(from, to);
+			// StartCoroutine(DrawLine(nodes[$"{from}Node"], nodes[$"{to}Node"], duration, nodeColours[to]));
+		}
+
 	}
 
 	// Update is called once per frame
-	void Update() {
-
-	}
+	void Update() { }
 
 	IEnumerator DrawLine(Vector3 start, Vector3 dest, float time, Color c, int verts = 100) {
 		GameObject lrgo = GameObject.Instantiate(baseLine, Vector3.zero, Quaternion.identity, transform);
