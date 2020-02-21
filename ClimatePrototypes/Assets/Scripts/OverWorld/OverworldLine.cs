@@ -47,6 +47,26 @@ public class OverworldLine : MonoBehaviour {
 			if (step > time)
 				inProgress = false;
 		}
+		yield return new WaitForSeconds(1);
 		// lr.Simplify(.5f);
+		// lrgo.SetActive(false);
+		StartCoroutine(EraseLine(lr, points, .25f));
+	}
+
+	IEnumerator EraseLine(LineRenderer lr, List<Vector3> points, float time) {
+		int verts = points.Count;
+		float begin = Time.time;
+		bool inProgress = true;
+
+		while (inProgress) {
+			yield return null;
+			int curCount = lr.positionCount;
+			float step = Time.time - begin;
+			lr.positionCount = System.Math.Max((int)((1 - step / time) * verts), 0);
+			lr.SetPositions(points.Skip(verts - lr.positionCount).ToArray());
+			if (step > time)
+				inProgress = false;
+		}
+		lr.gameObject.SetActive(false);
 	}
 }
