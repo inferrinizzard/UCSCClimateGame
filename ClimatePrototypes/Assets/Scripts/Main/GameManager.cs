@@ -7,14 +7,17 @@ using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager> {
 
+	public bool runModel = true;
 	GameObject loadingScreen;
 	Slider loadingBar;
 
+	public override void Awake() {
+		if (runModel)
+			World.Init();
+	}
 	void Start() {
 		loadingScreen = transform.GetChild(0).GetChild(0).gameObject; //do better
-		loadingBar = loadingScreen.GetComponentInChildren<Slider>();
-
-		World.Init();
+		// loadingBar = loadingScreen.GetComponentInChildren<Slider>();
 	}
 	public static void QuitGame() {
 		// prompt
@@ -41,7 +44,7 @@ public class GameManager : Singleton<GameManager> {
 		instance.loadingScreen.SetActive(true);
 
 		while (!asyncLoad.isDone && !calcDone) {
-			instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
+			// instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
 			if (asyncLoad.progress >= .9f && Time.time - start > 1) {
 				if (name != "Overworld")

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 public static class Extensions {
-	public static string AsString(this double[] nums) => $"[{string.Join(", ", nums)}]";
-	public static string AsString(this IEnumerable<double> nums) => $"[{string.Join(", ", nums)}]";
+	public static string AsString<T>(this IEnumerable<T> nums) => $"[{string.Join(", ", nums)}]";
+	public static string AsString<T>(this T[] nums) => $"[{string.Join(", ", nums)}]";
 
 	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource> action) {
 		if (@this == null)
@@ -28,6 +28,8 @@ public static class Extensions {
 			action(e.Current, index++);
 		e.Dispose();
 	}
+
+	public static void print(this UnityEngine.MonoBehaviour @this, params object[] words) => UnityEngine.Debug.Log(string.Join(" ", words));
 
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, TResult> func) => @this.Select(func);
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, int, TResult> func) => @this.Select(func);
