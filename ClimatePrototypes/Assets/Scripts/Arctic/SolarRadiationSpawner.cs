@@ -10,7 +10,9 @@ public class SolarRadiationSpawner : MonoBehaviour {
 
 	Transform radiationParent;
 	// Start is called before the first frame update
-	void Start() {
+	void Start()
+	{
+		StartCoroutine(Enter());
 		radiationParent = new GameObject().transform;
 		radiationParent.name = "Solar Radiation";
 	}
@@ -29,6 +31,11 @@ public class SolarRadiationSpawner : MonoBehaviour {
 	IEnumerator EmitBallWait() {
 		canEmit = false;
 		yield return new WaitForSeconds(ballEmitWaitSeconds);
+		canEmit = true;
+	}
+	IEnumerator Enter() {
+		canEmit = false;
+		yield return new WaitForSeconds(3f);
 		canEmit = true;
 	}
 }

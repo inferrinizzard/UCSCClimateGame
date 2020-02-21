@@ -29,6 +29,7 @@ public class HighCloud : MonoBehaviour {
 		renderer.color -= new Color(0, .1f, .1f, 0);
 		if (renderer.color.g < 1 - .1 * heatThreshold) {
 			print("red");
+			GetComponent<LongWaveSpawner>().cloudHit = true;
 			renderer.color = Color.white;
 		}
 	}
@@ -37,5 +38,9 @@ public class HighCloud : MonoBehaviour {
 
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
 			Destroy(gameObject);
+		if (hits >= 3)
+		{
+			//GetComponent<LongWaveSpawner>().cloudHit = true;
+		}
 	}
 }
