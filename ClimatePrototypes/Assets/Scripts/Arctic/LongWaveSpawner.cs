@@ -26,7 +26,7 @@ public class LongWaveSpawner : MonoBehaviour
     }
     private void EmitBall() {
         //for (int i = 0; i < numBalls; i++)
-        Instantiate(longWavePrefab, transform.position + Vector3.right * Random.Range(5, -5), Quaternion.identity, longWaveParent);
+        Instantiate(longWavePrefab, transform.position, Quaternion.identity, longWaveParent);
         //StartCoroutine(EmitBallWait());
         hasEmit = true;
     }

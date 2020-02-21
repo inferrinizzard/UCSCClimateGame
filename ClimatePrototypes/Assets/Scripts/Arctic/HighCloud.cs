@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HighCloud : MonoBehaviour {
-	int heatThreshold = 4;
+	int heatThreshold = 3;
 	int hits = 0;
 	new SpriteRenderer renderer;
 	Vector2 screenMin;
@@ -29,6 +29,7 @@ public class HighCloud : MonoBehaviour {
 		renderer.color -= new Color(0, .1f, .1f, 0);
 		if (renderer.color.g < 1 - .1 * heatThreshold) {
 			print("red");
+			Destroy(other.gameObject);
 			GetComponent<LongWaveSpawner>().cloudHit = true;
 			renderer.color = Color.white;
 		}
