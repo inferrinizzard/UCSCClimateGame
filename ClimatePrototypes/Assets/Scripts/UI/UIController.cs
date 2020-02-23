@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIController : MonoBehaviour {
+public class UIController : Singleton<UIController> {
 	public GameObject settingsGroup;
 	public InfoController infoGroup;
 	public GameObject notificationGroup;
@@ -14,12 +14,10 @@ public class UIController : MonoBehaviour {
 	bool infoOn = false;
 	bool notificationsOn = false;
 
-	// Start is called before the first frame update
 	void Start() {
 		turnText.text = $"Turn {World.turn}";
 	}
 
-	// Update is called once per frame
 	void Update() {
 		moneyText.text = $"Money: ${World.money:0,0}";
 	}

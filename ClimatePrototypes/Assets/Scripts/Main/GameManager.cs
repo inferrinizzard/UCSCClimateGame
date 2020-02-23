@@ -8,11 +8,13 @@ using UnityEngine.UI;
 public class GameManager : Singleton<GameManager> {
 
 	public bool runModel = true;
+	bool exitSure = false;
 	GameObject loadingScreen;
 	Slider loadingBar;
 	public List < (string, string) > lineToDraw = new List < (string, string) > ();
 
 	public override void Awake() {
+		base.Awake();
 		if (runModel)
 			World.Init();
 	}
@@ -22,11 +24,16 @@ public class GameManager : Singleton<GameManager> {
 	}
 	public static void QuitGame() {
 		// prompt
-		Application.Quit();
+		if (!instance.exitSure) {
+			Debug.Log("Are you sure");
+			instance.exitSure = true;
+		} else
+			Application.Quit();
+		instance.exitSure = false;
 	}
 
 	public static void Transition(string scene) {
-
+		print(instance);
 		instance.StartCoroutine(LoadScene(scene));
 	}
 

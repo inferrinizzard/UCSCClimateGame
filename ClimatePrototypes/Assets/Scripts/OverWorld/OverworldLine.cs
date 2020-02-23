@@ -31,7 +31,7 @@ public class OverworldLine : MonoBehaviour {
 	// Update is called once per frame
 	void Update() { }
 
-	IEnumerator DrawLine(Vector3 start, Vector3 dest, float time, Color c, int verts = 100) {
+	IEnumerator DrawLine(Vector3 start, Vector3 dest, float time, Color c, int verts = 100, float delay = 1) {
 		GameObject lrgo = GameObject.Instantiate(baseLine, Vector3.zero, Quaternion.identity, transform);
 		lrgo.SetActive(true);
 		LineRenderer lr = lrgo.GetComponent<LineRenderer>();
@@ -48,6 +48,7 @@ public class OverworldLine : MonoBehaviour {
 		var startAngle = Mathf.Atan2((centre - start).y, (centre - start).x) * Mathf.Rad2Deg;
 		var destAngle = Mathf.Atan2((centre - dest).y, (centre - dest).x) * Mathf.Rad2Deg;
 
+		// TODO: animation curve lerp
 		List<Vector3> points = new int[verts].Map((_, i) => {
 			var newAngle = Mathf.LerpAngle(startAngle, destAngle, (float)i / verts) * Mathf.Deg2Rad;
 			return new Vector3(-Mathf.Cos(newAngle), -Mathf.Sin(newAngle), -1) * (centre - start).magnitude + centre;
@@ -67,10 +68,10 @@ public class OverworldLine : MonoBehaviour {
 			if (step > time)
 				inProgress = false;
 		}
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(delay);
 		// lr.Simplify(1E-8);
 
-		// StartCoroutine(EraseLine(lr, points, .25f));
+		StartCoroutine(EraseLine(lr, points, .25f));
 	}
 
 	IEnumerator EraseLine(LineRenderer lr, List<Vector3> points, float time) {
