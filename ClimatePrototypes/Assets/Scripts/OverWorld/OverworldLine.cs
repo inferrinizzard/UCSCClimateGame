@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 
 public class OverworldLine : MonoBehaviour {
+
+	[SerializeField] float dist = 0;
 	public float duration = .25f;
 	List<LineRenderer> arrows = new List<LineRenderer>();
 	Dictionary<string, Vector3> nodes = new Dictionary<string, Vector3>();
@@ -16,7 +18,8 @@ public class OverworldLine : MonoBehaviour {
 		foreach (Transform child in nodeParent)
 			nodes.Add(child.name, child.position);
 
-		// StartCoroutine(DrawLine(nodes["CityNode"], nodes["ForestNode"], .5f, Color.red));
+		StartCoroutine(DrawLine(nodes["CityNode"], nodes["ForestNode"], .5f, Color.green));
+		StartCoroutine(DrawLine(nodes["CityNode"], nodes["ArcticNode"], .5f, Color.cyan));
 
 		foreach (var(from, to)in GameManager.Instance.lineToDraw) {
 			this.print(from, to);
@@ -34,13 +37,22 @@ public class OverworldLine : MonoBehaviour {
 		LineRenderer lr = lrgo.GetComponent<LineRenderer>();
 		lr.material.color = c;
 		lr.positionCount = 2;
-		List<Vector3> points = new int[verts].Map((_, i) =>
-			Vector3.Lerp(
-				new Vector3(start.x, start.y, -1),
-				new Vector3(dest.x, dest.y, -1),
-				(float)i / verts
-			)
-		).ToList();
+
+		// float mag = (dest - start).magnitude / 2;
+		// float angle = Mathf.Atan2((dest - start).y, (dest - start).x);
+
+		Vector3 half = Vector3.Lerp(start, dest, .5f);
+		var dir = Vector2.Perpendicular(dest - start).normalized * dist;
+		var centre = half + new Vector3(dir.x, dir.y, 0);
+
+		var startAngle = Mathf.Atan2((centre - start).y, (centre - start).x) * Mathf.Rad2Deg;
+		var destAngle = Mathf.Atan2((centre - dest).y, (centre - dest).x) * Mathf.Rad2Deg;
+
+		List<Vector3> points = new int[verts].Map((_, i) => {
+			var newAngle = Mathf.LerpAngle(startAngle, destAngle, (float)i / verts) * Mathf.Deg2Rad;
+			return new Vector3(-Mathf.Cos(newAngle), -Mathf.Sin(newAngle), -1) * (centre - start).magnitude + centre;
+		}).ToList();
+		print(points[0]);
 		lr.SetPositions(points.Take(2).ToArray());
 		float begin = Time.time;
 		bool inProgress = true;
@@ -56,9 +68,9 @@ public class OverworldLine : MonoBehaviour {
 				inProgress = false;
 		}
 		yield return new WaitForSeconds(1);
-		// lr.Simplify(.5f);
-		// lrgo.SetActive(false);
-		StartCoroutine(EraseLine(lr, points, .25f));
+		// lr.Simplify(1E-8);
+
+		// StartCoroutine(EraseLine(lr, points, .25f));
 	}
 
 	IEnumerator EraseLine(LineRenderer lr, List<Vector3> points, float time) {
@@ -75,6 +87,7 @@ public class OverworldLine : MonoBehaviour {
 			if (step > time)
 				inProgress = false;
 		}
-		lr.gameObject.SetActive(false);
+		// lr.gameObject.SetActive(false);
+		Destroy(lr.gameObject);
 	}
 }
