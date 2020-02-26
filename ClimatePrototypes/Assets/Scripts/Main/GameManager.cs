@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager> {
-
 	public bool runModel = true;
 	bool exitSure = false;
 	GameObject loadingScreen;
@@ -20,6 +19,8 @@ public class GameManager : Singleton<GameManager> {
 	}
 	void Start() {
 		loadingScreen = transform.GetChild(0).GetChild(0).gameObject; //do better
+		loadingScreen.SetActive(false);
+		SceneManager.activeSceneChanged += instance.InitScene;
 		// loadingBar = loadingScreen.GetComponentInChildren<Slider>();
 	}
 	public static void QuitGame() {
@@ -32,18 +33,20 @@ public class GameManager : Singleton<GameManager> {
 		instance.exitSure = false;
 	}
 
-	public static void Transition(string scene) {
-		print(instance);
-		instance.StartCoroutine(LoadScene(scene));
+	void InitScene(Scene to, Scene from) {
+		instance.loadingScreen.SetActive(false);
 	}
+
+	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));
 
 	static IEnumerator LoadScene(string name) {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.time;
 
-		bool calcDone = false;
+		bool calcDone = true;
 		if (name == "Overworld") {
+			calcDone = false;
 			Thread calcThread = new Thread(() => { World.Calc(); calcDone = true; });
 			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 			calcThread.Start();
@@ -51,20 +54,15 @@ public class GameManager : Singleton<GameManager> {
 
 		instance.loadingScreen.SetActive(true);
 
-		while (!asyncLoad.isDone && !calcDone) {
+		while (!asyncLoad.isDone || !calcDone) {
+			yield return null;
 			// instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
-			if (asyncLoad.progress >= .9f && Time.time - start > 1) {
-				if (name != "Overworld")
-					calcDone = true;
-
+			if (asyncLoad.progress >= .9f && Time.time - start > 1 && calcDone) {
 				asyncLoad.allowSceneActivation = true;
-				instance.loadingScreen.SetActive(false);
 				World.turn++;
 				yield break;
 			}
-			yield return null;
 		}
-		yield break;
 	}
 }

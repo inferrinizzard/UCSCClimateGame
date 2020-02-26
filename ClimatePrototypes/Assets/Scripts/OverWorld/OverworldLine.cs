@@ -22,7 +22,7 @@ public class OverworldLine : MonoBehaviour {
 		StartCoroutine(DrawLine(nodes["CityNode"], nodes["ArcticNode"], .5f, Color.cyan));
 
 		foreach (var(from, to)in GameManager.Instance.lineToDraw) {
-			this.print(from, to);
+			// this.print(from, to);
 			// StartCoroutine(DrawLine(nodes[$"{from}Node"], nodes[$"{to}Node"], duration, nodeColours[to]));
 		}
 
@@ -53,7 +53,6 @@ public class OverworldLine : MonoBehaviour {
 			var newAngle = Mathf.LerpAngle(startAngle, destAngle, (float)i / verts) * Mathf.Deg2Rad;
 			return new Vector3(-Mathf.Cos(newAngle), -Mathf.Sin(newAngle), -1) * (centre - start).magnitude + centre;
 		}).ToList();
-		print(points[0]);
 		lr.SetPositions(points.Take(2).ToArray());
 		float begin = Time.time;
 		bool inProgress = true;
