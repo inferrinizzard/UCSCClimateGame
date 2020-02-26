@@ -4,36 +4,34 @@ using UnityEngine;
 
 public class LongWaveSpawner : MonoBehaviour
 {
-    public bool cloudHit = false;
     private bool canEmit = true;
-    private bool hasEmit = false;
-    public float ballEmitWaitSeconds = 10f;
+    //private bool hasEmit = false;
+    private float ballEmitWaitSeconds = 5.0f;
     public GameObject longWavePrefab;
 
     Transform longWaveParent;
-    // Start is called before the first frame update
     void Start()
     {
         longWaveParent = new GameObject().transform;
         longWaveParent.name = "Long Wave Ray";
+        StartCoroutine(EmitBallWait(1f));
     }
-
-    // Update is called once per frame
+    
     void Update() {
-        if (cloudHit && canEmit && !hasEmit)
+        if ( canEmit)
             EmitBall();
         
     }
     private void EmitBall() {
-        //for (int i = 0; i < numBalls; i++)
+        
         Instantiate(longWavePrefab, transform.position, Quaternion.identity, longWaveParent);
-        //StartCoroutine(EmitBallWait());
-        hasEmit = true;
+        StartCoroutine(EmitBallWait(ballEmitWaitSeconds));
+        //hasEmit = true;
     }
 
-    IEnumerator EmitBallWait() {
+    IEnumerator EmitBallWait(float waitTime) {
         canEmit = false;
-        yield return new WaitForSeconds(ballEmitWaitSeconds);
+        yield return new WaitForSeconds(waitTime);
         canEmit = true;
     }
 

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7585854367735539509}
   - component: {fileID: 8327050854472178330}
   - component: {fileID: 2962960792814458994}
+  - component: {fileID: 6648519165178210211}
   m_Layer: 0
   m_Name: High Cloud
   m_TagString: Cloud
@@ -140,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 582f8ebced8aca34a9e7b5b253493fdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sideForce: 5
+  sideForce: 2
 --- !u!50 &2962960792814458994
 Rigidbody2D:
   serializedVersion: 4
@@ -162,3 +163,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &6648519165178210211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7585854367735539506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0e2cb29e5de74583abdbbea507e60ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cloudHit: 0
+  ballEmitWaitSeconds: 10
+  longWavePrefab: {fileID: 1111486439586294892, guid: 21a0f54cf2c984c809e5c9a5b36f3a7f,
+    type: 3}

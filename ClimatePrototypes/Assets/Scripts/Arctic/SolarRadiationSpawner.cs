@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SolarRadiationSpawner : MonoBehaviour {
 	private bool canEmit = true;
-	public float ballEmitWaitSeconds = 1f;
+	private float ballEmitWaitSeconds = 2f;
 	public GameObject ballPrefab;
 	[SerializeField] int numBalls = 3;
 
