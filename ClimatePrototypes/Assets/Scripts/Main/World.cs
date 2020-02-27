@@ -15,6 +15,8 @@ public static class World {
 
 	public static double averageTemp = 0;
 
+	public static readonly Dictionary<string, string> verbose = new Dictionary<string, string> { { "co2", "Emissions" }, { "land", "LandUse" }, { "money", "Economy" }, { "opinion", "PublicOpinion" } };
+
 	public static void Init() {
 		Calc();
 		// FinishCalc(StartCalc().Wait());
@@ -40,7 +42,10 @@ public static class World {
 
 	public readonly static Dictionary<string, System.Action<float>> tagUpdates = new Dictionary<string, System.Action<float>> { { "co2", UpdateCO2 }, { "land", UpdateAlbedo }, { "money", UpdateMoney }, { "opinion", UpdateOpinion } };
 
-	public static void UpdateFactor(string tag, float delta) => tagUpdates[tag].Invoke(delta);
+	public static void UpdateFactor(string tag, float delta) {
+		GameManager.Instance.AddLine("City", "Forest", tag);
+		tagUpdates[tag].Invoke(delta);
+	}
 
 	static void UpdateCO2(float deltaF) => EBM.F += deltaF;
 	static void UpdateMoney(float delta) => money += delta;

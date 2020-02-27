@@ -8,22 +8,26 @@ public class OverworldLine : MonoBehaviour {
 	[SerializeField] float dist = 0;
 	public float duration = .25f;
 	List<LineRenderer> arrows = new List<LineRenderer>();
-	Dictionary<string, Vector3> nodes = new Dictionary<string, Vector3>();
-	Dictionary<string, Color> nodeColours = new Dictionary<string, Color> { { "Forest", Color.green }, { "Arctic", Color.cyan }, { "Tropic", Color.red }, };
+	readonly Dictionary<string, Color> nodeColours = new Dictionary<string, Color> { { "Forest", Color.green }, { "Arctic", Color.cyan }, { "Tropic", Color.red }, };
+	readonly Dictionary<string, WorldBubble> nodes = new Dictionary<string, WorldBubble>();
 	[SerializeField] Transform nodeParent = default;
 	[SerializeField] GameObject baseLine = default;
 
 	// Start is called before the first frame update
 	void Start() {
-		foreach (Transform child in nodeParent)
-			nodes.Add(child.name, child.position);
+		foreach (WorldBubble node in nodeParent.GetComponentsInChildren<WorldBubble>())
+			nodes.Add(node.name.Replace("Node", string.Empty), node);
+		// print(nodes.AsString());
+		// print(nodes["Forest"].icons.AsString());
 
-		StartCoroutine(DrawLine(nodes["CityNode"], nodes["ForestNode"], .5f, Color.green));
-		StartCoroutine(DrawLine(nodes["CityNode"], nodes["ArcticNode"], .5f, Color.cyan));
+		var logoCoroutine = ShowLogo(nodes["Forest"].icons[World.verbose["co2"]], 1);
+		StartCoroutine(DrawLine(nodes["City"].transform.position, nodes["Forest"].transform.position, .5f, Color.green, logoCoroutine));
+		StartCoroutine(DrawLine(nodes["City"].transform.position, nodes["Arctic"].transform.position, .5f, Color.cyan, logoCoroutine));
 
-		foreach (var(from, to)in GameManager.Instance.lineToDraw) {
+		foreach (var(from, to, tag)in GameManager.Instance.lineToDraw) {
 			// this.print(from, to);
-			// StartCoroutine(DrawLine(nodes[$"{from}Node"], nodes[$"{to}Node"], duration, nodeColours[to]));
+			// var logoCoroutine = ShowLogo(nodes[to].icons[World.verbose[tag]], .2f);
+			StartCoroutine(DrawLine(nodes[from].transform.position, nodes[to].transform.position, duration, nodeColours[to], logoCoroutine));
 		}
 
 	}
@@ -31,7 +35,7 @@ public class OverworldLine : MonoBehaviour {
 	// Update is called once per frame
 	void Update() { }
 
-	IEnumerator DrawLine(Vector3 start, Vector3 dest, float time, Color c, int verts = 100, float delay = 1) {
+	IEnumerator DrawLine(Vector3 start, Vector3 dest, float time, Color c, IEnumerator showIcon, int verts = 100, float delay = 1) {
 		GameObject lrgo = GameObject.Instantiate(baseLine, Vector3.zero, Quaternion.identity, transform);
 		lrgo.SetActive(true);
 		LineRenderer lr = lrgo.GetComponent<LineRenderer>();
@@ -67,6 +71,7 @@ public class OverworldLine : MonoBehaviour {
 			if (step > time)
 				inProgress = false;
 		}
+		StartCoroutine(showIcon);
 		yield return new WaitForSeconds(delay);
 		// lr.Simplify(1E-8);
 
@@ -89,5 +94,27 @@ public class OverworldLine : MonoBehaviour {
 		}
 		// lr.gameObject.SetActive(false);
 		Destroy(lr.gameObject);
+	}
+
+	IEnumerator ShowLogo(SpriteRenderer icon, float time) {
+		float begin = Time.time;
+		bool inProgress = true;
+
+		float fadeIn = time / 2;
+		icon.gameObject.SetActive(true);
+
+		while (inProgress) {
+			yield return null;
+			float step = Time.time - begin;
+
+			if (step < fadeIn)
+				icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, step / fadeIn);
+			else
+				icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, 1 - step / time);
+
+			if (step > time)
+				inProgress = false;
+		}
+		icon.gameObject.SetActive(false);
 	}
 }

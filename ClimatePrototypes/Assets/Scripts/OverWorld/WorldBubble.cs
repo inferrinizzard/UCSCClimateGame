@@ -8,16 +8,17 @@ public class WorldBubble : MonoBehaviour {
 	GameObject bubble;
 	bool active = false;
 	Vector3 startPos;
-	SpriteRenderer[] icons = new SpriteRenderer[4];
+	public Dictionary<string, SpriteRenderer> icons = new Dictionary<string, SpriteRenderer>();
 
 	// Start is called before the first frame update
-	void Start() {
+	void Awake() {
 		bubble = transform.GetChild(0).gameObject;
 		startPos = bubble.transform.localPosition;
 		bubble.transform.localScale = Vector3.one * .01f;
-		icons = transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>();
+		foreach (SpriteRenderer icon in transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>())
+			icons.Add(icon.name.Replace("Icon", string.Empty), icon);
 		foreach (var i in icons)
-			i.gameObject.SetActive(false);
+			i.Value.gameObject.SetActive(false);
 	}
 
 	// Update is called once per frame
