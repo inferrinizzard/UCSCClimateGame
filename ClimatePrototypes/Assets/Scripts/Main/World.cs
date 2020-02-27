@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
 public static class World {
 	public static float money = 100f;
@@ -12,7 +13,7 @@ public static class World {
 	public static double[] energy;
 	public static double[] precip;
 
-	public static double averageTemp = 80.0;
+	public static double averageTemp = 0;
 
 	public static void Init() {
 		Calc();
@@ -20,10 +21,14 @@ public static class World {
 	}
 
 	public static void Calc(bool useTemp = false, int years = 0, int steps = 0) {
+		var timer = new Stopwatch();
+		timer.Start();
 		(temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);
+		timer.Stop();
 		averageTemp = temp.Average();
 		Debug.Log(averageTemp);
 		Debug.Log(temp.AsString());
+		Debug.Log(timer.ElapsedMilliseconds);
 	}
 
 	public static async Task StartCalc(bool useTemp = false, int years = 0, int steps = 0) => await Task.Run(() => EBM.Calc(useTemp ? EBM.temp : null, years, steps));

@@ -10,6 +10,8 @@ public class UIController : Singleton<UIController> {
 	public Text moneyText;
 	public Text turnText;
 
+	[SerializeField] Button backButton = default;
+
 	bool settingsOn = false;
 	bool infoOn = false;
 	bool notificationsOn = false;
@@ -43,6 +45,8 @@ public class UIController : Singleton<UIController> {
 		}
 	}
 
+	public void ToggleBackButton(bool on) => backButton.gameObject.SetActive(on);
+
 	public void ToggleNotifications() {
 		notificationsOn = !notificationsOn;
 
@@ -50,8 +54,8 @@ public class UIController : Singleton<UIController> {
 			notificationGroup.SetActive(notificationsOn);
 	}
 
-	public void Exit() => GameManager.QuitGame();
+	public void UIQuitGame() => GameManager.QuitGame();
 
-	public void ChangeLevel(string level) => GameManager.Transition(level);
+	public void UITransition(string level) => GameManager.Transition(level);
 
 }

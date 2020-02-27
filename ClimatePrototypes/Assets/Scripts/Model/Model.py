@@ -49,7 +49,7 @@ def saturation_specific_humidity(temp, press):
     Lv = 2.5E6
     ep = 0.622  # ratio of gas constants of dry air and water vapor
     temp = temp + 273.15  # convert to Kelvin
-    es = es0 * np.exp(-(Lv/Rv) * ((1/temp)-(1/t0)))
+    es = es0 * np.exp(-(Lv / Rv) * ((1 / temp) - (1 / t0)))
     qs = ep * es / press
 
     return qs
@@ -66,7 +66,7 @@ def compare(name="", file="", real=""):
     data = read(file)
     print("Unity: " + str(data))
     print("python: " + str(real))
-    print("diff: "+str(np.linalg.norm(real-data)))
+    print("diff: " + str(np.linalg.norm(real - data)))
     print()
 
 
@@ -105,15 +105,15 @@ def main():
     n = 50
     nt = 1000
     dur = 30
-    dt = 1/float(nt)
+    dt = 1 / float(nt)
 
     # Spatial Grid
-    dx = 1.0/n  # grid box width
-    x = np.arange(dx/2, 1+dx/2, dx)  # native grid
+    dx = 1.0 / n  # grid box width
+    x = np.arange(dx / 2, 1 + dx / 2, dx)  # native grid
     xb = np.arange(dx, 1, dx)
 
     # Diffusion Operator (WE15, Appendix A)
-    lam = D/dx**2*(1-xb**2)
+    lam = D / dx**2 * (1 - xb**2)
     L1 = np.append(0, -lam)
     L2 = np.append(-lam, 0)
     L3 = -L1-L2
@@ -121,20 +121,20 @@ def main():
         np.diag(L2[:n-1], 1) - np.diag(L1[1:n], -1)
 
     # Definitions for implicit scheme on Tg
-    cg_tau = cg/tau
-    dt_tau = dt/tau
-    dc = dt_tau*cg_tau
-    kappa = (1+dt_tau)*np.identity(n)-dt*diffop/cg
+    cg_tau = cg / tau
+    dt_tau = dt / tau
+    dc = dt_tau * cg_tau
+    kappa = (1 + dt_tau) * np.identity(n) - dt * diffop / cg
 
     # Seasonal forcing (WE15 eq.3)
-    ty = np.arange(dt/2, 1+dt/2, dt)
-    S = (np.tile(S0-S2*x**2, [nt, 1]) -
-         np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
+    ty = np.arange(dt / 2, 1 + dt / 2, dt)
+    S = (np.tile(S0 - S2 * x**2, [nt, 1]) -
+         np.tile(S1 * np.cos(2 * np.pi * ty), [n, 1]).T * np.tile(x, [nt, 1]))
 
     # Further definitions
-    M = B+cg_tau
-    aw = a0-a2*x**2  # open water albedo
-    kLf = k*Lf
+    M = B + cg_tau
+    aw = a0 - a2 * x**2  # open water albedo
+    kLf = k * Lf
 
     # Set up output arrays, saving 100 timesteps/year
     E100 = np.zeros([n, dur*100])
@@ -143,9 +143,9 @@ def main():
     m = -1
 
     # Initial conditions
-    T = 7.5+20*(1-2*x**2)
+    T = 7.5 + 20 * (1 - 2 * x**2)
     Tg = T
-    E = cw*T
+    E = cw * T
 
     j = 0
 
@@ -154,26 +154,26 @@ def main():
     for years in range(0, dur):
         # Loop within One Year
         for i in range(0, int(nt)):
-            m = m+1
+            m += 1
             # store 100 timesteps per year
-            if (p+1)*10 == m:
-                p = p+1
+            if (p + 1) * 10 == m:
+                p += 1
                 E100[:, p] = E
                 T100[:, p] = T
             # forcing
-            alpha = aw*(E > 0) + ai*(E < 0)  # WE15, eq.4
-            C = alpha*S[i, :] + cg_tau*Tg - A
+            alpha = aw * (E > 0) + ai * (E < 0)  # WE15, eq.4
+            C = alpha * S[i, :] + cg_tau * Tg - A
             # surface temperature
-            T0 = C/(M-kLf/E)  # WE15, eq.A3
-            T = E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)  # WE15, eq.9
+            T0 = C / (M - kLf / E)  # WE15, eq.A3
+            T = E / cw * (E >= 0) + T0 * (E < 0) * (T0 < 0)  # WE15, eq.9
             # Forward Euler on E
-            E = E+dt*(C-M*T+Fb+F)  # WE15, eq.A2
+            E = E + dt * (C - M * T + Fb + F)  # WE15, eq.A2
             # latent heat transport
             q = RH * saturation_specific_humidity(Tg, Ps)
-            lht = dt * np.dot(diffop, Lv*q/cp)
+            lht = dt * np.dot(diffop, Lv * q / cp)
             # Implicit Euler on Tg
-            Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
-                                 Tg + lht + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A)/(M-kLf/E)*(T0 < 0)*(E < 0))))
+            Tg = np.linalg.solve(kappa-np.diag(dc / (M - kLf / E) * (T0 < 0) * (E < 0)),
+                                 Tg + lht + (dt_tau * (E / cw * (E >= 0) + (ai * S[i, :] - A) / (M - kLf / E) * (T0 < 0) * (E < 0))))
         print('year %d complete' % (years))
 
     # output only converged, final year
@@ -192,21 +192,21 @@ def main():
     # Calculate diffusive heat transport, latent and total
     x = np.reshape(x, (n, 1))
     qfin = RH * saturation_specific_humidity(Tfin, Ps)
-    hfin = Tfin + Lv*qfin/cp  # in temperature units
-    Fa = -D * (1-x**2) * np.gradient(hfin, axis=0) * n
-    Fla = -D * (1-x**2) * np.gradient(Lv*qfin/cp, axis=0) * n
+    hfin = Tfin + Lv * qfin / cp  # in temperature units
+    Fa = -D * (1 - x**2) * np.gradient(hfin, axis=0) * n
+    Fla = -D * (1 - x**2) * np.gradient(Lv * qfin / cp, axis=0) * n
 
     # Weighting function to partition transport into Hadley cell and eddy transports
     w = np.exp(-x**2 / sigma**2)
     F_hc = w*Fa
-    F_eddy = (1-w)*Fa
-    Fl_eddy = (1-w)*Fla
+    F_eddy = (1 - w) * Fa
+    Fl_eddy = (1 - w) * Fla
 
     # Calculate latent heat transport by Hadley cell
     hfin_eq = hfin[0, :]
     gms = hfin_eq * gms_scale - hfin  # gross moist stability
     psi = F_hc / gms  # mass flux
-    Fl_hc = -(Lv*qfin/cp) * psi
+    Fl_hc = -(Lv * qfin / cp) * psi
 
     # Calculate E-P as the convergence of latent heat transport
     Fl = Fl_hc + Fl_eddy
@@ -267,7 +267,7 @@ def main():
     # plot the ice thickness (Fig 2c)
     plt.subplot(1, 4, 3)
     clevsh = np.arange(0.00001, 4.5, .5)
-    hfin = -Efin/Lf*(Efin < 0)
+    hfin = -Efin / Lf * (Efin < 0)
     plt.contourf(tfin, x, hfin, clevsh)
     plt.colorbar()
     # plot ice edge on h

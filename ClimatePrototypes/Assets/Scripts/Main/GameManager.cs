@@ -15,14 +15,18 @@ public class GameManager : Singleton<GameManager> {
 	public override void Awake() {
 		base.Awake();
 		if (runModel)
-			World.Init();
+			if (World.averageTemp == 0)
+				World.Init();
+		// SpeedTest.VectorAllocTest();
 	}
+
 	void Start() {
 		loadingScreen = transform.GetChild(0).GetChild(0).gameObject; //do better
 		loadingScreen.SetActive(false);
 		SceneManager.activeSceneChanged += instance.InitScene;
 		// loadingBar = loadingScreen.GetComponentInChildren<Slider>();
 	}
+
 	public static void QuitGame() {
 		// prompt
 		if (!instance.exitSure) {
@@ -30,11 +34,12 @@ public class GameManager : Singleton<GameManager> {
 			instance.exitSure = true;
 		} else
 			Application.Quit();
-		instance.exitSure = false;
+		// instance.exitSure = false;
 	}
 
 	void InitScene(Scene to, Scene from) {
 		instance.loadingScreen.SetActive(false);
+		UIController.Instance.ToggleBackButton(to.name != "Overworld");
 	}
 
 	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));
