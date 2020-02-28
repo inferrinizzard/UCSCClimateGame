@@ -7,11 +7,13 @@ public class SolarRadiationSpawner : MonoBehaviour {
 	private float ballEmitWaitSeconds = 2f;
 	public GameObject ballPrefab;
 	[SerializeField] int numBalls = 3;
+	public DayNightCycle dayNightCycle;
 
 	Transform radiationParent;
 	// Start is called before the first frame update
 	void Start()
 	{
+		
 		StartCoroutine(Enter());
 		radiationParent = new GameObject().transform;
 		radiationParent.name = "Solar Radiation";
@@ -19,7 +21,7 @@ public class SolarRadiationSpawner : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if (canEmit)
+		if (canEmit && dayNightCycle.isDayTime)
 			EmitBall();
 	}
 	private void EmitBall() {

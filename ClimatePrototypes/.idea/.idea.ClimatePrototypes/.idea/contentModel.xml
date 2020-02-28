@@ -35,9 +35,11 @@
           <e p="Arctic" t="Include">
             <e p="BallBehavior.cs" t="Include" />
             <e p="BufferBehavior.cs" t="Include" />
-            <e p="FadeBackgroundDay.cs" t="Include" />
+            <e p="Countdown.cs" t="Include" />
+            <e p="DayNightCycle.cs" t="Include" />
             <e p="HighCloud.cs" t="Include" />
             <e p="HighCloudSpawner.cs" t="Include" />
+            <e p="LongWaveBehavior.cs" t="Include" />
             <e p="LongWaveSpawner.cs" t="Include" />
             <e p="LowCloud.cs" t="Include" />
             <e p="LowCloudSpawner.cs" t="Include" />

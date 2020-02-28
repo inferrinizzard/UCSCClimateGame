@@ -7,7 +7,7 @@ public class LowCloudSpawner : MonoBehaviour
     public GameObject lowCloudPrefab;
     [SerializeField]
     private bool canSpawn = true;
-    public float lowCloudSpawnWaitSeconds = 8f;
+    private float lowCloudSpawnWaitSeconds = 6f;
     Transform lowCloudParrent;
     private void Start()
     {
@@ -32,7 +32,7 @@ public class LowCloudSpawner : MonoBehaviour
     
     IEnumerator SpawnLowCloudWait() {
         canSpawn = false;
-        yield return new WaitForSeconds(Random.Range(6f, lowCloudSpawnWaitSeconds));
+        yield return new WaitForSeconds(Random.Range(lowCloudSpawnWaitSeconds-2f, lowCloudSpawnWaitSeconds));
         canSpawn = true;
     }
 }

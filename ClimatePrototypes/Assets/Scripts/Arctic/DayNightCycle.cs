@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FadeBackgroundDay : MonoBehaviour
+public class DayNightCycle : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
 
     [SerializeField]private bool faded = false;
-
-    private float dayTime = 5.0f;
+    
+    private float dayTime = 10f;
 
     private float currentVelocity = 10.0f;
     // Start is called before the first frame update
     void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public bool isDayTime
+    {
+        get { return faded; }
     }
 
     // Update is called once per frame
@@ -37,7 +42,7 @@ public class FadeBackgroundDay : MonoBehaviour
     IEnumerator FadeOut()
     {
         _spriteRenderer.color = new Color(255f,255f,255f, 0f);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(dayTime);
         faded = true;
     }
     
@@ -45,7 +50,7 @@ public class FadeBackgroundDay : MonoBehaviour
     {
         _spriteRenderer.color = new Color(255f,255f,255f, 255f);
         
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(dayTime);
         faded = false;
     }
 }

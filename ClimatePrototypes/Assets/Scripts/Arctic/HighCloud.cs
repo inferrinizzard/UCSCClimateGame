@@ -24,15 +24,14 @@ public class HighCloud : MonoBehaviour {
 
 	}
 
-	void OnCollisionEnter2D(Collision2D other) {
+	/*void OnCollisionEnter2D(Collision2D other) {
 		hits++;
 		//renderer.color -= new Color(0, .1f, .1f, 0);
 		if (renderer.color.g < 1 - .1 * heatThreshold) {
-			print("red");
 			Destroy(other.gameObject);
 			//renderer.color = Color.white;
 		}
-	}
+	}*/
 	
 	void Update() {
 

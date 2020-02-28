@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BufferBehavior : MonoBehaviour {
 	
-	[SerializeField]private float health;
+	public float health;
 	public Sprite health4;
 	public Sprite health3;
 	public Sprite health2;

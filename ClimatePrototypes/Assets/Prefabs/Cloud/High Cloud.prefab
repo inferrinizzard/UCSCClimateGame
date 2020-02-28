@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 7585854367735539506}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.6, y: 0.45, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -97,7 +97,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 1
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.34997636}
+  m_Offset: {x: 0.06578684, y: -0.83823526}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -108,7 +108,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.03, y: 0.057397485}
+  m_Size: {x: 5.8897247, y: 0.28223085}
   m_EdgeRadius: 0
 --- !u!251 &7585854367735539509
 PlatformEffector2D:
@@ -175,7 +175,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0e2cb29e5de74583abdbbea507e60ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cloudHit: 0
-  ballEmitWaitSeconds: 10
   longWavePrefab: {fileID: 1111486439586294892, guid: 21a0f54cf2c984c809e5c9a5b36f3a7f,
     type: 3}
