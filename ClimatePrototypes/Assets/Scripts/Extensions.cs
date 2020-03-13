@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public static class Extensions
-{
+public static class Extensions {
 	public static string AsString<T>(this IEnumerable<T> nums) => $"[{string.Join(", ", nums)}]";
 	public static string AsString<T>(this T[] nums) => $"[{string.Join(", ", nums)}]";
 
-	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource> action)
-	{
+	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource> action) {
 		if (@this == null)
 			throw new ArgumentNullException("Source");
 		if (action == null)
@@ -19,8 +17,7 @@ public static class Extensions
 		e.Dispose();
 	}
 
-	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource, int> action)
-	{
+	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource, int> action) {
 		if (@this == null)
 			throw new ArgumentNullException("Source");
 		if (action == null)

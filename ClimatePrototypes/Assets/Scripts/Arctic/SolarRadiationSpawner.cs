@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,9 +11,8 @@ public class SolarRadiationSpawner : MonoBehaviour {
 
 	Transform radiationParent;
 	// Start is called before the first frame update
-	void Start()
-	{
-		
+	void Start() {
+
 		StartCoroutine(Enter());
 		radiationParent = new GameObject().transform;
 		radiationParent.name = "Solar Radiation";

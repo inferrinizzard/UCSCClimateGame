@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MathNet.Numerics.Distributions;
@@ -11,7 +11,7 @@ public class PaddleBehavior : MonoBehaviour {
 	private float horizontalInput = 0f;
 	private Vector2 screenBounds;
 	private float paddleWidth;
-	
+
 	void Start() {
 		paddleRb2d = GetComponent<Rigidbody2D>();
 		screenBounds =
@@ -27,8 +27,7 @@ public class PaddleBehavior : MonoBehaviour {
 		horizontalInput = Input.GetAxis("Horizontal");
 	}
 
-	private void LateUpdate()
-	{
+	private void LateUpdate() {
 		Vector3 viewPos = transform.position;
 		viewPos.x = Mathf.Clamp(viewPos.x, screenBounds.x * -1 + paddleWidth / 2, screenBounds.x - paddleWidth / 2);
 		transform.position = viewPos;
