@@ -28,9 +28,7 @@ public static class World {
 		(temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);
 		timer.Stop();
 		averageTemp = temp.Average();
-		Debug.Log(averageTemp);
-		Debug.Log(temp.AsString());
-		Debug.Log(timer.ElapsedMilliseconds);
+		Debug.Log($"Average Temp: {averageTemp} with regionals: {temp.AsString()}, calcuated in {timer.ElapsedMilliseconds}ms");
 	}
 
 	public static async Task StartCalc(bool useTemp = false, int years = 0, int steps = 0) => await Task.Run(() => EBM.Calc(useTemp ? EBM.temp : null, years, steps));
