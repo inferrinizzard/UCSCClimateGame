@@ -22,6 +22,9 @@
             </e>
           </e>
         </e>
+        <e p="Materials" t="Include">
+          <e p="Circle.shader" t="Include" />
+        </e>
         <e p="Packages" t="Include">
           <e p="Newtonsoft.Json.12.0.3" t="Include">
             <e p="lib" t="Include">
@@ -31,6 +34,7 @@
             </e>
           </e>
         </e>
+        <e p="PlantTree.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="Arctic" t="Include">
             <e p="BallBehavior.cs" t="Include" />
@@ -71,8 +75,10 @@
           <e p="Model" t="Include">
             <e p="EBM.cs" t="Include" />
             <e p="EBMVariables.cs" t="Include" />
+            <e p="SpeedTest.cs" t="Include" />
           </e>
           <e p="OverWorld" t="Include">
+            <e p="OverworldLine.cs" t="Include" />
             <e p="SlideIn.cs" t="Include" />
             <e p="WorldBubble.cs" t="Include" />
             <e p="WorldNotification.cs" t="Include" />
@@ -121,6 +127,7 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="TreeGrowth.cs" t="Include" />
       </e>
       <e p="ClimatePrototypes.sln" t="IncludeFlat" />
       <e p="obj" t="ExcludeRecursive" />
