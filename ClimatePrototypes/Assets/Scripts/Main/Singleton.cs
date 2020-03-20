@@ -7,10 +7,10 @@ public class Singleton<T> : MonoBehaviour where T : Component {
 	protected static T instance;
 	public static T Instance {
 		get {
-			if(!instance) {
-				instance = FindObjectOfType<T> ();
-				if(!instance) {
-					instance = new GameObject().AddComponent<T> ();
+			if (!instance) {
+				instance = FindObjectOfType<T>();
+				if (!instance) {
+					instance = new GameObject().AddComponent<T>();
 					instance.name = typeof(T).Name;
 				}
 			}
@@ -19,7 +19,7 @@ public class Singleton<T> : MonoBehaviour where T : Component {
 	}
 
 	public virtual void Awake() {
-		if(!instance) {
+		if (!instance) {
 			instance = this as T;
 			DontDestroyOnLoad(this.gameObject);
 		} else

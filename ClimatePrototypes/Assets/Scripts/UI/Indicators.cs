@@ -20,17 +20,17 @@ public class Indicators : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(World.publicOpinion > 1) {
+		if (World.publicOpinion > 1) {
 			opinionImage.sprite = opinionSprites[2];
-		} else if(World.publicOpinion < 0) {
+		} else if (World.publicOpinion < 0) {
 			opinionImage.sprite = opinionSprites[1];
 		} else {
 			opinionImage.sprite = opinionSprites[0];
 		}
 
-		if(World.averageTemp > 50.0) {
+		if (World.averageTemp > 50.0) {
 			temperatureImage.sprite = temperatureSprites[2];
-		} else if(World.publicOpinion < 0) {
+		} else if (World.publicOpinion < 0) {
 			temperatureImage.sprite = temperatureSprites[1];
 		} else {
 			temperatureImage.sprite = temperatureSprites[0];

@@ -70,14 +70,14 @@ public partial class EBM {
 	static readonly Vector<double> L2 = Vector<double>.Build.Dense(bands, i => i >= bands ? 0 : -lam[i++]);
 	static readonly Vector<double> L3 = -L1 - L2;
 	static readonly Matrix<double> d3 = Matrix<double>.Build.DiagonalOfDiagonalVector(L3);
-	static readonly Matrix<double> d2 = new Func<Matrix<double>> (() => {
+	static readonly Matrix<double> d2 = new Func<Matrix<double>>(() => {
 		Matrix<double> mat = Matrix<double>.Build.Dense(bands, bands, 0);
-		mat.SetSubMatrix (0, 1, Matrix<double>.Build.DiagonalOfDiagonalVector (L2.SubVector(0, bands - 1)));
+		mat.SetSubMatrix(0, 1, Matrix<double>.Build.DiagonalOfDiagonalVector(L2.SubVector(0, bands - 1)));
 		return mat;
 	}) ();
-	static readonly Matrix<double> d1 = new Func<Matrix<double>> (() => {
+	static readonly Matrix<double> d1 = new Func<Matrix<double>>(() => {
 		Matrix<double> mat = Matrix<double>.Build.Dense(bands, bands, 0);
-		mat.SetSubMatrix (1, 0, Matrix<double>.Build.DiagonalOfDiagonalVector (L1.SubVector(1, bands - 1)));
+		mat.SetSubMatrix(1, 0, Matrix<double>.Build.DiagonalOfDiagonalVector(L1.SubVector(1, bands - 1)));
 		return mat;
 	}) ();
 
@@ -101,9 +101,9 @@ public partial class EBM {
 	static readonly Matrix<double> kappa = (1 + dt_tau) * I - dt * diffop / cg;
 	static readonly Vector<double> ty = Vector<double>.Build.Dense(nt, i => dt / 2 + i++ * dt);
 	static readonly Matrix<double> S =
-		Matrix<double>.Build.DenseOfRowVectors (new Vector<double>[nt].Map (v => simpleS).ToArray()) -
-		Matrix<double>.Build.DenseOfRowVectors (new Vector<double>[bands].Map (v => S1 * (ty * 2 * Math.PI).PointwiseCos ()).ToArray ()).Transpose ().PointwiseMultiply(
-			Matrix<double>.Build.DenseOfRowVectors (new Vector<double>[nt].Map (v => x).ToArray()));
+		Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Map(v => simpleS).ToArray()) -
+		Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[bands].Map(v => S1 * (ty * 2 * Math.PI).PointwiseCos()).ToArray()).Transpose().PointwiseMultiply(
+			Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Map(v => x).ToArray()));
 	//could optimise with indices if needed
 	static readonly double M = B + cg_tau;
 	/// <summary> Ratio of MSE aloft to near surface, equatorial MSE </summary>

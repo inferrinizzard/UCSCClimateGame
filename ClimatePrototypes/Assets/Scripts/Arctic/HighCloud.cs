@@ -13,12 +13,12 @@ public class HighCloud : MonoBehaviour {
 	Rigidbody2D rb;
 
 	void Start() {
-		renderer = GetComponent<SpriteRenderer> ();
+		renderer = GetComponent<SpriteRenderer>();
 		print(renderer.color);
 
 		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
 		screenMax = Camera.main.ViewportToWorldPoint(Vector2.one);
-		rb = GetComponent<Rigidbody2D> ();
+		rb = GetComponent<Rigidbody2D>();
 
 		Vector2 force = new Vector2(sideForce, 0);
 		rb.velocity = force;
@@ -36,7 +36,7 @@ public class HighCloud : MonoBehaviour {
 
 	void Update() {
 
-		if(transform.position.x < screenMin.x || transform.position.x > screenMax.x)
+		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
 			Destroy(gameObject);
 	}
 }

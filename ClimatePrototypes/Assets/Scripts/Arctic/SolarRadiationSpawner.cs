@@ -21,7 +21,7 @@ public class SolarRadiationSpawner : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(canEmit && dayNightCycle.isDayTime)
+		if (canEmit && dayNightCycle.isDayTime)
 			EmitBall();
 	}
 	private void EmitBall() {

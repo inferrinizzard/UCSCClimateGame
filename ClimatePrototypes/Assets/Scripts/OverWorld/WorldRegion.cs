@@ -30,8 +30,8 @@ public class WorldRegion : MonoBehaviour {
 	// }
 
 	void OnMouseExit() { //set solid bg active, everything else off
-		for(int i = 0; i < parent.childCount; i++)
-			parent.GetChild (i).gameObject.SetActive(true);
+		for (int i = 0; i < parent.childCount; i++)
+			parent.GetChild(i).gameObject.SetActive(true);
 		bg.gameObject.SetActive(false);
 	}
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 public class WorldNotification : MonoBehaviour {
-	public Dictionary<Variables, Regions[]> regionVariables = new Dictionary<Variables, Regions[]> ();
+	public Dictionary<Variables, Regions[]> regionVariables = new Dictionary<Variables, Regions[]>();
 
 	public enum Variables {
 		opinion,
@@ -34,7 +34,7 @@ public class WorldNotification : MonoBehaviour {
 	// called by updateXXX functions in World script
 	public void notifyWorld(Variables value) {
 		// Debug.Log(value + " updated, popping badges in following regions:");
-		foreach(var region in regionVariables[value]) {
+		foreach (var region in regionVariables[value]) {
 			// Debug.Log(region);
 			//  pop corresponding bagdges
 		}

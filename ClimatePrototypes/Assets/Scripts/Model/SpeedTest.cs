@@ -14,7 +14,7 @@ public static class SpeedTest {
 
 		var timer = new Stopwatch();
 		timer.Start();
-		for(int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			Vector<double> t = T * 1234;
 		}
 		timer.Stop();
@@ -22,7 +22,7 @@ public static class SpeedTest {
 
 		Vector<double> test = T;
 		timer.Restart();
-		for(int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			test = T * 1234;
 		}
 		timer.Stop();

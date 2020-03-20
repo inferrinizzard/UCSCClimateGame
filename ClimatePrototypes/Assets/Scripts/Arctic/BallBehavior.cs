@@ -15,15 +15,15 @@ public class BallBehavior : MonoBehaviour {
 	void Start() {
 		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
 		screenMax = Camera.main.ViewportToWorldPoint(Vector2.one);
-		rb = GetComponent<Rigidbody2D> ();
+		rb = GetComponent<Rigidbody2D>();
 
-		Vector2 force = new Vector2(Random.Range (-sideForce, sideForce), -Random.Range(upForce * 0.8f, upForce));
+		Vector2 force = new Vector2(Random.Range(-sideForce, sideForce), -Random.Range(upForce * 0.8f, upForce));
 		rb.velocity = force;
 	}
 
 	void Update() {
 
-		if(transform.position.x < screenMin.x || transform.position.x > screenMax.x || transform.position.y < screenMin.y || (transform.position.y > screenMax.y && rb.velocity.y > 0))
+		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x || transform.position.y < screenMin.y || (transform.position.y > screenMax.y && rb.velocity.y > 0))
 			Destroy(gameObject);
 	}
 

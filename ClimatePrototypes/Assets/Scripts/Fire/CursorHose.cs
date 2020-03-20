@@ -10,7 +10,7 @@ public class CursorHose : MonoBehaviour {
 		Cursor.visible = false;
 	}
 	void Update() {
-		Vector2 cursorPos = cam.ScreenToWorldPoint (new Vector3(Input.mousePosition.x - 200f, Input.mousePosition.y, cam.nearClipPlane));
+		Vector2 cursorPos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x - 200f, Input.mousePosition.y, cam.nearClipPlane));
 		transform.position = cursorPos;
 	}
 }
