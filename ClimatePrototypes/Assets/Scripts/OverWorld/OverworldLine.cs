@@ -14,19 +14,18 @@ public class OverworldLine : MonoBehaviour {
 	[SerializeField] Transform nodeParent = default;
 	[SerializeField] GameObject baseLine = default;
 
-	void Start() {
+	System.Reflection.FieldInfo Fetch(string name) => this.GetType().GetField(name);
+
+	void Awake() {
 		foreach (WorldBubble node in nodeParent.GetComponentsInChildren<WorldBubble>())
-			this.GetType().GetField(node.name).SetValue(this, node);
+			Fetch(node.name).SetValue(this, node);
+	}
 
-		StartCoroutine(DrawLine(CityNode, ForestNode, ForestNode.colour, "co2"));
-		StartCoroutine(DrawLine(CityNode, ArcticNode, ArcticNode.colour, "co2"));
-
-		// foreach (var(from, to, tag) in GameManager.Instance.lineToDraw) {
-		// 	// this.print(from, to);
-		// 	// var logoCoroutine = ShowLogo(nodes[to].icons[World.verbose[tag]], .2f);
-		// 	StartCoroutine(DrawLine(nodes[from].transform.position, nodes[to].transform.position, duration, nodeColours[to], logoCoroutine));
-		// }
-
+	void Start() {
+		foreach (var(from, to, tag) in World.lineToDraw) {
+			WorldBubble dest = Fetch($"{to.ToString()}Node").GetValue(this) as WorldBubble;
+			StartCoroutine(DrawLine(Fetch($"{from.ToString()}Node").GetValue(this) as WorldBubble, dest, dest.colour, tag));
+		}
 	}
 
 	// Update is called once per frame

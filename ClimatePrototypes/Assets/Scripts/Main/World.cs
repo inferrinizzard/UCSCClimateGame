@@ -19,6 +19,13 @@ public static class World {
 
 	public static double averageTemp = 0;
 
+	public enum Region {
+		Arctic,
+		City,
+		Forest,
+		Fire
+	}
+
 	public struct Factor {
 		public string name, verbose;
 		Action<float> update;
@@ -29,13 +36,20 @@ public static class World {
 			update = updateFunction;
 		}
 
-		public void Update(float delta) => update.Invoke(delta);
+		public void Update(Region scene, Region? dest, float delta) {
+			lineToDraw.Add((scene, dest ?? Region.Forest, name));
+			update.Invoke(delta);
+		}
 	}
 
-	public static Factor co2 = new Factor("co2", "Emissions", new Action<float>((float deltaF) => EBM.F += deltaF));
-	public static Factor albedo = new Factor("land", "LandUse", new Action<float>((float deltaS1) => EBM.S1 = deltaS1));
-	public static Factor economy = new Factor("money", "Economy", new Action<float>((float delta) => money += delta));
-	public static Factor opinion = new Factor("opinion", "PublicOpinion", new Action<float>((float delta) => publicOpinion += delta));
+	// static void AddLine(Region a, Region b, string c) => lineToDraw.Add((a, b, c));
+
+	public static List < (Region, Region, string) > lineToDraw = new List < (Region, Region, string) > ();
+
+	public static Factor co2 = new Factor("co2", "Emissions", new Action<float>((float deltaF) => EBM.F += deltaF)),
+		albedo = new Factor("land", "LandUse", new Action<float>((float deltaS1) => EBM.S1 = deltaS1)),
+		economy = new Factor("money", "Economy", new Action<float>((float delta) => money += delta)),
+		opinion = new Factor("opinion", "PublicOpinion", new Action<float>((float delta) => publicOpinion += delta));
 
 	public static Factor? GetFactor(string factor) {
 		switch (factor) {

@@ -442,7 +442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
-  color: {r: 0, g: 0, b: 0, a: 0}
+  colour: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!4 &237590790
 Transform:
   m_ObjectHideFlags: 0
@@ -940,7 +940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
-  color: {r: 0, g: 0, b: 0, a: 0}
+  colour: {r: 1, g: 0.75, b: 0, a: 1}
 --- !u!4 &608624361
 Transform:
   m_ObjectHideFlags: 0
@@ -1025,6 +1025,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dist: 4
   duration: 0.25
+  CityNode: {fileID: 0}
+  ForestNode: {fileID: 0}
+  ArcticNode: {fileID: 0}
+  FireNode: {fileID: 0}
   nodeParent: {fileID: 720132945}
   baseLine: {fileID: 525056248}
 --- !u!1 &642082698
@@ -2534,7 +2538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
-  color: {r: 0, g: 0, b: 0, a: 0}
+  colour: {r: 0, g: 1, b: 0, a: 1}
 --- !u!58 &1622224479
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3114,7 +3118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
-  color: {r: 0, g: 0, b: 0, a: 0}
+  colour: {r: 0, g: 1, b: 1, a: 1}
 --- !u!4 &2075063327
 Transform:
   m_ObjectHideFlags: 0

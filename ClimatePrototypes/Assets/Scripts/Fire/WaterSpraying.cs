@@ -55,7 +55,7 @@ public class WaterSpraying : MonoBehaviour {
 		if (timer < 0 || curWater <= 0) {
 			Destroy(cloneWater);
 			cloneWater = null;
-			World.co2.Update(damage / 100);
+			World.co2.Update(World.Region.Fire, World.Region.City, damage / 100);
 		}
 
 		if (curWater <= 0) {

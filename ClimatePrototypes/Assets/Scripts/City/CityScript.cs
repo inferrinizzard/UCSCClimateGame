@@ -75,7 +75,7 @@ public class CityScript : MonoBehaviour {
 	public void ChooseBill(string side) {
 		currentBill[side]["tags"].Split().ForEach(
 			tag => Func.Lambda(
-				(string[] split) => World.GetFactor(split[0])?.Update(float.Parse(split[1] + split[2])))
+				(string[] split) => World.GetFactor(split[0])?.Update(World.Region.City, null, float.Parse(split[1] + split[2])))
 			(SplitTag(tag)));
 		currentBill = GetNextBill();
 		coroutines.ForEach(co => StopCoroutine(co));

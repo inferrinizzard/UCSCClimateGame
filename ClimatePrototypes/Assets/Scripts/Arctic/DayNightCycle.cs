@@ -10,7 +10,7 @@ public class DayNightCycle : MonoBehaviour {
 
 	private float dayTime = 10f;
 
-	private float currentVelocity = 10.0f;
+	// private float currentVelocity = 10.0f;
 	// Start is called before the first frame update
 	void Start() {
 		_spriteRenderer = GetComponent<SpriteRenderer>();

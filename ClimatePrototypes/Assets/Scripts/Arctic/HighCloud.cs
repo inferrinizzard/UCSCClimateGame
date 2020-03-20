@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HighCloud : MonoBehaviour {
-	int heatThreshold = 3;
-	int hits = 0;
+	// int heatThreshold = 3;
+	// int hits = 0;
 	new SpriteRenderer renderer;
 	Vector2 screenMin;
 	private Vector2 screenMax;
