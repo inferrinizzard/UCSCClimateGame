@@ -442,6 +442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &237590790
 Transform:
   m_ObjectHideFlags: 0
@@ -904,7 +905,7 @@ GameObject:
   - component: {fileID: 608624358}
   - component: {fileID: 608624362}
   m_Layer: 0
-  m_Name: TropicsNode
+  m_Name: FireNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -939,6 +940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &608624361
 Transform:
   m_ObjectHideFlags: 0
@@ -1898,7 +1900,7 @@ GameObject:
   - component: {fileID: 1199502295}
   - component: {fileID: 1199502296}
   m_Layer: 0
-  m_Name: TropicsBubble
+  m_Name: FireBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2532,6 +2534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!58 &1622224479
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3111,6 +3114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 8
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &2075063327
 Transform:
   m_ObjectHideFlags: 0

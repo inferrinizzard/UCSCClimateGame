@@ -8,19 +8,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Overworld.unity
     guid: 2e6700a2e02ebd94cbde7ac0f6e71bec
-  - enabled: 0
-    path: Assets/__DELETED_GUID_Trash/a4c93712153df9884ff359e4e8a899e3
-    guid: a4c93712153df9884ff359e4e8a899e3
   - enabled: 1
     path: Assets/Scenes/City.unity
     guid: 3474e35aded05cf4ba7c53bbfdd37ec3
   - enabled: 1
     path: Assets/Scenes/Forest.unity
     guid: 7cefa61cc72fd554382ddba98829146e
-  - enabled: 0
-    path: Assets/Scenes/Fire.unity
-    guid: 2e49922ccaf2565498eaf3753eac7fa4
   - enabled: 1
     path: Assets/Scenes/Arctic.unity
     guid: fbcce027f5bed4ef3aca5463e329fb16
+  - enabled: 1
+    path: Assets/Scenes/Fire.unity
+    guid: 3fdaf4e805ee76c4b80b14ffed9e4248
   m_configObjects: {}
