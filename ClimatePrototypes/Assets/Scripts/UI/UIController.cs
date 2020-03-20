@@ -18,16 +18,17 @@ public class UIController : Singleton<UIController> {
 	bool notificationsOn = false;
 
 	void Start() {
-		turnText.text = $"Turn {World.turn}";
+		turnText.text = $"Year {World.turn}";
 	}
 
 	void Update() {
-		moneyText.text = $"Money: ${World.money:0,0}";
+		moneyText.text = $"{World.money:F2}";
 	}
 
 	public void IncrementTurn() {
+		print(World.turn); // bug
 		World.turn++;
-		turnText.text = $"Turn {World.turn}";
+		turnText.text = $"Year {++World.turn}";
 	}
 
 	public void ToggleSettings() {
@@ -57,6 +58,10 @@ public class UIController : Singleton<UIController> {
 
 	public void UIQuitGame() => GameManager.QuitGame();
 
-	public void UITransition(string level) => GameManager.Transition(level);
+	public void UITransition(string level) {
+		if (level == "Overworld")
+			IncrementTurn();
+		GameManager.Transition(level);
+	}
 
 }

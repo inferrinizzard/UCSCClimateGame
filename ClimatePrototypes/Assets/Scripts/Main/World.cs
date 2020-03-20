@@ -47,7 +47,7 @@ public static class World {
 	public static List < (Region, Region, string) > lineToDraw = new List < (Region, Region, string) > ();
 
 	public static Factor co2 = new Factor("co2", "Emissions", new Action<float>((float deltaF) => EBM.F += deltaF)),
-		albedo = new Factor("land", "LandUse", new Action<float>((float deltaS1) => EBM.S1 = deltaS1)),
+		albedo = new Factor("land", "LandUse", new Action<float>((float deltaS1) => EBM.S1 = deltaS1)), //a0
 		economy = new Factor("money", "Economy", new Action<float>((float delta) => money += delta)),
 		opinion = new Factor("opinion", "PublicOpinion", new Action<float>((float delta) => publicOpinion += delta));
 

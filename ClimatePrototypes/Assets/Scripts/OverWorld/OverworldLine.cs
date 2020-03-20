@@ -1,11 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
 
 public class OverworldLine : MonoBehaviour {
-
 	[SerializeField] float dist = 0;
 	public float duration = .25f;
 	// List<LineRenderer> arrows = new List<LineRenderer>();
@@ -100,6 +99,7 @@ public class OverworldLine : MonoBehaviour {
 		bool inProgress = true;
 
 		float fadeIn = time / 2;
+		icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, 0);
 		icon.gameObject.SetActive(true);
 
 		while (inProgress) {

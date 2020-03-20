@@ -1,10 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 public class WorldBubble : MonoBehaviour {
-
 	[SerializeField] float size = 8;
 	public Color colour;
 	GameObject bubble;
@@ -35,6 +34,9 @@ public class WorldBubble : MonoBehaviour {
 		if (!active)
 			StartCoroutine(Bubble(entering: true, dur: .25f));
 		if (Input.GetButtonDown("Fire1")) {
+			foreach (var node in transform.parent.GetComponentsInChildren<WorldBubble>())
+				foreach (var kvp in node.icons)
+					kvp.Value.gameObject.SetActive(false);
 			GameManager.Transition(name.Replace("Node", string.Empty));
 			// Debug.Log(gameObject.name.Replace("Node", string.Empty));
 		}
