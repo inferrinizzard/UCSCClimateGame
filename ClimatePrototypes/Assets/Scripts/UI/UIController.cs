@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,14 +33,14 @@ public class UIController : Singleton<UIController> {
 	public void ToggleSettings() {
 		settingsOn = !settingsOn;
 
-		if (settingsGroup)
+		if(settingsGroup)
 			settingsGroup.SetActive(settingsOn);
 	}
 
 	public void ToggleInfo() {
 		infoOn = !infoOn;
 
-		if (infoGroup) {
+		if(infoGroup) {
 			// infoGroup.gameObject.SetActive(infoOn);
 			infoGroup.bRenderOnNextFrame = true;
 		}
@@ -50,7 +51,7 @@ public class UIController : Singleton<UIController> {
 	public void ToggleNotifications() {
 		notificationsOn = !notificationsOn;
 
-		if (notificationGroup)
+		if(notificationGroup)
 			notificationGroup.SetActive(notificationsOn);
 	}
 

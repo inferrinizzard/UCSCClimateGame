@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class DayNightCycle : MonoBehaviour {
@@ -21,7 +22,9 @@ public class DayNightCycle : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate() {
+
 		if (faded) {
+
 			StartCoroutine(FadeIn());
 		} else {
 

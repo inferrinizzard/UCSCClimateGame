@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+
 using Newtonsoft.Json;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,14 +17,14 @@ public class CityScript : MonoBehaviour {
 	[SerializeField] Text leftTitle = default, rightTitle = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
-	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
+	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>> ();
 	//enum BillDifficulty {easy, med, hard};
 	public string currentBillDifficulty = "easy";
-	private List<Bill> currentBillList = new List<Bill>();
+	private List<Bill> currentBillList = new List<Bill> ();
 	public int currentBillIndex = 0;
 	public Bill currentBill;
 
-	List<Coroutine> coroutines = new List<Coroutine>();
+	List<Coroutine> coroutines = new List<Coroutine> ();
 
 	private float ppm;
 	private float albedoDelta;
@@ -37,18 +39,18 @@ public class CityScript : MonoBehaviour {
 			right = _right;
 		}
 
-		public Dictionary<string, string> this[string prop] {
+		public Dictionary<string, string> this [string prop] {
 			get => prop == "left" ? this.left : this.right;
 			set {
-				if (prop == "left") { this.left = value; } else { this.right = value; }
+				if(prop == "left") { this.left = value; } else { this.right = value; }
 			}
 			// get => this.GetType().GetField(prop);
 			// set => this.GetType().GetField(prop).SetValue(this, value);
 		}
 
 		public override string ToString() => System.String.Format("name:{0}, left:{1}, right:{2}", name,
-			"{" + left.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}",
-			"{" + right.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
+			"{" + left.Map (kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}",
+			"{" + right.Map (kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
 	}
 
 	void Start() {
@@ -60,9 +62,9 @@ public class CityScript : MonoBehaviour {
 
 	public static Dictionary<string, List<Bill>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level => {
-			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories)[0])) {
+			using (StreamReader reader = new StreamReader(Directory.GetFiles (Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories) [0])) {
 				string json = reader.ReadToEnd();
-				return (level, JsonConvert.DeserializeObject<List<Bill>>(json));
+				return(level, JsonConvert.DeserializeObject<List<Bill>> (json));
 			}
 		}).ToDictionary(x => x.Item1, x => x.Item2);
 
@@ -71,13 +73,13 @@ public class CityScript : MonoBehaviour {
 	}
 
 	public void ChooseBill(string side) {
-		currentBill[side]["tags"].Split().ForEach(
+		currentBill[side]["tags"].Split ().ForEach(
 			tag => Func.Lambda(
-				(string[] split) => World.UpdateFactor(split[0], float.Parse(split[1] + split[2])))
+				(string[] split) => World.UpdateFactor (split[0], float.Parse(split[1] + split[2])))
 			(SplitTag(tag)));
 		currentBill = GetNextBill();
-		coroutines.ForEach(co => StopCoroutine(co));
-		coroutines = new List<Coroutine>();
+		coroutines.ForEach (co => StopCoroutine(co));
+		coroutines = new List<Coroutine> ();
 		PrintBill(currentBill);
 	}
 
@@ -93,11 +95,11 @@ public class CityScript : MonoBehaviour {
 	}
 
 	Bill GetNextBill() {
-		if (currentBillIndex < currentBillList.Count - 1) {
+		if(currentBillIndex < currentBillList.Count - 1) {
 			currentBillIndex += 1;
 		} else {
 			currentBillIndex = 0;
-			switch (currentBillDifficulty) {
+			switch(currentBillDifficulty) {
 				case "easy":
 					currentBillDifficulty = "med";
 					break;
@@ -118,7 +120,7 @@ public class CityScript : MonoBehaviour {
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
 	{
-		for (int i = 0; i < text.Length - 1; i++) {
+		for(int i = 0; i < text.Length - 1; i++) {
 			print.text = text.Substring(0, i);
 			yield return new WaitForSeconds(speed);
 		}

@@ -34,7 +34,7 @@ public class FireController : MonoBehaviour {
 				newFire.transform.localScale *= temp;
 				newFire.health *= temp;
 			}
-			// if (World.averageTemp > 25) // do nothing
+			// if(World.averageTemp > 25) // do nothing
 			newFire.transform.SetParent(transform);
 			newFire.name += $" {i}";
 		}

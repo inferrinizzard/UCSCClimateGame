@@ -1,7 +1,9 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using UnityEngine;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
@@ -14,6 +16,18 @@ public static class World {
 	public static double[] precip;
 
 	public static double averageTemp = 0;
+
+	public struct Region {
+		public string name, verbose, scene;
+		public Action Update;
+
+		Region(string name, string fullName, Action updateFunction) {
+			this.name = name;
+			verbose = fullName;
+			Update = updateFunction;
+			scene = fullName;
+		}
+	}
 
 	public static readonly Dictionary<string, string> verbose = new Dictionary<string, string> { { "co2", "Emissions" }, { "land", "LandUse" }, { "money", "Economy" }, { "opinion", "PublicOpinion" } };
 
@@ -33,7 +47,7 @@ public static class World {
 
 	public static async Task StartCalc(bool useTemp = false, int years = 0, int steps = 0) => await Task.Run(() => EBM.Calc(useTemp ? EBM.temp : null, years, steps));
 
-	public static void FinishCalc((double[], double[], double[])state) {
+	public static void FinishCalc((double[], double[], double[]) state) {
 		(temp, energy, precip) = state;
 		averageTemp = temp.Average();
 	}

@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using MathNet.Numerics.Distributions;
+
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 
@@ -13,10 +15,10 @@ public class PaddleBehavior : MonoBehaviour {
 	private float paddleWidth;
 
 	void Start() {
-		paddleRb2d = GetComponent<Rigidbody2D>();
+		paddleRb2d = GetComponent<Rigidbody2D> ();
 		screenBounds =
-			Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-		paddleWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x;
+			Camera.main.ScreenToWorldPoint (new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+		paddleWidth = transform.GetComponent<SpriteRenderer> ().bounds.size.x;
 	}
 
 	private void Move(float input) {
@@ -34,7 +36,7 @@ public class PaddleBehavior : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
-		if (Mathf.Abs(horizontalInput) > 0.1f)
+		if(Mathf.Abs(horizontalInput) > 0.1f)
 			Move(horizontalInput);
 		else {
 			Move(0f);

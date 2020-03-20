@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class SolarRadiationSpawner : MonoBehaviour {
@@ -20,7 +21,7 @@ public class SolarRadiationSpawner : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if (canEmit && dayNightCycle.isDayTime)
+		if(canEmit && dayNightCycle.isDayTime)
 			EmitBall();
 	}
 	private void EmitBall() {
