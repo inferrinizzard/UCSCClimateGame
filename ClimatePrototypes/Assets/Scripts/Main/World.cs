@@ -77,6 +77,6 @@ public static class World {
 		(temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);
 		timer.Stop();
 		averageTemp = temp.Average();
-		Debug.Log($"Average Temp: {averageTemp} with regionals: {temp.AsString()}, calcuated in {timer.ElapsedMilliseconds}ms");
+		Debug.Log($"Average Temp: {averageTemp} with regionals: {temp.AsString()}, calculated in {timer.ElapsedMilliseconds}ms");
 	}
 }

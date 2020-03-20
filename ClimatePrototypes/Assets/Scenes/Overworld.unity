@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 8
+  size: 6
   colour: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!4 &237590790
 Transform:
@@ -939,8 +939,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 8
-  colour: {r: 1, g: 0.75, b: 0, a: 1}
+  size: 6
+  colour: {r: 1, g: 0.5, b: 0, a: 1}
 --- !u!4 &608624361
 Transform:
   m_ObjectHideFlags: 0
@@ -2537,7 +2537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 8
+  size: 6
   colour: {r: 0, g: 1, b: 0, a: 1}
 --- !u!58 &1622224479
 CircleCollider2D:
@@ -3117,7 +3117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 8
+  size: 6
   colour: {r: 0, g: 1, b: 1, a: 1}
 --- !u!4 &2075063327
 Transform:
@@ -3257,12 +3257,17 @@ PrefabInstance:
     - target: {fileID: 5174851537695450224, guid: 91c0bc0f5c849914094e66a42dac4167,
         type: 3}
       propertyPath: runModel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5174851537695450225, guid: 91c0bc0f5c849914094e66a42dac4167,
         type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5174851537695450225, guid: 91c0bc0f5c849914094e66a42dac4167,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5174851537695450227, guid: 91c0bc0f5c849914094e66a42dac4167,
         type: 3}
