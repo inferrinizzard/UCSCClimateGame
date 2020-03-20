@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 
@@ -12,21 +13,21 @@ public partial class EBM {
 	public static Vector<double> energy;
 	/// <summary> Public energy </summary>
 	public static Vector<double> precip;
-	/// <summary> OLR when T = 0 (W m^-2) </summary>
+	/// <summary> OLR when T = 0(W m^-2) </summary>
 	public static double A = 193;
-	/// <summary> OLR temperature dependence (W M^-2 K^-1) </summary>
+	/// <summary> OLR temperature dependence(W M^-2 K^-1) </summary>
 	static readonly double B = 2.1;
-	/// <summary> Ocean mixed layer heat capacity (W yr m^-2 K^-1)  </summary>
+	/// <summary> Ocean mixed layer heat capacity(W yr m^-2 K^-1)  </summary>
 	/// <remarks> Edit this to adjust model speed </remarks>
 	static readonly double cw = 9.8;
-	/// <summary> Diffusivity for heat transport (W m^-2 K^-1)  </summary>
+	/// <summary> Diffusivity for heat transport(W m^-2 K^-1)  </summary>
 	static readonly double D = 0.5;
 
-	/// <summary> Insolation at equator (W m^-2)  </summary>
+	/// <summary> Insolation at equator(W m^-2)  </summary>
 	public static double S0 = 420;
-	/// <summary> Insolation seasonal dependence (W m^-2)  </summary>
+	/// <summary> Insolation seasonal dependence(W m^-2)  </summary>
 	public static double S1 = 338;
-	/// <summary> Insolation spatial dependence (W m^-2)  </summary>
+	/// <summary> Insolation spatial dependence(W m^-2)  </summary>
 	static readonly double S2 = 240;
 	/// <summary> Ice-free co-albedo at equator  </summary>
 	static readonly double a0 = 0.7;
@@ -34,7 +35,7 @@ public partial class EBM {
 	static readonly double a2 = 0.1;
 	/// <summary> Co-albedo where there is sea ice  </summary>
 	static readonly double aI = 0.4;
-	/// <summary> Radiative forcing (W m^-2) </summary>
+	/// <summary> Radiative forcing(W m^-2) </summary>
 	public static double F = 0;
 
 	/// <summary> Number of latitudinal bands </summary>
@@ -42,13 +43,13 @@ public partial class EBM {
 	/// <summary> Number of game regions </summary>
 	public static int regions = 3;
 
-	/// <summary> Latent heat of vaporization (J kg^-1) </summary>
+	/// <summary> Latent heat of vaporization(J kg^-1) </summary>
 	static readonly double Lv = 2500000;
-	/// <summary> Heat capacity of air at constant pressure (J kg^-1 K^-1) </summary>
+	/// <summary> Heat capacity of air at constant pressure(J kg^-1 K^-1) </summary>
 	static readonly double cp = 1004.6;
 	/// <summary> Relative humidity </summary>
 	static readonly double Rh = 0.8;
-	/// <summary> Surface pressure (Pa) </summary>
+	/// <summary> Surface pressure(Pa) </summary>
 	static readonly double Ps = 100000;
 	/// <summary> Number of timesteps per year </summary>
 	static readonly int nt = 1000;
@@ -73,26 +74,26 @@ public partial class EBM {
 		Matrix<double> mat = Matrix<double>.Build.Dense(bands, bands, 0);
 		mat.SetSubMatrix(0, 1, Matrix<double>.Build.DiagonalOfDiagonalVector(L2.SubVector(0, bands - 1)));
 		return mat;
-	})();
+	}) ();
 	static readonly Matrix<double> d1 = new Func<Matrix<double>>(() => {
 		Matrix<double> mat = Matrix<double>.Build.Dense(bands, bands, 0);
 		mat.SetSubMatrix(1, 0, Matrix<double>.Build.DiagonalOfDiagonalVector(L1.SubVector(1, bands - 1)));
 		return mat;
-	})();
+	}) ();
 
 	static readonly Matrix<double> diffop = -d3 - d2 - d1;
 	static readonly Vector<double> simpleS = S0 - S2 * x.PointwisePower(2);
 	static readonly Vector<double> aw = a0 - a2 * x.PointwisePower(2);
 	static readonly Matrix<double> I = Matrix<double>.Build.DenseIdentity(bands);
-	/// <summary> Heat flux from ocean below (W m^-2) </summary>
+	/// <summary> Heat flux from ocean below(W m^-2) </summary>
 	public static double Fb = 4;
-	/// <summary> Sea ice thermal conductivity (W m^-2 K^-1) </summary>
+	/// <summary> Sea ice thermal conductivity(W m^-2 K^-1) </summary>
 	static readonly int k = 2;
-	/// <summary> Sea ice latent heat of fusion (W yr m^-3) </summary>
+	/// <summary> Sea ice latent heat of fusion(W yr m^-3) </summary>
 	static readonly double Lf = 9.5;
 	/// <summary> Ghost layer heat capacity(W yr m^-2 K^-1) </summary>
 	static readonly double cg = cw / 100;
-	/// <summary> Ghost layer coupling timescale (yr) </summary>
+	/// <summary> Ghost layer coupling timescale(yr) </summary>
 	static readonly double tau = 0.00001;
 	static readonly double cg_tau = cg / tau;
 	static readonly double dt_tau = dt / tau;

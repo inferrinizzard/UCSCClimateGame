@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,7 +11,6 @@ public class GameManager : Singleton<GameManager> {
 	bool exitSure = false;
 	GameObject loadingScreen;
 	Slider loadingBar;
-	public List < (string, string, string) > lineToDraw = new List < (string, string, string) > ();
 
 	public override void Awake() {
 		base.Awake();
@@ -43,8 +43,6 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));
-
-	public void AddLine(string to, string from, string attr) => lineToDraw.Add((to, from, attr));
 
 	static IEnumerator LoadScene(string name) {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);

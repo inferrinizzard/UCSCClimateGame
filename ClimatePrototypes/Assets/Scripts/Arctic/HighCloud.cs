@@ -1,16 +1,17 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class HighCloud : MonoBehaviour {
-	int heatThreshold = 3;
-	int hits = 0;
+	// int heatThreshold = 3;
+	// int hits = 0;
 	new SpriteRenderer renderer;
 	Vector2 screenMin;
 	private Vector2 screenMax;
 	public float sideForce = 5f;
 	Rigidbody2D rb;
-	
+
 	void Start() {
 		renderer = GetComponent<SpriteRenderer>();
 		print(renderer.color);
@@ -32,7 +33,7 @@ public class HighCloud : MonoBehaviour {
 			//renderer.color = Color.white;
 		}
 	}*/
-	
+
 	void Update() {
 
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)

@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
-public class WaterSpraying : MonoBehaviour
-{
+public class WaterSpraying : MonoBehaviour {
 	public GameObject particle;
 	public GameObject prompt;
 	public GameObject yes;
@@ -21,53 +21,44 @@ public class WaterSpraying : MonoBehaviour
 	public float waterRate = 1f;
 	public GameObject Fill;
 
-	private void Start()
-	{
+	private void Start() {
 		curWater = maxWater;
 		timerText.text = string.Format("{00}", timer);
-		
+
 	}
-	void Update()
-	{
+	void Update() {
 		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 		damageText.text = $"Damage: {damage}";
 		Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 		Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
 		if (timer > 0)
-			if (cloneWater == null)
-			{
-				if (Input.GetMouseButtonDown(0) && curWater > 0)
-				{
+			if (cloneWater == null) {
+				if (Input.GetMouseButtonDown(0) && curWater > 0) {
 					cloneWater = Instantiate(particle, worldPos, Quaternion.identity);
 				}
 			}
-			else
-			{
-				if (Input.GetMouseButtonUp(0) || curWater <= 0)
-				{
-					Destroy(cloneWater);
-					cloneWater = null;
-				}
-				if (Input.GetMouseButton(0) && curWater > 0)
-				{
-					curWater -= waterRate;
-					waterSlider.value = curWater / maxWater;
-					// Ray ray = Camera.main.ScreenPointToRay(mousePos);
-					foreach (Collider2D col in Physics2D.OverlapCircleAll(worldPos, 1))
-						col.GetComponent<FadeFire>()?.Fade();
-					cloneWater.transform.position = worldPos;
-				}
+		else {
+			if (Input.GetMouseButtonUp(0) || curWater <= 0) {
+				Destroy(cloneWater);
+				cloneWater = null;
 			}
-
-		if (timer < 0 || curWater <= 0)
-		{
-			Destroy(cloneWater);
-			cloneWater = null;
-			World.UpdateFactor("co2", damage / 100);
+			if (Input.GetMouseButton(0) && curWater > 0) {
+				curWater -= waterRate;
+				waterSlider.value = curWater / maxWater;
+				// Ray ray = Camera.main.ScreenPointToRay(mousePos);
+				foreach (Collider2D col in Physics2D.OverlapCircleAll(worldPos, 1))
+					col.GetComponent<FadeFire>()?.Fade();
+				cloneWater.transform.position = worldPos;
+			}
 		}
 
-		if (curWater <= 0)
-		{
+		if (timer < 0 || curWater <= 0) {
+			Destroy(cloneWater);
+			cloneWater = null;
+			World.co2.Update(World.Region.Fire, World.Region.City, damage / 100);
+		}
+
+		if (curWater <= 0) {
 			EnablePrompt();
 			StartCoroutine("Blink");
 		}
@@ -75,39 +66,33 @@ public class WaterSpraying : MonoBehaviour
 		//Debug.Log(World.money);*/
 	}
 
-	void OnDrawGizmos()
-	{
+	void OnDrawGizmos() {
 		Gizmos.color = Color.red;
 		Gizmos.DrawSphere(new Vector2(Input.mousePosition.x, Input.mousePosition.y), 1);
 	}
 
-	public void IncreaseWaterAmount()
-	{
+	public void IncreaseWaterAmount() {
 		World.money -= 50f;
 		curWater = incWater;
 		waterSlider.value = curWater / maxWater;
 	}
 
-	public void EnablePrompt()
-	{
+	public void EnablePrompt() {
 		prompt.SetActive(true);
 		yes.SetActive(true);
 		curWater = incWater;
 		waterSlider.value = curWater / maxWater;
 
 	}
-	public void DisablePrompt()
-	{
+	public void DisablePrompt() {
 		prompt.SetActive(false);
 		yes.SetActive(false);
 		Fill.SetActive(true);
 		StopCoroutine("Blink");
 	}
-	
-	IEnumerator Blink()
-	{
-		while (true)
-		{
+
+	IEnumerator Blink() {
+		while (true) {
 			Fill.SetActive(false);
 			yield return new WaitForSeconds(0.5f);
 			Fill.SetActive(true);

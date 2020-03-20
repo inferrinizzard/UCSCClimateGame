@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 
 public class Trees : MonoBehaviour {
-	(int, GameObject)[, ] grid = new(int, GameObject)[6, 8];
-	(int, int)[] initTrees = new(int, int)[] {
+	(int, GameObject) [, ] grid = new(int, GameObject) [6, 8];
+	(int, int) [] initTrees = new(int, int) [] {
 		(0, 4), (1, 1), (2, 3), (1, 5), (3, 0), (3, 7), (4, 2), (4, 5)
 	};
 
@@ -20,12 +21,12 @@ public class Trees : MonoBehaviour {
 		_grid = GetComponent<Grid>();
 		initTrees.ForEach(x => grid[x.Item1, x.Item2] = (2, PlantTree(x.Item2, -x.Item1)));
 
-		// foreach (Transform t in trees.GetComponentsInChildren<Transform>())
+		// foreach(Transform t in trees.GetComponentsInChildren<Transform>())
 		// 	Debug.Log($"{t.name}: {_grid.WorldToCell(t.position) + gridOffset}");
 		//map tree pos to grid
 	}
 
-	GameObject RandomTree() => trees.transform.GetChild((int)UnityEngine.Random.Range(0, trees.transform.childCount)).gameObject;
+	GameObject RandomTree() => trees.transform.GetChild((int) UnityEngine.Random.Range(0, trees.transform.childCount)).gameObject;
 
 	GameObject PlantTree(int row, int col) {
 		GameObject newTree = Instantiate(RandomTree(), _grid.CellToWorld(new Vector3Int(row, col, 0) + gridOffset) + _grid.cellSize / 2f, Quaternion.identity);

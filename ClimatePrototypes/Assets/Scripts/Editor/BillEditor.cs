@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using Newtonsoft.Json;
+
 using UnityEditor;
+
 using UnityEngine;
 
 public class BillEditor : EditorWindow {
@@ -47,7 +50,7 @@ public class BillEditor : EditorWindow {
 		GUILayout.Label("Edit a Bill", EditorStyles.boldLabel);
 
 		EditorGUI.BeginChangeCheck();
-		d = (Decks)EditorGUILayout.EnumPopup("Bill Deck", d);
+		d = (Decks) EditorGUILayout.EnumPopup("Bill Deck", d);
 		string deckName = d.ToString();
 		if (EditorGUI.EndChangeCheck())
 			AssignBill(BillEditor.bills[deckName][index]);
@@ -128,7 +131,7 @@ public class BillEditor : EditorWindow {
 
 	void WriteToFile(string deckName) {
 		string json = JsonConvert.SerializeObject(bills[deckName], Formatting.Indented);
-		using(StreamWriter writer = new StreamWriter(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{deckName}.json", SearchOption.AllDirectories)[0])) {
+		using(StreamWriter writer = new StreamWriter(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{deckName}.json", SearchOption.AllDirectories) [0])) {
 			writer.Write(json);
 		}
 	}

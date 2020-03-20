@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using MathNet.Numerics.LinearAlgebra;
 
 public partial class EBM {
@@ -17,7 +18,7 @@ public partial class EBM {
 		return qs;
 	}
 
-	public static(Matrix<double>, Matrix<double>)Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
+	public static(Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
 		T = T ?? 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
 		years = years == 0 ? dur : years;
 		timesteps = timesteps == 0 ? nt : timesteps;
@@ -87,7 +88,7 @@ public partial class EBM {
 		Matrix<double> Fl_eddy = MultiplyRowWise(Fla, (1 - w));
 
 		Vector<double> hfin_eq = hfin.Row(0);
-		Matrix<double> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale)[x] - i);
+		Matrix<double> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale) [x] - i);
 		Matrix<double> psi = F_hc.PointwiseDivide(gms);
 		Matrix<double> Fl_hc = -(Lv * qfin / cp).PointwiseMultiply(psi);
 
@@ -103,11 +104,11 @@ public partial class EBM {
 	/// <param name="timesteps"> Optional number of steps per year, will default to <see cref="nt"/> </param>
 	/// <example>
 	/// <code>
-	/// Calc(temp[]) → (temp[], energy[], precip[])
+	/// Calc(temp[]) →(temp[], energy[], precip[])
 	/// </code>
 	/// </example>
-	/// <returns> Tuple of double arrays (temp, energy, precip)</returns>
-	public static(double[], double[], double[])Calc(IEnumerable<double> input = null, int years = 0, int timesteps = 0) {
+	/// <returns> Tuple of double arrays(temp, energy, precip)</returns>
+	public static(double[], double[], double[]) Calc(IEnumerable<double> input = null, int years = 0, int timesteps = 0) {
 		var(T100, E100) = Integrate(input == null ? null : Vector<double>.Build.Dense(input.ToArray()), years, timesteps);
 		temp = T100.Column(99);
 		energy = E100.Column(99);
@@ -129,8 +130,8 @@ public partial class EBM {
 	public static double[] Condense(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => x.Average()).ToArray();
 	// static double Average(IEnumerable<double> vec) { return x.Average(); }
 
-	static Predicate < (double, double) > Less = ((double, double)t) => t.Item1 < t.Item2;
-	static Predicate < (double, double) > GreatOrE = ((double, double)t) => t.Item1 >= t.Item2;
+	static Predicate < (double, double) > Less = ((double, double) t) => t.Item1 < t.Item2;
+	static Predicate < (double, double) > GreatOrE = ((double, double) t) => t.Item1 >= t.Item2;
 	public static Vector<double> Sign0(Predicate < (double, double) > op, Vector<double> vec, Vector<double> result = null) => (result ?? vec).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
 	static void Print(IEnumerable<double> nums) => UnityEngine.Debug.Log(nums == null ? "null" : nums.AsString());
 	static void Print(double num) => UnityEngine.Debug.Log(num);

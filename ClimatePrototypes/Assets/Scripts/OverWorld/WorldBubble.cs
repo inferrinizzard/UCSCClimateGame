@@ -1,10 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class WorldBubble : MonoBehaviour {
 
 	[SerializeField] float size = 8;
+	public Color colour;
 	GameObject bubble;
 	bool active = false;
 	Vector3 startPos;
@@ -15,10 +17,10 @@ public class WorldBubble : MonoBehaviour {
 		bubble = transform.GetChild(0).gameObject;
 		startPos = bubble.transform.localPosition;
 		bubble.transform.localScale = Vector3.one * .01f;
-		foreach (SpriteRenderer icon in transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>())
+		foreach (SpriteRenderer icon in transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>()) {
 			icons.Add(icon.name.Replace("Icon", string.Empty), icon);
-		foreach (var i in icons)
-			i.Value.gameObject.SetActive(false);
+			icon.gameObject.SetActive(false);
+		}
 	}
 
 	// Update is called once per frame
@@ -33,7 +35,7 @@ public class WorldBubble : MonoBehaviour {
 		if (!active)
 			StartCoroutine(Bubble(entering: true, dur: .25f));
 		if (Input.GetButtonDown("Fire1")) {
-			GameManager.Transition(gameObject.name.Replace("Node", string.Empty));
+			GameManager.Transition(name.Replace("Node", string.Empty));
 			// Debug.Log(gameObject.name.Replace("Node", string.Empty));
 		}
 	}
@@ -59,6 +61,5 @@ public class WorldBubble : MonoBehaviour {
 		}
 		if (!entering)
 			bubble.SetActive(false);
-
 	}
 }

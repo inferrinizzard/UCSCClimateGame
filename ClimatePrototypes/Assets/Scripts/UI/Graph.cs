@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,7 @@ public class Graph : MonoBehaviour {
 			return _lr;
 		}).ForEach(l =>
 			l.SetPositions(
-				rcp[l.name].Map((n, i) => new Vector3(i, (float)n, 0)).ToArray()
+				rcp[l.name].Map((n, i) => new Vector3(i, (float) n, 0)).ToArray()
 			)
 		);
 	}

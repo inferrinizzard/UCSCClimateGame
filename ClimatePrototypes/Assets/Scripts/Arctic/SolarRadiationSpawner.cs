@@ -1,19 +1,19 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class SolarRadiationSpawner : MonoBehaviour {
 	private bool canEmit = true;
 	private float ballEmitWaitSeconds = 2f;
 	public GameObject ballPrefab;
-	[SerializeField] int numBalls = 3;
+	// [SerializeField] int numBalls = 3;
 	public DayNightCycle dayNightCycle;
 
 	Transform radiationParent;
 	// Start is called before the first frame update
-	void Start()
-	{
-		
+	void Start() {
+
 		StartCoroutine(Enter());
 		radiationParent = new GameObject().transform;
 		radiationParent.name = "Solar Radiation";

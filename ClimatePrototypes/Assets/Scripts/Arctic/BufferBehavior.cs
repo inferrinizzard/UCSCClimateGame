@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class BufferBehavior : MonoBehaviour {
-	
+
 	public float health;
 	public Sprite health4;
 	public Sprite health3;
@@ -12,8 +13,7 @@ public class BufferBehavior : MonoBehaviour {
 	public Sprite health1;
 	public Sprite health0;
 
-	private void Start()
-	{
+	private void Start() {
 		health = 4f;
 	}
 
@@ -27,8 +27,7 @@ public class BufferBehavior : MonoBehaviour {
 		}
 	}
 
-	private void TakeDamage()
-	{
+	private void TakeDamage() {
 		if (health > 0)
 			health--;
 		Debug.Log(health);

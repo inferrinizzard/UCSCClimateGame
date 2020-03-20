@@ -1,10 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
+// using System.Web;
+
 using Newtonsoft.Json;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,7 +39,7 @@ public class CityScript : MonoBehaviour {
 			right = _right;
 		}
 
-		public Dictionary<string, string> this[string prop] {
+		public Dictionary<string, string> this [string prop] {
 			get => prop == "left" ? this.left : this.right;
 			set {
 				if (prop == "left") { this.left = value; } else { this.right = value; }
@@ -60,7 +62,7 @@ public class CityScript : MonoBehaviour {
 
 	public static Dictionary<string, List<Bill>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level => {
-			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories)[0])) {
+			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories) [0])) {
 				string json = reader.ReadToEnd();
 				return (level, JsonConvert.DeserializeObject<List<Bill>>(json));
 			}
@@ -73,7 +75,7 @@ public class CityScript : MonoBehaviour {
 	public void ChooseBill(string side) {
 		currentBill[side]["tags"].Split().ForEach(
 			tag => Func.Lambda(
-				(string[] split) => World.UpdateFactor(split[0], float.Parse(split[1] + split[2])))
+				(string[] split) => World.GetFactor(split[0])?.Update(World.Region.City, null, float.Parse(split[1] + split[2])))
 			(SplitTag(tag)));
 		currentBill = GetNextBill();
 		coroutines.ForEach(co => StopCoroutine(co));

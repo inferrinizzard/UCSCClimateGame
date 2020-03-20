@@ -1,5 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,12 +17,12 @@ public class WorldRegion : MonoBehaviour {
 
 	// void OnMouseOver()
 	// {
-	// 	for (int i = 0; i < parent.childCount; i++)        //sets all other regions to false (allows transparent bg to show)
-	// 		if (i != transform.GetSiblingIndex())
+	// 	for (int i = 0; i < parent.childCount; i++)        //sets all other regions to false(allows transparent bg to show)
+	// 		if(i != transform.GetSiblingIndex())
 	// 			parent.GetChild(i).gameObject.SetActive(false);
 	// 	bg.gameObject.SetActive(false);     //sets solid bg to false
-	// 	if (Input.GetMouseButtonDown(0) && World.actionsRemaining > 0)
-	// 		if (MainMenuController.Scenes[name] != -1)
+	// 	if(Input.GetMouseButtonDown(0) && World.actionsRemaining > 0)
+	// 		if(MainMenuController.Scenes[name] != -1)
 	// 		{
 	// 			SceneManager.LoadScene(MainMenuController.Scenes[name]);
 	// 			World.actionsRemaining--;
