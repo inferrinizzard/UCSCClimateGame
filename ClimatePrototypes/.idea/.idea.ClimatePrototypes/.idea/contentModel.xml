@@ -22,9 +22,11 @@
             </e>
           </e>
         </e>
+        <e p="FollowMouse.cs" t="Include" />
         <e p="Materials" t="Include">
           <e p="Circle.shader" t="Include" />
         </e>
+        <e p="MouseClick.cs" t="Include" />
         <e p="Packages" t="Include">
           <e p="Newtonsoft.Json.12.0.3" t="Include">
             <e p="lib" t="Include">

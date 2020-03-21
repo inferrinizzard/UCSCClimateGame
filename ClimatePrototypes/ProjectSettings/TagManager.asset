@@ -8,6 +8,8 @@ TagManager:
   - Cloud
   - Ice
   - SolarRadiation
+  - AgentClicked
+  - Shadow
   layers:
   - Default
   - TransparentFX

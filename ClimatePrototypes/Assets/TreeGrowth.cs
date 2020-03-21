@@ -8,6 +8,7 @@ public class TreeGrowth : MonoBehaviour
     public Sprite treeStage2;
     public Sprite treeStage3;
     public Sprite treeStage4;
+    public Sprite treeDeathStage;
     
     public Tilemap tilemap;
 
@@ -40,7 +41,7 @@ public class TreeGrowth : MonoBehaviour
     void Update()
     {
         CheckProximity();
-        if (treeStage < 4)
+        if (treeStage < 5)
         {
             if (!growing)
             {
@@ -62,7 +63,7 @@ public class TreeGrowth : MonoBehaviour
         }
     }
 
-    void UpdateTreeVFX(int m_treeStage)
+    public void UpdateTreeVFX(int m_treeStage)
     {
         switch (m_treeStage)
         {
@@ -77,6 +78,9 @@ public class TreeGrowth : MonoBehaviour
                 break;
             case 4:
                 m_Sprite.sprite = treeStage4;
+                break;
+            case 5:
+                m_Sprite.sprite = treeDeathStage;
                 break;
             default:
                 break;
