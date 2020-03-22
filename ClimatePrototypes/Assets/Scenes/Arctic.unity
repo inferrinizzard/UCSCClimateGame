@@ -524,8 +524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDayTime: 0
-  breakpoints:
-  - 8.5
+  transitionTime: 1.5
 --- !u!1 &526003410
 GameObject:
   m_ObjectHideFlags: 0
@@ -987,10 +986,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 891243671}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfc4f87f1b57fc740b73e7e8bc7f6e89, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c558876a15550e47a0a42c98bb9ff2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lowCloudPrefab: {fileID: 2072777403796196785, guid: 12e19168afda23640a539e808481c8c4,
+  type: 1
+  cloudPrefab: {fileID: 2072777403796196785, guid: 12e19168afda23640a539e808481c8c4,
     type: 3}
   canSpawn: 1
 --- !u!1 &903623914
@@ -2034,10 +2034,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1677652526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e1fcc2fcaeeb7478ec7dbff5b18640, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c558876a15550e47a0a42c98bb9ff2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highCloudPrefab: {fileID: 7585854367735539506, guid: a31bc0f67f59aa94cbff89c7de934caf,
+  type: 0
+  cloudPrefab: {fileID: 7585854367735539506, guid: a31bc0f67f59aa94cbff89c7de934caf,
     type: 3}
   canSpawn: 1
 --- !u!1001 &1703692309
