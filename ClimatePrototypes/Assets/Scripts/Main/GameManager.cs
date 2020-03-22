@@ -65,7 +65,8 @@ public class GameManager : Singleton<GameManager> {
 
 			if (asyncLoad.progress >= .9f && Time.time - start > 1 && calcDone) {
 				asyncLoad.allowSceneActivation = true;
-				World.turn++;
+				if (name == "Overworld")
+					UIController.Instance.IncrementTurn();
 				yield break;
 			}
 		}

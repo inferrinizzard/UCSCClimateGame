@@ -10,9 +10,7 @@ public class UIController : Singleton<UIController> {
 	public GameObject notificationGroup;
 	public Text moneyText;
 	public Text turnText;
-
 	[SerializeField] Button backButton = default;
-
 	bool settingsOn = false;
 	bool infoOn = false;
 	bool notificationsOn = false;
@@ -25,11 +23,7 @@ public class UIController : Singleton<UIController> {
 		moneyText.text = $"{World.money:F2}";
 	}
 
-	public void IncrementTurn() {
-		print(World.turn); // bug
-		World.turn++;
-		turnText.text = $"Year {++World.turn}";
-	}
+	public void IncrementTurn() => turnText.text = $"Year {++World.turn}";
 
 	public void ToggleSettings() {
 		settingsOn = !settingsOn;
@@ -58,10 +52,6 @@ public class UIController : Singleton<UIController> {
 
 	public void UIQuitGame() => GameManager.QuitGame();
 
-	public void UITransition(string level) {
-		if (level == "Overworld")
-			IncrementTurn();
-		GameManager.Transition(level);
-	}
+	public void UITransition(string level) => GameManager.Transition(level);
 
 }

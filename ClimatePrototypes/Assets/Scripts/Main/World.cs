@@ -19,13 +19,7 @@ public static class World {
 
 	public static double averageTemp = 0;
 
-	public enum Region {
-		Arctic,
-		City,
-		Forest,
-		Fire
-	}
-
+	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
 		public string name, verbose;
 		Action<float> update;
@@ -41,8 +35,6 @@ public static class World {
 			update.Invoke(delta);
 		}
 	}
-
-	// static void AddLine(Region a, Region b, string c) => lineToDraw.Add((a, b, c));
 
 	public static List < (Region, Region, string) > lineToDraw = new List < (Region, Region, string) > ();
 
