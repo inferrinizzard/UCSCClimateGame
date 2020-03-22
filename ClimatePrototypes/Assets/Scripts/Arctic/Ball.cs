@@ -3,12 +3,10 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class BallBehavior : MonoBehaviour {
-	public float upForce = 5f;
-	public float sideForce = 2f;
+public class Ball : MonoBehaviour {
+	Vector2 force = new Vector2(2, 5);
 	Rigidbody2D rb;
-	Vector2 screenMin;
-	Vector2 screenMax;
+	Vector2 screenMin, screenMax;
 
 	// Start is called before the first frame update
 	void Start() {
@@ -16,8 +14,7 @@ public class BallBehavior : MonoBehaviour {
 		screenMax = Camera.main.ViewportToWorldPoint(Vector2.one);
 		rb = GetComponent<Rigidbody2D>();
 
-		Vector2 force = new Vector2(Random.Range(-sideForce, sideForce), -Random.Range(upForce * 0.8f, upForce));
-		rb.velocity = force;
+		rb.velocity = new Vector2(Random.Range(-force.x, force.x), -Random.Range(force.y * 0.8f, force.y));
 	}
 
 	void Update() {

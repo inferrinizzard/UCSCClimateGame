@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1416425125973123345}
   - component: {fileID: 4777962095370094827}
   - component: {fileID: 4862321365063373638}
-  - component: {fileID: 1726715789}
   m_Layer: 0
   m_Name: Buffer
   m_TagString: Untagged
@@ -118,7 +117,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1416425125973123344}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8414829e2f8ea294bbc91d31bfeb2c48, type: 3}
+  m_Script: {fileID: 11500000, guid: d1ba1f20f5910cb4e9020eed8e57e6ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 4
@@ -128,24 +127,3 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cb7a02e0e0c0f6a4e82c56202663a347, type: 3}
   - {fileID: 21300000, guid: df91b27f03b1c9540b39d086c612c5e6, type: 3}
   - {fileID: 21300000, guid: 8161601b91f7ca14a9188d9628080d35, type: 3}
---- !u!50 &1726715789
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1416425125973123344}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7

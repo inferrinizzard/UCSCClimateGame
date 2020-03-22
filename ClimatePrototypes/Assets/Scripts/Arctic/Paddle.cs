@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class PaddleBehavior : MonoBehaviour {
+public class Paddle : MonoBehaviour {
 	private Rigidbody2D paddleRb2d;
 	public float paddleSpeed = 5f;
 	private float horizontalInput = 0f;

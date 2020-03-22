@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class LongWaveBehavior : MonoBehaviour {
+public class LongWaveRadiation : MonoBehaviour {
 	private float upForce = 10f;
 	private float sideForce = 10f;
 	Rigidbody2D rb;

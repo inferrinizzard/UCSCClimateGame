@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class BufferBehavior : MonoBehaviour {
+public class Buffer : MonoBehaviour {
 	public int health = 4;
 	[SerializeField] Sprite[] healthSprite = new Sprite[5];
 	SpriteRenderer sr;

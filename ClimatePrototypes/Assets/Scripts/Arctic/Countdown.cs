@@ -32,7 +32,7 @@ public class Countdown : MonoBehaviour {
 
 	void CalculateScore() {
 		score = 0;
-		foreach (var buffer in ice.GetComponentsInChildren<BufferBehavior>()) {
+		foreach (var buffer in ice.GetComponentsInChildren<Buffer>()) {
 			score += buffer.health;
 		}
 
