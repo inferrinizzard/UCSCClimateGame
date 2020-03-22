@@ -32,7 +32,8 @@ public class LowCloud : MonoBehaviour {
 	//void OnTriggerExit2D(Collider2D other) => GetComponent<Collider2D>().enabled = true;
 
 	void Update() {
-		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
+		// if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
+		if (transform.position.x > screenMax.x)
 			Destroy(gameObject);
 	}
 }

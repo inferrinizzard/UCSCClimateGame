@@ -33,7 +33,8 @@ public class HighCloud : MonoBehaviour {
 	}*/
 
 	void Update() {
-		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
+		// if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
+		if (transform.position.x > screenMax.x)
 			Destroy(gameObject);
 	}
 }

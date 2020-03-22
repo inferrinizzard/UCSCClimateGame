@@ -31,10 +31,10 @@ public class Countdown : MonoBehaviour {
 	}
 
 	void CalculateScore() {
+		Time.timeScale = 0;
 		score = 0;
-		foreach (var buffer in ice.GetComponentsInChildren<Buffer>()) {
+		foreach (var buffer in ice.GetComponentsInChildren<Buffer>())
 			score += buffer.health;
-		}
 
 		scoreTextBox.text = "Score: " + score.ToString();
 
