@@ -6,23 +6,21 @@ using UnityEngine;
 public class HighCloud : MonoBehaviour {
 	// int heatThreshold = 3;
 	// int hits = 0;
-	new SpriteRenderer renderer;
+	// SpriteRenderer sr;
 	Vector2 screenMin;
-	private Vector2 screenMax;
-	public float sideForce = 5f;
+	Vector2 screenMax;
+	[SerializeField] float sideForce = 5f;
 	Rigidbody2D rb;
 
 	void Start() {
-		renderer = GetComponent<SpriteRenderer>();
-		print(renderer.color);
+		// sr = GetComponent<SpriteRenderer>();
+		// print(renderer.color);
 
 		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
 		screenMax = Camera.main.ViewportToWorldPoint(Vector2.one);
 		rb = GetComponent<Rigidbody2D>();
 
-		Vector2 force = new Vector2(sideForce, 0);
-		rb.velocity = force;
-
+		rb.velocity = new Vector2(sideForce, 0);
 	}
 
 	/*void OnCollisionEnter2D(Collision2D other) {
@@ -35,7 +33,6 @@ public class HighCloud : MonoBehaviour {
 	}*/
 
 	void Update() {
-
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
 			Destroy(gameObject);
 	}

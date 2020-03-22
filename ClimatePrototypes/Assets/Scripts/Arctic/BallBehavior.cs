@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class BallBehavior : MonoBehaviour {
 	public float upForce = 5f;
-
 	public float sideForce = 2f;
-
 	Rigidbody2D rb;
 	Vector2 screenMin;
 	Vector2 screenMax;
+
 	// Start is called before the first frame update
 	void Start() {
 		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
@@ -22,9 +21,7 @@ public class BallBehavior : MonoBehaviour {
 	}
 
 	void Update() {
-
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x || transform.position.y < screenMin.y || (transform.position.y > screenMax.y && rb.velocity.y > 0))
 			Destroy(gameObject);
 	}
-
 }

@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class LowCloud : MonoBehaviour {
 	private float brightnessThreshold = .4f;
-
 	Vector2 screenMin;
 	private Vector2 screenMax;
-	public float sideForce = 3f;
+	[SerializeField] float sideForce = 3f;
 	Rigidbody2D rb;
-
-	public Sprite brightCloud;
-	public Sprite darkCloud;
+	[SerializeField] Sprite brightCloud = default;
+	[SerializeField] Sprite darkCloud = default;
 
 	void Start() {
 		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
@@ -23,7 +21,6 @@ public class LowCloud : MonoBehaviour {
 		rb.velocity = force;
 
 		if (Random.value > brightnessThreshold) {
-
 			gameObject.GetComponent<SpriteRenderer>().sprite = brightCloud;
 		} else {
 			GetComponent<Collider2D>().enabled = false;
@@ -35,7 +32,6 @@ public class LowCloud : MonoBehaviour {
 	//void OnTriggerExit2D(Collider2D other) => GetComponent<Collider2D>().enabled = true;
 
 	void Update() {
-
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x)
 			Destroy(gameObject);
 	}

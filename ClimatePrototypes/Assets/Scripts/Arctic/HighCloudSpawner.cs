@@ -6,14 +6,13 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class HighCloudSpawner : MonoBehaviour {
-	public GameObject highCloudPrefab;
-	[SerializeField]
-	private bool canSpawn = true;
+	[SerializeField] GameObject highCloudPrefab = default;
+	[SerializeField] bool canSpawn = true;
 	private float highCloudSpawnWaitSeconds = 8f;
-	Transform highCloudParrent;
+	Transform highCloudParent;
 	private void Start() {
-		highCloudParrent = new GameObject().transform;
-		highCloudParrent.name = "High Cloud";
+		highCloudParent = new GameObject().transform;
+		highCloudParent.name = "High Cloud";
 	}
 
 	private void OnEnable() {
@@ -26,7 +25,7 @@ public class HighCloudSpawner : MonoBehaviour {
 	}
 
 	private void SpawnHighCloud() {
-		Instantiate(highCloudPrefab, transform.position + transform.up * Random.Range(-0.5f, 1), Quaternion.identity, highCloudParrent);
+		Instantiate(highCloudPrefab, transform.position + transform.up * Random.Range(-0.5f, 1), Quaternion.identity, highCloudParent);
 		StartCoroutine(SpawnLowCloudWait());
 	}
 

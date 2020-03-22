@@ -9,6 +9,7 @@ public class LongWaveBehavior : MonoBehaviour {
 	Rigidbody2D rb;
 	Vector2 screenMin;
 	Vector2 screenMax;
+
 	// Start is called before the first frame update
 	void Start() {
 		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
@@ -20,7 +21,6 @@ public class LongWaveBehavior : MonoBehaviour {
 	}
 
 	void Update() {
-
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x || transform.position.y < screenMin.y || (transform.position.y > screenMax.y && rb.velocity.y > 0))
 			Destroy(gameObject);
 	}

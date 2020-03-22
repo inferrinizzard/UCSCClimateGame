@@ -7,7 +7,7 @@ public class LongWaveSpawner : MonoBehaviour {
 	private bool canEmit = true;
 	//private bool hasEmit = false;
 	private float ballEmitWaitSeconds = 5.0f;
-	public GameObject longWavePrefab;
+	[SerializeField] GameObject longWavePrefab = default;
 	private int numberofLongWave = 3;
 
 	Transform longWaveParent;
@@ -20,12 +20,11 @@ public class LongWaveSpawner : MonoBehaviour {
 	void Update() {
 		if (canEmit)
 			EmitBall();
-
 	}
+
 	private void EmitBall() {
 		for (int i = 0; i < numberofLongWave; i++) {
 			Instantiate(longWavePrefab, transform.position, Quaternion.identity, longWaveParent);
-
 		}
 		StartCoroutine(EmitBallWait(ballEmitWaitSeconds));
 		//hasEmit = true;

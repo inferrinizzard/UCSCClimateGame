@@ -6,35 +6,31 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
+
 public class Countdown : MonoBehaviour {
 	public float timeLeft = 60f;
-	public GameObject ice;
+	[SerializeField] GameObject ice = default;
 	private TextMeshProUGUI textBox;
 	public TextMeshProUGUI scoreTextBox;
-	public float score;
+	public float score = 0f;
 
 	private void Start() {
 		textBox = GetComponent<TextMeshProUGUI>();
-		score = 0f;
 		scoreTextBox.text = "Score";
 	}
 
 	void Update() {
 		if ((timeLeft -= Time.deltaTime) < 0f) {
 			timeLeft = 0f;
-			calculateScore();
+			CalculateScore();
 		} else {
 			scoreTextBox.text = "Score: ";
 		}
 
 		textBox.text = Mathf.Round(timeLeft).ToString();
-
 	}
 
-	void calculateScore() {
-		if (score > 0) {
-			return;
-		}
+	void CalculateScore() {
 		score = 0;
 		foreach (var buffer in ice.GetComponentsInChildren<BufferBehavior>()) {
 			score += buffer.health;
@@ -42,6 +38,6 @@ public class Countdown : MonoBehaviour {
 
 		scoreTextBox.text = "Score: " + score.ToString();
 
+		// TODO:freeze and prompt here
 	}
-
 }

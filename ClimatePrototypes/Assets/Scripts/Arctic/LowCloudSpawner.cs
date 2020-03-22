@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LowCloudSpawner : MonoBehaviour {
-	public GameObject lowCloudPrefab;
-	[SerializeField]
-	private bool canSpawn = true;
+	[SerializeField] GameObject lowCloudPrefab = default;
+	[SerializeField] bool canSpawn = true;
 	private float lowCloudSpawnWaitSeconds = 6f;
-	Transform lowCloudParrent;
+	Transform lowCloudParent;
+
 	private void Start() {
-		lowCloudParrent = new GameObject().transform;
-		lowCloudParrent.name = "Low Cloud";
+		lowCloudParent = new GameObject().transform;
+		lowCloudParent.name = "Low Cloud";
 	}
 
 	private void OnEnable() {
@@ -24,7 +24,7 @@ public class LowCloudSpawner : MonoBehaviour {
 	}
 
 	private void SpawnLowCloud() {
-		Instantiate(lowCloudPrefab, transform.position + transform.up * Random.Range(0, 1.5f), Quaternion.identity, lowCloudParrent);
+		Instantiate(lowCloudPrefab, transform.position + transform.up * Random.Range(0, 1.5f), Quaternion.identity, lowCloudParent);
 		StartCoroutine(SpawnLowCloudWait());
 	}
 

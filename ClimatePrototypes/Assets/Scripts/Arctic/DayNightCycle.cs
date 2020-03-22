@@ -4,45 +4,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DayNightCycle : MonoBehaviour {
-	private SpriteRenderer _spriteRenderer;
+	private SpriteRenderer daySR, nightSR;
+	public bool isDayTime = false;
+	private float dayDuration = 10f;
+	System.Func<float, float, float> fadeIn, fadeOut;
+	[SerializeField] float transitionTime = 1.5f;
 
-	[SerializeField] private bool faded = false;
-
-	private float dayTime = 10f;
-
-	// private float currentVelocity = 10.0f;
-	// Start is called before the first frame update
 	void Start() {
-		_spriteRenderer = GetComponent<SpriteRenderer>();
+		var srs = GetComponentsInChildren<SpriteRenderer>();
+		(daySR, nightSR) = (srs[0], srs[1]);
+
+		fadeIn = (float step, float dur) => EaseMethods.CubicEaseOut(step, 0, 1, dur);
+		fadeOut = (float step, float dur) => EaseMethods.CubicEaseIn(dur - step, 0, 1, dur);
+
+		StartCoroutine(ChangeDayNight(isDayTime, true));
 	}
 
-	public bool isDayTime {
-		get { return faded; }
-	}
-
-	// Update is called once per frame
-	void FixedUpdate() {
-
-		if (faded) {
-
-			StartCoroutine(FadeIn());
-		} else {
-
-			StartCoroutine(FadeOut());
+	IEnumerator ChangeDayNight(bool isDay, bool initial = false) {
+		isDayTime = isDay;
+		float timer = initial ? 2.5f : dayDuration;
+		while ((timer -= Time.deltaTime) > dayDuration - transitionTime) {
+			yield return null;
+			float step = timer - (dayDuration - transitionTime);
+			daySR.color = new Color(1, 1, 1, isDayTime ? fadeOut(step, transitionTime) : fadeIn(step, transitionTime));
+			nightSR.color = new Color(1, 1, 1, isDayTime ? fadeIn(step, transitionTime) : fadeOut(step, transitionTime));
 		}
-
-	}
-
-	IEnumerator FadeOut() {
-		_spriteRenderer.color = new Color(255f, 255f, 255f, 0f);
-		yield return new WaitForSeconds(dayTime);
-		faded = true;
-	}
-
-	IEnumerator FadeIn() {
-		_spriteRenderer.color = new Color(255f, 255f, 255f, 255f);
-
-		yield return new WaitForSeconds(dayTime);
-		faded = false;
+		yield return new WaitForSeconds(initial ? timer : dayDuration - transitionTime);
+		StartCoroutine(ChangeDayNight(!isDay));
 	}
 }

@@ -59,6 +59,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -121,11 +122,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 4
-  health4: {fileID: 21300000, guid: 8161601b91f7ca14a9188d9628080d35, type: 3}
-  health3: {fileID: 21300000, guid: df91b27f03b1c9540b39d086c612c5e6, type: 3}
-  health2: {fileID: 21300000, guid: cb7a02e0e0c0f6a4e82c56202663a347, type: 3}
-  health1: {fileID: 21300000, guid: 3073c3e1be562bc41b32eec3ee0fb78e, type: 3}
-  health0: {fileID: 21300000, guid: dc6d9d1a920c95c4788b14d32dab371e, type: 3}
+  healthSprite:
+  - {fileID: 21300000, guid: dc6d9d1a920c95c4788b14d32dab371e, type: 3}
+  - {fileID: 21300000, guid: 3073c3e1be562bc41b32eec3ee0fb78e, type: 3}
+  - {fileID: 21300000, guid: cb7a02e0e0c0f6a4e82c56202663a347, type: 3}
+  - {fileID: 21300000, guid: df91b27f03b1c9540b39d086c612c5e6, type: 3}
+  - {fileID: 21300000, guid: 8161601b91f7ca14a9188d9628080d35, type: 3}
 --- !u!50 &1726715789
 Rigidbody2D:
   serializedVersion: 4
