@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FireBackground : MonoBehaviour {
-	//TODO: fade background
-	// Start is called before the first frame update
+	SpriteRenderer baseSR, burntSR;
 	void Start() {
-
+		var sr = GetComponentsInChildren<SpriteRenderer>();
+		(baseSR, burntSR) = (sr[0], sr[1]);
 	}
 
-	// Update is called once per frame
 	void Update() {
-
+		if (FireController.damage < FireController.damageLimit * .75)
+			baseSR.color = new Color(1, 1, 1, 1 - EaseMethods.QuadEaseIn(FireController.damage, 0, 1, FireController.damageLimit * .75f));
 	}
 }

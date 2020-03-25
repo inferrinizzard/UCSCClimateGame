@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class FireController : MonoBehaviour {
 	[SerializeField] int numFires = 5;
 	public static float damage = 0;
-	[SerializeField] float damageLimit = 100;
+	public static readonly float damageLimit = 100;
 	float timer = 60f;
 	[SerializeField] GameObject firePrefab = default;
 	[SerializeField] Text damageText = default;
@@ -42,6 +42,7 @@ public class FireController : MonoBehaviour {
 	}
 
 	void Spawn() {
+		// TODO: spawn over time
 		for (int i = 0; i < numFires; i++) {
 			Fire newFire = Instantiate(firePrefab,
 				RandomPoint(

@@ -21,7 +21,6 @@ public class Fire : MonoBehaviour {
 
 	public void Fade() {
 		health -= fadeRate;
-		transform.localScale = Vector3.Slerp(end, start, health / 100f);
-		// TODO: ease here
+		transform.localScale = EaseMethods.EaseVector3(EaseMethods.QuadEaseIn, start, end, 100 - health, 100);
 	}
 }

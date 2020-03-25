@@ -32,6 +32,10 @@ public static class Extensions {
 	}
 
 	public static void print(this UnityEngine.MonoBehaviour @this, params object[] words) => UnityEngine.Debug.Log(string.Join(" ", words));
+	public static dynamic Print(this object @this) {
+		UnityEngine.Debug.Log(@this);
+		return @this;
+	}
 
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, TResult> func) => @this.Select(func);
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, int, TResult> func) => @this.Select(func);
