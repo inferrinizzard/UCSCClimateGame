@@ -2,25 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 
-[System.Serializable]
 public class FireController : MonoBehaviour {
 	[SerializeField] int numFires = 5;
+	public static float damage = 0;
+	float timer = 60f;
 	[SerializeField] GameObject firePrefab = default;
-	private float temp;
-	// Start is called before the first frame update
+	[SerializeField] Text damageText = default;
+	[SerializeField] Text timerText = default;
+	[SerializeField] Slider waterSlider = default;
+	[SerializeField] HoseSpray spray = default;
+
 	void Start() {
+		timerText.text = string.Format("{00}", timer);
 		Spawn();
 	}
 
-	// Update is called once per frame
+	void Update() {
+		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
+		damageText.text = $"Damage: {damage}";
+
+		if (timer > 0) {
+			// if (Input.GetMouseButtonDown(0) && spray.curWater > 0)
+		} else {
+			if (spray.curWater <= 0) {
+				// pause and prompt here
+				World.co2.Update(World.Region.Fire, World.Region.City, damage / 100);
+			}
+		}
+
+		if (spray.curWater <= 0) {
+			// EnablePrompt();
+			// StartCoroutine("Blink");
+		}
+	}
+
 	void Spawn() {
 		for (int i = 0; i < numFires; i++) {
-			FadeFire newFire = Instantiate(firePrefab,
+			Fire newFire = Instantiate(firePrefab,
 				RandomPoint(
 					Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2)
 					(firePrefab.GetComponent<SpriteRenderer>().bounds.min)),
-				Quaternion.identity).GetComponent<FadeFire>();
+				Quaternion.identity).GetComponent<Fire>();
 			if (World.averageTemp < 70) {
 				float temp = (Random.Range(.5f, .8f));
 				newFire.transform.localScale *= temp;
