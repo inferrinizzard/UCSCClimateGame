@@ -28,6 +28,7 @@ public class FireController : MonoBehaviour {
 			if (timer > 0) {
 				// EnablePrompt();
 				// StartCoroutine("Blink");
+				// TODO: refill
 			} else {
 				// pause and prompt here
 				World.co2.Update(World.Region.Fire, World.Region.City, damage / 100);
