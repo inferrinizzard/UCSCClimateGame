@@ -255,7 +255,7 @@ RectTransform:
   m_GameObject: {fileID: 69987881}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.8688504, y: 1.2080793, z: 0}
+  m_LocalScale: {x: 1.5, y: 1, z: 0}
   m_Children:
   - {fileID: 436433974}
   - {fileID: 741688733}
@@ -264,7 +264,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -4.5847473, y: 20.089523}
+  m_AnchoredPosition: {x: 0, y: 20.089523}
   m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &69987884
@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5471698, g: 0.35359558, b: 0.35359558, a: 1}
+  m_Color: {r: 0.8, g: 0.37584314, b: 0.16, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -807,12 +807,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1935586721}
-        m_MethodName: 
+      - m_Target: {fileID: 1935586722}
+        m_MethodName: AddWater
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

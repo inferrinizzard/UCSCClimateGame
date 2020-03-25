@@ -46,18 +46,18 @@ public class FireController : MonoBehaviour {
 			Fire newFire = Instantiate(firePrefab,
 				RandomPoint(
 					Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2)
-					(firePrefab.GetComponent<SpriteRenderer>().bounds.min)),
+					(firePrefab.GetComponent<SpriteRenderer>().bounds.max)),
 				Quaternion.identity).GetComponent<Fire>();
 			if (World.averageTemp < 70) {
-				float temp = (Random.Range(.5f, .8f));
+				float temp = Random.Range(.5f, .8f);
 				newFire.transform.localScale *= temp;
 				newFire.health *= temp;
 			} else if (World.averageTemp < 90) {
-				float temp = (Random.Range(.8f, 1f));
+				float temp = Random.Range(.8f, 1f);
 				newFire.transform.localScale *= temp;
 				newFire.health *= temp;
 			} else if (World.averageTemp > 90) {
-				float temp = (Random.Range(1f, 2f));
+				float temp = Random.Range(1f, 2f);
 				newFire.transform.localScale *= temp;
 				newFire.health *= temp;
 			}
@@ -67,17 +67,12 @@ public class FireController : MonoBehaviour {
 		}
 	}
 
-	// Vector3 RandomPoint(float margin = 0) =>
-	// 		new Vector3(Random.Range(margin - Screen.width / 2, Screen.width / 2 - margin),
-	// 			Random.Range(margin - Screen.height / 2, Screen.height / 2 - margin - 64), 0);
 	Vector3 RandomPoint(float margin = 0) {
 		Vector3 randomPos = Camera.main.ViewportToWorldPoint(new Vector2(Random.value, Random.value));
-		// randomPos.x = Mathf.Clamp(randomPos.x, margin - Screen.width / 2, Screen.width / 2 - margin);
-		// randomPos.y = Mathf.Clamp(randomPos.y, margin - Screen.height / 2, Screen.height / 2 - 48 - margin);
-		randomPos.z = 0;
-		return randomPos;
+		var min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+		var max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
+		return new Vector3(Mathf.Clamp(randomPos.x, margin + min.x, max.x - margin), Mathf.Clamp(randomPos.y, margin + min.y, max.y - margin), 0);
 	}
-	// TODO: margins
 
 	IEnumerator PromptFlash(float speed) {
 		Slider preview = Instantiate(waterSlider.gameObject, waterSlider.transform.parent).GetComponentInChildren<Slider>();
