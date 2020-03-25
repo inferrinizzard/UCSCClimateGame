@@ -7,12 +7,16 @@ using UnityEngine.UI;
 public class FireController : MonoBehaviour {
 	[SerializeField] int numFires = 5;
 	public static float damage = 0;
+	[SerializeField] float damageLimit = 100;
 	float timer = 60f;
 	[SerializeField] GameObject firePrefab = default;
 	[SerializeField] Text damageText = default;
 	[SerializeField] Text timerText = default;
 	[SerializeField] Slider waterSlider = default;
 	[SerializeField] HoseSpray spray = default;
+	[SerializeField] WaterPrompt prompt = default;
+	bool hovering = false;
+	IEnumerator flash = null;
 
 	void Start() {
 		timerText.text = string.Format("{00}", timer);
@@ -22,18 +26,19 @@ public class FireController : MonoBehaviour {
 	void Update() {
 		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 		damageText.text = $"Damage: {damage}";
-		waterSlider.value = spray.curWater / spray.maxWater;
+		waterSlider.value = spray.currentWater / spray.maxWater;
 
-		if (spray.curWater <= 0) {
+		if (spray.currentWater <= 0) {
 			if (timer > 0) {
-				// EnablePrompt();
-				// StartCoroutine("Blink");
-				// TODO: refill
+				prompt.SetActive(true);
 			} else {
 				// TODO: pause and prompt here
-				World.co2.Update(World.Region.Fire, World.Region.City, damage / 100);
+				World.co2.Update(World.Region.Fire, World.Region.City, damage / damageLimit);
 			}
 		}
+
+		if (hovering && flash == null)
+			StartCoroutine(flash = PromptFlash(2));
 	}
 
 	void Spawn() {
@@ -73,4 +78,31 @@ public class FireController : MonoBehaviour {
 		return randomPos;
 	}
 	// TODO: margins
+
+	IEnumerator PromptFlash(float speed) {
+		Slider preview = Instantiate(waterSlider.gameObject, waterSlider.transform.parent).GetComponentInChildren<Slider>();
+		Destroy(preview.transform.GetChild(1).gameObject);
+		preview.transform.SetSiblingIndex(0);
+		preview.value = (spray.currentWater + spray.addWater) / spray.maxWater;
+		Image previewBar = preview.GetComponentInChildren<Image>();
+		previewBar.color = Color.red;
+
+		float start = Time.time;
+
+		while (hovering) {
+			yield return null;
+			previewBar.color = new Color(1, 0, 0, 1 - Mathf.PingPong(Time.time * speed, 1));
+		}
+		Destroy(preview.gameObject);
+		flash = null;
+	}
+
+	public void SetHovering(bool status) => hovering = status;
+
+	public void AddWater() {
+		hovering = false;
+		spray.currentWater += spray.addWater;
+		World.money -= 10;
+		prompt.SetActive(false);
+	}
 }
