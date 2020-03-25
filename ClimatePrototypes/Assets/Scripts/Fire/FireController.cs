@@ -22,19 +22,16 @@ public class FireController : MonoBehaviour {
 	void Update() {
 		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 		damageText.text = $"Damage: {damage}";
+		waterSlider.value = spray.curWater / spray.maxWater;
 
-		if (timer > 0) {
-			// if (Input.GetMouseButtonDown(0) && spray.curWater > 0)
-		} else {
-			if (spray.curWater <= 0) {
+		if (spray.curWater <= 0) {
+			if (timer > 0) {
+				// EnablePrompt();
+				// StartCoroutine("Blink");
+			} else {
 				// pause and prompt here
 				World.co2.Update(World.Region.Fire, World.Region.City, damage / 100);
 			}
-		}
-
-		if (spray.curWater <= 0) {
-			// EnablePrompt();
-			// StartCoroutine("Blink");
 		}
 	}
 
@@ -64,6 +61,9 @@ public class FireController : MonoBehaviour {
 		}
 	}
 
+	// Vector3 RandomPoint(float margin = 0) =>
+	// 		new Vector3(Random.Range(margin - Screen.width / 2, Screen.width / 2 - margin),
+	// 			Random.Range(margin - Screen.height / 2, Screen.height / 2 - margin - 64), 0);
 	Vector3 RandomPoint(float margin = 0) {
 		Vector3 randomPos = Camera.main.ViewportToWorldPoint(new Vector2(Random.value, Random.value));
 		// randomPos.x = Mathf.Clamp(randomPos.x, margin - Screen.width / 2, Screen.width / 2 - margin);

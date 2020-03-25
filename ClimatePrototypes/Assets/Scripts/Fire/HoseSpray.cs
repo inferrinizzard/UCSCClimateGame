@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HoseSpray : MonoBehaviour {
-	[SerializeField] float maxWater = 5000f;
-	public float curWater = 5000f;
+	public float maxWater = 5000f;
+	[HideInInspector] public float curWater = 5000f;
 	[SerializeField] float incWater = 500f;
+	[SerializeField] float waterRate = 10f;
 	Camera cam;
 	Collider2D col;
 
@@ -28,7 +29,7 @@ public class HoseSpray : MonoBehaviour {
 		else if (Input.GetMouseButtonUp(0) || curWater <= 0)
 			col.gameObject.SetActive(false);
 		else if (Input.GetMouseButton(0) && curWater > 0) {
-			curWater--;
+			curWater -= waterRate;
 			List<Collider2D> hits = new List<Collider2D>();
 			if (col.OverlapCollider((new ContactFilter2D()).NoFilter(), hits) > 0)
 				foreach (Collider2D fire in hits)
