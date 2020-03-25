@@ -30,7 +30,7 @@ public class FireController : MonoBehaviour {
 				// StartCoroutine("Blink");
 				// TODO: refill
 			} else {
-				// pause and prompt here
+				// TODO: pause and prompt here
 				World.co2.Update(World.Region.Fire, World.Region.City, damage / 100);
 			}
 		}
@@ -72,4 +72,5 @@ public class FireController : MonoBehaviour {
 		randomPos.z = 0;
 		return randomPos;
 	}
+	// TODO: margins
 }

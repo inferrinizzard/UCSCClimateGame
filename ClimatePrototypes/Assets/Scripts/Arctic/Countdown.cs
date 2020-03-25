@@ -38,6 +38,6 @@ public class Countdown : MonoBehaviour {
 
 		scoreTextBox.text = "Score: " + score.ToString();
 
-		// TODO:freeze and prompt here
+		// TODO: freeze and prompt here
 	}
 }
