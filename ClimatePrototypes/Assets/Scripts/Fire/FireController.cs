@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FireController : MonoBehaviour {
+public class FireController : RegionController {
 	[SerializeField] int numFires = 5;
 	[SerializeField] float spawnDelayMin = 10;
 	public static float damage = 0;
@@ -37,7 +37,7 @@ public class FireController : MonoBehaviour {
 			if (timer > 0) {
 				prompt.SetActive(true);
 			} else {
-				// TODO: pause and prompt here
+				Pause();
 				World.co2.Update(World.Region.Fire, World.Region.City, damage / damageLimit);
 			}
 		}

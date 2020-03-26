@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class RegionController : MonoBehaviour {
 
-	void Pause() {
+	protected void Pause( /*string scene/text */ ) {
 		Time.timeScale = 0;
+		UIController.Instance.ActivatePrompt();
 	}
 }

@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Countdown : MonoBehaviour {
+public class ArcticController : RegionController {
 	float timeLeft = 60f;
 	[SerializeField] GameObject ice = default;
-	private Text timerText;
-	[SerializeField] Text scoreText;
+	Text timerText;
+	[SerializeField] Text scoreText = default;
 	public float score = 0f;
 
 	private void Start() {
@@ -20,6 +20,7 @@ public class Countdown : MonoBehaviour {
 	void Update() {
 		if ((timeLeft -= Time.deltaTime) < 0f) {
 			timeLeft = 0f;
+			Pause();
 			CalculateScore();
 		} else {
 			scoreText.text = "Score: ";
@@ -29,13 +30,10 @@ public class Countdown : MonoBehaviour {
 	}
 
 	void CalculateScore() {
-		Time.timeScale = 0;
 		score = 0;
 		foreach (var buffer in ice.GetComponentsInChildren<Buffer>())
 			score += buffer.health;
 
 		scoreText.text = "Score: " + score.ToString();
-
-		// TODO: freeze and prompt here
 	}
 }

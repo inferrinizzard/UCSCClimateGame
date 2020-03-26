@@ -5,15 +5,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : Singleton<UIController> {
-	public GameObject settingsGroup;
-	public InfoController infoGroup;
-	public GameObject notificationGroup;
-	public Text moneyText;
-	public Text turnText;
+	[SerializeField] GameObject settingsGroup = default;
+	[SerializeField] InfoController infoGroup = default;
+	[SerializeField] GameObject notificationGroup = default;
+	[SerializeField] Text moneyText = default;
+	[SerializeField] Text turnText = default;
 	[SerializeField] Button backButton = default;
-	bool settingsOn = false;
-	bool infoOn = false;
-	bool notificationsOn = false;
+	[SerializeField] GameObject returnPrompt = default;
+	bool settingsOn = false,
+	infoOn = false,
+	notificationsOn = false;
 
 	void Start() {
 		turnText.text = $"Year {World.turn}";
@@ -52,6 +53,10 @@ public class UIController : Singleton<UIController> {
 
 	public void UIQuitGame() => GameManager.QuitGame();
 
-	public void UITransition(string level) => GameManager.Transition(level);
+	public void UITransition(string level) {
+		returnPrompt.SetActive(false);
+		GameManager.Transition(level);
+	}
 
+	public void ActivatePrompt() => returnPrompt.SetActive(true);
 }

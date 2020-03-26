@@ -47,7 +47,7 @@ public class GameManager : Singleton<GameManager> {
 	static IEnumerator LoadScene(string name) {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
 		asyncLoad.allowSceneActivation = false;
-		float start = Time.time;
+		float start = Time.realtimeSinceStartup;
 
 		bool calcDone = true;
 		if (name == "Overworld") {
@@ -57,13 +57,14 @@ public class GameManager : Singleton<GameManager> {
 			calcThread.Start();
 		}
 
-		instance.loadingScreen.SetActive(true);
+		Instance.loadingScreen.SetActive(true);
 
 		while (!asyncLoad.isDone || !calcDone) {
 			yield return null;
 			// instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
-			if (asyncLoad.progress >= .9f && Time.time - start > 1 && calcDone) {
+			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && calcDone) {
+				Time.timeScale = 1;
 				asyncLoad.allowSceneActivation = true;
 				if (name == "Overworld")
 					UIController.Instance.IncrementTurn();
