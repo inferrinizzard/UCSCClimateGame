@@ -37,6 +37,11 @@ public static class Extensions {
 		return @this;
 	}
 
+	public static dynamic Print(this double @this) {
+		UnityEngine.Debug.Log(@this);
+		return @this;
+	}
+
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, TResult> func) => @this.Select(func);
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, int, TResult> func) => @this.Select(func);
 	public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> @this, Func<TSource, bool> func) => @this.Where(func);

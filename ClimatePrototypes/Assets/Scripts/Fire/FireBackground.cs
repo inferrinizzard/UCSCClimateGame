@@ -12,6 +12,8 @@ public class FireBackground : MonoBehaviour {
 
 	void Update() {
 		if (FireController.damage < FireController.damageLimit * .75)
-			baseSR.color = new Color(1, 1, 1, 1 - EaseMethods.QuadEaseIn(FireController.damage, 0, 1, FireController.damageLimit * .75f));
+			baseSR.color = new Color(1, 1, 1, (1 - EaseMethods.QuadEaseIn(FireController.damage, 0, 1, FireController.damageLimit * .75f)));
+		else if (FireController.damage > FireController.damageLimit * .75)
+			baseSR.color = Color.clear;
 	}
 }

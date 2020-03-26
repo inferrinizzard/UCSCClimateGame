@@ -1862,6 +1862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numFires: 5
+  spawnDelayMin: 10
   firePrefab: {fileID: 1688062329584212153, guid: bf0861234c595ca49987846a05a7408f,
     type: 3}
   damageText: {fileID: 582284132}

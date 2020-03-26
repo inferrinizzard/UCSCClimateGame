@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class FireController : MonoBehaviour {
 	[SerializeField] int numFires = 5;
+	[SerializeField] float spawnDelayMin = 10;
 	public static float damage = 0;
 	public static readonly float damageLimit = 100;
 	float timer = 60f;
@@ -17,10 +18,14 @@ public class FireController : MonoBehaviour {
 	[SerializeField] WaterPrompt prompt = default;
 	bool hovering = false;
 	IEnumerator flash = null;
+	float margin;
 
 	void Start() {
 		timerText.text = string.Format("{00}", timer);
-		Spawn();
+
+		margin = Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2) (firePrefab.GetComponent<SpriteRenderer>().bounds.max);
+		for (int i = 0; i < numFires; i++)
+			StartCoroutine(SpawnFire());
 	}
 
 	void Update() {
@@ -41,31 +46,25 @@ public class FireController : MonoBehaviour {
 			StartCoroutine(flash = PromptFlash(2));
 	}
 
-	void Spawn() {
-		// TODO: spawn over time
-		for (int i = 0; i < numFires; i++) {
-			Fire newFire = Instantiate(firePrefab,
-				RandomPoint(
-					Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2)
-					(firePrefab.GetComponent<SpriteRenderer>().bounds.max)),
-				Quaternion.identity).GetComponent<Fire>();
-			if (World.averageTemp < 70) {
-				float temp = Random.Range(.5f, .8f);
-				newFire.transform.localScale *= temp;
-				newFire.health *= temp;
-			} else if (World.averageTemp < 90) {
-				float temp = Random.Range(.8f, 1f);
-				newFire.transform.localScale *= temp;
-				newFire.health *= temp;
-			} else if (World.averageTemp > 90) {
-				float temp = Random.Range(1f, 2f);
-				newFire.transform.localScale *= temp;
-				newFire.health *= temp;
-			}
-			// if (World.averageTemp > 25) // do nothing
-			newFire.transform.SetParent(transform);
-			newFire.name += $" {i}";
+	IEnumerator SpawnFire() {
+		Fire newFire = Instantiate(firePrefab, RandomPoint(margin), Quaternion.identity, transform).GetComponent<Fire>();
+		if (World.averageTemp < 70) {
+			float temp = Random.Range(.5f, .8f);
+			newFire.transform.localScale *= temp;
+			newFire.health *= temp;
+		} else if (World.averageTemp < 90) {
+			float temp = Random.Range(.8f, 1f);
+			newFire.transform.localScale *= temp;
+			newFire.health *= temp;
+		} else if (World.averageTemp > 90) {
+			float temp = Random.Range(1f, 2f);
+			newFire.transform.localScale *= temp;
+			newFire.health *= temp;
 		}
+
+		yield return new WaitForSeconds(Random.Range(spawnDelayMin, spawnDelayMin * 1.5f));
+		if (timer > 0)
+			StartCoroutine(SpawnFire());
 	}
 
 	Vector3 RandomPoint(float margin = 0) {
