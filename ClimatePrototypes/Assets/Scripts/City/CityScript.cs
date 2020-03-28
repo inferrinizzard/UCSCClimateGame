@@ -19,15 +19,11 @@ public class CityScript : MonoBehaviour {
 
 	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
 	//enum BillDifficulty {easy, med, hard};
-	public string currentBillDifficulty = "easy";
-	private List<Bill> currentBillList = new List<Bill>();
-	public int currentBillIndex = 0;
-	public Bill currentBill;
-
+	string currentBillDifficulty = "easy";
+	List<Bill> currentBillList = new List<Bill>();
+	int currentBillIndex = 0;
+	Bill currentBill;
 	List<Coroutine> coroutines = new List<Coroutine>();
-
-	private float ppm;
-	private float albedoDelta;
 
 	public struct Bill {
 		public string name;
@@ -78,9 +74,9 @@ public class CityScript : MonoBehaviour {
 				(string[] split) => World.GetFactor(split[0])?.Update(World.Region.City, null, float.Parse(split[1] + split[2])))
 			(SplitTag(tag)));
 		currentBill = GetNextBill();
-		coroutines.ForEach(co => StopCoroutine(co));
+		// coroutines.ForEach(co => StopCoroutine(co));
 		coroutines = new List<Coroutine>();
-		PrintBill(currentBill);
+		// PrintBill(currentBill);
 	}
 
 	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|-)");
