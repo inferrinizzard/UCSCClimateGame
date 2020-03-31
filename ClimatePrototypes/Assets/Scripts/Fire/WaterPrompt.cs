@@ -5,25 +5,22 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class WaterPrompt : MonoBehaviour {
-	GameObject yesButton;
+	GameObject yesButton, noButton;
 	Text text;
 	Image sprite;
 
 	void Start() {
 		sprite = GetComponent<Image>();
 		text = GetComponentInChildren<Text>();
-		yesButton = this.GetComponentOnlyInChildren<Button>().gameObject;
+		var buttons = this.GetComponentsOnlyInChildren<Button>();
+		(yesButton, noButton) = (buttons[0].gameObject, buttons[1].gameObject);
 		SetActive(false);
-	}
-
-	// Update is called once per frame
-	void Update() {
-
 	}
 
 	public void SetActive(bool status) {
 		text.enabled = status;
 		sprite.enabled = status;
 		yesButton.SetActive(status);
+		noButton.SetActive(status);
 	}
 }

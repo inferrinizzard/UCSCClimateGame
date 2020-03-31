@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class HoseSpray : MonoBehaviour {
 	[HideInInspector] public float currentWater = 5000f;
-	public float maxWater = 5000f, addWater = 500f;
-	[SerializeField] float waterRate = 10f;
+	public float maxWater = 5000f, addWater = 2000f;
+	[SerializeField] float waterRate = 10f, recoverRate = 2f;
 	Camera cam;
 	Collider2D col;
 
@@ -32,10 +32,13 @@ public class HoseSpray : MonoBehaviour {
 			if (col.OverlapCollider((new ContactFilter2D()).NoFilter(), hits) > 0)
 				foreach (Collider2D fire in hits)
 					fire.GetComponent<Fire>()?.Fade();
+		} else if (Time.timeScale != 0) {
+			if (currentWater < maxWater)
+				currentWater += recoverRate;
 		}
 
 		if (currentWater > 0)
-			transform.position = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x - 200f, Input.mousePosition.y, cam.nearClipPlane));
+			transform.position = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x - 200f, Input.mousePosition.y, cam.nearClipPlane)); // use bounds of sprite
 		else
 			Cursor.visible = true;
 	}

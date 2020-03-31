@@ -13,7 +13,7 @@ public class Fire : MonoBehaviour {
 	void Start() => start = transform.localScale;
 
 	void Update() {
-		if (step++ % damageRate == 0)
+		if (step++ % damageRate == 0 && Time.timeScale != 0)
 			FireController.damage += fadeRate;
 		if (health <= 0)
 			Destroy(gameObject);

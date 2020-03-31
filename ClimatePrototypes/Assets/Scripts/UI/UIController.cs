@@ -58,5 +58,5 @@ public class UIController : Singleton<UIController> {
 		GameManager.Transition(level);
 	}
 
-	public void ActivatePrompt() => returnPrompt.SetActive(true);
+	public void SetPrompt(bool status) => returnPrompt.SetActive(status);
 }

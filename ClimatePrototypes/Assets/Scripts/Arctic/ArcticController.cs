@@ -35,5 +35,6 @@ public class ArcticController : RegionController {
 			score += buffer.health;
 
 		scoreText.text = "Score: " + score.ToString();
+		World.albedo.Update(World.Region.Arctic, World.Region.City, score / ice.GetComponentsInChildren<Buffer>().Length / 5);
 	}
 }

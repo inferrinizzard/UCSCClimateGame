@@ -11,8 +11,7 @@ public class FireController : RegionController {
 	public static readonly float damageLimit = 100;
 	float timer = 60f;
 	[SerializeField] GameObject firePrefab = default;
-	[SerializeField] Text damageText = default;
-	[SerializeField] Text timerText = default;
+	[SerializeField] Text damageText = default, timerText = default;
 	[SerializeField] Slider waterSlider = default;
 	[SerializeField] HoseSpray spray = default;
 	[SerializeField] WaterPrompt prompt = default;
@@ -33,13 +32,15 @@ public class FireController : RegionController {
 		damageText.text = $"Damage: {damage}";
 		waterSlider.value = spray.currentWater / spray.maxWater;
 
-		if (spray.currentWater <= 0) {
-			if (timer > 0) {
+		if (timer > 0) {
+			if (spray.currentWater <= 0)
 				prompt.SetActive(true);
-			} else {
-				Pause();
-				World.co2.Update(World.Region.Fire, World.Region.City, damage / damageLimit);
-			}
+		} else {
+			timerText.text = "0";
+			prompt.SetActive(false);
+			Cursor.visible = true;
+			Pause();
+			World.co2.Update(World.Region.Fire, World.Region.City, damage / damageLimit);
 		}
 
 		if (hovering && flash == null)
@@ -48,19 +49,16 @@ public class FireController : RegionController {
 
 	IEnumerator SpawnFire() {
 		Fire newFire = Instantiate(firePrefab, RandomPoint(margin), Quaternion.identity, transform).GetComponent<Fire>();
-		if (World.averageTemp < 70) {
-			float temp = Random.Range(.5f, .8f);
-			newFire.transform.localScale *= temp;
-			newFire.health *= temp;
-		} else if (World.averageTemp < 90) {
-			float temp = Random.Range(.8f, 1f);
-			newFire.transform.localScale *= temp;
-			newFire.health *= temp;
-		} else if (World.averageTemp > 90) {
-			float temp = Random.Range(1f, 2f);
-			newFire.transform.localScale *= temp;
-			newFire.health *= temp;
-		}
+		float temp = .5f;
+		if (World.averageTemp < 10)
+			temp *= Random.Range(.5f, .8f);
+		else if (World.averageTemp < 20)
+			temp *= Random.Range(.8f, 1f);
+		else if (World.averageTemp > 20)
+			temp *= Random.Range(1f, 2f);
+
+		newFire.transform.localScale *= temp;
+		newFire.health *= temp;
 
 		yield return new WaitForSeconds(Random.Range(spawnDelayMin, spawnDelayMin * 1.5f));
 		if (timer > 0)
@@ -94,10 +92,15 @@ public class FireController : RegionController {
 
 	public void SetHovering(bool status) => hovering = status;
 
-	public void AddWater() {
-		hovering = false;
-		spray.currentWater += spray.addWater;
-		World.money -= 10;
+	public void AddWater(bool add) {
+		if (add) {
+			if (World.money > 10) {
+				hovering = false;
+				spray.currentWater += spray.addWater;
+				World.money -= 10;
+			}
+		} else
+			spray.currentWater = .1f;
 		prompt.SetActive(false);
 	}
 }
