@@ -32,6 +32,7 @@ public static class World {
 
 		public void Update(Region scene, Region? dest, float delta) {
 			lineToDraw.Add((scene, dest ?? Region.Forest, name));
+			Debug.Log($"change {verbose} by {delta}");
 			update.Invoke(delta);
 		}
 	}

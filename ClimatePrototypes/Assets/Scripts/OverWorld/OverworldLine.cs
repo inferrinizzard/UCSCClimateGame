@@ -25,6 +25,7 @@ public class OverworldLine : MonoBehaviour {
 			WorldBubble dest = Fetch($"{to.ToString()}Node").GetValue(this) as WorldBubble;
 			StartCoroutine(DrawLine(Fetch($"{from.ToString()}Node").GetValue(this) as WorldBubble, dest, dest.colour, tag));
 		}
+		World.lineToDraw = new List < (World.Region, World.Region, string) > ();
 	}
 
 	// Update is called once per frame

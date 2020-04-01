@@ -20,7 +20,8 @@ public class ArcticController : RegionController {
 	void Update() {
 		if ((timeLeft -= Time.deltaTime) < 0f) {
 			timeLeft = 0f;
-			Pause();
+			if (!paused)
+				Pause();
 			CalculateScore();
 		} else {
 			scoreText.text = "Score: ";
@@ -35,6 +36,9 @@ public class ArcticController : RegionController {
 			score += buffer.health;
 
 		scoreText.text = "Score: " + score.ToString();
-		World.albedo.Update(World.Region.Arctic, World.Region.City, score / ice.GetComponentsInChildren<Buffer>().Length / 5);
+		if (!updated) {
+			World.albedo.Update(World.Region.Arctic, World.Region.City, score / ice.GetComponentsInChildren<Buffer>().Length / 5);
+			updated = true;
+		}
 	}
 }

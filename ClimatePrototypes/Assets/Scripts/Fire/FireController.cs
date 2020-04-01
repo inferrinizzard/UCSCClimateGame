@@ -39,8 +39,12 @@ public class FireController : RegionController {
 			timerText.text = "0";
 			prompt.SetActive(false);
 			Cursor.visible = true;
-			Pause();
-			World.co2.Update(World.Region.Fire, World.Region.City, damage / damageLimit);
+			if (!paused)
+				Pause();
+			if (!updated) {
+				World.co2.Update(World.Region.Fire, World.Region.City, damage / damageLimit);
+				updated = true;
+			}
 		}
 
 		if (hovering && flash == null)
