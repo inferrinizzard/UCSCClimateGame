@@ -40,7 +40,7 @@ public static class World {
 	public static List < (Region, Region, string) > lineToDraw = new List < (Region, Region, string) > ();
 
 	public static Factor co2 = new Factor("co2", "Emissions", new Action<float>((float deltaF) => EBM.F += deltaF)),
-		albedo = new Factor("land", "LandUse", new Action<float>((float deltaS1) => EBM.S1 = deltaS1)), //a0
+		albedo = new Factor("land", "LandUse", new Action<float>((float deltaa0) => EBM.a0 += deltaa0)), //was s1
 		economy = new Factor("money", "Economy", new Action<float>((float delta) => money += delta)),
 		opinion = new Factor("opinion", "PublicOpinion", new Action<float>((float delta) => publicOpinion += delta));
 
@@ -61,10 +61,11 @@ public static class World {
 
 	public static void Init() {
 		Calc();
+
 		// FinishCalc(StartCalc().Wait());
 	}
 
-	public static void Calc(bool useTemp = false, int years = 0, int steps = 0) {
+	public static void Calc(bool useTemp = true, int years = 0, int steps = 0) {
 		var timer = new Stopwatch();
 		timer.Start();
 		(temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);

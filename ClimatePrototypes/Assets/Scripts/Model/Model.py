@@ -86,7 +86,7 @@ def main():
     F = 0  # radiative forcing (W m^-2)
     k = 2  # sea ice thermal conductivity (W m^-2 K^-1)
     Lf = 9.5  # sea ice latent heat of fusion (W yr m^-3)
-    cg = 0.01*cw  # ghost layer heat capacity(W yr m^-2 K^-1)
+    cg = 0.01 * cw  # ghost layer heat capacity(W yr m^-2 K^-1)
     tau = 1e-5  # ghost layer coupling timescale (yr)
     Lv = 2.5E6  # latent heat of vaporization (J kg^-1)
     cp = 1004.6  # heat capacity of air at constant pressure (J kg^-1 K^-1)
@@ -116,8 +116,8 @@ def main():
     lam = D / dx**2 * (1 - xb**2)
     L1 = np.append(0, -lam)
     L2 = np.append(-lam, 0)
-    L3 = -L1-L2
-    diffop = - np.diag(L3[:-1] if n == 3 or n == 6 or n == 24 else L3) - \
+    L3 = -L1 - L2
+    diffop = -np.diag(L3[:-1] if n == 3 or n == 6 or n == 24 else L3) - \
         np.diag(L2[:n-1], 1) - np.diag(L1[1:n], -1)
 
     # Definitions for implicit scheme on Tg
@@ -198,7 +198,7 @@ def main():
 
     # Weighting function to partition transport into Hadley cell and eddy transports
     w = np.exp(-x**2 / sigma**2)
-    F_hc = w*Fa
+    F_hc = w * Fa
     F_eddy = (1 - w) * Fa
     Fl_eddy = (1 - w) * Fla
 

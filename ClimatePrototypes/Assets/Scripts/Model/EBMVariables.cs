@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 using MathNet.Numerics;
@@ -45,19 +43,26 @@ public partial class EBM {
 	static readonly double D = 0.5;
 
 	/// <summary> Insolation at equator(W m^-2)  </summary>
-	public static double S0 = 420;
+	static readonly double S0 = 420;
 	/// <summary> Insolation seasonal dependence(W m^-2)  </summary>
-	public static double S1 = 338;
+	static readonly double S1 = 338;
 	/// <summary> Insolation spatial dependence(W m^-2)  </summary>
 	static readonly double S2 = 240;
 	/// <summary> Ice-free co-albedo at equator  </summary>
-	static readonly double a0 = 0.7;
-	/// <summary> Ice=free co-albedo spatial dependence  </summary>
+	static double _a0 = 0.7;
+	public static double a0 {
+		get => _a0;
+		set {
+			_a0 = value;
+			aw = a0 - a2 * x.PointwisePower(2);
+		}
+	}
+	/// <summary> Ice-free co-albedo spatial dependence  </summary>
 	static readonly double a2 = 0.1;
 	/// <summary> Co-albedo where there is sea ice  </summary>
 	static readonly double aI = 0.4;
 	/// <summary> Open water albedos </summary>
-	static readonly Vector<double> aw = a0 - a2 * x.PointwisePower(2);
+	static Vector<double> aw = a0 - a2 * x.PointwisePower(2);
 	/// <summary> Radiative forcing(W m^-2) </summary>
 	public static double F = 0;
 
@@ -79,9 +84,9 @@ public partial class EBM {
 	/// <summary> Ghost layer heat capacity(W yr m^-2 K^-1) </summary>
 	static readonly double cg = cw / 100;
 	/// <summary> Ratio of MSE aloft to near surface, equatorial MSE </summary>
-	static readonly double gms_scale = 1.06;
+	static readonly double gms_scale = 2; // was 1.06
 	/// <summary> Characteristic width for gaussian weighting function </summary>
-	static readonly double sigma = .3;
+	static readonly double sigma = 0.4; // was 0.3
 
 	// # Diffusion Operator (WE15, Appendix A)
 	static readonly Vector<double> lam = D / dx / dx * (1 - xb.PointwisePower(2));

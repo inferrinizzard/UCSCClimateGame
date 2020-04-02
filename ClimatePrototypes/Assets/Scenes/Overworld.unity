@@ -441,8 +441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 4
-  colour: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  size: 8
+  colour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &237590790
 Transform:
   m_ObjectHideFlags: 0
@@ -940,8 +940,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 4
-  colour: {r: 1, g: 0.5, b: 0, a: 1}
+  size: 8
+  colour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &608624361
 Transform:
   m_ObjectHideFlags: 0
@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aadef0426cfb62949a55d5a7abdb0bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dist: 4
+  dist: 0
   duration: 0.25
   CityNode: {fileID: 0}
   ForestNode: {fileID: 0}
@@ -2700,8 +2700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 4
-  colour: {r: 0, g: 1, b: 0, a: 1}
+  size: 8
+  colour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!58 &1622224479
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3441,8 +3441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ed2be99ad5ddc4596d2d47cea12683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 4
-  colour: {r: 0, g: 1, b: 1, a: 1}
+  size: 8
+  colour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &2075063327
 Transform:
   m_ObjectHideFlags: 0

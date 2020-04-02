@@ -10,9 +10,18 @@ public class RegionController : MonoBehaviour {
 	protected bool updated = false;
 
 	protected void Pause( /*string scene/text */ ) {
-		paused = true;
-		Time.timeScale = 0;
-		UIController.Instance.SetPrompt(true);
-		updated = false;
+		if (!paused) {
+			paused = true;
+			Time.timeScale = 0;
+			UIController.Instance.SetPrompt(true);
+			updated = false;
+		}
+	}
+
+	protected void TriggerUpdate(System.Action updateEBM) {
+		if (!updated) {
+			updateEBM();
+			updated = true;
+		}
 	}
 }

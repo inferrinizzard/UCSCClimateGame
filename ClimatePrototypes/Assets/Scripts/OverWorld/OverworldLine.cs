@@ -11,11 +11,12 @@ public class OverworldLine : MonoBehaviour {
 
 	[HideInInspector] public WorldBubble CityNode, ForestNode, ArcticNode, FireNode;
 	[SerializeField] Transform nodeParent = default;
-	[SerializeField] GameObject baseLine = default;
+	GameObject baseLine;
 
 	System.Reflection.FieldInfo Fetch(string name) => this.GetType().GetField(name);
 
 	void Awake() {
+		baseLine = GetComponentInChildren<LineRenderer>(true).gameObject;
 		foreach (WorldBubble node in nodeParent.GetComponentsInChildren<WorldBubble>())
 			Fetch(node.name).SetValue(this, node);
 	}
