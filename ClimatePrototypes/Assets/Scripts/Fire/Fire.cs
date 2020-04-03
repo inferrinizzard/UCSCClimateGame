@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Fire : MonoBehaviour {
-	[SerializeField] int damageRate = 30;
 	[SerializeField] float fadeRate = 1f;
 	public float health = 100f;
 	Vector3 start, end = Vector3.one * .05f;
@@ -12,11 +11,13 @@ public class Fire : MonoBehaviour {
 
 	void Start() => start = transform.localScale;
 
-	void Update() {
-		if (step++ % damageRate == 0 && Time.timeScale != 0)
+	void FixedUpdate() {
+		if (step++ % FireController.damageRate == 0 && Time.timeScale != 0)
 			FireController.damage += fadeRate;
-		if (health <= 0)
+		if (health <= 0) {
 			Destroy(gameObject);
+			FireController.fireCount--;
+		}
 	}
 
 	public void Fade() {
