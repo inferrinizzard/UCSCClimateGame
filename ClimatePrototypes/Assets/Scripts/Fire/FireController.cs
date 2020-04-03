@@ -110,5 +110,5 @@ public class FireController : RegionController {
 		prompt.SetActive(false);
 	}
 
-	double ProcessScore() => (Math.Log(Math.E * damage / damageLimit) + .1) / 1.1; // negative under like 60
+	double ProcessScore() => (System.Math.Log(System.Math.E * damage / damageLimit) + .1) / 1.1; // negative under like 60
 }
