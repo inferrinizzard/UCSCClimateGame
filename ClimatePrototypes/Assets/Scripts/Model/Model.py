@@ -70,8 +70,7 @@ def compare(name="", file="", real=""):
     print()
 
 
-def main():
-
+def main(F):
     D = 0.5  # diffusivity for heat transport (W m^-2 K^-1)
     S1 = 338  # insolation seasonal dependence (W m^-2)
     A = 193  # OLR when T = 0 (W m^-2)
@@ -83,7 +82,7 @@ def main():
     a2 = 0.1  # ice=free co-albedo spatial dependence
     ai = 0.4  # co-albedo where there is sea ice
     Fb = 4  # heat flux from ocean below (W m^-2)
-    F = 0  # radiative forcing (W m^-2)
+    # F = 0  # radiative forcing (W m^-2)
     k = 2  # sea ice thermal conductivity (W m^-2 K^-1)
     Lf = 9.5  # sea ice latent heat of fusion (W yr m^-3)
     cg = 0.01 * cw  # ghost layer heat capacity(W yr m^-2 K^-1)
@@ -102,7 +101,7 @@ def main():
     # For a quicker computation, use the parameters:
     # n = 100
     # nt = 1000
-    n = 50
+    n = 24
     nt = 1000
     dur = 30
     dt = 1 / float(nt)
@@ -174,13 +173,15 @@ def main():
             # Implicit Euler on Tg
             Tg = np.linalg.solve(kappa-np.diag(dc / (M - kLf / E) * (T0 < 0) * (E < 0)),
                                  Tg + lht + (dt_tau * (E / cw * (E >= 0) + (ai * S[i, :] - A) / (M - kLf / E) * (T0 < 0) * (E < 0))))
-        print('year %d complete' % (years))
+        # print('year %d complete' % (years))
 
     # output only converged, final year
     tfin = np.linspace(0, 1, 100)
     Efin = E100[:, -100:]
     Tfin = T100[:, -100:]
 
+    print(np.average(Tfin), F)
+    return
     # Efin = E100[:, :100] #test
     # Tfin = T100[:, :100]
     print(T100)
@@ -324,4 +325,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    for i in range(16):
+        main(i)

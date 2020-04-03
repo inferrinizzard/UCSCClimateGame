@@ -7,14 +7,12 @@ using UnityEngine.UI;
 
 public class ArcticController : RegionController {
 	float timeLeft = 60f;
-	[SerializeField] GameObject ice = default;
-	Text timerText;
-	[SerializeField] Text scoreText = default;
-	public float score = 0f;
+	[SerializeField] Text scoreText = default, timerText = default;
+	int damage = 0;
+	Buffer[] buffers;
 
-	private void Start() {
-		timerText = GetComponent<Text>();
-		scoreText.text = "Score";
+	void Start() {
+		buffers = GetComponentsInChildren<Buffer>();
 	}
 
 	void Update() {
@@ -23,20 +21,18 @@ public class ArcticController : RegionController {
 			Pause();
 			CalculateScore();
 		} else {
-			scoreText.text = "Score: ";
+			damage = 0;
+			foreach (Buffer b in buffers)
+				damage += b.health + 1;
+			scoreText.text = $"Ice Remaining: {damage}";
 		}
 
 		timerText.text = Mathf.Round(timeLeft).ToString();
 	}
 
 	void CalculateScore() {
-		score = 0;
-		foreach (var buffer in ice.GetComponentsInChildren<Buffer>())
-			score += buffer.health;
-
-		scoreText.text = "Score: " + score.ToString();
-		TriggerUpdate(() =>
-			World.albedo.Update(World.Region.Arctic, World.Region.City, score / ice.GetComponentsInChildren<Buffer>().Length / 5) // also log-linear?
-		);
+		TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
+
+	double ProcessScore() => (Math.Log(Math.E * (5 * buffers.Length - damage) / 30d) / 3 + .75) / 1000d;
 }

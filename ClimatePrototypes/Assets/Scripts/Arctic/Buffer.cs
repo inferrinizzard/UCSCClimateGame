@@ -14,15 +14,10 @@ public class Buffer : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.gameObject.tag == "SolarRadiation") {
-			TakeDamage();
-			sr.sprite = healthSprite[health];
+		if (collision.gameObject.CompareTag("SolarRadiation")) {
+			if (health > 0)
+				sr.sprite = healthSprite[--health];
 			Destroy(collision.gameObject);
 		}
-	}
-
-	private void TakeDamage() {
-		if (health > 0)
-			health--;
 	}
 }

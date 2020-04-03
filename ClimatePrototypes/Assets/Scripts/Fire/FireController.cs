@@ -5,11 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class FireController : RegionController {
+	[SerializeField] float timer = 60f;
 	[SerializeField] int numFires = 5;
+	public static int fireCount = 0;
 	[SerializeField] float spawnDelayMin = 10;
+	public static int damageRate = 30;
 	public static float damage = 0;
-	public static readonly float damageLimit = 100;
-	float timer = 60f;
+	public static readonly float damageLimit = 200f;
 	[SerializeField] GameObject firePrefab = default;
 	[SerializeField] Text damageText = default, timerText = default;
 	[SerializeField] Slider waterSlider = default;
@@ -23,7 +25,7 @@ public class FireController : RegionController {
 		timerText.text = string.Format("{00}", timer);
 
 		margin = Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2) (firePrefab.GetComponent<SpriteRenderer>().bounds.max);
-		for (int i = 0; i < numFires; i++)
+		for (; fireCount < numFires; fireCount++)
 			StartCoroutine(SpawnFire());
 	}
 
@@ -41,7 +43,7 @@ public class FireController : RegionController {
 			Cursor.visible = true;
 			Pause();
 			TriggerUpdate(() =>
-				World.co2.Update(World.Region.Fire, World.Region.City, damage / damageLimit) //log-linear
+				World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore())
 			);
 		}
 
@@ -50,17 +52,19 @@ public class FireController : RegionController {
 	}
 
 	IEnumerator SpawnFire() {
-		Fire newFire = Instantiate(firePrefab, RandomPoint(margin), Quaternion.identity, transform).GetComponent<Fire>();
-		float temp = .5f;
-		if (World.averageTemp < 10)
-			temp *= Random.Range(.5f, .8f);
-		else if (World.averageTemp < 20)
-			temp *= Random.Range(.8f, 1f);
-		else if (World.averageTemp > 20)
-			temp *= Random.Range(1f, 2f);
+		if (fireCount < numFires) {
+			Fire newFire = Instantiate(firePrefab, RandomPoint(margin), Quaternion.identity, transform).GetComponent<Fire>();
+			float temp = .5f;
+			if (World.averageTemp < 10)
+				temp *= Random.Range(.5f, .8f);
+			else if (World.averageTemp < 20)
+				temp *= Random.Range(.8f, 1f);
+			else if (World.averageTemp > 20)
+				temp *= Random.Range(1f, 2f);
 
-		newFire.transform.localScale *= temp;
-		newFire.health *= temp;
+			newFire.transform.localScale *= temp;
+			newFire.health *= temp;
+		}
 
 		yield return new WaitForSeconds(Random.Range(spawnDelayMin, spawnDelayMin * 1.5f));
 		if (timer > 0)
@@ -105,4 +109,6 @@ public class FireController : RegionController {
 			spray.currentWater = .1f;
 		prompt.SetActive(false);
 	}
+
+	double ProcessScore() => (Math.Log(Math.E * damage / damageLimit) + .1) / 1.1; // negative under like 60
 }

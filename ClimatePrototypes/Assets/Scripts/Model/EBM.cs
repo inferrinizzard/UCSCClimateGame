@@ -5,14 +5,14 @@ using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 
 public partial class EBM {
-	// double overload
+	// array overload
 	public static Vector<double> Humidity(double[] temp, double press) => Humidity(Vector<double>.Build.Dense(temp), press);
 	// calculates saturation specific humidity based on temperature
 	public static Vector<double> Humidity(Vector<double> temp, double press) {
-		double es0 = 610.78;
-		double t0 = 273.16;
-		double Rv = 461.5;
-		double ep = 0.622;
+		const double es0 = 610.78;
+		const double t0 = 273.16;
+		const double Rv = 461.5;
+		const double ep = 0.622;
 		Vector<double> es = es0 * (-Lv / Rv * (1 / (temp + 273.15f) - 1 / t0)).PointwiseExp();
 		Vector<double> qs = ep * es / press;
 		return qs;
@@ -30,31 +30,31 @@ public partial class EBM {
 		int p = -1, m = -1;
 		for (int i = 0; i < years; i++) {
 			for (int j = 0; j < timesteps; j++) {
-				m++;
-				if ((p + 1) * 10 == m) {
+				if ((p + 1) * 10 == ++m) {
 					p++;
 					E100.SetColumn(p, E);
 					T100.SetColumn(p, T);
 				}
-				Vector<double> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x); //aw*(E > 0) + ai*(E < 0)
-				Vector<double> C = alpha.PointwiseMultiply(S.Row(j)) + cg_tau * Tg - A; //alpha*S[i, :] + cg_tau*Tg - A
+				Vector<double> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x); // aw*(E > 0) + ai*(E < 0)
+				Vector<double> C = alpha.PointwiseMultiply(S.Row(j)) + cg_tau * Tg - A; // alpha*S[i, :] + cg_tau*Tg - A
 				Vector<double> T0 = C / (M - k * Lf / E);
-				T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0)); //E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)
+				T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0)); // E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)
 				E = E + dt * (C - M * T + Fb + F);
 				Vector<double> q = Rh * Humidity(Tg, Ps);
 				Vector<double> lht = dt * (diffop * (Lv * q / cp));
 				Tg = (kappa - Matrix<double>.Build.DiagonalOfDiagonalVector(
-					Sign0(Less, Sign0(Less, E, T0), dc / (M - k * Lf / E)) //np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)
+					Sign0(Less, Sign0(Less, E, T0), dc / (M - k * Lf / E)) // np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)
 				)).Solve(Tg + lht + dt_tau * (
-					Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A). //E/cw*(E >= 0)+(ai*S[i, :]-A)
-					Map2((a, b) => b != 0 ? a / b : 0, //funky division
-						Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E)) //(M-kLf/E)*(T0 < 0)*(E < 0)
+					Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A). // E/cw*(E >= 0)+(ai*S[i, :]-A)
+					Map2((a, b) => b != 0 ? a / b : 0, // funky division
+						Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E)) // (M-kLf/E)*(T0 < 0)*(E < 0)
 				));
 			}
 		}
+		// TODO: rewrite this?
 		return (
-			Matrix<double>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Skip(T100.ColumnCount - 100).ToArray()), //Tfin
-			Matrix<double>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Skip(E100.ColumnCount - 100).ToArray()) //Efin
+			Matrix<double>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Skip(T100.ColumnCount - 100).ToArray()), // Tfin
+			Matrix<double>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Skip(E100.ColumnCount - 100).ToArray()) // Efin
 		);
 	}
 	static Matrix<double> MultiplyRowWise(Matrix<double> mat, Vector<double> vec) => mat.MapIndexed((x, y, i) => i * vec[x]);
