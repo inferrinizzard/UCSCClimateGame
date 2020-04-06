@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 [System.Serializable]
 public class CityScript : MonoBehaviour {
+	[SerializeField] Button returnButton = default;
 	[SerializeField] Text mainTitle = default;
 	[SerializeField] Text leftText = default, rightText = default;
 	[SerializeField] Text leftTitle = default, rightTitle = default;
@@ -54,6 +55,8 @@ public class CityScript : MonoBehaviour {
 		currentBillList = bills[currentBillDifficulty];
 		currentBill = bills[currentBillDifficulty][currentBillIndex];
 		PrintBill(currentBill);
+
+		returnButton.onClick.AddListener(() => GameManager.Transition("Overworld"));
 	}
 
 	public static Dictionary<string, List<Bill>> LoadBills() =>
