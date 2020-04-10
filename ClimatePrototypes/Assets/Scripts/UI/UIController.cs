@@ -5,12 +5,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : Singleton<UIController> {
+	public Text worldNameText;
 	[SerializeField] Text moneyText = default;
 	[SerializeField] Text turnText = default;
 	[SerializeField] Button backButton = default;
 	[SerializeField] GameObject returnPrompt = default;
 
-	void Start() {
+	void OnEnable() {
+		worldNameText.text = World.worldName;
 		turnText.text = $"Year {World.turn}";
 	}
 
@@ -22,7 +24,7 @@ public class UIController : Singleton<UIController> {
 
 	public void ToggleBackButton(bool on) => backButton.gameObject.SetActive(on);
 
-	public void UIQuitGame() => GameManager.QuitGame();
+	public void UIQuitGame(int status) => GameManager.QuitGame(status);
 
 	public void UITransition(string level) {
 		returnPrompt.SetActive(false);

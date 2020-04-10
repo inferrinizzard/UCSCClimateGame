@@ -10,6 +10,7 @@ using UnityEngine;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
 public static class World {
+	public static string worldName = "";
 	public static float money = 100f, publicOpinion = 0f;
 	public static int turn = 1;
 	public static double[] temp, energy, precip;

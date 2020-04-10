@@ -116,9 +116,12 @@ public class CityScript : MonoBehaviour {
 
 	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
 	{
-		for (int i = 0; i < text.Length - 1; i++) {
-			print.text = text.Substring(0, i);
+		print.text = "";
+		for (int i = 0; i < text.Length; i++) {
+			print.text += text[i];
 			yield return new WaitForSeconds(speed);
 		}
 	}
+
+	public void Return() => GameManager.Transition("Overworld");
 }
