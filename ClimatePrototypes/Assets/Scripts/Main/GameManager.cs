@@ -75,13 +75,13 @@ public class GameManager : Singleton<GameManager> {
 			// instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
 			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && calcDone) {
+				Time.timeScale = 1;
+				asyncLoad.allowSceneActivation = true;
+				if (name == "Overworld")
+					UIController.Instance.IncrementTurn();
+				UIController.Instance.SetPrompt(false);
 				yield break;
 			}
 		}
-		Time.timeScale = 1;
-		asyncLoad.allowSceneActivation = true;
-		if (name == "Overworld")
-			UIController.Instance.IncrementTurn();
-		UIController.Instance.SetPrompt(false);
 	}
 }

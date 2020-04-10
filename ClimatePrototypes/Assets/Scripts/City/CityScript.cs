@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-// using System.Web;
 
 using Newtonsoft.Json;
 
 using UnityEngine;
 using UnityEngine.UI;
 
-[System.Serializable]
-public class CityScript : MonoBehaviour {
-	[SerializeField] Text mainTitle = default;
+public class CityScript : RegionController {
+	[SerializeField] Text mainTitle = default; // TODO: fix
 	[SerializeField] Text leftText = default, rightText = default;
 	[SerializeField] Text leftTitle = default, rightTitle = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
+
+	[SerializeField] SpriteRenderer leftPerson = default, rightPerson = default;
+	[SerializeField] Transform personContainer = default;
 
 	Dictionary<BillDifficulty, List<Bill>> bills = new Dictionary<BillDifficulty, List<Bill>>();
 	public enum BillDifficulty { Easy, Med, Hard }
@@ -54,6 +55,9 @@ public class CityScript : MonoBehaviour {
 		currentBillList = bills[currentDifficulty];
 		currentBill = bills[currentDifficulty][currentBillIndex];
 		PrintBill(currentBill);
+
+		var persons = personContainer.GetComponentsInChildren<SpriteRenderer>().Select(sr => sr.sprite).OrderBy(x => Random.value).Take(2).ToList();
+		(leftPerson.sprite, rightPerson.sprite) = (persons[0], persons[1]);
 	}
 
 	public static Dictionary<BillDifficulty, List<Bill>> LoadBills() =>
@@ -97,6 +101,10 @@ public class CityScript : MonoBehaviour {
 	}
 
 	IEnumerator Typewriter(Text print, string text, float delay) { //given text to print, text ref, and print speed, does typewriter effect
+		if (print.text == "Title") {
+			print.text = text;
+			print.transform.position += print.preferredWidth * Vector3.right;
+		}
 		print.text = "";
 		for (int i = 0; i < text.Length; i++) {
 			print.text += text[i];

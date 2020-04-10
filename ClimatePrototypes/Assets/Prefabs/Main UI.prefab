@@ -1352,6 +1352,7 @@ MonoBehaviour:
   moneyText: {fileID: 8003398447145238658}
   turnText: {fileID: 8003398446598069349}
   backButton: {fileID: 8003398447642868655}
+  exitButton: {fileID: 8003398447528229762}
   returnPrompt: {fileID: 1849801715016199721}
 --- !u!1 &8003398447145238657
 GameObject:
