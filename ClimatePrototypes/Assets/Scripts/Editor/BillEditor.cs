@@ -9,7 +9,7 @@ using UnityEditor;
 using UnityEngine;
 
 public class BillEditor : EditorWindow {
-	static Dictionary<string, List<CityScript.Bill>> bills = new Dictionary<string, List<CityScript.Bill>>();
+	static Dictionary<CityScript.BillDifficulty, List<CityScript.Bill>> bills = new Dictionary<CityScript.BillDifficulty, List<CityScript.Bill>>();
 	static int index = 0;
 
 	static CityScript.Bill newBill = new CityScript.Bill("", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
@@ -21,15 +21,13 @@ public class BillEditor : EditorWindow {
 	static BillEditor self = null;
 
 	static bool deletePrompt = false;
-	Decks d;
-
-	enum Decks { easy, med, hard }
+	CityScript.BillDifficulty d = CityScript.BillDifficulty.Easy;
 
 	[MenuItem("Window/Bill Editor")]
 	static void Awake() {
 		bills = CityScript.LoadBills();
 		self = GetWindow<BillEditor>();
-		self.AssignBill(BillEditor.bills["easy"][index]);
+		self.AssignBill(BillEditor.bills[CityScript.BillDifficulty.Easy][index]);
 		EditorStyles.textArea.wordWrap = true;
 		EditorStyles.textArea.clipping = TextClipping.Overflow;
 	}
@@ -44,14 +42,13 @@ public class BillEditor : EditorWindow {
 
 		if (bills.Count == 0) {
 			bills = CityScript.LoadBills();
-			self.AssignBill(BillEditor.bills["easy"][index]);
+			self.AssignBill(BillEditor.bills[CityScript.BillDifficulty.Easy][index]);
 		}
 
 		GUILayout.Label("Edit a Bill", EditorStyles.boldLabel);
 
 		EditorGUI.BeginChangeCheck();
-		d = (Decks) EditorGUILayout.EnumPopup("Bill Deck", d);
-		string deckName = d.ToString();
+		var deckName = (CityScript.BillDifficulty) EditorGUILayout.EnumPopup("Bill Deck", d);
 		if (EditorGUI.EndChangeCheck())
 			AssignBill(BillEditor.bills[deckName][index]);
 
@@ -76,7 +73,7 @@ public class BillEditor : EditorWindow {
 				GUILayout.Label("Body");
 				newBill[section]["body"] = EditorGUILayout.TextArea(newBill[section]["body"], EditorStyles.textArea, GUILayout.MinHeight(position.height / 2 - 100), GUILayout.MaxWidth(position.width * .49f));
 				GUILayout.Label("Tags");
-				newTags[section].Keys.ForEach(k => newTags[section][k] = EditorGUILayout.FloatField(tagsVerbose[k], newTags[section][k]));
+				newTags[section] = newTags[section].Select(kvp => new KeyValuePair<string, float>(kvp.Key, EditorGUILayout.FloatField(tagsVerbose[kvp.Key], newTags[section][kvp.Key]))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 				GUILayout.EndVertical();
 			});
 			GUILayout.EndHorizontal();
@@ -119,19 +116,20 @@ public class BillEditor : EditorWindow {
 		newBill.name = b.name;
 		newBill.left = b.left;
 		newBill.right = b.right;
-		newTags.Keys.ForEach(section => {
-			newTags[section] = newTags[section].ToDictionary(kvp => kvp.Key, kvp => 0f);
+		newTags = newTags.Select(section => {
+			var tags = newTags[section.Key].ToDictionary(kvp => kvp.Key, kvp => 0f);
 			if (b.name != "new bill")
-				b[section]["tags"].Split().ForEach(tag => {
+				b[section.Key]["tags"].Split().ForEach(tag => {
 					var match = CityScript.SplitTag(tag);
-					newTags[section][match[0]] = float.Parse(match[2]);
+					tags[match[0]] = float.Parse(match[1] + match[2]);
 				});
-		});
+			return new KeyValuePair<string, Dictionary<string, float>>(section.Key, tags);
+		}).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 	}
 
-	void WriteToFile(string deckName) {
+	void WriteToFile(CityScript.BillDifficulty deckName) {
 		string json = JsonConvert.SerializeObject(bills[deckName], Formatting.Indented);
-		using(StreamWriter writer = new StreamWriter(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{deckName}.json", SearchOption.AllDirectories) [0])) {
+		using(StreamWriter writer = new StreamWriter(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{deckName.ToString().ToLower()}.json", SearchOption.AllDirectories) [0])) {
 			writer.Write(json);
 		}
 	}

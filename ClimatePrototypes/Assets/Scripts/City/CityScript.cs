@@ -17,9 +17,9 @@ public class CityScript : MonoBehaviour {
 	[SerializeField] Text leftTitle = default, rightTitle = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
-	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
-	//enum BillDifficulty {easy, med, hard};
-	string currentBillDifficulty = "easy";
+	Dictionary<BillDifficulty, List<Bill>> bills = new Dictionary<BillDifficulty, List<Bill>>();
+	public enum BillDifficulty { Easy, Med, Hard }
+	BillDifficulty currentDifficulty = BillDifficulty.Easy;
 	List<Bill> currentBillList = new List<Bill>();
 	int currentBillIndex = 0;
 	Bill currentBill;
@@ -51,22 +51,18 @@ public class CityScript : MonoBehaviour {
 
 	void Start() {
 		bills = LoadBills();
-		currentBillList = bills[currentBillDifficulty];
-		currentBill = bills[currentBillDifficulty][currentBillIndex];
+		currentBillList = bills[currentDifficulty];
+		currentBill = bills[currentDifficulty][currentBillIndex];
 		PrintBill(currentBill);
 	}
 
-	public static Dictionary<string, List<Bill>> LoadBills() =>
+	public static Dictionary<BillDifficulty, List<Bill>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level => {
 			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories) [0])) {
 				string json = reader.ReadToEnd();
 				return (level, JsonConvert.DeserializeObject<List<Bill>>(json));
 			}
-		}).ToDictionary(x => x.Item1, x => x.Item2);
-
-	void Update() {
-		// currentBill = GetNextBill();
-	}
+		}).ToDictionary(x => (BillDifficulty) System.Enum.Parse(typeof(BillDifficulty), x.Item1, true), x => x.Item2);
 
 	public void ChooseBill(string side) {
 		currentBill[side]["tags"].Split().ForEach(
@@ -79,7 +75,7 @@ public class CityScript : MonoBehaviour {
 		// PrintBill(currentBill);
 	}
 
-	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|-)");
+	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|[-])");
 
 	void PrintBill(Bill currentBill) {
 		var mainCo = StartCoroutine(Typewriter(mainTitle, currentBill.name, speed));
@@ -94,32 +90,17 @@ public class CityScript : MonoBehaviour {
 		if (currentBillIndex < currentBillList.Count - 1) {
 			currentBillIndex += 1;
 		} else {
+			currentDifficulty = (BillDifficulty) (((int) (currentDifficulty + 1)) % 3);
 			currentBillIndex = 0;
-			switch (currentBillDifficulty) {
-				case "easy":
-					currentBillDifficulty = "med";
-					break;
-				case "med":
-					currentBillDifficulty = "hard";
-					break;
-				case "hard":
-					currentBillDifficulty = "easy"; // loop back?
-					break;
-					// null if exaust TODO: message
-				default:
-					break;
-
-			}
 		}
-		return bills[currentBillDifficulty][currentBillIndex];
+		return bills[currentDifficulty][currentBillIndex];
 	}
 
-	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
-	{
+	IEnumerator Typewriter(Text print, string text, float delay) { //given text to print, text ref, and print speed, does typewriter effect
 		print.text = "";
 		for (int i = 0; i < text.Length; i++) {
 			print.text += text[i];
-			yield return new WaitForSeconds(speed);
+			yield return new WaitForSeconds(delay);
 		}
 	}
 
