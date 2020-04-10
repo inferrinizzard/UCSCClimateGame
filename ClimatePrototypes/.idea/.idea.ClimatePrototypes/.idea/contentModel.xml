@@ -7,6 +7,7 @@
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="AgentMovement.cs" t="Include" />
         <e p="External Libs" t="Include">
           <e p="NuGet" t="Include">
             <e p="LICENSE.txt" t="Include" />
