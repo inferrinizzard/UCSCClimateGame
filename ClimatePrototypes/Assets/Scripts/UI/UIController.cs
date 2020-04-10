@@ -9,6 +9,7 @@ public class UIController : Singleton<UIController> {
 	[SerializeField] Text moneyText = default;
 	[SerializeField] Text turnText = default;
 	[SerializeField] Button backButton = default;
+	[SerializeField] Button exitButton = default;
 	[SerializeField] GameObject returnPrompt = default;
 
 	void OnEnable() {
@@ -22,9 +23,12 @@ public class UIController : Singleton<UIController> {
 
 	public void IncrementTurn() => turnText.text = $"Year {++World.turn}";
 
-	public void ToggleBackButton(bool on) => backButton.gameObject.SetActive(on);
+	public void ToggleBackButton(bool on) {
+		backButton.gameObject.SetActive(on);
+		exitButton.gameObject.SetActive(!on);
+	}
 
-	public void UIQuitGame(int status) => GameManager.QuitGame(status);
+	public void UIQuitGame(int status) => GameManager.Instance.QuitGame(status);
 
 	public void UITransition(string level) {
 		returnPrompt.SetActive(false);

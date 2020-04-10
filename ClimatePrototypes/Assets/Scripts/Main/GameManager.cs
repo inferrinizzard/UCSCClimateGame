@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class GameManager : Singleton<GameManager> {
 	public bool runModel = true;
 	[SerializeField] GameObject loadingScreen = default;
-	[SerializeField] GameObject exitPrompt = default;
+	[SerializeField] GameObject quitPrompt = default;
 	bool titleScreen = true;
 	[HideInInspector] public Scene? titleScene = null;
 
@@ -32,13 +32,13 @@ public class GameManager : Singleton<GameManager> {
 		}
 	}
 
-	public static void QuitGame(int exitStatus = 0) {
+	public void QuitGame(int exitStatus = 0) {
 		switch (exitStatus) {
 			case 0:
-				instance.exitPrompt.SetActive(true);
+				instance.quitPrompt.SetActive(true);
 				break;
 			case 1:
-				instance.exitPrompt.SetActive(false);
+				instance.quitPrompt.SetActive(false);
 				break;
 			case 2:
 				Application.Quit();
