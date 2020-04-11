@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Overworld.unity
     guid: 2e6700a2e02ebd94cbde7ac0f6e71bec
   - enabled: 0
-    path: Assets/__DELETED_GUID_Trash/a4c93712153df9884ff359e4e8a899e3
+    path: 
     guid: a4c93712153df9884ff359e4e8a899e3
   - enabled: 1
     path: Assets/Scenes/City.unity
@@ -18,9 +18,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Forest.unity
     guid: 7cefa61cc72fd554382ddba98829146e
   - enabled: 0
-    path: Assets/Scenes/Fire.unity
+    path: 
     guid: 2e49922ccaf2565498eaf3753eac7fa4
   - enabled: 1
     path: Assets/Scenes/Arctic.unity
     guid: fbcce027f5bed4ef3aca5463e329fb16
+  - enabled: 1
+    path: Assets/Scenes/ForestMainScreen.unity
+    guid: d8e401829efc276449df3a0d9f8a7114
+  - enabled: 1
+    path: Assets/Scenes/Xueer_Forest.unity
+    guid: 74dac3a804f40004a8ecd31e0eb79539
   m_configObjects: {}
