@@ -12,6 +12,7 @@ public class GameManager : Singleton<GameManager> {
 	[SerializeField] GameObject quitPrompt = default;
 	bool titleScreen = true;
 	[HideInInspector] public Scene? titleScene = null;
+	RegionController currentRegion;
 
 	public override void Awake() {
 		base.Awake();
@@ -51,6 +52,14 @@ public class GameManager : Singleton<GameManager> {
 	void InitScene(Scene to, Scene from) {
 		instance.loadingScreen.SetActive(false);
 		UIController.Instance.ToggleBackButton(to.name != "Overworld");
+		if (to.name != "Overworld") {
+			foreach (GameObject o in to.GetRootGameObjects())
+				if (o.TryComponent<RegionController>(out RegionController controller)) {
+					controller.Intro();
+					break;
+				}
+			// var controller = FindObjectOfType<RegionController>();
+		}
 	}
 
 	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));

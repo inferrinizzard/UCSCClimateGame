@@ -73,4 +73,13 @@ public static class Extensions {
 				group.AddRange(child.GetComponentsInChildren<T>());
 		return group.ToArray();
 	}
+
+	public static bool TryComponent<T>(this MonoBehaviour @this, out T c) where T : Component => @this.TryGetComponent(out c);
+	public static bool TryComponent<T>(this MonoBehaviour @this) where T : Component => @this.TryGetComponent(out T c);
+	public static bool TryComponent<T>(this GameObject @this, out T c) where T : Component => @this.TryGetComponent(out c);
+	public static bool TryComponent<T>(this GameObject @this) where T : Component => @this.TryGetComponent(out T c);
+	public static bool TryComponent<T>(this Component @this, out T c) where T : Component => @this.TryGetComponent(out c);
+	public static bool TryComponent<T>(this Component @this) where T : Component => @this.TryGetComponent(out T c);
+	public static bool TryComponent<T>(this Transform @this, out T c) where T : Component => @this.TryGetComponent(out c);
+	public static bool TryComponent<T>(this Transform @this) where T : Component => @this.TryGetComponent(out T c);
 }

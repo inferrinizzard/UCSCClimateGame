@@ -82,11 +82,11 @@ public class CityScript : RegionController {
 	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|[-])");
 
 	void PrintBill(Bill currentBill) {
-		var mainCo = StartCoroutine(Typewriter(mainTitle, currentBill.name, speed));
-		var tCoL = StartCoroutine(Typewriter(leftTitle, currentBill.left["title"], speed));
-		var tCoR = StartCoroutine(Typewriter(rightTitle, currentBill.right["title"], speed));
-		var bCoL = StartCoroutine(Typewriter(leftText, currentBill.left["body"], speed));
-		var bCoR = StartCoroutine(Typewriter(rightText, currentBill.right["body"], speed));
+		var mainCo = StartCoroutine(UIController.Typewriter(mainTitle, currentBill.name, speed));
+		var tCoL = StartCoroutine(UIController.Typewriter(leftTitle, currentBill.left["title"], speed));
+		var tCoR = StartCoroutine(UIController.Typewriter(rightTitle, currentBill.right["title"], speed));
+		var bCoL = StartCoroutine(UIController.Typewriter(leftText, currentBill.left["body"], speed));
+		var bCoR = StartCoroutine(UIController.Typewriter(rightText, currentBill.right["body"], speed));
 		coroutines = new List<Coroutine> { mainCo, tCoL, tCoR, bCoL, bCoR };
 	}
 
@@ -98,18 +98,6 @@ public class CityScript : RegionController {
 			currentBillIndex = 0;
 		}
 		return bills[currentDifficulty][currentBillIndex];
-	}
-
-	IEnumerator Typewriter(Text print, string text, float delay) { //given text to print, text ref, and print speed, does typewriter effect
-		if (print.text == "Title") {
-			print.text = text;
-			print.transform.position += print.preferredWidth * Vector3.right;
-		}
-		print.text = "";
-		for (int i = 0; i < text.Length; i++) {
-			print.text += text[i];
-			yield return new WaitForSeconds(delay);
-		}
 	}
 
 	public void Return() => GameManager.Transition("Overworld");
