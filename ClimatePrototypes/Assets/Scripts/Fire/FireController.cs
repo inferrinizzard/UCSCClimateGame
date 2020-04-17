@@ -42,9 +42,7 @@ public class FireController : RegionController {
 			prompt.SetActive(false);
 			Cursor.visible = true;
 			Pause();
-			TriggerUpdate(() =>
-				World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore())
-			);
+			TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
 		}
 
 		if (hovering && flash == null)
@@ -110,5 +108,5 @@ public class FireController : RegionController {
 		prompt.SetActive(false);
 	}
 
-	double ProcessScore() => (System.Math.Log(System.Math.E * damage / damageLimit) + .1) / 1.1; // negative under like 60
+	double ProcessScore() => (System.Math.Log(System.Math.E * damage / damageLimit) + .1) / 1.1; // negative under like 60, returns scale of 0-1ish
 }
