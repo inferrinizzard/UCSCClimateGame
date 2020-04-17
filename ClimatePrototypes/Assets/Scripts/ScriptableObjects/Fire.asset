@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a54a9f5eaa0a372429db635ab9f23e33, type: 3}
-  m_Name: Arctic
+  m_Name: Fire
   m_EditorClassIdentifier: 
   tutorial:
-  - Hello, welcome to the Arctic!
-  - Use the A|D Keys or the Left|Right Arrow Keys to move your paddle!
-  - Block incoming solar radiation from space!
+  - Hello, this is the Subtropics!
+  - There are ongoing wildfires, Click and Hold to put them out!
+  - Try not to run out of water!
   prefab: {fileID: 0}

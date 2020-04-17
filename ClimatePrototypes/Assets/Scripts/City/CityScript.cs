@@ -54,7 +54,8 @@ public class CityScript : RegionController {
 		bills = LoadBills();
 		currentBillList = bills[currentDifficulty];
 		currentBill = bills[currentDifficulty][currentBillIndex];
-		PrintBill(currentBill);
+		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => PrintBill(currentBill)));
+		// PrintBill(currentBill);
 
 		var persons = personContainer.GetComponentsInChildren<SpriteRenderer>().Select(sr => sr.sprite).OrderBy(x => Random.value).Take(2).ToList();
 		(leftPerson.sprite, rightPerson.sprite) = (persons[0], persons[1]);

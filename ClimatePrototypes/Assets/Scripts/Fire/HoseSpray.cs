@@ -21,25 +21,28 @@ public class HoseSpray : MonoBehaviour {
 	}
 
 	void Update() {
-		Cursor.visible = false;
-		if (Input.GetMouseButtonDown(0) && currentWater > 0)
-			col.gameObject.SetActive(true);
-		else if (Input.GetMouseButtonUp(0) || currentWater <= 0)
-			col.gameObject.SetActive(false);
-		else if (Input.GetMouseButton(0) && currentWater > 0) {
-			currentWater -= waterRate;
-			List<Collider2D> hits = new List<Collider2D>();
-			if (col.OverlapCollider((new ContactFilter2D()).NoFilter(), hits) > 0)
-				foreach (Collider2D fire in hits)
-					fire.GetComponent<Fire>()?.Fade();
-		} else if (Time.timeScale != 0) {
-			if (currentWater < maxWater)
-				currentWater += recoverRate;
-		}
+		if (!GameManager.Instance.currentRegion.paused) {
+			Cursor.visible = false;
+			if (Input.GetMouseButtonDown(0) && currentWater > 0)
+				col.gameObject.SetActive(true);
+			else if (Input.GetMouseButtonUp(0) || currentWater <= 0)
+				col.gameObject.SetActive(false);
+			else if (Input.GetMouseButton(0) && currentWater > 0) {
+				currentWater -= waterRate;
+				List<Collider2D> hits = new List<Collider2D>();
+				if (col.OverlapCollider((new ContactFilter2D()).NoFilter(), hits) > 0)
+					foreach (Collider2D fire in hits)
+						fire.GetComponent<Fire>()?.Fade();
+			} else if (Time.timeScale != 0) {
+				if (currentWater < maxWater)
+					currentWater += recoverRate;
+			}
 
-		if (currentWater > 0)
-			transform.position = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x - 200f, Input.mousePosition.y, cam.nearClipPlane)); // use bounds of sprite
-		else
+			if (currentWater > 0)
+				transform.position = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x - 200f, Input.mousePosition.y, cam.nearClipPlane)); // use bounds of sprite
+			else
+				Cursor.visible = true;
+		} else
 			Cursor.visible = true;
 	}
 }

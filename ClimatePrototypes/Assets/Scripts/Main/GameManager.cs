@@ -12,7 +12,7 @@ public class GameManager : Singleton<GameManager> {
 	[SerializeField] GameObject quitPrompt = default;
 	bool titleScreen = true;
 	[HideInInspector] public Scene? titleScene = null;
-	RegionController currentRegion;
+	public RegionController currentRegion;
 
 	public override void Awake() {
 		base.Awake();
@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	void Start() {
+		FindCurrentRegion(SceneManager.GetActiveScene());
 		SceneManager.activeSceneChanged += instance.InitScene;
 
 		if (titleScreen && SceneManager.GetActiveScene().name == "Overworld" && titleScene == null) {
@@ -49,17 +50,19 @@ public class GameManager : Singleton<GameManager> {
 		}
 	}
 
-	void InitScene(Scene to, Scene from) {
+	void InitScene(Scene from, Scene to) {
 		instance.loadingScreen.SetActive(false);
 		UIController.Instance.ToggleBackButton(to.name != "Overworld");
-		if (to.name != "Overworld") {
-			foreach (GameObject o in to.GetRootGameObjects())
-				if (o.TryComponent<RegionController>(out RegionController controller)) {
-					controller.Intro();
-					break;
-				}
-			// var controller = FindObjectOfType<RegionController>();
-		}
+		if (to.name != "Overworld")
+			FindCurrentRegion(to);
+	}
+
+	void FindCurrentRegion(Scene s) {
+		foreach (GameObject o in s.GetRootGameObjects())
+			if (o.TryComponent<RegionController>(out currentRegion)) {
+				currentRegion.Intro();
+				break;
+			}
 	}
 
 	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));

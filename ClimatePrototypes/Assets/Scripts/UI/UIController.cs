@@ -56,14 +56,17 @@ public class UIController : Singleton<UIController> {
 	}
 
 	public static IEnumerator ClickToAdvance(Text text, string[] words, GameObject button = null) {
+		var clickPrompt = text.GetComponentOnlyInChildren<Text>()?.gameObject;
 		yield return instance.StartCoroutine(Typewriter(text, words[0]));
-		text.GetComponentOnlyInChildren<Text>()?.gameObject.SetActive(true);
+		clickPrompt.SetActive(true);
 
 		for (int i = 1; i < words.Length; i++) {
 			yield return new WaitForMouseDown();
+			clickPrompt.SetActive(false);
 			yield return instance.StartCoroutine(Typewriter(text, words[i]));
+			clickPrompt.SetActive(true);
 			if (i == words.Length - 1) {
-				text.GetComponentOnlyInChildren<Text>()?.gameObject.SetActive(false);
+				clickPrompt.SetActive(false);
 				if (button)
 					button.SetActive(true);
 			}
