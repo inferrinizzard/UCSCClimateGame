@@ -31,7 +31,7 @@ public static class Extensions {
 		e.Dispose();
 	}
 
-	public static void print(this UnityEngine.MonoBehaviour @this, params object[] words) => UnityEngine.Debug.Log(string.Join(" ", words));
+	public static void Print(this UnityEngine.MonoBehaviour @this, params object[] words) => UnityEngine.Debug.Log(string.Join(" ", words));
 	public static dynamic Print(this object @this) {
 		UnityEngine.Debug.Log(@this);
 		return @this;

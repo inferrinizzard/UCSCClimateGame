@@ -53,16 +53,18 @@ public class GameManager : Singleton<GameManager> {
 	void InitScene(Scene from, Scene to) {
 		instance.loadingScreen.SetActive(false);
 		UIController.Instance.ToggleBackButton(to.name != "Overworld");
-		if (to.name != "Overworld")
-			FindCurrentRegion(to);
+		FindCurrentRegion(to);
+		// if (to.name == "Overworld")
+		// 	this.Print(World.averageTemp, EBM.F); // temp limit: start + 2 (17.5?)
 	}
 
 	void FindCurrentRegion(Scene s) {
-		foreach (GameObject o in s.GetRootGameObjects())
-			if (o.TryComponent<RegionController>(out currentRegion)) {
-				currentRegion.Intro();
-				break;
-			}
+		if (s.name != "Overworld")
+			foreach (GameObject o in s.GetRootGameObjects())
+				if (o.TryComponent<RegionController>(out currentRegion)) {
+					currentRegion.Intro();
+					break;
+				}
 	}
 
 	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));
