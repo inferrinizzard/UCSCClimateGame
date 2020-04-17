@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,6 +15,7 @@ public class PlantTree : MonoBehaviour
     public bool canPlantTree; // flag to track if placing agent or place tree
     public bool canPlantAgent;
     public GameObject agentPlacedPrefab;
+    public GameObject agentClickedPrefab;
     public GameObject shadowPrefab;
     private GameObject currentShadow;
 
@@ -29,8 +31,8 @@ public class PlantTree : MonoBehaviour
     void Start()
     {
         agentSelected = null;
-        plantActionSprite.color = Color.clear;
-        cutActionSprite.color = Color.clear;
+        //plantActionSprite.color = Color.clear;
+        //cutActionSprite.color = Color.clear;
         
         canPlantTree = true;
         canPlantAgent = false;
@@ -46,8 +48,6 @@ public class PlantTree : MonoBehaviour
         
         
     }
-
-    // Update is called once per frame
     void Update()
     {
         // Hightlight tiles
@@ -60,14 +60,7 @@ public class PlantTree : MonoBehaviour
         if (groundGridInfo.ContainsKey(cellPositionHover))
         {
             // Dangerous, changing tile directly
-            /*Tile hoverTile = tilemap.GetTile<Tile>(cellPositionHover);
-            Debug.Log(hoverTile);
-            hoverTile.color = Color.green;*/
-            if (canPlantTree)
-            {
-                
-            }
-            else
+            if (!canPlantTree || agentSelected != null)
             {
                 // place shadow
                 if (currentShadow is null)
@@ -79,7 +72,6 @@ public class PlantTree : MonoBehaviour
                     currentShadow.transform.position = spawnHoverPosition;
                 }
             }
-            
         }
 
         
@@ -104,8 +96,6 @@ public class PlantTree : MonoBehaviour
                     
                     agentSelected.transform.position = spawnPosition;
                 }
-
-                
             }
             else  
             {
@@ -113,8 +103,18 @@ public class PlantTree : MonoBehaviour
                 if (canPlantAgent)
                 {
                     Instantiate(agentPlacedPrefab, spawnPosition, transform.rotation);
+                    agentClickedPrefab.SetActive(false);
                     canPlantAgent = false;
                 }
+                
+                // move selectedAgent to selected target tile
+                if (agentSelected != null)
+                {
+                    GameObject AIGoal = new GameObject();
+                    AIGoal.transform.position = spawnPosition;
+                    agentSelected.GetComponent<AIDestinationSetter>().target = AIGoal.transform;
+                }
+                
                 
                 // cut down current tile tree
                 if (gridTreeInfo.ContainsKey(cellPosition) && cutActionSprite.color == Color.red && agentSelected != null)

@@ -43,7 +43,10 @@ public class AgentMovement : MonoBehaviour
 
                 plantTreeScript.agentSelected = gameObject;
                 
-                GetComponent<SpriteRenderer>().color = Color.red;
+                GetComponent<SpriteRenderer>().color = Color.yellow;
+                
+                // select future tiles
+                
                 // enable action bar
                 plantActionSprite.color = Color.yellow;
                 cutActionSprite.color = Color.yellow;

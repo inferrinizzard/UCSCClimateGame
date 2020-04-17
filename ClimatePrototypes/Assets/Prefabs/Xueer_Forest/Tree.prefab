@@ -92,11 +92,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72e6571aed3ba7b40b537024fbda1476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  treeStage1: {fileID: 21300000, guid: 27354848afe0fd943871eff23c7e6c13, type: 3}
-  treeStage2: {fileID: 21300000, guid: b0d1e64367fbbed4dbb86951a99eb933, type: 3}
-  treeStage3: {fileID: 21300000, guid: 1947c1123ff785d42b30f05501e400f4, type: 3}
-  treeStage4: {fileID: 21300000, guid: 38ee9be38b4f01c4f910472556718e15, type: 3}
-  treeDeathStage: {fileID: 21300000, guid: 12baecacc059f2749bfae3b01db26b5e, type: 3}
+  treeStage1: {fileID: 21300000, guid: 7f3725e3641c85a4bba99fd254900e35, type: 3}
+  treeStage2: {fileID: 21300000, guid: 41d9c43b8e1400a43bca7efa9e1cecd0, type: 3}
+  treeStage3: {fileID: 21300000, guid: 85c8c2c11673b3e4897677c187500e5e, type: 3}
+  treeStage4: {fileID: 21300000, guid: 397c80c3b06a8cb40afcbbf4a69c75a4, type: 3}
+  treeDeathStage: {fileID: 21300000, guid: 6fe4a344786bd664d97c3466b98eaf35, type: 3}
   tilemap: {fileID: 4660067031876766533, guid: 72ec8059610aa844b91dde3c2ddca36f, type: 3}
   treeGrid: {fileID: 87416688264313432, guid: b9a0f4395bc60094a94433fc9cbb319d, type: 3}
   treeStage: 1
