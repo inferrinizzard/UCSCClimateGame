@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class CityScript : RegionController {
 	[SerializeField] Text mainTitle = default; // TODO: fix
-	[SerializeField] Text leftText = default, rightText = default;
+	[SerializeField] TMPro.TextMeshProUGUI leftText = default, rightText = default;
 	[SerializeField] Text leftTitle = default, rightTitle = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
@@ -54,7 +54,10 @@ public class CityScript : RegionController {
 		bills = LoadBills();
 		currentBillList = bills[currentDifficulty];
 		currentBill = bills[currentDifficulty][currentBillIndex];
-		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => PrintBill(currentBill)));
+		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => {
+			mainTitle.transform.root.gameObject.SetActive(true);
+			PrintBill(currentBill);
+		}));
 		// PrintBill(currentBill);
 
 		var persons = personContainer.GetComponentsInChildren<SpriteRenderer>().Select(sr => sr.sprite).OrderBy(x => Random.value).Take(2).ToList();
@@ -92,10 +95,8 @@ public class CityScript : RegionController {
 	}
 
 	Bill GetNextBill() {
-		if (currentBillIndex < currentBillList.Count - 1) {
-			currentBillIndex += 1;
-		} else {
-			currentDifficulty = (BillDifficulty) (((int) (currentDifficulty + 1)) % 3);
+		if (currentBillIndex++ >= currentBillList.Count - 1) {
+			currentDifficulty = (BillDifficulty) (((int) currentDifficulty + 1) % 3);
 			currentBillIndex = 0;
 		}
 		return bills[currentDifficulty][currentBillIndex];
