@@ -12,8 +12,10 @@ using UnityEngine.UI;
 public class Graph : MonoBehaviour {
 	LineRenderer[] lr;
 	public static Dictionary<string, double[]> rcp;
+
 	public void Start() {
-		rcp = JsonConvert.DeserializeObject<Dictionary<string, double[]>>(new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"ipcc.json", SearchOption.AllDirectories) [0]).ReadToEnd());
+		var rcp_raw = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, double[]>>>(new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"ipcc.json", SearchOption.AllDirectories) [0]).ReadToEnd());
+		rcp = rcp_raw["forcing"];
 		lr = rcp.Select((kvp, i) => {
 			var line = new GameObject(kvp.Key).AddComponent<LineRenderer>();
 			line.transform.SetParent(transform);

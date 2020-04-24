@@ -15,6 +15,9 @@ public static class World {
 	public static int turn = 1;
 	public static double[] temp, energy, precip;
 	public static double averageTemp = 0;
+	public static Impact impact = Impact.Stage1;
+
+	public enum Impact { Stage1, Stage2, Stage3, Stage4 }
 
 	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
