@@ -13,6 +13,8 @@ public class Buffer : MonoBehaviour {
 		sr = GetComponent<SpriteRenderer>();
 	}
 
+	public void AssignSprite() => sr.sprite = healthSprite[health];
+
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if (collision.gameObject.CompareTag("SolarRadiation")) {
 			if (health > 0)

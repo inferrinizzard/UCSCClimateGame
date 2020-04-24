@@ -558,12 +558,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96197f3478ee25c418320b497cf159cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visited: 0
   intro: {fileID: 11400000, guid: ba780126df272254bb0ac069fff1a329, type: 2}
   introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
     type: 3}
+  paused: 0
+  region: 0
   scoreText: {fileID: 1730636744}
   timerText: {fileID: 1296716237}
+  ice: {fileID: 680337532}
 --- !u!4 &1194167034
 Transform:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class RegionController : MonoBehaviour {
-	// [HideInInspector] public int visited = 0;
+	[HideInInspector] public static int _visited = 0;
 	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
 	// timer logic?
@@ -21,6 +21,7 @@ public class RegionController : MonoBehaviour {
 	public void AssignRegion(string name) => region = (World.Region) System.Enum.Parse(typeof(World.Region), name);
 
 	public void Intro(int visited) {
+		_visited = visited;
 		if (intro[visited].Length == 0)
 			return;
 		SetPause(1);
