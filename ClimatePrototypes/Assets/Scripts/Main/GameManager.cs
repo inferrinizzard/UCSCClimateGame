@@ -14,11 +14,12 @@ public class GameManager : Singleton<GameManager> {
 	[HideInInspector] public Scene? titleScene = null;
 	public RegionController currentRegion;
 
+	Dictionary<World.Region, int> visits = new Dictionary<World.Region, int> { { World.Region.Arctic, 0 }, { World.Region.Fire, 0 }, { World.Region.Forest, 0 }, { World.Region.City, 0 } };
+
 	public override void Awake() {
 		base.Awake();
-		if (runModel)
-			if (World.averageTemp == 0)
-				World.Init();
+		if (Instance.runModel && World.averageTemp == 0)
+			World.Init();
 		// SpeedTest.VectorAllocTest();
 	}
 
@@ -45,8 +46,6 @@ public class GameManager : Singleton<GameManager> {
 			case 2:
 				Application.Quit();
 				break;
-			default:
-				break;
 		}
 	}
 
@@ -62,7 +61,8 @@ public class GameManager : Singleton<GameManager> {
 		if (s.name != "Overworld")
 			foreach (GameObject o in s.GetRootGameObjects())
 				if (o.TryComponent<RegionController>(out currentRegion)) {
-					currentRegion.Intro();
+					currentRegion.AssignRegion(s.name);
+					currentRegion.Intro(visits[currentRegion.region]++);
 					break;
 				}
 	}
@@ -70,12 +70,13 @@ public class GameManager : Singleton<GameManager> {
 	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));
 
 	static IEnumerator LoadScene(string name) {
+		Cursor.visible = true;
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.realtimeSinceStartup;
 
 		bool calcDone = true;
-		if (name == "Overworld") {
+		if (name == "Overworld" && Instance.runModel) {
 			calcDone = false;
 			Thread calcThread = new Thread(() => { World.Calc(); calcDone = true; });
 			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
@@ -94,6 +95,7 @@ public class GameManager : Singleton<GameManager> {
 				if (name == "Overworld")
 					UIController.Instance.IncrementTurn();
 				UIController.Instance.SetPrompt(false);
+				Cursor.visible = true;
 				yield break;
 			}
 		}

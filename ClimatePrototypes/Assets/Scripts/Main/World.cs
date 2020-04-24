@@ -42,12 +42,13 @@ public static class World {
 		opinion = new Factor("opinion", "PublicOpinion", new Action<double>((double delta) => publicOpinion += (float) delta));
 
 	public static Factor? GetFactor(string factor) {
+		bool RegexCheck(string pattern) => new Regex(pattern, RegexOptions.IgnoreCase).IsMatch(factor);
 		switch (factor) {
-			case var f when new Regex(@"(co2|emissions)", RegexOptions.IgnoreCase).IsMatch(factor):
+			case var _ when RegexCheck(@"(co2|emissions)"):
 				return co2;
-			case var f when new Regex(@"(land|albedo)", RegexOptions.IgnoreCase).IsMatch(factor):
+			case var _ when RegexCheck(@"(land|albedo)"):
 				return albedo;
-			case var f when new Regex(@"(money|economy)", RegexOptions.IgnoreCase).IsMatch(factor):
+			case var _ when RegexCheck(@"(money|economy)"):
 				return economy;
 			case "opinion":
 				return opinion;

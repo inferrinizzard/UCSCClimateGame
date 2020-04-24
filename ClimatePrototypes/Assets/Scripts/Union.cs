@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class UnionBase<A> {
 	dynamic value;
-
-	public UnionBase(A a) { value = a; }
-	protected UnionBase(object x) { value = x; }
+	public UnionBase(A a) => value = a;
+	protected UnionBase(object x) => value = x;
 
 	protected T InternalMatch<T>(params Delegate[] ds) {
 		var vt = value.GetType();
@@ -19,19 +18,19 @@ public class UnionBase<A> {
 
 			var pt = mi.GetParameters() [0].ParameterType;
 			if (pt.IsAssignableFrom(vt))
-				return (T) mi.Invoke(null, new object[] { value });
+				return (T) mi.Invoke(d.Target, new object[] { value });
 		}
 		throw new Exception("No appropriate matching function was provided");
 	}
 
-	public T Match<T>(Func<A, T> fa) { return InternalMatch<T>(fa); }
+	public T Match<T>(Func<A, T> fa) => InternalMatch<T>(fa);
 }
 
 public class Union<A, B> : UnionBase<A> {
 	public Union(A a) : base(a) { }
 	public Union(B b) : base(b) { }
 	protected Union(object x) : base(x) { }
-	public T Match<T>(Func<A, T> fa, Func<B, T> fb) { return InternalMatch<T>(fa, fb); }
+	public T Match<T>(Func<A, T> fa, Func<B, T> fb) => InternalMatch<T>(fa, fb);
 }
 
 public class Union<A, B, C> : Union<A, B> {
@@ -39,7 +38,7 @@ public class Union<A, B, C> : Union<A, B> {
 	public Union(B b) : base(b) { }
 	public Union(C c) : base(c) { }
 	protected Union(object x) : base(x) { }
-	public T Match<T>(Func<A, T> fa, Func<B, T> fb, Func<C, T> fc) { return InternalMatch<T>(fa, fb, fc); }
+	public T Match<T>(Func<A, T> fa, Func<B, T> fb, Func<C, T> fc) => InternalMatch<T>(fa, fb, fc);
 }
 
 public class Union<A, B, C, D> : Union<A, B, C> {
@@ -48,7 +47,7 @@ public class Union<A, B, C, D> : Union<A, B, C> {
 	public Union(C c) : base(c) { }
 	public Union(D d) : base(d) { }
 	protected Union(object x) : base(x) { }
-	public T Match<T>(Func<A, T> fa, Func<B, T> fb, Func<C, T> fc, Func<D, T> fd) { return InternalMatch<T>(fa, fb, fc, fd); }
+	public T Match<T>(Func<A, T> fa, Func<B, T> fb, Func<C, T> fc, Func<D, T> fd) => InternalMatch<T>(fa, fb, fc, fd);
 }
 
 public class Union<A, B, C, D, E> : Union<A, B, C, D> {
@@ -58,25 +57,14 @@ public class Union<A, B, C, D, E> : Union<A, B, C, D> {
 	public Union(D d) : base(d) { }
 	public Union(E e) : base(e) { }
 	protected Union(object x) : base(x) { }
-	public T Match<T>(Func<A, T> fa, Func<B, T> fb, Func<C, T> fc, Func<D, T> fd, Func<E, T> fe) { return InternalMatch<T>(fa, fb, fc, fd, fe); }
+	public T Match<T>(Func<A, T> fa, Func<B, T> fb, Func<C, T> fc, Func<D, T> fd, Func<E, T> fe) => InternalMatch<T>(fa, fb, fc, fd, fe);
 }
 
 public class DiscriminatedUnionTest {
-	public Union<int, bool, string, int[]> MakeUnion(int n) {
-		return new Union<int, bool, string, int[]>(n);
-	}
-
-	public Union<int, bool, string, int[]> MakeUnion(bool b) {
-		return new Union<int, bool, string, int[]>(b);
-	}
-
-	public Union<int, bool, string, int[]> MakeUnion(string s) {
-		return new Union<int, bool, string, int[]>(s);
-	}
-
-	public Union<int, bool, string, int[]> MakeUnion(params int[] xs) {
-		return new Union<int, bool, string, int[]>(xs);
-	}
+	public Union<int, bool, string, int[]> MakeUnion(int n) => new Union<int, bool, string, int[]>(n);
+	public Union<int, bool, string, int[]> MakeUnion(bool b) => new Union<int, bool, string, int[]>(b);
+	public Union<int, bool, string, int[]> MakeUnion(string s) => new Union<int, bool, string, int[]>(s);
+	public Union<int, bool, string, int[]> MakeUnion(params int[] xs) => new Union<int, bool, string, int[]>(xs);
 
 	public void Print(Union<int, bool, string, int[]> union) {
 		var text = union.Match(

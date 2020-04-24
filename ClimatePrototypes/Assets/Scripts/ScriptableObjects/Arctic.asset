@@ -16,4 +16,8 @@ MonoBehaviour:
   - Hello, welcome to the Arctic!
   - Use the A|D Keys or the Left|Right Arrow Keys to move your paddle!
   - Block incoming solar radiation from space!
-  prefab: {fileID: 0}
+  secondVisit:
+  - Welcome back to the Arctic!
+  - There have been some clouds gathering recently.
+  - They may help you out by reflecting light.
+  thirdVisit: []

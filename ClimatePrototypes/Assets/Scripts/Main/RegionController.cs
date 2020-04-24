@@ -5,24 +5,30 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class RegionController : MonoBehaviour {
-	[HideInInspector] public int visited = 0;
+	// [HideInInspector] public int visited = 0;
 	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
 	// timer logic?
 	[HideInInspector] public bool paused = false;
 	protected bool updated = false;
 
+	public World.Region region;
+
 	protected GameObject introBlock;
 
-	public void Intro() {
-		if (visited++ > 0)
+	protected virtual void Awake() { }
+
+	public void AssignRegion(string name) => region = (World.Region) System.Enum.Parse(typeof(World.Region), name);
+
+	public void Intro(int visited) {
+		if (intro[visited].Length == 0)
 			return;
 		SetPause(1);
 		introBlock = Instantiate(introPrefab); // could read different prefab from scriptable obj per visit // store func calls on scriptable obj?
 		var introText = introBlock.GetComponentInChildren<Text>();
 		var introButton = introBlock.GetComponentInChildren<Button>(true);
 		introButton?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => SetPause(0)));
-		StartCoroutine(UIController.ClickToAdvance(introText, intro.tutorial, introButton.gameObject));
+		StartCoroutine(UIController.ClickToAdvance(introText, intro[visited], introButton.gameObject));
 	}
 
 	void SetPause(int on) => paused = (Time.timeScale = 1 - on) == 0;

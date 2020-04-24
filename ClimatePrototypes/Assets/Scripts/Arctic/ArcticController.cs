@@ -13,7 +13,7 @@ public class ArcticController : RegionController {
 
 	void Start() {
 		buffers = GetComponentsInChildren<Buffer>();
-		Intro();
+		// Intro();
 		// decrement buffer health here
 	}
 

@@ -44,6 +44,8 @@ public class UIController : Singleton<UIController> {
 	}
 
 	public static IEnumerator Typewriter(TMPro.TextMeshProUGUI print, string text, float delay = .05f) { //given text to print, text ref, and print speed, does typewriter effect
+		if (text.Length == 0)
+			yield break;
 		if (print.text == "Title") {
 			print.text = text;
 			print.transform.position += print.preferredWidth * Vector3.right;
