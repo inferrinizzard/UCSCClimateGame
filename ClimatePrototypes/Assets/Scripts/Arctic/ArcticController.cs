@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using Math = System.Math;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +10,20 @@ public class ArcticController : RegionController {
 	[SerializeField] Text scoreText = default, timerText = default;
 	int damage = 0;
 	Buffer[] buffers;
+	[SerializeField] Transform ice = default;
 
 	void Start() {
-		buffers = GetComponentsInChildren<Buffer>();
+		buffers = ice.GetComponentsInChildren<Buffer>();
+		// Intro();
+		int totalHealth = buffers.Length * buffers[0].health;
+		for (int i = 0; i < Math.Floor(EBM.F / EBM.maxF * totalHealth);) { //TODO: with temp instead
+			var buff = buffers[Random.Range(0, buffers.Length)];
+			if (buff.health > 0) {
+				buff.health--;
+				i++;
+				buff.AssignSprite();
+			}
+		}
 	}
 
 	void Update() {
@@ -31,7 +42,7 @@ public class ArcticController : RegionController {
 	}
 
 	void CalculateScore() {
-		TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
+		// TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
 
 	double ProcessScore() => (Math.Log(Math.E * (5 * buffers.Length - damage) / 30d) / 3 + .75) / 1000d;

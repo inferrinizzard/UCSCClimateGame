@@ -65,6 +65,7 @@ public partial class EBM {
 	static Vector<double> aw = a0 - a2 * x.PointwisePower(2);
 	/// <summary> Radiative forcing(W m^-2) </summary>
 	public static double F = 0;
+	public static double maxF = 16;
 
 	// misc consts
 	/// <summary> Latent heat of vaporization(J kg^-1) </summary>

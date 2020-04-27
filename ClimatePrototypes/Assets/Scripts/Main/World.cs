@@ -10,10 +10,14 @@ using UnityEngine;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
 public static class World {
+	public static string worldName = "";
 	public static float money = 100f, publicOpinion = 0f;
 	public static int turn = 1;
 	public static double[] temp, energy, precip;
 	public static double averageTemp = 0;
+	public static Impact impact = Impact.Stage1;
+
+	public enum Impact { Stage1, Stage2, Stage3, Stage4 }
 
 	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
@@ -41,12 +45,13 @@ public static class World {
 		opinion = new Factor("opinion", "PublicOpinion", new Action<double>((double delta) => publicOpinion += (float) delta));
 
 	public static Factor? GetFactor(string factor) {
+		bool RegexCheck(string pattern) => new Regex(pattern, RegexOptions.IgnoreCase).IsMatch(factor);
 		switch (factor) {
-			case var f when new Regex(@"(co2|emissions)", RegexOptions.IgnoreCase).IsMatch(factor):
+			case var _ when RegexCheck(@"(co2|emissions)"):
 				return co2;
-			case var f when new Regex(@"(land|albedo)", RegexOptions.IgnoreCase).IsMatch(factor):
+			case var _ when RegexCheck(@"(land|albedo)"):
 				return albedo;
-			case var f when new Regex(@"(money|economy)", RegexOptions.IgnoreCase).IsMatch(factor):
+			case var _ when RegexCheck(@"(money|economy)"):
 				return economy;
 			case "opinion":
 				return opinion;
