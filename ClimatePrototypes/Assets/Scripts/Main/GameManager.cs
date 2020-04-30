@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 
+using Newtonsoft.Json;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,8 +20,10 @@ public class GameManager : Singleton<GameManager> {
 
 	public override void Awake() {
 		base.Awake();
-		if (Instance.runModel && World.averageTemp == 0)
+		if (Instance.runModel && World.averageTemp == 0) {
 			World.Init();
+			World.ranges = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<double, List<double>>>>(Resources.Load<TextAsset>("ipcc").text);
+		}
 		// SpeedTest.VectorAllocTest();
 	}
 

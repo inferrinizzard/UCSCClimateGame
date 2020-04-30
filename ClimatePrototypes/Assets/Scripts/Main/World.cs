@@ -16,8 +16,9 @@ public static class World {
 	public static double[] temp, energy, precip;
 	public static double averageTemp = 0;
 	public static Impact impact = Impact.Stage1;
+	public static Dictionary<string, Dictionary<double, List<double>>> ranges;
 
-	public enum Impact { Stage1, Stage2, Stage3, Stage4 }
+	public enum Impact { Stage1, Stage2, Stage3, Stage4, Stage5 }
 
 	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
