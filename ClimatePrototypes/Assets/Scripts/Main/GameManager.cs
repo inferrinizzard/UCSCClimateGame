@@ -96,8 +96,10 @@ public class GameManager : Singleton<GameManager> {
 			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && calcDone) {
 				Time.timeScale = 1;
 				asyncLoad.allowSceneActivation = true;
-				if (name == "Overworld")
+				if (name == "Overworld") {
 					UIController.Instance.IncrementTurn();
+					World.DetermineImpact();
+				}
 				UIController.Instance.SetPrompt(false);
 				Cursor.visible = true;
 				yield break;
