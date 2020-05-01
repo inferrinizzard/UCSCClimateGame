@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Fire.unity
     guid: 99a46e809b76f334d98474a2f2836e5f
+  - enabled: 1
+    path: Assets/Scenes/TitleScreen.unity
+    guid: 8d4cc5599ea75f54e91d6c5773fbcfda
   m_configObjects: {}

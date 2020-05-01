@@ -7,8 +7,6 @@ using UnityEngine;
 public class OverworldLine : MonoBehaviour {
 	[SerializeField] float dist = 0;
 	public float duration = .25f;
-	// List<LineRenderer> arrows = new List<LineRenderer>();
-
 	[HideInInspector] public WorldBubble CityNode, ForestNode, ArcticNode, FireNode;
 	[SerializeField] Transform nodeParent = default;
 	GameObject baseLine;
@@ -22,15 +20,13 @@ public class OverworldLine : MonoBehaviour {
 	}
 
 	void Start() {
+		// World.lineToDraw = new List < (World.Region, World.Region, string) > () { (World.Region.City, World.Region.Forest, "co2"), (World.Region.City, World.Region.Arctic, "co2"), (World.Region.City, World.Region.Fire, "co2") };
 		foreach (var(from, to, tag) in World.lineToDraw) {
 			WorldBubble dest = Fetch($"{to.ToString()}Node").GetValue(this) as WorldBubble;
 			StartCoroutine(DrawLine(Fetch($"{from.ToString()}Node").GetValue(this) as WorldBubble, dest, dest.colour, tag));
 		}
 		World.lineToDraw = new List < (World.Region, World.Region, string) > ();
 	}
-
-	// Update is called once per frame
-	void Update() { }
 
 	IEnumerator DrawLine(WorldBubble startNode, WorldBubble destNode, Color c, string factor, float time = -1, int verts = 100, float delay = 1) {
 		Vector3 start = startNode.transform.position, dest = destNode.transform.position;
@@ -71,7 +67,8 @@ public class OverworldLine : MonoBehaviour {
 			if (step > time)
 				inProgress = false;
 		}
-		StartCoroutine(ShowLogo(destNode.icons[World.GetFactor(factor)?.verbose], delay));
+		if (factor != "")
+			StartCoroutine(ShowLogo(destNode.icons[World.GetFactor(factor)?.verbose], delay));
 		yield return new WaitForSeconds(delay);
 		// lr.Simplify(1E-8);
 

@@ -24,7 +24,7 @@ public class CloudSpawner : MonoBehaviour {
 	}
 
 	void Update() {
-		if (canSpawn)
+		if (canSpawn && ArcticController._visited > 0)
 			SpawnCloud();
 	}
 

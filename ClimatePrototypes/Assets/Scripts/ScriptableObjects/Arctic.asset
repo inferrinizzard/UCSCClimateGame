@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a54a9f5eaa0a372429db635ab9f23e33, type: 3}
+  m_Name: Arctic
+  m_EditorClassIdentifier: 
+  tutorial:
+  - Hello, welcome to the Arctic!
+  - Use the A|D Keys or the Left|Right Arrow Keys to move your paddle!
+  - Block incoming solar radiation from space!
+  secondVisit:
+  - Welcome back to the Arctic!
+  - There have been some clouds gathering recently.
+  - They may help you out by reflecting light.
+  thirdVisit: []

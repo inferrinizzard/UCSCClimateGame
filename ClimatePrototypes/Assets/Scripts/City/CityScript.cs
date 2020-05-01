@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-// using System.Web;
 
 using Newtonsoft.Json;
 
 using UnityEngine;
 using UnityEngine.UI;
 
-[System.Serializable]
-public class CityScript : MonoBehaviour {
-	[SerializeField] Button returnButton = default;
-	[SerializeField] Text mainTitle = default;
-	[SerializeField] Text leftText = default, rightText = default;
+public class CityScript : RegionController {
+	[SerializeField] Text mainTitle = default; // TODO: fix
+	[SerializeField] TMPro.TextMeshProUGUI leftText = default, rightText = default;
 	[SerializeField] Text leftTitle = default, rightTitle = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
-	Dictionary<string, List<Bill>> bills = new Dictionary<string, List<Bill>>();
-	//enum BillDifficulty {easy, med, hard};
-	string currentBillDifficulty = "easy";
+	[SerializeField] SpriteRenderer leftPerson = default, rightPerson = default;
+	[SerializeField] Transform personContainer = default;
+
+	Dictionary<BillDifficulty, List<Bill>> bills = new Dictionary<BillDifficulty, List<Bill>>();
+	public enum BillDifficulty { Easy, Med, Hard }
+	BillDifficulty currentDifficulty = BillDifficulty.Easy;
 	List<Bill> currentBillList = new List<Bill>();
 	int currentBillIndex = 0;
 	Bill currentBill;
@@ -52,24 +52,25 @@ public class CityScript : MonoBehaviour {
 
 	void Start() {
 		bills = LoadBills();
-		currentBillList = bills[currentBillDifficulty];
-		currentBill = bills[currentBillDifficulty][currentBillIndex];
-		PrintBill(currentBill);
+		currentBillList = bills[currentDifficulty];
+		currentBill = bills[currentDifficulty][currentBillIndex];
+		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => {
+			mainTitle.transform.root.gameObject.SetActive(true);
+			PrintBill(currentBill);
+		}));
+		// PrintBill(currentBill);
 
-		returnButton.onClick.AddListener(() => GameManager.Transition("Overworld"));
+		var persons = personContainer.GetComponentsInChildren<SpriteRenderer>().Select(sr => sr.sprite).OrderBy(x => Random.value).Take(2).ToList();
+		(leftPerson.sprite, rightPerson.sprite) = (persons[0], persons[1]);
 	}
 
-	public static Dictionary<string, List<Bill>> LoadBills() =>
+	public static Dictionary<BillDifficulty, List<Bill>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level => {
 			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories) [0])) {
 				string json = reader.ReadToEnd();
 				return (level, JsonConvert.DeserializeObject<List<Bill>>(json));
 			}
-		}).ToDictionary(x => x.Item1, x => x.Item2);
-
-	void Update() {
-		// currentBill = GetNextBill();
-	}
+		}).ToDictionary(x => (BillDifficulty) System.Enum.Parse(typeof(BillDifficulty), x.Item1, true), x => x.Item2);
 
 	public void ChooseBill(string side) {
 		currentBill[side]["tags"].Split().ForEach(
@@ -82,46 +83,24 @@ public class CityScript : MonoBehaviour {
 		// PrintBill(currentBill);
 	}
 
-	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|-)");
+	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|[-])");
 
 	void PrintBill(Bill currentBill) {
-		var mainCo = StartCoroutine(Typewriter(mainTitle, currentBill.name, speed));
-		var tCoL = StartCoroutine(Typewriter(leftTitle, currentBill.left["title"], speed));
-		var tCoR = StartCoroutine(Typewriter(rightTitle, currentBill.right["title"], speed));
-		var bCoL = StartCoroutine(Typewriter(leftText, currentBill.left["body"], speed));
-		var bCoR = StartCoroutine(Typewriter(rightText, currentBill.right["body"], speed));
+		var mainCo = StartCoroutine(UIController.Typewriter(mainTitle, currentBill.name, speed));
+		var tCoL = StartCoroutine(UIController.Typewriter(leftTitle, currentBill.left["title"], speed));
+		var tCoR = StartCoroutine(UIController.Typewriter(rightTitle, currentBill.right["title"], speed));
+		var bCoL = StartCoroutine(UIController.Typewriter(leftText, currentBill.left["body"], speed));
+		var bCoR = StartCoroutine(UIController.Typewriter(rightText, currentBill.right["body"], speed));
 		coroutines = new List<Coroutine> { mainCo, tCoL, tCoR, bCoL, bCoR };
 	}
 
 	Bill GetNextBill() {
-		if (currentBillIndex < currentBillList.Count - 1) {
-			currentBillIndex += 1;
-		} else {
+		if (currentBillIndex++ >= currentBillList.Count - 1) {
+			currentDifficulty = (BillDifficulty) (((int) currentDifficulty + 1) % 3);
 			currentBillIndex = 0;
-			switch (currentBillDifficulty) {
-				case "easy":
-					currentBillDifficulty = "med";
-					break;
-				case "med":
-					currentBillDifficulty = "hard";
-					break;
-				case "hard":
-					currentBillDifficulty = "easy"; // loop back?
-					break;
-					// null if exaust TODO: message
-				default:
-					break;
-
-			}
 		}
-		return bills[currentBillDifficulty][currentBillIndex];
+		return bills[currentDifficulty][currentBillIndex];
 	}
 
-	IEnumerator Typewriter(Text print, string text, float speed) //given text to print, text ref, and print speed, does typewriter effect
-	{
-		for (int i = 0; i < text.Length - 1; i++) {
-			print.text = text.Substring(0, i);
-			yield return new WaitForSeconds(speed);
-		}
-	}
+	public void Return() => GameManager.Transition("Overworld");
 }
