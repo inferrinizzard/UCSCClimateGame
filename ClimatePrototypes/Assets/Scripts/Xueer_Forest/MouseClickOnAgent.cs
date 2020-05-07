@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class MouseClickOnAgent : MonoBehaviour
 {
@@ -40,12 +41,12 @@ public class MouseClickOnAgent : MonoBehaviour
         // if there is an agent selected currently, disable this function
         if (plantTree.agentSelected != null)
         {
-            GetComponent<SpriteRenderer>().color = Color.grey;
+            //GetComponent<SpriteRenderer>().color = Color.grey;
             scriptActive = false;
         }
         else
         {
-            GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+            //GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
             scriptActive = true;
         }
         
@@ -70,7 +71,7 @@ public class MouseClickOnAgent : MonoBehaviour
                     minionNumber += 1;
                     if (minionNumber == 5)
                     {
-                        GetComponent<SpriteRenderer>().color = Color.clear;
+                        //GetComponent<Image>().color = Color.clear;
                     }
                 
                     plantTree.canPlantTree = false;

@@ -77,7 +77,7 @@ SpriteRenderer:
   m_Size: {x: 0.53125, y: 1.8359375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &5870713263210574087
@@ -97,8 +97,10 @@ MonoBehaviour:
   treeStage3: {fileID: 21300000, guid: 85c8c2c11673b3e4897677c187500e5e, type: 3}
   treeStage4: {fileID: 21300000, guid: 397c80c3b06a8cb40afcbbf4a69c75a4, type: 3}
   treeDeathStage: {fileID: 21300000, guid: 6fe4a344786bd664d97c3466b98eaf35, type: 3}
+  treeCutStage: {fileID: 21300000, guid: 653bf7a88d6ab6e409eade472405ab22, type: 3}
   tilemap: {fileID: 4660067031876766533, guid: 72ec8059610aa844b91dde3c2ddca36f, type: 3}
   treeGrid: {fileID: 87416688264313432, guid: b9a0f4395bc60094a94433fc9cbb319d, type: 3}
+  loggerAI: {fileID: 0}
   treeStage: 1
   growing: 0
   growSpeed: 3

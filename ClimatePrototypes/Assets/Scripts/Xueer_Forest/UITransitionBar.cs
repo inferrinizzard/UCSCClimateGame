@@ -5,7 +5,9 @@ using UnityEngine;
 public class UITransitionBar : MonoBehaviour
 {
     private Transform transitionBarTransform;
-    public Transform cameraTargetTransform;
+    //public Transform cameraTargetTransform;
+    public GameObject transitionFrom;
+    public GameObject transitionTo;
 
     private float timer;
     // Start is called before the first frame update
@@ -29,10 +31,13 @@ public class UITransitionBar : MonoBehaviour
             timer = 0f;
         }
 
-        if (timer >= 2.0f)
+        if (timer >= 0.5f)
         {
-            //Debug.Log("load left scene");
-            Camera.main.transform.position = cameraTargetTransform.position;
+            Debug.Log("load left scene");
+            //Camera.main.transform.position = cameraTargetTransform.position;
+            transitionFrom.SetActive(false);
+            transitionTo.SetActive(true);
+            
         }
     }
 }
