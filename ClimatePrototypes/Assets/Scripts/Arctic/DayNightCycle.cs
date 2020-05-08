@@ -14,12 +14,14 @@ public class DayNightCycle : MonoBehaviour {
 		var srs = GetComponentsInChildren<SpriteRenderer>();
 		(daySR, nightSR) = (srs[0], srs[1]);
 
+		// init fade funcs
 		fadeIn = (float step, float dur) => EaseMethods.CubicEaseOut(step, 0, 1, dur);
 		fadeOut = (float step, float dur) => EaseMethods.CubicEaseIn(dur - step, 0, 1, dur);
 
 		StartCoroutine(ChangeDayNight(isDayTime, true));
 	}
 
+	/// <summary> Controls day-night cycle. </summary>
 	IEnumerator ChangeDayNight(bool isDay, bool initial = false) {
 		isDayTime = isDay;
 		float timer = initial ? 2.5f : dayDuration;
