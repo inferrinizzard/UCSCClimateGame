@@ -582,7 +582,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &225333541
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4919,75 +4919,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1698173044
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1698173048}
-  - component: {fileID: 1698173046}
-  - component: {fileID: 1698173045}
-  m_Layer: 0
-  m_Name: LoggerGoal
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!50 &1698173045
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698173044}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!58 &1698173046
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698173044}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.3
---- !u!4 &1698173048
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698173044}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.54, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 16
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1721776337
 GameObject:
   m_ObjectHideFlags: 0
@@ -5116,6 +5047,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Logger
       objectReference: {fileID: 0}
+    - target: {fileID: 5824571952176956021, guid: c09402d2a70b382429d1b106a8e31b8e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5824571952176956027, guid: c09402d2a70b382429d1b106a8e31b8e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5235,17 +5171,27 @@ PrefabInstance:
     - target: {fileID: 5824571952176956026, guid: c09402d2a70b382429d1b106a8e31b8e,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.9339623
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5824571952176956026, guid: c09402d2a70b382429d1b106a8e31b8e,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.3263871
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5824571952176956026, guid: c09402d2a70b382429d1b106a8e31b8e,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.2599235
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824571952176956026, guid: c09402d2a70b382429d1b106a8e31b8e,
+        type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824571952176956026, guid: c09402d2a70b382429d1b106a8e31b8e,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -8666301885020796263, guid: c09402d2a70b382429d1b106a8e31b8e, type: 3}
@@ -5274,8 +5220,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c0cacdec0a68b844b7c8aace5c12c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loggerAI: {fileID: 1863968596}
-  goalPrefab: {fileID: 1698173044}
+  goalPrefab: {fileID: 1643829338379131110, guid: effae3f0df5dad242aa91df44483a6ba,
+    type: 3}
+  tilemap: {fileID: 1729990565}
+  plantTree: {fileID: 311408433}
 --- !u!114 &1739322765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5366,7 +5314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1
-  target: {fileID: 1698173048}
+  target: {fileID: 0}
 --- !u!95 &1739322769
 Animator:
   serializedVersion: 3
@@ -5941,9 +5889,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loggerPrefab: {fileID: 1739322763}
-  newTreetoCut: 0
   tilemap: {fileID: 1729990565}
   spawnVector3Int: {x: 5, y: 0, z: 0}
+  treeQueue: []
 --- !u!1 &1873765475
 GameObject:
   m_ObjectHideFlags: 0
@@ -6293,6 +6241,7 @@ MonoBehaviour:
   plantTree: {fileID: 311408433}
   treeStage1Prefab: {fileID: 478931276432224317, guid: 73d2462f92db8ff4c84217d21f0ef601,
     type: 3}
+  loggerAI: {fileID: 1863968596}
 --- !u!61 &2008902963
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6757,7 +6706,7 @@ PrefabInstance:
     - target: {fileID: 87416688264313433, guid: b9a0f4395bc60094a94433fc9cbb319d,
         type: 3}
       propertyPath: m_Name
-      value: TreeManager
+      value: TreeLoggerAIManager
       objectReference: {fileID: 0}
     - target: {fileID: 87416688264313432, guid: b9a0f4395bc60094a94433fc9cbb319d,
         type: 3}

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,10 +7,14 @@ public class Plant : MonoBehaviour
 {
     public PlantTree plantTree;
     public GameObject treeStage1Prefab;
-
+    public LoggerAIManager loggerAI;
+    
+    
     private Transform selectedAgent;
     private Vector3 selectedAgentPosition;
     private Vector3Int cellPosition;
+    
+
     void Update()
     {
         if (plantTree.agentSelected != null && Input.GetButtonDown("Fire1"))
@@ -41,6 +46,13 @@ public class Plant : MonoBehaviour
         yield return new WaitForSeconds(3f);
         plantTree.agentSelected.GetComponent<Animator>().SetInteger("animState", 0);
         GameObject go = Instantiate(treeStage1Prefab, selectedAgentPosition, transform.rotation);
+        
+        // add tree to logger cut list
+        if (!loggerAI.treeQueue.Contains(cellPosition))
+        {
+            loggerAI.treeQueue.Add(cellPosition);    
+        }
+        
         go.GetComponent<TreeGrowth>().enabled = true;
         plantTree.gridTreeInfo.Add(cellPosition, true); // add tree to data structure
         plantTree.gridTreePrefab.Add(cellPosition, go);

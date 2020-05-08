@@ -43,13 +43,6 @@ public class TreeGrowth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (treeStage == 4 && notAdded)
-        {
-            //loggerAI.newTreetoCut = true;
-            loggerAI.treeList.Enqueue(treeCellPosition);
-            notAdded = false;
-        }
-        
         CheckProximity();
         if (treeStage < 5)
         {
@@ -59,6 +52,11 @@ public class TreeGrowth : MonoBehaviour
                 UpdateTreeVFX(treeStage);
                 StartCoroutine(Grow());
             }
+        }
+
+        if (treeStage == 6)
+        {
+            UpdateTreeVFX(treeStage);
         }
 
         

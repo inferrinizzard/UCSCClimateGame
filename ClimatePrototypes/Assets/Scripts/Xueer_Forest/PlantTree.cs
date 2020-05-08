@@ -26,11 +26,10 @@ public class PlantTree : MonoBehaviour
     
     // This map needs to be updated if ground tilemap is changed
     public Dictionary<Vector3Int, bool> groundGridInfo = new Dictionary<Vector3Int, bool>();
-    //public Dictionary<GameObject, bool> agentsInfo = new Dictionary<GameObject, bool>();
-    
     public Dictionary<Vector3Int, bool> gridTreeInfo = new Dictionary<Vector3Int, bool>();  // dic for tree data
     public Dictionary<Vector3Int, GameObject> gridTreePrefab = new Dictionary<Vector3Int, GameObject>();  // dictionary for grabbing tree prefab asset 
-    // Start is called before the first frame update
+    
+
     void Start()
     {
         agentSelected = null;
@@ -52,6 +51,14 @@ public class PlantTree : MonoBehaviour
         
         
     }
+    
+    // change tree VFX
+    public void CutTreeAt(Vector3Int loc)
+    {
+        gridTreePrefab[loc].GetComponent<TreeGrowth>().treeStage = 6;  
+        
+    }
+    
     void Update()
     {
         // Hightlight tiles
@@ -77,19 +84,6 @@ public class PlantTree : MonoBehaviour
                 }
             }
         }
-        
-        /*// side walking animation turn off
-        if (agentSelected != null && agentSelected.GetComponent<AIDestinationSetter>().target != null)
-        {
-            float dist = Vector3.Distance(agentSelected.transform.position, agentSelected.GetComponent<AIDestinationSetter>().target.position);
-            
-            if ( dist < 6 )
-            {
-                Debug.Log("dist is : " + dist);
-                agentSelected.GetComponent<Animator>().SetBool("SideWalking", false);
-            }
-        }*/
-        
         
         if (Input.GetButtonDown("Fire1"))
         {
@@ -135,21 +129,6 @@ public class PlantTree : MonoBehaviour
                     currentAgentGoal.position = spawnPosition;
                     agentSelected.GetComponent<Animator>().SetInteger("animState", 2);
                 }
-                
-                // cut down current tile tree 
-                // Implementation moved to Cut.cs
-                /*if (gridTreeInfo.ContainsKey(cellPosition) && cutActionSprite.color == Color.red && agentSelected != null)
-                {
-                    gridTreePrefab[cellPosition].GetComponent<TreeGrowth>().treeStage = 5;
-                    gridTreePrefab[cellPosition].GetComponent<TreeGrowth>().UpdateTreeVFX(5);
-                    
-                    // move action agent to the tile
-                    // TODO: coroutine to move agent overtime
-                    //if (!movedAgent) StartCoroutine(MoveAgentToTile(spawnPosition));
-                    agentSelected.transform.position = spawnPosition;
-                    
-                }*/
-                // draw tree beneath agent
                 spawnPosition.z = -2;
 
                 
@@ -160,31 +139,5 @@ public class PlantTree : MonoBehaviour
                 
             }
         }
-        // deprecated keyboard control for plant and cut action
-        /*if (agentSelected != null)
-        {
-            // use plant action
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                plantActionSprite.color = Color.red;
-                cutActionSprite.color = new Color(255,255,255);
-            } // use cut action
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                cutActionSprite.color = Color.red;
-                plantActionSprite.color = new Color(255,255,255);
-            }
-        }*/
     }
-
-    /*IEnumerator MoveAgentToTile(GameObject agent, Vector3 destination)
-    {
-        Vector3 dir = destination - agent.transform.position;
-        agent.transform.position += dir.normalized * Time.deltaTime;
-
-        if (destination == agent.transform.position)
-        {
-            movedAgent = true;
-        }
-    }*/
 }

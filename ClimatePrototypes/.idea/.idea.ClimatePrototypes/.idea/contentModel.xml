@@ -304,6 +304,7 @@
           <e p="Xueer_Forest" t="Include">
             <e p="AgentMovement.cs" t="Include" />
             <e p="FollowMouse.cs" t="Include" />
+            <e p="ForestCamera.cs" t="Include" />
             <e p="LoadScene.cs" t="Include" />
             <e p="LoadSceneForest.cs" t="Include" />
             <e p="MouseClickOnAgent.cs" t="Include" />
