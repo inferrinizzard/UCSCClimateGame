@@ -3151,6 +3151,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 85c8c2c11673b3e4897677c187500e5e, type: 3}
   - {fileID: 21300000, guid: 397c80c3b06a8cb40afcbbf4a69c75a4, type: 3}
   selected: {fileID: 0}
+  agentParent: {fileID: 0}
+  utility: {fileID: 0}
   activeTiles: []
 --- !u!1 &533341145
 GameObject:
@@ -4152,6 +4154,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2144524984348932771, guid: c0cdbed2d6039b742b8e63bf7316ea23,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7c9ba8f3cedb7b844a0e4fced00dd490, type: 2}
     - target: {fileID: 5632030031496418657, guid: c0cdbed2d6039b742b8e63bf7316ea23,
         type: 3}
       propertyPath: whenCloseToDestination

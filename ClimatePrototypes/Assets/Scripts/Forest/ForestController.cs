@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Pathfinding;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ForestController : MonoBehaviour {
 	public static ForestController Instance;
@@ -35,14 +36,15 @@ public class ForestController : MonoBehaviour {
 	public void SetTarget(Vector3 pos) {
 		Debug.Log(pos);
 
-		var newVolunteer = GameObject.Instantiate(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), Quaternion.identity, agentParent);
-		volunteers.Add(newVolunteer.GetComponent<Volunteer>());
+		var newVolunteer = GameObject.Instantiate(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), Quaternion.identity, agentParent).GetComponent<Volunteer>();
+		volunteers.Add(newVolunteer);
 		newVolunteer.name += $" {volunteers.Count}";
 		newVolunteer.transform.position = new Vector3(newVolunteer.transform.position.x, newVolunteer.transform.position.y, 0);
-		newVolunteer.SetActive(true);
+		newVolunteer.gameObject.SetActive(true);
 		selected = null;
 
-		newVolunteer.GetComponent<Volunteer>().AssignTarget(pos);
+		newVolunteer.AssignTarget(pos);
+		newVolunteer.OnReached.AddListener(() => Debug.Log("reached2"));
 	}
 
 	public void SetTarget(Vector3Int pos) {
