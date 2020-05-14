@@ -21,7 +21,7 @@ public class VolunteerUI : MonoBehaviour {
 	public void SelectUI() {
 		animator.SetBool("isSelected", selected = !selected);
 		Debug.Log(selected);
-		ForestController.Instance.Selected = selected ? this : null;
+		ForestController.Instance.selected = selected ? this : null;
 	}
 
 	public void SpawnVolunteer() {
