@@ -15,6 +15,7 @@ public class Volunteer : MonoBehaviour {
 	[HideInInspector] public Animator anim;
 	public VolunteerUnityEvent OnReached;
 	public UnityEvent OnReturn;
+	[HideInInspector] public int ID = -1;
 
 	void Awake() {
 		setter = GetComponent<AIDestinationSetter>();
@@ -59,6 +60,7 @@ public class Volunteer : MonoBehaviour {
 	}
 
 	void Return() {
+		ForestController.Instance.volunteers[ID].UI.gameObject.SetActive(true);
 		Destroy(pathTarget.gameObject);
 		Destroy(gameObject);
 	}

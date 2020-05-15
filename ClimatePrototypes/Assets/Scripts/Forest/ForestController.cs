@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Pathfinding;
 
@@ -13,8 +14,8 @@ public class ForestController : MonoBehaviour {
 	public bool hasSelected { get => selected != null; }
 
 	[HideInInspector] public Transform agentParent, utility;
-	public List<Vector3Int> activeTiles = new List<Vector3Int>();
-	public List<Volunteer> volunteers = new List<Volunteer>();
+	public List<VolunteerTask> volunteers = new List<VolunteerTask>();
+	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 
 	void Awake() {
 		Instance = this;
@@ -33,10 +34,13 @@ public class ForestController : MonoBehaviour {
 
 	public void SetTarget(Vector3 pos, UnityAction<Volunteer> onReached) {
 		var newVolunteer = GameObject.Instantiate(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), Quaternion.identity, agentParent).GetComponent<Volunteer>();
-		volunteers.Add(newVolunteer);
-		newVolunteer.name += $" {volunteers.Count}";
+		newVolunteer.ID = volunteers.Count;
+		newVolunteer.name += $" {newVolunteer.ID}";
 		newVolunteer.transform.position = new Vector3(newVolunteer.transform.position.x, newVolunteer.transform.position.y, 0);
 		newVolunteer.gameObject.SetActive(true);
+
+		volunteers.Add(new VolunteerTask(newVolunteer, selected));
+		selected.gameObject.SetActive(false);
 		selected = null;
 
 		newVolunteer.AssignTarget(pos);
@@ -44,7 +48,14 @@ public class ForestController : MonoBehaviour {
 	}
 
 	public void SetTarget(Vector3Int pos, UnityAction<Volunteer> onReached) {
-		activeTiles.Add(pos);
 		SetTarget((Vector3) pos, onReached);
+		volunteers[volunteers.Count - 1].activeTile = pos;
 	}
+}
+
+public class VolunteerTask {
+	public Volunteer volunteer;
+	public VolunteerUI UI;
+	public Vector3Int? activeTile;
+	public VolunteerTask(Volunteer v, VolunteerUI vUI, Vector3Int? tile = null) => (volunteer, UI, activeTile) = (v, vUI, tile);
 }
