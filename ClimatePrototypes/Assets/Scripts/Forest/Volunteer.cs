@@ -38,7 +38,8 @@ public class Volunteer : MonoBehaviour {
 	}
 
 	public void AssignTarget(Vector3 targetPos) {
-		pathfinder.enabled = true;
+		// pathfinder.enabled = true;
+		pathfinder.isStopped = false;
 		pathTarget.position = targetPos;
 		setter.target = pathTarget;
 
@@ -47,7 +48,8 @@ public class Volunteer : MonoBehaviour {
 	}
 
 	void ReachedTarget() {
-		pathfinder.enabled = false;
+		// pathfinder.enabled = false;
+		pathfinder.isStopped = true;
 		anim.SetBool("isWalking", false);
 		if (setter.target.position == origin)
 			OnReturn.Invoke();

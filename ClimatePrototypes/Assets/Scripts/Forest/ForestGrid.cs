@@ -25,14 +25,12 @@ public class ForestGrid : MonoBehaviour {
 			Vector3Int newHover = map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 			if (map.cellBounds.Contains(newHover)) {
 				if (newHover != hoverCell) {
-					map.SetTile(new Vector3Int(hoverCell.x, hoverCell.y, 1), null);
-					map.SetColor(new Vector3Int(hoverCell.x, hoverCell.y, 1), Color.white);
+					ClearHover(hoverCell);
 					map.SetTile(new Vector3Int(newHover.x, newHover.y, 1), hoverTile);
 					map.SetColor(new Vector3Int(newHover.x, newHover.y, 1), new Color(1, 1, 1, .3f));
 				}
 			} else {
-				map.SetTile(new Vector3Int(hoverCell.x, hoverCell.y, 1), null);
-				map.SetColor(new Vector3Int(hoverCell.x, hoverCell.y, 1), Color.white);
+				ClearHover(hoverCell);
 			}
 			hoverCell = newHover;
 
@@ -40,6 +38,10 @@ public class ForestGrid : MonoBehaviour {
 				ForestController.Instance.SetTarget(hoverCell, VolunteerActions.Plant);
 			}
 		}
+	}
 
+	public static void ClearHover(Vector3Int cell) {
+		map.SetTile(new Vector3Int(cell.x, cell.y, 1), null);
+		map.SetColor(new Vector3Int(cell.x, cell.y, 1), Color.white);
 	}
 }
