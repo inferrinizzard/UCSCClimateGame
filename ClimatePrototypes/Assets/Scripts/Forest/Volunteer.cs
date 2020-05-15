@@ -11,9 +11,10 @@ public class Volunteer : MonoBehaviour {
 	Transform pathTarget;
 	AIGoalReached targetGoal;
 	AIPath pathfinder;
-	Vector3 origin;
-	Animator anim;
-	public UnityEvent OnReached;
+	[HideInInspector] public Vector3 origin;
+	[HideInInspector] public Animator anim;
+	public VolunteerUnityEvent OnReached;
+	public UnityEvent OnReturn;
 
 	void Awake() {
 		setter = GetComponent<AIDestinationSetter>();
@@ -25,17 +26,18 @@ public class Volunteer : MonoBehaviour {
 		pathTarget.parent = ForestController.Instance.agentParent;
 		targetGoal = pathTarget.gameObject.AddComponent<AIGoalReached>();
 		targetGoal.myAgent = gameObject;
+
+		(OnReached, OnReturn) = (new VolunteerUnityEvent(), new UnityEvent());
+		OnReturn.AddListener(Return);
 	}
 
 	void Update() {
-		if ((pathTarget.position - transform.position).sqrMagnitude < .1 && setter.target != null) {
+		if (setter.target != null && (pathTarget.position - transform.position).sqrMagnitude < .1) {
 			ReachedTarget(); // TODO: event listener
 		}
 	}
 
 	public void AssignTarget(Vector3 targetPos) {
-		this.print(targetPos, pathTarget, setter, targetGoal);
-
 		pathfinder.enabled = true;
 		pathTarget.position = targetPos;
 		setter.target = pathTarget;
@@ -45,13 +47,19 @@ public class Volunteer : MonoBehaviour {
 	}
 
 	void ReachedTarget() {
-		setter.target = null;
 		pathfinder.enabled = false;
 		anim.SetBool("isWalking", false);
-		BeginAction();
+		if (setter.target.position == origin)
+			OnReturn.Invoke();
+		else
+			OnReached.Invoke(this);
+		setter.target = null;
 	}
 
-	void BeginAction() {
-		OnReached.Invoke();
+	void Return() {
+		Destroy(pathTarget.gameObject);
+		Destroy(gameObject);
 	}
 }
+
+public class VolunteerUnityEvent : UnityEvent<Volunteer> { }

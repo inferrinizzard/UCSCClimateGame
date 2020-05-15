@@ -3142,18 +3142,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volunteerPrefab: {fileID: 8216776056107443475}
-  trees:
-  - {fileID: 21300000, guid: 653bf7a88d6ab6e409eade472405ab22, type: 3}
-  - {fileID: 21300000, guid: 6fe4a344786bd664d97c3466b98eaf35, type: 3}
-  - {fileID: 21300000, guid: 7105c51e75011644bb24f98a1dce26ff, type: 3}
-  - {fileID: 21300000, guid: 7f3725e3641c85a4bba99fd254900e35, type: 3}
-  - {fileID: 21300000, guid: 41d9c43b8e1400a43bca7efa9e1cecd0, type: 3}
-  - {fileID: 21300000, guid: 85c8c2c11673b3e4897677c187500e5e, type: 3}
-  - {fileID: 21300000, guid: 397c80c3b06a8cb40afcbbf4a69c75a4, type: 3}
   selected: {fileID: 0}
   agentParent: {fileID: 0}
   utility: {fileID: 0}
   activeTiles: []
+  volunteers: []
 --- !u!1 &533341145
 GameObject:
   m_ObjectHideFlags: 0
@@ -3593,7 +3586,7 @@ GameObject:
   - component: {fileID: 1387593166}
   - component: {fileID: 1387593165}
   m_Layer: 0
-  m_Name: Button
+  m_Name: Volunteer UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3649,7 +3642,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616b2bd2f32c652478d6fe3222a2533f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldPrefab: {fileID: 0}
 --- !u!114 &1387593167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3920,6 +3912,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff05d3d9576b5cd41b9d60432736b210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _trees:
+  - {fileID: 11400000, guid: d61b816399aedea429d919d0a188c42e, type: 2}
+  - {fileID: 11400000, guid: c91e9a8a08fd47741a6b0aa8dca3437b, type: 2}
+  - {fileID: 11400000, guid: 5f17034687d7e204bad26378afecf130, type: 2}
+  - {fileID: 11400000, guid: 408bcb0ff74e1b3459faeacca84168f4, type: 2}
+  - {fileID: 11400000, guid: 20e7cdd0affe59048afa832bd7a2b737, type: 2}
+  - {fileID: 11400000, guid: e3d82ce277f56f9458be023b7efaf680, type: 2}
+  - {fileID: 11400000, guid: f46fdfadd985fef40b8dcc123a1662be, type: 2}
   hoverTile: {fileID: 11400000, guid: ffc2c8428c814164c8ab22ce477ea319, type: 2}
 --- !u!1 &2028124686
 GameObject:
@@ -4098,6 +4098,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Volunteer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5944379235779317808, guid: c0cdbed2d6039b742b8e63bf7316ea23,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5944379235779317812, guid: c0cdbed2d6039b742b8e63bf7316ea23,
         type: 3}

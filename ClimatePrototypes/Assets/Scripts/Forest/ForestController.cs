@@ -9,14 +9,12 @@ using UnityEngine.Events;
 public class ForestController : MonoBehaviour {
 	public static ForestController Instance;
 	[SerializeField] GameObject volunteerPrefab = default;
-	public Sprite[] trees;
-
 	[HideInInspector] public VolunteerUI selected;
 	public bool hasSelected { get => selected != null; }
 
 	[HideInInspector] public Transform agentParent, utility;
 	public List<Vector3Int> activeTiles = new List<Vector3Int>();
-	List<Volunteer> volunteers = new List<Volunteer>();
+	public List<Volunteer> volunteers = new List<Volunteer>();
 
 	void Awake() {
 		Instance = this;
@@ -33,9 +31,7 @@ public class ForestController : MonoBehaviour {
 
 	}
 
-	public void SetTarget(Vector3 pos) {
-		Debug.Log(pos);
-
+	public void SetTarget(Vector3 pos, UnityAction<Volunteer> onReached) {
 		var newVolunteer = GameObject.Instantiate(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), Quaternion.identity, agentParent).GetComponent<Volunteer>();
 		volunteers.Add(newVolunteer);
 		newVolunteer.name += $" {volunteers.Count}";
@@ -44,11 +40,11 @@ public class ForestController : MonoBehaviour {
 		selected = null;
 
 		newVolunteer.AssignTarget(pos);
-		newVolunteer.OnReached.AddListener(() => Debug.Log("reached2"));
+		newVolunteer.OnReached.AddListener(onReached);
 	}
 
-	public void SetTarget(Vector3Int pos) {
+	public void SetTarget(Vector3Int pos, UnityAction<Volunteer> onReached) {
 		activeTiles.Add(pos);
-		SetTarget((Vector3) pos);
+		SetTarget((Vector3) pos, onReached);
 	}
 }
