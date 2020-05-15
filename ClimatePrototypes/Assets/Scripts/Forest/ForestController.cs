@@ -11,7 +11,9 @@ public class ForestController : MonoBehaviour {
 	public static ForestController Instance;
 	[SerializeField] GameObject volunteerPrefab = default;
 	[HideInInspector] public VolunteerUI selected;
-	public bool hasSelected { get => selected != null; }
+	public bool hasSelected { get => selected != null && !overUI; }
+
+	[HideInInspector] public bool overUI = false;
 
 	[HideInInspector] public Transform agentParent, utility;
 	public List<VolunteerTask> volunteers = new List<VolunteerTask>();
@@ -20,6 +22,8 @@ public class ForestController : MonoBehaviour {
 	void Awake() {
 		Instance = this;
 	}
+
+	public void UIHover(bool over) => overUI = over;
 
 	void Start() {
 		agentParent = new GameObject("Agent Parent").transform;
