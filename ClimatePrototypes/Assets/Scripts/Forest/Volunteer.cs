@@ -44,14 +44,15 @@ public class Volunteer : MonoBehaviour {
 		pathTarget.position = targetPos;
 		setter.target = pathTarget;
 
-		anim.SetBool("isWalking", true);
+		anim.SetTrigger("Walking");
 		transform.localScale = new Vector3(targetPos.x < transform.position.x ? -1 : 1, 1, 1);
 	}
 
 	void ReachedTarget() {
 		// pathfinder.enabled = false;
 		pathfinder.isStopped = true;
-		anim.SetBool("isWalking", false);
+		transform.localScale = Vector3.one;
+		anim.ResetTrigger("Walking");
 		if (setter.target.position == origin)
 			OnReturn.Invoke();
 		else
@@ -60,7 +61,7 @@ public class Volunteer : MonoBehaviour {
 	}
 
 	void Return() {
-		ForestController.Instance.volunteers[ID].UI.gameObject.SetActive(true);
+		ForestController.Instance.volunteers[ID].UI.Reset();
 		Destroy(pathTarget.gameObject);
 		Destroy(gameObject);
 	}

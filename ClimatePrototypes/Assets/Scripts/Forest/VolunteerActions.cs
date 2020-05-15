@@ -9,7 +9,7 @@ using UnityEngine.Tilemaps;
 
 public class VolunteerActions {
 	public static void Plant(Volunteer v) {
-		v.anim.SetBool("isShoveling", true);
+		v.anim.SetTrigger("Shoveling");
 		var task = ForestController.Instance.volunteers[v.ID];
 		ForestController.Instance.StartCoroutine(TreeGrow(task.volunteer, task.activeTile.Value));
 	}
@@ -20,8 +20,8 @@ public class VolunteerActions {
 		for (int i = 0; i < times.Length; i++) {
 			yield return new WaitForSeconds(times[i]);
 			if (i == 0) {
-				v.anim.SetBool("isShoveling", false);
-				v.anim.SetBool("isWalking", true);
+				v.anim.ResetTrigger("Shoveling");
+				v.anim.SetTrigger("Walking");
 				v.AssignTarget(v.origin);
 			}
 			ForestGrid.map.SetTile(tilePos, ForestGrid.trees[i + 3]);
