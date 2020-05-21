@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public static class Extensions
-{
+public static class Extensions {
 	public static string AsString<T>(this IEnumerable<T> nums) => $"[{string.Join(", ", nums)}]";
 	public static string AsString<T>(this T[] nums) => $"[{string.Join(", ", nums)}]";
 
-	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource> action)
-	{
+	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource> action) {
 		if (@this == null)
 			throw new ArgumentNullException("Source");
 		if (action == null)
@@ -19,8 +17,7 @@ public static class Extensions
 		e.Dispose();
 	}
 
-	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource, int> action)
-	{
+	public static void ForEach<TSource>(this IEnumerable<TSource> @this, Action<TSource, int> action) {
 		if (@this == null)
 			throw new ArgumentNullException("Source");
 		if (action == null)
@@ -33,6 +30,14 @@ public static class Extensions
 	}
 
 	public static void print(this UnityEngine.MonoBehaviour @this, params object[] words) => UnityEngine.Debug.Log(string.Join(" ", words));
+	public static dynamic Log(this object @this) {
+		UnityEngine.Debug.Log(@this);
+		return @this;
+	}
+	public static T Log<T>(this object @this, T t) {
+		UnityEngine.Debug.Log(t);
+		return t;
+	}
 
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, TResult> func) => @this.Select(func);
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, int, TResult> func) => @this.Select(func);

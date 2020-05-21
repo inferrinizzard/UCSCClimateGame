@@ -40,6 +40,7 @@ public class Volunteer : MonoBehaviour {
 
 	public void AssignTarget(Vector3 targetPos) {
 		// pathfinder.enabled = true;
+		pathfinder.canSearch = true;
 		pathfinder.isStopped = false;
 		pathTarget.position = targetPos;
 		setter.target = pathTarget;
@@ -48,7 +49,13 @@ public class Volunteer : MonoBehaviour {
 		transform.localScale = new Vector3(targetPos.x < transform.position.x ? -1 : 1, 1, 1);
 	}
 
+	public void Stop() {
+		pathfinder.isStopped = true;
+		pathfinder.canSearch = false;
+	}
+
 	void ReachedTarget() {
+		// pathfinder.canMove = false;
 		// pathfinder.enabled = false;
 		pathfinder.isStopped = true;
 		transform.localScale = Vector3.one;

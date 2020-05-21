@@ -34,7 +34,7 @@ public class ForestGrid : MonoBehaviour {
 			}
 			hoverCell = newHover;
 
-			if (Input.GetMouseButtonDown(0) && !ForestController.Instance.activeTiles.Contains(hoverCell)) {
+			if (Input.GetMouseButtonDown(0) && map.cellBounds.Contains(hoverCell) && !ForestController.Instance.activeTiles.Contains(hoverCell)) {
 				ForestController.Instance.SetTarget(hoverCell, VolunteerActions.Plant);
 			}
 		}

@@ -43,7 +43,7 @@ public class ForestController : MonoBehaviour {
 		newVolunteer.transform.position = new Vector3(newVolunteer.transform.position.x, newVolunteer.transform.position.y, 0);
 		newVolunteer.gameObject.SetActive(true);
 
-		volunteers.Add(new VolunteerTask(newVolunteer, selected));
+		volunteers.Add(new VolunteerTask(newVolunteer, selected, pos : pos));
 		selected.gameObject.SetActive(false);
 		selected = null;
 
@@ -61,5 +61,6 @@ public class VolunteerTask {
 	public Volunteer volunteer;
 	public VolunteerUI UI;
 	public Vector3Int? activeTile;
-	public VolunteerTask(Volunteer v, VolunteerUI vUI, Vector3Int? tile = null) => (volunteer, UI, activeTile) = (v, vUI, tile);
+	public Vector3 target;
+	public VolunteerTask(Volunteer v, VolunteerUI vUI, Vector3Int? tile = null, Vector3 pos = default) => (volunteer, UI, activeTile, target) = (v, vUI, tile, pos);
 }

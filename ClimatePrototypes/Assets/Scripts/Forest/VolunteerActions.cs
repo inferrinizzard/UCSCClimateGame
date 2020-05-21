@@ -28,10 +28,19 @@ public class VolunteerActions {
 		}
 	}
 
-	public static void Protest(Volunteer v) {
-		v.anim.SetBool("isProtesting", true);
+	public static IEnumerator WaitAndReturn(Volunteer v, float duration = 1) {
+		yield return new WaitForSeconds(duration);
+		v.anim.SetTrigger("Walking");
+		v.AssignTarget(v.origin);
 	}
+
+	public static void Protest(Volunteer v) {
+		v.anim.SetTrigger("Protesting");
+		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
+	}
+
 	public static void Capture(Volunteer v) {
-		// v.anim.SetBool("isFacility", true);
+		v.anim.SetTrigger("Facility");
+		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
 	}
 }
