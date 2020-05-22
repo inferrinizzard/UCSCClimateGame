@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VolunteerUI : MonoBehaviour {
+	[SerializeField] Sprite[] bubbles = default;
+	[SerializeField] Sprite active = default, vacant = default;
+	[SerializeField] GameObject selector = default, bubble = default;
+
 	bool selected { get => ForestController.Instance.selected == this; }
 	Animator animator;
 
@@ -11,20 +16,25 @@ public class VolunteerUI : MonoBehaviour {
 		animator = GetComponent<Animator>();
 	}
 
+	public void Deactivate() {
+		GetComponent<Image>().sprite = vacant;
+		GetComponent<Button>().enabled = false;
+		bubble.SetActive(false);
+	}
+
 	public void SelectUI() {
 		ForestController.Instance.selected = selected != this ? this : null;
-		if (selected) {
-			animator.ResetTrigger("Idle");
-			animator.SetTrigger("Selected");
-		} else {
-			animator.ResetTrigger("Selected");
-			animator.SetTrigger("Idle");
-		}
-		transform.GetChild(0).gameObject.SetActive(selected);
+		selector.SetActive(selected);
 	}
 
 	public void Reset() {
-		transform.GetChild(0).gameObject.SetActive(selected);
+		selector.SetActive(selected);
 		gameObject.SetActive(true);
+		bubble.GetComponent<Image>().sprite = bubbles[0];
+	}
+
+	public void AssignBubble(UnityEngine.Events.UnityAction<Volunteer> action) {
+		selector.SetActive(false);
+		bubble.GetComponent<Image>().sprite = bubbles[VolunteerActions.volunteerActions.IndexOf(action) + 1];
 	}
 }

@@ -8,6 +8,8 @@ using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 public class VolunteerActions {
+	public static List<UnityAction<Volunteer>> volunteerActions = new List<UnityAction<Volunteer>>() { Capture, Plant, Protest };
+
 	public static void Plant(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
 		var task = ForestController.Instance.volunteers[v.ID];
