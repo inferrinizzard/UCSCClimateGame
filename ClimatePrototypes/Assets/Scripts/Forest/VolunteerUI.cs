@@ -28,6 +28,7 @@ public class VolunteerUI : MonoBehaviour {
 	}
 
 	public void Reset() {
+		GetComponent<Button>().enabled = true;
 		selector.SetActive(selected);
 		gameObject.SetActive(true);
 		bubble.GetComponent<Image>().sprite = bubbles[0];
@@ -35,6 +36,7 @@ public class VolunteerUI : MonoBehaviour {
 
 	public void AssignBubble(UnityEngine.Events.UnityAction<Volunteer> action) {
 		selector.SetActive(false);
-		bubble.GetComponent<Image>().sprite = bubbles[VolunteerActions.volunteerActions.IndexOf(action) + 1];
+		GetComponent<Button>().enabled = false;
+		bubble.GetComponent<Image>().sprite = bubbles[VolunteerActions.GetBubble(action)];
 	}
 }

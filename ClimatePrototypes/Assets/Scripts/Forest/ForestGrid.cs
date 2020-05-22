@@ -11,7 +11,8 @@ public class ForestGrid : MonoBehaviour {
 	public static TileBase[] trees;
 	public static TileBase stump { get => trees[0]; }
 	public static TileBase dead { get => trees[1]; }
-	public static TileBase sprout { get => trees[2]; }
+	public static TileBase empty { get => trees[2]; }
+	public static TileBase sprout { get => trees[3]; }
 	Vector3Int hoverCell;
 	[SerializeField] TileBase hoverTile = default;
 	public static List<ForestTree> currentTrees = new List<ForestTree>();
@@ -49,7 +50,10 @@ public class ForestGrid : MonoBehaviour {
 			hoverCell = newHover;
 
 			if (Input.GetMouseButtonDown(0) && map.cellBounds.Contains(hoverCell) && !ForestController.Instance.activeTiles.Contains(hoverCell)) {
-				ForestController.Instance.SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
+				if (map.GetTile(hoverCell) == empty)
+					ForestController.Instance.SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
+				else if (map.GetTile(hoverCell) == stump || map.GetTile(hoverCell) == dead)
+					ForestController.Instance.SetVolunteerTarget(hoverCell, VolunteerActions.Clear);
 			}
 		}
 	}
@@ -60,7 +64,7 @@ public class ForestGrid : MonoBehaviour {
 	}
 }
 
-public class ForestTree {
+public class ForestTree { // TODO: do these get cleared?
 	TileBase _tile;
 	TileBase tile {
 		get => _tile;

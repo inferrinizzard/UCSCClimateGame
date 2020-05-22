@@ -65,7 +65,7 @@ public class ForestController : MonoBehaviour {
 	}
 }
 
-public class VolunteerTask {
+public class VolunteerTask { //TODO: do these get cleared?
 	public Volunteer volunteer;
 	public VolunteerUI UI;
 	public Vector3Int? activeTile;

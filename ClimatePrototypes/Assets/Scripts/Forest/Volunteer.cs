@@ -12,7 +12,13 @@ public class Volunteer : PathfindingAgent {
 }
 
 public class VolunteerActions {
-	public static List<UnityAction<Volunteer>> volunteerActions = new List<UnityAction<Volunteer>>() { Capture, Plant, Protest };
+	public static int GetBubble(UnityAction<Volunteer> action) {
+		if (action == Capture)
+			return 1;
+		else if (action == Protest)
+			return 3;
+		return 2;
+	}
 
 	public static void Plant(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
@@ -41,6 +47,18 @@ public class VolunteerActions {
 	public static void Protest(Volunteer v) {
 		v.anim.SetTrigger("Protesting");
 		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
+	}
+
+	public static IEnumerator ClearAndReturn(Volunteer v, Vector3Int tilePos) {
+		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
+		ForestGrid.ClearHover(tilePos);
+		ForestGrid.map.SetTile(tilePos, ForestGrid.empty);
+	}
+
+	public static void Clear(Volunteer v) {
+		v.anim.SetTrigger("Shoveling");
+		var task = ForestController.Instance.volunteers[v.ID];
+		ForestController.Instance.StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
 	}
 
 	public static void Capture(Volunteer v) {

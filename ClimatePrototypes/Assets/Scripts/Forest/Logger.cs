@@ -15,7 +15,7 @@ public static class LoggerActions {
 	}
 
 	public static IEnumerator ChopAndReturn(Logger l) {
-		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(l, 1));
+		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(l, 3));
 		ForestGrid.map.SetTile(l.choppingTile, ForestGrid.stump);
 	}
 }
