@@ -20,9 +20,7 @@ public class ForestController : MonoBehaviour {
 	public List<VolunteerTask> volunteers = new List<VolunteerTask>();
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 
-	void Awake() {
-		Instance = this;
-	}
+	void Awake() => Instance = this;
 
 	public void UIHover(bool over) => overUI = over;
 
