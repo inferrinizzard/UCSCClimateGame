@@ -26,6 +26,9 @@ public class MouseClickOnAgent : MonoBehaviour
     private Transform agentTransform;
     private bool scriptActive;
     private SpriteRenderer regionIcon;
+    
+    private bool employStatus;
+    private bool assignStatus;
 
     void Start()
     {
@@ -37,10 +40,15 @@ public class MouseClickOnAgent : MonoBehaviour
 
         agentTransform = gameObject.GetComponent<Transform>();
         scriptActive = true;
+        
+
     }
 
     void Update()
     {
+        employStatus = gameObject.GetComponent<VolunteerState>().amIEmployed;
+        assignStatus = gameObject.GetComponent<VolunteerState>().amIAssigned;
+        
         // TODO
         // make this class usable for placed AgentClicked to move cell position
         
@@ -57,7 +65,7 @@ public class MouseClickOnAgent : MonoBehaviour
         }
         
         // if selected, spawn clicked state of selected character
-        if (Input.GetButtonDown("Fire1") && scriptActive)
+        if (Input.GetButtonDown("Fire1") && scriptActive && employStatus && !assignStatus)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray,Mathf.Infinity);
@@ -70,6 +78,8 @@ public class MouseClickOnAgent : MonoBehaviour
                 {
                     int camInt = camManager.getCurrentRegion();  // agent current location
                     UpdateAgentRegionUI(camInt);
+                    gameObject.GetComponent<VolunteerState>().amIAssigned = true;
+                    
                     // spawn agent to be placed
                     Vector3 spawnPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     //spawnPosition.z = -1;

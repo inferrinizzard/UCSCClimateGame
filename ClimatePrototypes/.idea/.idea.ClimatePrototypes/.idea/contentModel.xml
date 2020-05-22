@@ -350,7 +350,9 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="VolunteerManager.cs" t="Include" />
         <e p="VolunteerRegion.cs" t="Include" />
+        <e p="VolunteerState.cs" t="Include" />
       </e>
       <e p="AstarPathfindingProject.csproj" t="IncludeRecursive" />
       <e p="AstarPathfindingProjectEditor.csproj" t="IncludeRecursive" />

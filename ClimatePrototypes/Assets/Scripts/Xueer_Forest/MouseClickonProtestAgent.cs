@@ -21,18 +21,27 @@ public class MouseClickonProtestAgent : MonoBehaviour
 
     public Vector3Int firstSpawnLocation;
     private SpriteRenderer regionIcon;
+    
+    private bool employStatus;
+    private bool assignStatus;
+    
     void Start()
     {
         regionIcon = gameObject.transform.Find("RegionIcon").GetComponent<SpriteRenderer>();
         agentTransform = gameObject.GetComponent<Transform>();
         //spawnOne = firstSpawnLocation;
+        
     }
 
     void Update()
     {
+        employStatus = gameObject.GetComponent<VolunteerState>().amIEmployed;
+        assignStatus = gameObject.GetComponent<VolunteerState>().amIAssigned;
+            
         spawnOne = firstSpawnLocation;
         // if selected, spawn clicked state of selected character
-        if (Input.GetButtonDown("Fire1"))
+        // pre-req:  purchased but not assigned task
+        if (Input.GetButtonDown("Fire1") && employStatus && !assignStatus)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray,Mathf.Infinity);
@@ -41,6 +50,7 @@ public class MouseClickonProtestAgent : MonoBehaviour
             {
                 int camInt = camManager.getCurrentRegion();  // agent current location
                 UpdateAgentRegionUI(camInt);
+                gameObject.GetComponent<VolunteerState>().amIAssigned = true;
                 
                 // spawn agent to be placed
                 
