@@ -8,6 +8,8 @@ public class UITransitionBar : MonoBehaviour
     //public Transform cameraTargetTransform;
     public GameObject transitionFrom;
     public GameObject transitionTo;
+    public Transform UITransform;
+    public GameObject volunteerUI;
 
     private float timer;
     // Start is called before the first frame update
@@ -37,7 +39,7 @@ public class UITransitionBar : MonoBehaviour
             //Camera.main.transform.position = cameraTargetTransform.position;
             transitionFrom.SetActive(false);
             transitionTo.SetActive(true);
-            
+            volunteerUI.transform.position = UITransform.position;
         }
     }
 }

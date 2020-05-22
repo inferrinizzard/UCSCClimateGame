@@ -7,8 +7,6 @@
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="AgentAnimation.cs" t="Include" />
-        <e p="AIGoalReached.cs" t="Include" />
         <e p="AstarPathfindingProject" t="Include">
           <e p="AstarPathfindingProject.asmdef" t="Include" />
           <e p="Behaviors" t="Include">
@@ -213,7 +211,7 @@
             <e p="UnityReferenceHelper.cs" t="Include" />
           </e>
         </e>
-        <e p="Cut.cs" t="Include" />
+        <e p="CameraManager.cs" t="Include" />
         <e p="External Libs" t="Include">
           <e p="NuGet" t="Include">
             <e p="LICENSE.txt" t="Include" />
@@ -229,12 +227,9 @@
             </e>
           </e>
         </e>
-        <e p="LoggerAIManager.cs" t="Include" />
-        <e p="LoggerMovement.cs" t="Include" />
         <e p="Materials" t="Include">
           <e p="Circle.shader" t="Include" />
         </e>
-        <e p="MouseClickonProtestAgent.cs" t="Include" />
         <e p="Packages" t="Include">
           <e p="Newtonsoft.Json.12.0.3" t="Include">
             <e p="lib" t="Include">
@@ -244,7 +239,6 @@
             </e>
           </e>
         </e>
-        <e p="Plant.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="Arctic" t="Include">
             <e p="BallBehavior.cs" t="Include" />
@@ -302,12 +296,19 @@
             <e p="UIController.cs" t="Include" />
           </e>
           <e p="Xueer_Forest" t="Include">
+            <e p="AgentAnimation.cs" t="Include" />
             <e p="AgentMovement.cs" t="Include" />
+            <e p="AIGoalReached.cs" t="Include" />
+            <e p="Cut.cs" t="Include" />
             <e p="FollowMouse.cs" t="Include" />
             <e p="ForestCamera.cs" t="Include" />
             <e p="LoadScene.cs" t="Include" />
             <e p="LoadSceneForest.cs" t="Include" />
+            <e p="LoggerAIManager.cs" t="Include" />
+            <e p="LoggerMovement.cs" t="Include" />
             <e p="MouseClickOnAgent.cs" t="Include" />
+            <e p="MouseClickonProtestAgent.cs" t="Include" />
+            <e p="Plant.cs" t="Include" />
             <e p="PlantTree.cs" t="Include" />
             <e p="TreeGrowth.cs" t="Include" />
             <e p="UIMainScreenManager.cs" t="Include" />
@@ -349,6 +350,7 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="VolunteerRegion.cs" t="Include" />
       </e>
       <e p="AstarPathfindingProject.csproj" t="IncludeRecursive" />
       <e p="AstarPathfindingProjectEditor.csproj" t="IncludeRecursive" />
