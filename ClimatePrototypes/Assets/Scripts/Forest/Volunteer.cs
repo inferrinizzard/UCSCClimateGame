@@ -22,18 +22,13 @@ public class VolunteerActions {
 
 	public static IEnumerator TreeGrow(Volunteer v, Vector3Int tilePos) {
 		ForestGrid.ClearHover(tilePos);
-		float[] times = new [] { 1, 1.5f, 2f, 2f }; //TODO: proximity logic
-		for (int i = 0; i < times.Length; i++) {
-			yield return new WaitForSeconds(times[i]);
-			if (i == 0) {
-				v.anim.ResetTrigger("Shoveling");
-				v.anim.SetTrigger("Walking");
-				v.AssignTarget(v.origin);
-			}
-			ForestGrid.map.SetTile(tilePos, ForestGrid.trees[i + 3]);
-			if (i == 2)
-				ForestController.Instance.activeTrees.Add(tilePos);
-		}
+		yield return new WaitForSeconds(1);
+		v.anim.ResetTrigger("Shoveling");
+		v.anim.SetTrigger("Walking");
+		v.AssignTarget(v.origin);
+		ForestGrid.currentTrees.Add(new ForestTree(tilePos));
+		// if (i == 2)
+		// 	ForestController.Instance.activeTrees.Add(tilePos);
 	}
 
 	public static IEnumerator WaitAndReturn(PathfindingAgent agent, float duration = 1) {

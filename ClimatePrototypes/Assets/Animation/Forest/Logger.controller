@@ -9,7 +9,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Chop
+    m_ConditionEvent: Chopping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6452425449780439761}
@@ -116,7 +116,7 @@ AnimatorController:
   m_Name: Logger
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Chop
+  - m_Name: Chopping
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0

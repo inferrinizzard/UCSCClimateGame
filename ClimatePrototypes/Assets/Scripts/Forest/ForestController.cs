@@ -9,11 +9,12 @@ using UnityEngine.Events;
 
 public class ForestController : MonoBehaviour {
 	public static ForestController Instance;
-	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default;
+	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default, emissionsTracker = default;
 	[SerializeField] int numActive;
 	[HideInInspector] public VolunteerUI selected;
 	public bool hasSelected { get => selected != null && !overUI; }
 
+	public float damage = 0;
 	[HideInInspector] public bool overUI = false;
 
 	[HideInInspector] public Transform agentParent, utility;

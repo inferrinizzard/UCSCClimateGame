@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -10,8 +11,10 @@ public class ForestGrid : MonoBehaviour {
 	public static TileBase[] trees;
 	public static TileBase stump { get => trees[0]; }
 	public static TileBase dead { get => trees[1]; }
+	public static TileBase sprout { get => trees[2]; }
 	Vector3Int hoverCell;
 	[SerializeField] TileBase hoverTile = default;
+	public static List<ForestTree> currentTrees = new List<ForestTree>();
 
 	void Awake() {
 		trees = _trees;
@@ -20,6 +23,15 @@ public class ForestGrid : MonoBehaviour {
 	void Start() {
 		map = GetComponentInChildren<Tilemap>();
 		// Debug.Log(map.cellBounds); //boundsInt
+
+		for (var(i, max) = (0, (int) (Random.value * 3) + 10); i < max; i++) {
+			var randomPos = (Vector3) (map.cellBounds.max - map.cellBounds.min);
+			randomPos.Scale(new Vector3(Random.value, Random.value, Random.value));
+			var randomPosInt = Vector3Int.FloorToInt(randomPos) + map.cellBounds.min;
+			if (currentTrees.Any(tree => tree.pos == randomPosInt))
+				continue;
+			currentTrees.Add(new ForestTree(randomPosInt, _trees[Random.Range(2, 6)]));
+		}
 	}
 
 	void Update() {
@@ -45,5 +57,40 @@ public class ForestGrid : MonoBehaviour {
 	public static void ClearHover(Vector3Int cell) {
 		map.SetTile(new Vector3Int(cell.x, cell.y, 1), null);
 		map.SetColor(new Vector3Int(cell.x, cell.y, 1), Color.white);
+	}
+}
+
+public class ForestTree {
+	TileBase _tile;
+	TileBase tile {
+		get => _tile;
+		set {
+			_tile = value;
+			ForestGrid.map.SetTile(pos, _tile);
+			index = ForestGrid.trees.ToList().IndexOf(_tile);
+		}
+	}
+	// TileBase tile { get=>ForestGrid.map.GetTile(pos); set=>ForestGrid.map.SetTile(pos, value);} 
+	public Vector3Int pos;
+	int index = -1;
+	public bool alive { get => index > 1; }
+
+	public ForestTree(Vector3Int pos, TileBase tile = null) {
+		this.tile = tile ?? ForestGrid.sprout;
+		Debug.Log(this.tile);
+		this.pos = pos;
+		ForestController.Instance.StartCoroutine(Grow(0));
+	}
+
+	IEnumerator Grow(float time = 2) {
+		yield return new WaitForSeconds(time);
+		if (index == ForestGrid.trees.Length - 1)
+			tile = ForestGrid.dead;
+		else {
+			if (index == 4)
+				ForestController.Instance.activeTrees.Add(pos);
+			tile = ForestGrid.trees[index + 1];
+			ForestController.Instance.StartCoroutine(Grow(2 + Random.value - .5f));
+		}
 	}
 }
