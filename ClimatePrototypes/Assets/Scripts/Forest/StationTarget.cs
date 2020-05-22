@@ -37,7 +37,7 @@ public class StationTarget : MonoBehaviour {
 		if (ForestController.Instance.hasSelected) {
 			var selectedTarget = subtargets.Where(kvp => !kvp.Value).OrderBy(kvp => kvp.Key.position.y).ElementAt(0).Key;
 			subtargets[selectedTarget] = true;
-			ForestController.Instance.SetTarget(selectedTarget.position, VolunteerActions.Capture);
+			ForestController.Instance.SetVolunteerTarget(selectedTarget.position, VolunteerActions.Capture);
 		}
 	}
 }

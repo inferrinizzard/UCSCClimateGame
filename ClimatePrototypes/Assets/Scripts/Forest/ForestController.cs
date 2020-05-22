@@ -37,7 +37,7 @@ public class ForestController : MonoBehaviour {
 
 	}
 
-	public void SetTarget(Vector3 pos, UnityAction<Volunteer> onReached) {
+	public void SetVolunteerTarget(Vector3 pos, UnityAction<Volunteer> onReached) {
 		var newVolunteer = GameObject.Instantiate(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), Quaternion.identity, agentParent).GetComponent<Volunteer>();
 		newVolunteer.ID = volunteers.Count;
 		newVolunteer.name += $" {newVolunteer.ID}";
@@ -50,11 +50,12 @@ public class ForestController : MonoBehaviour {
 		selected = null;
 
 		newVolunteer.AssignTarget(pos);
-		newVolunteer.OnReached.AddListener(onReached);
+		newVolunteer.OnReached.AddListener((PathfindingAgent agent) => onReached.Invoke(agent as Volunteer));
+		newVolunteer.OnReturn.AddListener(() => volunteers[newVolunteer.ID].UI.Reset());
 	}
 
-	public void SetTarget(Vector3Int pos, UnityAction<Volunteer> onReached) {
-		SetTarget((Vector3) pos, onReached);
+	public void SetVolunteerTarget(Vector3Int pos, UnityAction<Volunteer> onReached) {
+		SetVolunteerTarget((Vector3) pos, onReached);
 		volunteers[volunteers.Count - 1].activeTile = pos;
 	}
 }

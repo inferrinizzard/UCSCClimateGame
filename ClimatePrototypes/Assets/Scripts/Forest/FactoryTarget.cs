@@ -23,7 +23,7 @@ public class FactoryTarget : MonoBehaviour {
 
 	void OnMouseDown() {
 		if (ForestController.Instance.hasSelected) {
-			ForestController.Instance.SetTarget(Camera.main.ScreenToWorldPoint(Input.mousePosition), VolunteerActions.Protest);
+			ForestController.Instance.SetVolunteerTarget(Camera.main.ScreenToWorldPoint(Input.mousePosition), VolunteerActions.Protest);
 		}
 	}
 }
