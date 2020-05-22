@@ -1,18 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-public class Logger : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+public class Logger : PathfindingAgent {
+	[HideInInspector] public Vector3Int choppingTile;
+}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+public static class LoggerActions {
+	public static void Chop(Logger l) {
+		l.anim.SetTrigger("Chopping");
+		l.transform.localScale = new Vector3(-1, 1, 1);
+		ForestController.Instance.StartCoroutine(ChopAndReturn(l));
+	}
+
+	public static IEnumerator ChopAndReturn(Logger l) {
+		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(l, 1));
+		ForestGrid.map.SetTile(l.choppingTile, ForestGrid.stump);
+	}
 }

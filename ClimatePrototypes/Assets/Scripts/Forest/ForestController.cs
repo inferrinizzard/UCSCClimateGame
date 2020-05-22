@@ -19,6 +19,7 @@ public class ForestController : MonoBehaviour {
 	[HideInInspector] public Transform agentParent, utility;
 	public List<VolunteerTask> volunteers = new List<VolunteerTask>();
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
+	public List<Vector3Int> activeTrees = new List<Vector3Int>();
 
 	void Awake() => Instance = this;
 
@@ -33,23 +34,26 @@ public class ForestController : MonoBehaviour {
 		uiPanel.GetComponentsInChildren<VolunteerUI>().Skip(numActive).ToList().ForEach(v => v.Deactivate());
 	}
 
-	void Update() {
+	public PathfindingAgent NewAgent(GameObject prefab, Vector3 pos, Vector3 target) {
+		var newAgent = GameObject.Instantiate(prefab, pos, Quaternion.identity, agentParent).GetComponent<PathfindingAgent>();
+		newAgent.transform.position = new Vector3(newAgent.transform.position.x, newAgent.transform.position.y, 0);
+		newAgent.gameObject.SetActive(true);
 
+		newAgent.AssignTarget(target);
+
+		return newAgent;
 	}
 
 	public void SetVolunteerTarget(Vector3 pos, UnityAction<Volunteer> onReached) {
-		var newVolunteer = GameObject.Instantiate(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), Quaternion.identity, agentParent).GetComponent<Volunteer>();
+		var newVolunteer = NewAgent(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), pos) as Volunteer;
 		newVolunteer.ID = volunteers.Count;
 		newVolunteer.name += $" {newVolunteer.ID}";
-		newVolunteer.transform.position = new Vector3(newVolunteer.transform.position.x, newVolunteer.transform.position.y, 0);
-		newVolunteer.gameObject.SetActive(true);
 
 		volunteers.Add(new VolunteerTask(newVolunteer, selected, onReached, pos : pos));
 		// selected.gameObject.SetActive(false);
 		selected.AssignBubble(onReached);
 		selected = null;
 
-		newVolunteer.AssignTarget(pos);
 		newVolunteer.OnReached.AddListener((PathfindingAgent agent) => onReached.Invoke(agent as Volunteer));
 		newVolunteer.OnReturn.AddListener(() => volunteers[newVolunteer.ID].UI.Reset());
 	}

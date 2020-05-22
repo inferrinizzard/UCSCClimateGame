@@ -8,6 +8,8 @@ public class ForestGrid : MonoBehaviour {
 	public static Tilemap map;
 	[SerializeField] TileBase[] _trees = default;
 	public static TileBase[] trees;
+	public static TileBase stump { get => trees[0]; }
+	public static TileBase dead { get => trees[1]; }
 	Vector3Int hoverCell;
 	[SerializeField] TileBase hoverTile = default;
 

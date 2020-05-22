@@ -27,13 +27,16 @@ public class VolunteerActions {
 				v.AssignTarget(v.origin);
 			}
 			ForestGrid.map.SetTile(tilePos, ForestGrid.trees[i + 3]);
+			if (i == 2)
+				ForestController.Instance.activeTrees.Add(tilePos);
 		}
 	}
 
-	public static IEnumerator WaitAndReturn(Volunteer v, float duration = 1) {
+	public static IEnumerator WaitAndReturn(PathfindingAgent agent, float duration = 1) {
 		yield return new WaitForSeconds(duration);
-		v.anim.SetTrigger("Walking");
-		v.AssignTarget(v.origin);
+		agent.transform.localScale = Vector3.one;
+		agent.anim.SetTrigger("Walking");
+		agent.AssignTarget(agent.origin);
 	}
 
 	public static void Protest(Volunteer v) {
