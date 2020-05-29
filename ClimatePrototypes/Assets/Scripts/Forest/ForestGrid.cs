@@ -16,6 +16,7 @@ public class ForestGrid : MonoBehaviour {
 	Vector3Int hoverCell;
 	[SerializeField] TileBase hoverTile = default;
 	public static List<ForestTree> currentTrees = new List<ForestTree>();
+	public static float growthTime = 5;
 
 	void Awake() {
 		trees = _trees;
@@ -25,7 +26,7 @@ public class ForestGrid : MonoBehaviour {
 		map = GetComponentInChildren<Tilemap>();
 		// Debug.Log(map.cellBounds); //boundsInt
 
-		for (var(i, max) = (0, (int) (Random.value * 3) + 10); i < max; i++) {
+		for (var(i, max) = (0, (int) map.size.x * map.size.y / 2 * 1); i < max; i++) {
 			var randomPos = (Vector3) (map.cellBounds.max - map.cellBounds.min);
 			randomPos.Scale(new Vector3(Random.value, Random.value, Random.value));
 			var randomPosInt = Vector3Int.FloorToInt(randomPos) + map.cellBounds.min;
@@ -81,20 +82,38 @@ public class ForestTree { // TODO: do these get cleared?
 
 	public ForestTree(Vector3Int pos, TileBase tile = null) {
 		this.tile = tile ?? ForestGrid.sprout;
-		Debug.Log(this.tile);
+		// Debug.Log(this.tile);
 		this.pos = pos;
 		ForestController.Instance.StartCoroutine(Grow(0));
+		NeighbourCount();
 	}
 
-	IEnumerator Grow(float time = 2) {
+	IEnumerator Grow(float time) {
 		yield return new WaitForSeconds(time);
 		if (index == ForestGrid.trees.Length - 1)
 			tile = ForestGrid.dead;
 		else {
-			if (index == 4)
+			float awaitTime = (ForestGrid.growthTime + (Random.value - .25f) * 2) * (1 + .5f * NeighbourCount() / 4f);
+			if (index == 4) {
 				ForestController.Instance.activeTrees.Add(pos);
+				awaitTime += index / 4f;
+			}
 			tile = ForestGrid.trees[index + 1];
-			ForestController.Instance.StartCoroutine(Grow(2 + Random.value - .5f));
+			ForestController.Instance.StartCoroutine(Grow(awaitTime));
 		}
+	}
+
+	float NeighbourCount() {
+		int count = 0;
+		bool IsTree(TileBase tile) => tile != null && tile != ForestGrid.dead && tile != ForestGrid.stump && tile != ForestGrid.empty;
+		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.up)))
+			count++;
+		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.left)))
+			count++;
+		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.right)))
+			count++;
+		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.down)))
+			count++;
+		return count;
 	}
 }
