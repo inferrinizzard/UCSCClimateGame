@@ -14,10 +14,16 @@ public static class World {
 	public static float money = 100f, publicOpinion = 0f;
 	public static int turn = 1;
 	public static double[] temp, energy, precip;
-	public static double averageTemp = 0;
+	public static double averageTemp { get => temp?.Average() ?? 0; }
 	public static Impact impact = Impact.Stage1;
+	public static Dictionary<string, Dictionary<double, List<double>>> ranges;
 
-	public enum Impact { Stage1, Stage2, Stage3, Stage4 }
+	public enum Impact { Stage1, Stage2, Stage3, Stage4, Stage5 }
+
+	public static void DetermineImpact() {
+		var avgTemp = averageTemp;
+		impact = (Impact) Math.Max(0, ranges["temperature"].ToList().FindIndex(kvp => kvp.Value[turn] > avgTemp) - 1);
+	}
 
 	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
@@ -39,10 +45,10 @@ public static class World {
 
 	public static List < (Region, Region, string) > lineToDraw = new List < (Region, Region, string) > ();
 
-	public static readonly Factor co2 = new Factor("co2", "Emissions", new Action<double>((double deltaF) => EBM.F += deltaF)),
-		albedo = new Factor("land", "LandUse", new Action<double>((double deltaa0) => EBM.a0 += deltaa0)), //was s1
-		economy = new Factor("money", "Economy", new Action<double>((double delta) => money += (float) delta)),
-		opinion = new Factor("opinion", "PublicOpinion", new Action<double>((double delta) => publicOpinion += (float) delta));
+	public static readonly Factor co2 = new Factor("co2", "Emissions", new Action<double>(deltaF => EBM.F += deltaF)),
+		albedo = new Factor("land", "LandUse", new Action<double>(deltaa0 => EBM.a0 += deltaa0)), //was s1
+		economy = new Factor("money", "Economy", new Action<double>(delta => money += (float) delta)),
+		opinion = new Factor("opinion", "PublicOpinion", new Action<double>(delta => publicOpinion += (float) delta));
 
 	public static Factor? GetFactor(string factor) {
 		bool RegexCheck(string pattern) => new Regex(pattern, RegexOptions.IgnoreCase).IsMatch(factor);
@@ -71,7 +77,6 @@ public static class World {
 		timer.Start();
 		(temp, energy, precip) = EBM.Calc(useTemp ? EBM.temp : null, years, steps);
 		timer.Stop();
-		averageTemp = temp.Average();
 		Debug.Log($"Average Temp: {averageTemp} with regionals: {temp.AsString()}, calculated in {timer.ElapsedMilliseconds}ms");
 	}
 }

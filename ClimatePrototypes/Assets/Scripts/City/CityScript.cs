@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -52,6 +51,7 @@ public class CityScript : RegionController {
 
 	void Start() {
 		bills = LoadBills();
+		currentDifficulty = (int) World.impact < 2 ? BillDifficulty.Easy : (int) World.impact < 4 ? BillDifficulty.Med : BillDifficulty.Hard;
 		currentBillList = bills[currentDifficulty];
 		currentBill = bills[currentDifficulty][currentBillIndex];
 		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => {
@@ -65,12 +65,9 @@ public class CityScript : RegionController {
 	}
 
 	public static Dictionary<BillDifficulty, List<Bill>> LoadBills() =>
-		new string[] { "easy", "med", "hard" }.Map(level => {
-			using(StreamReader reader = new StreamReader(Directory.GetFiles(Directory.GetCurrentDirectory(), $"bills_{level}.json", SearchOption.AllDirectories) [0])) {
-				string json = reader.ReadToEnd();
-				return (level, JsonConvert.DeserializeObject<List<Bill>>(json));
-			}
-		}).ToDictionary(x => (BillDifficulty) System.Enum.Parse(typeof(BillDifficulty), x.Item1, true), x => x.Item2);
+		new string[] { "easy", "med", "hard" }.Map(level =>
+			(level, JsonConvert.DeserializeObject<List<Bill>>(Resources.Load<TextAsset>($"bills_{level}").text)))
+		.ToDictionary(x => (BillDifficulty) System.Enum.Parse(typeof(BillDifficulty), x.Item1, true), x => x.Item2);
 
 	public void ChooseBill(string side) {
 		currentBill[side]["tags"].Split().ForEach(

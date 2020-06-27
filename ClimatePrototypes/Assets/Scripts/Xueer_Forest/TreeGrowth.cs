@@ -8,11 +8,13 @@ public class TreeGrowth : MonoBehaviour
     public Sprite treeStage2;
     public Sprite treeStage3;
     public Sprite treeStage4;
-    public Sprite treeDeathStage;
+    public Sprite treeDeathStage;   // die of old    stage 5
+    public Sprite treeCutStage;   // stage 6
     
     public Tilemap tilemap;
 
     public PlantTree treeGrid;
+    public LoggerAIManager loggerAI;
     public int treeStage;
 
     public bool growing = false;
@@ -23,6 +25,8 @@ public class TreeGrowth : MonoBehaviour
     private Vector3Int treeCellPosition;
 
     public int nearByTreeCount;
+
+    private bool notAdded = true;
     // Start is called before the first frame update
     void Awake()
     {
@@ -34,7 +38,6 @@ public class TreeGrowth : MonoBehaviour
         treeCellPosition = tilemap.WorldToCell(gameObject.transform.position);
         
         StartCoroutine(Grow());
-        //m_Sprite = gameObject.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -50,16 +53,24 @@ public class TreeGrowth : MonoBehaviour
                 StartCoroutine(Grow());
             }
         }
+
+        if (treeStage == 6)
+        {
+            UpdateTreeVFX(treeStage);
+        }
+
+        
         
     }
     void CheckProximity()
     {
         //Debug.Log(transform.position);
-        Debug.Log(treeCellPosition + "up" + treeCellPosition + Vector3Int.up);
+        //Debug.Log(treeCellPosition + "up" + treeCellPosition + Vector3Int.up);
         if (treeGrid.gridTreeInfo.ContainsKey(treeCellPosition + Vector3Int.up))
         {
-            Debug.Log("two close");
+            //Debug.Log("two close");
             nearByTreeCount += 1;
+            
         }
     }
 
@@ -81,6 +92,9 @@ public class TreeGrowth : MonoBehaviour
                 break;
             case 5:
                 m_Sprite.sprite = treeDeathStage;
+                break;
+            case 6:
+                m_Sprite.sprite = treeCutStage;
                 break;
             default:
                 break;

@@ -6,10 +6,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ArcticController : RegionController {
+	/// <summary> Total level time </summary>
 	float timeLeft = 60f;
+	/// <summary> references to scene text assets </summary>
 	[SerializeField] Text scoreText = default, timerText = default;
+	/// <summary> Balls that landed </summary>
 	int damage = 0;
+	/// <summary> present Buffers </summary>
 	Buffer[] buffers;
+	/// <summary> Buffer parent </summary>
 	[SerializeField] Transform ice = default;
 
 	void Start() {
@@ -27,11 +32,12 @@ public class ArcticController : RegionController {
 	}
 
 	void Update() {
+		// check timer
 		if ((timeLeft -= Time.deltaTime) < 0f) {
 			timeLeft = 0f;
 			Pause();
 			CalculateScore();
-		} else {
+		} else { // update text
 			damage = 0;
 			foreach (Buffer b in buffers)
 				damage += b.health + 1;
@@ -45,5 +51,5 @@ public class ArcticController : RegionController {
 		// TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
 
-	double ProcessScore() => (Math.Log(Math.E * (5 * buffers.Length - damage) / 30d) / 3 + .75) / 1000d;
+	double ProcessScore() => (Math.Log(Math.E * (5 * buffers.Length - damage) / 30d) / 3 + .75) / 1000d; // custom score function
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Buffer : MonoBehaviour {
 	public int health = 4;
+	/// <summary> ice sprites in order </summary>
 	[SerializeField] Sprite[] healthSprite = new Sprite[5];
 	SpriteRenderer sr;
 

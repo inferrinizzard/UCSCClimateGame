@@ -12,11 +12,19 @@ public class RegionController : MonoBehaviour {
 	[HideInInspector] public bool paused = false;
 	protected bool updated = false;
 
+	[SerializeField] SpriteRenderer[] backgrounds = default;
+
 	public World.Region region;
 
 	protected GameObject introBlock;
 
-	protected virtual void Awake() { }
+	protected virtual void Awake() {
+		foreach (var s in backgrounds)
+			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
+	}
+
+	public static float GetScreenToWorldHeight { get => Camera.main.ViewportToWorldPoint(new Vector2(1, 1)).y * 2; }
+	public static float GetScreenToWorldWidth { get => Camera.main.ViewportToWorldPoint(new Vector2(1, 1)).x * 2; }
 
 	public void AssignRegion(string name) => region = (World.Region) System.Enum.Parse(typeof(World.Region), name);
 
