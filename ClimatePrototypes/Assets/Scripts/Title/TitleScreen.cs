@@ -3,16 +3,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TitleScreen : MonoBehaviour {
 	Camera cam;
 	Scene overworldScene;
 	OverworldController overworldController;
-
-	public void Unload() {
-		UIController.Instance.gameObject.SetActive(true);
-		SceneManager.UnloadSceneAsync(gameObject.scene);
-	}
+	[SerializeField] Graphic[] uiReveal = default;
 
 	public void Quit() => Application.Quit();
 
@@ -23,6 +20,33 @@ public class TitleScreen : MonoBehaviour {
 			SceneManager.LoadScene("Overworld", LoadSceneMode.Additive);
 			SceneManager.sceneLoaded += SetOverWorldActive;
 		} else SetOverWorldActive(SceneManager.GetSceneByName("Overworld"), LoadSceneMode.Single);
+
+		for (int i = 0; i < uiReveal.Length; i++) {
+			foreach (Graphic g in uiReveal[i].GetComponentsInChildren<Graphic>())
+				g.color = new Color(g.color.r, g.color.g, g.color.b, 0);
+			StartCoroutine(DropReveal(uiReveal[i], i * .5f, uiReveal[i].TryGetComponent(out Button _)));
+		}
+	}
+
+	IEnumerator DropReveal(Graphic g, float delay = 0, bool drop = true, float time = .5f) {
+		yield return new WaitForSeconds(delay);
+		float height = 0;
+		float startingHeight = 0;
+
+		if (drop) {
+			height = (g.transform as RectTransform).rect.height;
+			g.transform.position = g.transform.position + Vector3.up * height;
+			startingHeight = g.transform.position.y;
+		}
+
+		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+			yield return null;
+			if (drop)
+				g.transform.position = new Vector3(g.transform.position.x, startingHeight - step / time * height, g.transform.position.z);
+			foreach (Graphic child in g.GetComponentsInChildren<Graphic>()) {
+				child.color = new Color(child.color.r, child.color.g, child.color.b, step / time);
+			}
+		}
 	}
 
 	void SetOverWorldActive(Scene scene, LoadSceneMode mode) {
@@ -37,6 +61,10 @@ public class TitleScreen : MonoBehaviour {
 		overworldController.ClearWorld();
 		overworldController.SendToBottom();
 
+		// StartCoroutine(SlideUp());
+	}
+
+	public void ExitTitle() {
 		StartCoroutine(SlideUp());
 	}
 
@@ -50,6 +78,9 @@ public class TitleScreen : MonoBehaviour {
 
 	IEnumerator SlideUp() {
 		yield return StartCoroutine(PanUp());
+		UIController.Instance.gameObject.SetActive(true);
+		// yield return drop ui bar
 		yield return StartCoroutine(overworldController.EnterWorld());
+		SceneManager.UnloadSceneAsync(gameObject.scene);
 	}
 }
