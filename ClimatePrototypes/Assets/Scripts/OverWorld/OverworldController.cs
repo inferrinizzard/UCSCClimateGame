@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class OverworldController : MonoBehaviour {
-	[SerializeField] GameObject worldWrapper;
+	[SerializeField] GameObject worldWrapper = default;
+	[SerializeField] SpriteRenderer bg = default;
 
-	void Start() {
-
-	}
-
-	// Update is called once per frame
-	void Update() {
-
+	public void SendToBottom() {
+		Camera.main.transform.position = Vector3.forward * -10;
+		bg.transform.position = new Vector3(bg.transform.position.x, -Camera.main.ViewportToWorldPoint(Vector2.zero).y - bg.bounds.extents.y, bg.transform.position.z);
+		Camera.main.transform.position = new Vector3(0, bg.bounds.min.y - Camera.main.ViewportToWorldPoint(Vector2.zero).y, -10);
 	}
 
 	public void ClearWorld() {

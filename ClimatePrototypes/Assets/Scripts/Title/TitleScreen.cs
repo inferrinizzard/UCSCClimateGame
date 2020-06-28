@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,16 +32,19 @@ public class TitleScreen : MonoBehaviour {
 
 		UIController.Instance.gameObject.SetActive(false);
 
-		overworldController = overworldScene.GetRootGameObjects().ToList().Find(g => g.TryGetComponent(out OverworldController c)).GetComponent<OverworldController>();
-		cam = overworldController.GetComponent<Camera>();
+		cam = Camera.main;
+		overworldController = cam.GetComponent<OverworldController>();
 		overworldController.ClearWorld();
+		overworldController.SendToBottom();
 
 		StartCoroutine(SlideUp());
 	}
 
 	IEnumerator PanUp(float time = 1) {
+		float startHeight = cam.transform.position.y;
 		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
 			yield return null;
+			cam.transform.position = new Vector3(0, Mathf.Lerp(startHeight, 0, step / time), -10);
 		}
 	}
 
