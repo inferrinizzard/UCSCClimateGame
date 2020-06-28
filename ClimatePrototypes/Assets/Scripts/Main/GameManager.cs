@@ -12,8 +12,6 @@ public class GameManager : Singleton<GameManager> {
 	public bool runModel = true;
 	[SerializeField] GameObject loadingScreen = default;
 	[SerializeField] GameObject quitPrompt = default;
-	bool titleScreen = true;
-	[HideInInspector] public Scene? titleScene = null;
 	public RegionController currentRegion;
 
 	Dictionary<World.Region, int> visits = new Dictionary<World.Region, int> { { World.Region.Arctic, 0 }, { World.Region.Fire, 0 }, { World.Region.Forest, 0 }, { World.Region.City, 0 } };
@@ -30,13 +28,6 @@ public class GameManager : Singleton<GameManager> {
 	void Start() {
 		FindCurrentRegion(SceneManager.GetActiveScene());
 		SceneManager.activeSceneChanged += instance.InitScene;
-
-		if (titleScreen && SceneManager.GetActiveScene().name == "Overworld" && titleScene == null) {
-			UIController.Instance.gameObject.SetActive(false);
-			SceneManager.LoadScene("TitleScreen", LoadSceneMode.Additive);
-			titleScene = SceneManager.GetSceneByName("TitleScreen");
-			titleScreen = false;
-		}
 	}
 
 	public void QuitGame(int exitStatus = 0) {
