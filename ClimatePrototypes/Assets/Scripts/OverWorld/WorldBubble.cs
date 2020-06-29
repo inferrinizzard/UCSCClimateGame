@@ -11,7 +11,6 @@ public class WorldBubble : MonoBehaviour {
 	Vector3 startPos;
 	public Dictionary<string, SpriteRenderer> icons = new Dictionary<string, SpriteRenderer>();
 
-	// Start is called before the first frame update
 	void Awake() {
 		bubble = transform.GetChild(0).gameObject;
 		startPos = bubble.transform.localPosition;
@@ -21,9 +20,6 @@ public class WorldBubble : MonoBehaviour {
 			icon.gameObject.SetActive(false);
 		}
 	}
-
-	// Update is called once per frame
-	void Update() { }
 
 	void OnMouseEnter() {
 		if (!active)
@@ -37,8 +33,7 @@ public class WorldBubble : MonoBehaviour {
 			foreach (var node in transform.parent.GetComponentsInChildren<WorldBubble>())
 				foreach (var kvp in node.icons)
 					kvp.Value.gameObject.SetActive(false);
-			GameManager.Transition(name.Replace("Node", string.Empty));
-			// Debug.Log(gameObject.name.Replace("Node", string.Empty));
+			StartCoroutine(EnterRegion(new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0)));
 		}
 	}
 
@@ -49,19 +44,27 @@ public class WorldBubble : MonoBehaviour {
 
 	IEnumerator Bubble(bool entering, float dur, Vector2 pos = default(Vector2)) {
 		active = entering;
-		float start = Time.time;
 		if (entering)
 			bubble.SetActive(true);
-		bool inProgress = true;
-		while (inProgress) {
+		for (var(start, step) = (Time.time, 0f); step < dur; step = Time.time - start) {
 			yield return null;
-			float step = Time.time - start;
 			bubble.transform.localScale = (entering ? Mathf.Lerp(.001f, size, step / dur) : Mathf.Lerp(size, .001f, step / dur)) * Vector3.one;
 			bubble.transform.localPosition = entering ? Vector3.Lerp(transform.position, startPos, step / dur) : Vector3.Lerp(startPos, transform.position, step / dur);
-			if (step > dur)
-				inProgress = false;
 		}
 		if (!entering)
 			bubble.SetActive(false);
+	}
+
+	IEnumerator EnterRegion(Vector3 bubblePos, float time = .5f) {
+		StartCoroutine(UIController.SlideNav(UIController.Instance.navbar.transform, up : true));
+		Vector3 camStartPos = Camera.main.transform.position;
+		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+			yield return null;
+			Camera.main.transform.position = Vector3.Lerp(camStartPos, bubblePos, step / time);
+			Camera.main.orthographicSize = 5 * (1 - step / time); // slow
+			Camera.main.GetComponent<OverworldController>().fadeMat.SetFloat("_Alpha", step / time); // slow
+		}
+		GameManager.Transition(name.Replace("Node", string.Empty));
+		// Shader.SetGlobalFloat("_Alpha", 1);
 	}
 }

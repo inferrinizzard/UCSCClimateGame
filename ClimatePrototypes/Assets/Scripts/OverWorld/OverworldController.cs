@@ -7,6 +7,10 @@ public class OverworldController : MonoBehaviour {
 	[SerializeField] GameObject worldWrapper = default;
 	[SerializeField] SpriteRenderer bg = default;
 
+	public Material fadeMat;
+
+	void Start() { fadeMat = new Material(Shader.Find("Screen/Fade")); }
+
 	public void SendToBottom() {
 		Camera.main.transform.position = Vector3.forward * -10;
 		bg.transform.position = new Vector3(bg.transform.position.x, -Camera.main.ViewportToWorldPoint(Vector2.zero).y - bg.bounds.extents.y, bg.transform.position.z);
@@ -26,5 +30,9 @@ public class OverworldController : MonoBehaviour {
 			foreach (var sr in sprites)
 				sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, step);
 		}
+	}
+
+	void OnRenderImage(RenderTexture src, RenderTexture dest) {
+		Graphics.Blit(src, dest, fadeMat);
 	}
 }
