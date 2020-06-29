@@ -11,6 +11,7 @@ public class UIController : Singleton<UIController> {
 	[SerializeField] Button backButton = default;
 	[SerializeField] Button exitButton = default;
 	[SerializeField] GameObject returnPrompt = default;
+	public GameObject navbar;
 
 	void OnEnable() {
 		worldNameText.text = World.worldName;
@@ -87,6 +88,19 @@ public class UIController : Singleton<UIController> {
 				if (button)
 					button.SetActive(true);
 			}
+		}
+	}
+
+	// public void ShiftNav(bool up = true) => StartCoroutine(SlideNav(navbar, up));
+
+	public static IEnumerator SlideNav(Transform nav, bool up = false, float time = .5f) {
+		float height = (nav.transform as RectTransform).rect.height;
+		nav.transform.position = nav.transform.position + Vector3.up * height * (up ? -1 : 1);
+		float startingHeight = nav.transform.position.y;
+
+		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+			yield return null;
+			nav.transform.position = new Vector3(nav.transform.position.x, startingHeight - step / time * height * (up ? -1 : 1), nav.transform.position.z);
 		}
 	}
 }

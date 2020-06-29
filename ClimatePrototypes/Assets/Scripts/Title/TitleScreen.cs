@@ -24,14 +24,13 @@ public class TitleScreen : MonoBehaviour {
 		for (int i = 0; i < uiReveal.Length; i++) {
 			foreach (Graphic g in uiReveal[i].GetComponentsInChildren<Graphic>())
 				g.color = new Color(g.color.r, g.color.g, g.color.b, 0);
-			StartCoroutine(DropReveal(uiReveal[i], i * .5f, uiReveal[i].TryGetComponent(out Button _)));
+			StartCoroutine(DropReveal(uiReveal[i].transform, i * .5f, uiReveal[i].TryGetComponent(out Button _)));
 		}
 	}
 
-	IEnumerator DropReveal(Graphic g, float delay = 0, bool drop = true, float time = .5f) {
+	IEnumerator DropReveal(Transform g, float delay = 0, bool drop = true, bool fade = true, float time = .5f) {
 		yield return new WaitForSeconds(delay);
-		float height = 0;
-		float startingHeight = 0;
+		float height = 0, startingHeight = 0;
 
 		if (drop) {
 			height = (g.transform as RectTransform).rect.height;
@@ -43,9 +42,9 @@ public class TitleScreen : MonoBehaviour {
 			yield return null;
 			if (drop)
 				g.transform.position = new Vector3(g.transform.position.x, startingHeight - step / time * height, g.transform.position.z);
-			foreach (Graphic child in g.GetComponentsInChildren<Graphic>()) {
-				child.color = new Color(child.color.r, child.color.g, child.color.b, step / time);
-			}
+			if (fade)
+				foreach (Graphic child in g.GetComponentsInChildren<Graphic>())
+					child.color = new Color(child.color.r, child.color.g, child.color.b, step / time);
 		}
 	}
 
@@ -79,7 +78,7 @@ public class TitleScreen : MonoBehaviour {
 	IEnumerator SlideUp() {
 		yield return StartCoroutine(PanUp());
 		UIController.Instance.gameObject.SetActive(true);
-		// yield return drop ui bar
+		yield return StartCoroutine(UIController.SlideNav(UIController.Instance.navbar.transform));
 		yield return StartCoroutine(overworldController.EnterWorld());
 		SceneManager.UnloadSceneAsync(gameObject.scene);
 	}
