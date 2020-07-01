@@ -844,10 +844,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b3aac3c94a8b14da9b6b4550181e0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visited: 0
   intro: {fileID: 11400000, guid: 8a22151f9d1db2b439334935bb13f4b4, type: 2}
   introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
     type: 3}
+  paused: 0
+  backgrounds:
+  - {fileID: 870667301}
+  - {fileID: 742776274}
+  region: 0
   timer: 60
   numFires: 5
   spawnDelayMin: 10

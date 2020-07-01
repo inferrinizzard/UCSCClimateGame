@@ -1,19 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+// BAD NAMING: this class has unintentionally becoming a god class due to scope keep expanding. T
+// Should be refactored
 public class PlantTree : MonoBehaviour
 {
     public SpriteRenderer plantActionSprite;
     public SpriteRenderer cutActionSprite;
     public GameObject agentSelected;
     public Tilemap tilemap;
+    public GameObject AIGoalPrefab;
 
     public GameObject treeStage1;
     public bool canPlantTree; // flag to track if placing agent or place tree
     public bool canPlantAgent;
     public GameObject agentPlacedPrefab;
+    public GameObject agentClickedPrefab;
     public GameObject shadowPrefab;
     private GameObject currentShadow;
 
@@ -21,21 +26,21 @@ public class PlantTree : MonoBehaviour
     
     // This map needs to be updated if ground tilemap is changed
     public Dictionary<Vector3Int, bool> groundGridInfo = new Dictionary<Vector3Int, bool>();
-    //public Dictionary<GameObject, bool> agentsInfo = new Dictionary<GameObject, bool>();
+    public Dictionary<Vector3Int, bool> gridTreeInfo = new Dictionary<Vector3Int, bool>();  // dic for tree data
+    public Dictionary<Vector3Int, GameObject> gridTreePrefab = new Dictionary<Vector3Int, GameObject>();  // dictionary for grabbing tree prefab asset 
     
-    public Dictionary<Vector3Int, bool> gridTreeInfo = new Dictionary<Vector3Int, bool>();
-    public Dictionary<Vector3Int, GameObject> gridTreePrefab = new Dictionary<Vector3Int, GameObject>();
-    // Start is called before the first frame update
+
     void Start()
     {
         agentSelected = null;
-        plantActionSprite.color = Color.clear;
-        cutActionSprite.color = Color.clear;
+        //plantActionSprite.color = Color.clear;
+        //cutActionSprite.color = Color.clear;
         
         canPlantTree = true;
         canPlantAgent = false;
         
         // set up grid data structure
+        // hard coded for now, using cell position vector3int and the actual tilemap painting.
         for (int i = -4; i <= 3; i++)
         {
             for (int j = -3; j <= 2; j++)
@@ -46,8 +51,14 @@ public class PlantTree : MonoBehaviour
         
         
     }
-
-    // Update is called once per frame
+    
+    // change tree VFX
+    public void CutTreeAt(Vector3Int loc)
+    {
+        gridTreePrefab[loc].GetComponent<TreeGrowth>().treeStage = 6;  
+        
+    }
+    
     void Update()
     {
         // Hightlight tiles
@@ -60,14 +71,7 @@ public class PlantTree : MonoBehaviour
         if (groundGridInfo.ContainsKey(cellPositionHover))
         {
             // Dangerous, changing tile directly
-            /*Tile hoverTile = tilemap.GetTile<Tile>(cellPositionHover);
-            Debug.Log(hoverTile);
-            hoverTile.color = Color.green;*/
-            if (canPlantTree)
-            {
-                
-            }
-            else
+            if (!canPlantTree || agentSelected != null)
             {
                 // place shadow
                 if (currentShadow is null)
@@ -79,56 +83,52 @@ public class PlantTree : MonoBehaviour
                     currentShadow.transform.position = spawnHoverPosition;
                 }
             }
-            
         }
-
         
         if (Input.GetButtonDown("Fire1"))
         {
             Vector3 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int cellPosition = tilemap.WorldToCell(clickPosition);
             
-            //Debug.Log("cell position clicked is:" + cellPosition);
+            // DO NOT DELETE, useful debug info
+            Debug.Log("cell position clicked is:" + cellPosition);
+            
             if (!groundGridInfo.ContainsKey(cellPosition)) return;
             
             Vector3 spawnPosition = tilemap.GetCellCenterWorld(cellPosition);
             spawnPosition.z = -1;
-            // plant tree
+            // plant tree  implementation moved to Plant.cs
             if (canPlantTree && plantActionSprite.color == Color.red && agentSelected != null )
             {
-                if (!gridTreeInfo.ContainsKey(cellPosition))
+                /*if (!gridTreeInfo.ContainsKey(cellPosition))
                 {
                     GameObject go = Instantiate(treeStage1, spawnPosition, transform.rotation);
                     gridTreeInfo.Add(cellPosition, true);
                     gridTreePrefab.Add(cellPosition, go);
                     
                     agentSelected.transform.position = spawnPosition;
-                }
-
-                
+                }*/
             }
             else  
             {
                 // spawn agent the first time
                 if (canPlantAgent)
                 {
-                    Instantiate(agentPlacedPrefab, spawnPosition, transform.rotation);
+                    GameObject currentGO = Instantiate(agentPlacedPrefab, spawnPosition, transform.rotation);
+                    GameObject currentGoal = Instantiate(AIGoalPrefab, spawnPosition, transform.rotation);
+                    currentGO.GetComponent<AIDestinationSetter>().target = currentGoal.transform;
+                    currentGoal.GetComponent<AIGoalReached>().myAgent = currentGO;
+                    agentClickedPrefab.SetActive(false);
                     canPlantAgent = false;
                 }
                 
-                // cut down current tile tree
-                if (gridTreeInfo.ContainsKey(cellPosition) && cutActionSprite.color == Color.red && agentSelected != null)
+                // move selectedAgent to selected target tile
+                if (agentSelected != null)
                 {
-                    gridTreePrefab[cellPosition].GetComponent<TreeGrowth>().treeStage = 5;
-                    gridTreePrefab[cellPosition].GetComponent<TreeGrowth>().UpdateTreeVFX(5);
-                    
-                    // move action agent to the tile
-                    // TODO: coroutine to move agent overtime
-                    //if (!movedAgent) StartCoroutine(MoveAgentToTile(spawnPosition));
-                    agentSelected.transform.position = spawnPosition;
-                    
+                    Transform currentAgentGoal = agentSelected.GetComponent<AIDestinationSetter>().target;
+                    currentAgentGoal.position = spawnPosition;
+                    agentSelected.GetComponent<Animator>().SetInteger("animState", 2);
                 }
-                // draw tree beneath agent
                 spawnPosition.z = -2;
 
                 
@@ -137,35 +137,7 @@ public class PlantTree : MonoBehaviour
                 currentShadow = null;
                 Destroy( GameObject.FindWithTag("Shadow"));
                 
-                
-
-            }
-        }
-        
-        if (agentSelected != null)
-        {
-            // use plant action
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                plantActionSprite.color = Color.red;
-                cutActionSprite.color = new Color(255,255,255);
-            } // use cut action
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                cutActionSprite.color = Color.red;
-                plantActionSprite.color = new Color(255,255,255);
             }
         }
     }
-
-    /*IEnumerator MoveAgentToTile(GameObject agent, Vector3 destination)
-    {
-        Vector3 dir = destination - agent.transform.position;
-        agent.transform.position += dir.normalized * Time.deltaTime;
-
-        if (destination == agent.transform.position)
-        {
-            movedAgent = true;
-        }
-    }*/
 }

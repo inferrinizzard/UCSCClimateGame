@@ -24,6 +24,7 @@ public class AgentMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    
         // if clicked on this agent, highlight him
         if (Input.GetButtonDown("Fire1"))
         {
@@ -42,32 +43,36 @@ public class AgentMovement : MonoBehaviour
                 }
 
                 plantTreeScript.agentSelected = gameObject;
-                
-                GetComponent<SpriteRenderer>().color = Color.red;
+            
+                //GetComponent<SpriteRenderer>().color = Color.yellow;
+                // turn on walking forward animation indicating agent active status
+                GetComponent<Animator>().SetInteger("animState", 1);
+            
+                // select future tiles
+            
                 // enable action bar
                 plantActionSprite.color = Color.yellow;
                 cutActionSprite.color = Color.yellow;
-                ;
             }
+
         } 
-        // deselect current agent
+        // deselect current agent using right mouse button
         if (Input.GetButtonDown("Fire2"))
         {
             Vector3 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int cellPosition = tilemap.WorldToCell(clickPosition);
 
-            if (tilemap.WorldToCell((transform.position)) == cellPosition)
+            if (tilemap.WorldToCell((transform.position)) == cellPosition && amISelected == true)
             {
                 amISelected = false;
                 plantTreeScript.agentSelected = null;
 
-                GetComponent<SpriteRenderer>().color = new Color(255,255,255);
+                //GetComponent<SpriteRenderer>().color = new Color(255,255,255);
+                GetComponent<Animator>().SetInteger("animState", 0);
                 // disable action bar
                 plantActionSprite.color = Color.clear;
                 cutActionSprite.color = Color.clear;
             }
         }
-        
-        
     }
 }

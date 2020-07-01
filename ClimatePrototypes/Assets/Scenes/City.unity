@@ -1998,11 +1998,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b1b1722dce8944db08baf32c45077f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visited: 0
   intro: {fileID: 11400000, guid: 798adfaeca591b24b9de8cd928a69fae, type: 2}
   introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
     type: 3}
   paused: 0
+  backgrounds:
+  - {fileID: 2114293290}
+  region: 0
   mainTitle: {fileID: 1189416000}
   leftText: {fileID: 478389874}
   rightText: {fileID: 82958226}

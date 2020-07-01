@@ -49,6 +49,7 @@ public class FireController : RegionController {
 			StartCoroutine(flash = PromptFlash(2));
 	}
 
+	/// <summary> Looping fire spawn </summary>
 	IEnumerator SpawnFire() {
 		if (fireCount < numFires) {
 			Fire newFire = Instantiate(firePrefab, RandomPoint(margin), Quaternion.identity, transform).GetComponent<Fire>();
@@ -76,6 +77,7 @@ public class FireController : RegionController {
 		return new Vector3(Mathf.Clamp(randomPos.x, margin + min.x, max.x - margin), Mathf.Clamp(randomPos.y, margin + min.y, max.y - margin), 0);
 	}
 
+	/// <summary> Water slider flash </summary>
 	IEnumerator PromptFlash(float speed) {
 		Slider preview = Instantiate(waterSlider.gameObject, waterSlider.transform.parent).GetComponentInChildren<Slider>();
 		Destroy(preview.transform.GetChild(1).gameObject);
