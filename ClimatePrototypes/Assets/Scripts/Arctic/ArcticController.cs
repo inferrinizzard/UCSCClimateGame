@@ -17,7 +17,8 @@ public class ArcticController : RegionController {
 	/// <summary> Buffer parent </summary>
 	[SerializeField] Transform ice = default;
 
-	void Start() {
+	protected void Start() {
+		base.Start();
 		buffers = ice.GetComponentsInChildren<Buffer>();
 		// Intro();
 		int totalHealth = buffers.Length * buffers[0].health;

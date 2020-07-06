@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 87}
   - component: {fileID: 124}
   - component: {fileID: 217}
+  - component: {fileID: 23}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -67,6 +68,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &23
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96197f3478ee25c418320b497cf159cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intro: {fileID: 11400000, guid: ba780126df272254bb0ac069fff1a329, type: 2}
+  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
+    type: 3}
+  paused: 0
+  backgrounds: []
+  region: 0
+  scoreText: {fileID: 1730636744}
+  timerText: {fileID: 1296716237}
+  ice: {fileID: 680337532}
 --- !u!4 &82
 Transform:
   m_ObjectHideFlags: 0
@@ -464,8 +486,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96197f3478ee25c418320b497cf159cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intro: {fileID: 0}
+  introPrefab: {fileID: 0}
+  paused: 0
+  backgrounds: []
+  region: 0
   scoreText: {fileID: 1730636744}
   timerText: {fileID: 1296716237}
+  ice: {fileID: 0}
 --- !u!1 &891243671
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,58 +541,6 @@ MonoBehaviour:
   cloudPrefab: {fileID: 2072777403796196785, guid: 12e19168afda23640a539e808481c8c4,
     type: 3}
   canSpawn: 1
---- !u!1 &1194167032
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1194167034}
-  - component: {fileID: 1194167033}
-  m_Layer: 0
-  m_Name: Arctic Controller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1194167033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194167032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96197f3478ee25c418320b497cf159cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  intro: {fileID: 11400000, guid: ba780126df272254bb0ac069fff1a329, type: 2}
-  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
-    type: 3}
-  paused: 0
-  backgrounds: []
-  region: 0
-  scoreText: {fileID: 1730636744}
-  timerText: {fileID: 1296716237}
-  ice: {fileID: 680337532}
---- !u!4 &1194167034
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194167032}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1296716234
 GameObject:
   m_ObjectHideFlags: 0

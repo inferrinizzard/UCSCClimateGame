@@ -7,7 +7,7 @@ using Pathfinding;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ForestController : MonoBehaviour {
+public class ForestController : RegionController {
 	public static ForestController Instance;
 	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default, emissionsTracker = default;
 	[SerializeField] int numActive;
@@ -26,7 +26,8 @@ public class ForestController : MonoBehaviour {
 
 	public void UIHover(bool over) => overUI = over;
 
-	void Start() {
+	protected void Start() {
+		base.Start();
 		agentParent = new GameObject("Agent Parent").transform;
 		agentParent.parent = transform;
 		utility = new GameObject("Utility").transform;

@@ -1009,6 +1009,7 @@ GameObject:
   - component: {fileID: 781032943}
   - component: {fileID: 781032942}
   - component: {fileID: 781032941}
+  - component: {fileID: 781032944}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1081,6 +1082,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &781032944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781032940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72b1b1722dce8944db08baf32c45077f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intro: {fileID: 11400000, guid: 798adfaeca591b24b9de8cd928a69fae, type: 2}
+  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
+    type: 3}
+  paused: 0
+  backgrounds:
+  - {fileID: 2114293290}
+  region: 0
+  mainTitle: {fileID: 1189416000}
+  leftText: {fileID: 478389874}
+  rightText: {fileID: 82958226}
+  leftTitle: {fileID: 848522300}
+  rightTitle: {fileID: 880957940}
+  speed: 0.05
+  leftPerson: {fileID: 2107033079}
+  rightPerson: {fileID: 1698075305}
+  personContainer: {fileID: 274166960}
 --- !u!1 &848522298
 GameObject:
   m_ObjectHideFlags: 0
@@ -1978,7 +2007,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1487954277}
-  - component: {fileID: 1487954276}
   m_Layer: 0
   m_Name: City Controller
   m_TagString: Untagged
@@ -1986,34 +2014,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1487954276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1487954275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72b1b1722dce8944db08baf32c45077f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  intro: {fileID: 11400000, guid: 798adfaeca591b24b9de8cd928a69fae, type: 2}
-  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
-    type: 3}
-  paused: 0
-  backgrounds:
-  - {fileID: 2114293290}
-  region: 0
-  mainTitle: {fileID: 1189416000}
-  leftText: {fileID: 478389874}
-  rightText: {fileID: 82958226}
-  leftTitle: {fileID: 848522300}
-  rightTitle: {fileID: 880957940}
-  speed: 0.05
-  leftPerson: {fileID: 2107033079}
-  rightPerson: {fileID: 1698075305}
-  personContainer: {fileID: 274166960}
 --- !u!4 &1487954277
 Transform:
   m_ObjectHideFlags: 0
