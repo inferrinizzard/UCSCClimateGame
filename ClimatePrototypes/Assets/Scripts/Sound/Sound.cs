@@ -9,4 +9,14 @@ public class Sound {
 	[Range(0, 1)] public float volume = 1;
 	[Range(.1f, .3f)] public float pitch = 1;
 	[HideInInspector] public AudioSource source;
+
+	public Sound(AudioClip clip, float volume = 1, float pitch = 1) {
+		this.clip = clip;
+		this.volume = volume;
+		this.pitch = pitch;
+	}
+
+	public override string ToString() => $"Sound:{name} @{{volume:{volume}, pitch:{pitch}}}";
+
+	public void Play() => AudioManager.Instance.Play(this);
 }
