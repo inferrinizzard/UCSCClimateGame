@@ -33,8 +33,9 @@ public class AudioManager : Singleton<AudioManager> {
 		channel.volume = sound.volume;
 		channel.pitch = sound.pitch;
 		channel.Play();
-		Debug.Log(channel);
-		Debug.Log(sound);
+		Debug.Log($"played {sound} on channel {channel}");
+		// Debug.Log(channel);
+		// Debug.Log(sound);
 	}
 
 	AudioSource GetChannel(AudioType type) {
