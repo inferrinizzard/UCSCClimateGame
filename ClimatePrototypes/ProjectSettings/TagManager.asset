@@ -10,6 +10,7 @@ TagManager:
   - SolarRadiation
   - AgentClicked
   - Shadow
+  - Fire
   layers:
   - Default
   - TransparentFX
