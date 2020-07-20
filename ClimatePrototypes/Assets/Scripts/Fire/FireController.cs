@@ -21,7 +21,7 @@ public class FireController : RegionController {
 	IEnumerator flash = null;
 	float margin;
 
-	protected void Start() {
+	protected override void Start() {
 		base.Start();
 		timerText.text = string.Format("{00}", timer);
 

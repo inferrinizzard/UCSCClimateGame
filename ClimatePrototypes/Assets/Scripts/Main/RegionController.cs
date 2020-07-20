@@ -24,7 +24,7 @@ public class RegionController : MonoBehaviour {
 			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
 	}
 
-	protected void Start() { fadeMat = new Material(Shader.Find("Screen/Fade")); }
+	protected virtual void Start() { fadeMat = new Material(Shader.Find("Screen/Fade")); }
 
 	public static float GetScreenToWorldHeight { get => Camera.main.ViewportToWorldPoint(Vector2.one).y - Camera.main.ViewportToWorldPoint(Vector2.zero).y; }
 	public static float GetScreenToWorldWidth { get => Camera.main.ViewportToWorldPoint(Vector2.one).x - Camera.main.ViewportToWorldPoint(Vector2.zero).x; }

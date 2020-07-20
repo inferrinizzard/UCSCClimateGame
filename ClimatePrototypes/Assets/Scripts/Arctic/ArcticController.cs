@@ -17,7 +17,7 @@ public class ArcticController : RegionController {
 	/// <summary> Buffer parent </summary>
 	[SerializeField] Transform ice = default;
 
-	protected void Start() {
+	protected override void Start() {
 		base.Start();
 		buffers = ice.GetComponentsInChildren<Buffer>();
 		// Intro();

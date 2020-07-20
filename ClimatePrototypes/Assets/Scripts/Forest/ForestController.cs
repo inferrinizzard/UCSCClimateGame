@@ -22,11 +22,14 @@ public class ForestController : RegionController {
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 	public List<Vector3Int> activeTrees = new List<Vector3Int>();
 
-	void Awake() => Instance = this;
+	protected override void Awake() {
+		base.Awake();
+		Instance = this;
+	}
 
 	public void UIHover(bool over) => overUI = over;
 
-	protected void Start() {
+	protected override void Start() {
 		base.Start();
 		agentParent = new GameObject("Agent Parent").transform;
 		agentParent.parent = transform;
