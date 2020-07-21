@@ -7,11 +7,9 @@ using UnityEngine.UI;
 
 public class ArcticController : RegionController {
 	/// <summary> Total level time </summary>
-	float timeLeft = 60f;
 	/// <summary> references to scene text assets </summary>
 	[SerializeField] Text scoreText = default, timerText = default;
 	/// <summary> Balls that landed </summary>
-	int damage = 0;
 	/// <summary> present Buffers </summary>
 	Buffer[] buffers;
 	/// <summary> Buffer parent </summary>
@@ -31,10 +29,11 @@ public class ArcticController : RegionController {
 		}
 	}
 
-	void Update() {
+	protected override void Update() {
+		base.Update();
 		// check timer
-		if ((timeLeft -= Time.deltaTime) < 0f) {
-			timeLeft = 0f;
+		if ((timer -= Time.deltaTime) < 0f) {
+			timer = 0f;
 			Pause();
 			CalculateScore();
 		} else { // update text
@@ -44,7 +43,7 @@ public class ArcticController : RegionController {
 			scoreText.text = $"Ice Remaining: {damage}";
 		}
 
-		timerText.text = Mathf.Round(timeLeft).ToString();
+		timerText.text = Mathf.Round(timer).ToString();
 	}
 
 	void CalculateScore() {

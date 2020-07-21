@@ -5,13 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class FireController : RegionController {
-	[SerializeField] float timer = 60f;
 	[SerializeField] int numFires = 5;
-	public static int fireCount = 0;
+	public int fireCount = 0;
 	[SerializeField] float spawnDelayMin = 10;
-	public static int damageRate = 30;
-	public static float damage = 0;
-	public static readonly float damageLimit = 200f;
+	public int damageRate = 30;
+	public readonly float damageLimit = 200f;
 	[SerializeField] GameObject firePrefab = default;
 	[SerializeField] Text damageText = default, timerText = default;
 	[SerializeField] Slider waterSlider = default;
@@ -29,7 +27,8 @@ public class FireController : RegionController {
 			StartCoroutine(SpawnFire());
 	}
 
-	void Update() {
+	protected override void Update() {
+		base.Update();
 		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 		damageText.text = $"Damage: {damage}";
 		waterSlider.value = spray.currentWater / spray.maxWater;

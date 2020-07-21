@@ -8,17 +8,20 @@ public class RegionController : MonoBehaviour {
 	[HideInInspector] public static int _visited = 0;
 	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
-	// timer logic?
+	protected GameObject introBlock;
+
+	protected float timer = 60f;
+	public float damage = 0f; // out of 100?
+
 	[HideInInspector] public bool paused = false;
 	protected bool updated = false;
 
+	public World.Region region;
+	public static RegionController Instance;
 	[SerializeField] SpriteRenderer[] backgrounds = default;
 
-	public World.Region region;
-
-	protected GameObject introBlock;
-
 	protected virtual void Awake() {
+		Instance = this;
 		foreach (var s in backgrounds)
 			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
 	}
@@ -29,6 +32,7 @@ public class RegionController : MonoBehaviour {
 	public void AssignRegion(string name) => region = (World.Region) System.Enum.Parse(typeof(World.Region), name);
 
 	public void Intro(int visited) {
+		Debug.Log(intro);
 		_visited = visited;
 		if (intro[visited].Length == 0)
 			return;
@@ -40,9 +44,20 @@ public class RegionController : MonoBehaviour {
 		StartCoroutine(UIController.ClickToAdvance(introText, intro[visited], introButton.gameObject));
 	}
 
+	protected virtual void Update() {
+		if (timer < -1)
+			return;
+		if (timer -= Time.deltaTime <= 0) {
+			timer = 0;
+			// start model thread
+			// summon prompt
+		}
+	}
+
 	void SetPause(int on) => paused = (Time.timeScale = 1 - on) == 0;
 
 	protected void Pause(bool activatePrompt = true) {
+		Debug.Log(timer);
 		if (!paused) {
 			SetPause(1);
 			UIController.Instance.SetPrompt(activatePrompt);

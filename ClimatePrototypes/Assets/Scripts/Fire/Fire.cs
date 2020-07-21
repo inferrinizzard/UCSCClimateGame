@@ -14,11 +14,11 @@ public class Fire : MonoBehaviour {
 
 	void FixedUpdate() {
 		// do damage tick
-		if (step++ % FireController.damageRate == 0 && Time.timeScale != 0)
-			FireController.damage += fadeRate;
+		if (step++ % (FireController.Instance as FireController).damageRate == 0 && Time.timeScale != 0)
+			(FireController.Instance as FireController).damage += fadeRate;
 		if (health <= 0) {
 			Destroy(gameObject);
-			FireController.fireCount--;
+			(FireController.Instance as FireController).fireCount--;
 		}
 	}
 
