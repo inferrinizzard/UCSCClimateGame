@@ -64,6 +64,10 @@ public class CityScript : RegionController {
 		(leftPerson.sprite, rightPerson.sprite) = (persons[0], persons[1]);
 	}
 
+	protected override void GameOver() {
+
+	}
+
 	public static Dictionary<BillDifficulty, List<Bill>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level =>
 			(level, JsonConvert.DeserializeObject<List<Bill>>(Resources.Load<TextAsset>($"bills_{level}").text)))

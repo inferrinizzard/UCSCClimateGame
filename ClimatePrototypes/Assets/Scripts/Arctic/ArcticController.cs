@@ -31,12 +31,7 @@ public class ArcticController : RegionController {
 
 	protected override void Update() {
 		base.Update();
-		// check timer
-		if ((timer -= Time.deltaTime) < 0f) {
-			timer = 0f;
-			Pause();
-			CalculateScore();
-		} else { // update text
+		if (timer > 0) {
 			damage = 0;
 			foreach (Buffer b in buffers)
 				damage += b.health + 1;
@@ -46,7 +41,8 @@ public class ArcticController : RegionController {
 		timerText.text = Mathf.Round(timer).ToString();
 	}
 
-	void CalculateScore() {
+	protected override void GameOver() {
+		Pause();
 		// TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
 

@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class RegionController : MonoBehaviour {
+public abstract class RegionController : MonoBehaviour {
 	[HideInInspector] public static int _visited = 0;
 	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
@@ -15,6 +16,7 @@ public class RegionController : MonoBehaviour {
 
 	[HideInInspector] public bool paused = false;
 	protected bool updated = false;
+	protected abstract void GameOver();
 
 	public World.Region region;
 	public static RegionController Instance;
@@ -47,8 +49,9 @@ public class RegionController : MonoBehaviour {
 	protected virtual void Update() {
 		if (timer < -1)
 			return;
-		if (timer -= Time.deltaTime <= 0) {
+		if ((timer -= Time.deltaTime) <= 0) {
 			timer = 0;
+			GameOver();
 			// start model thread
 			// summon prompt
 		}

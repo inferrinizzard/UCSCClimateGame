@@ -36,16 +36,18 @@ public class FireController : RegionController {
 		if (timer > 0) {
 			if (spray.currentWater <= 0)
 				prompt.SetActive(true);
-		} else {
-			timerText.text = "0";
-			prompt.SetActive(false);
-			Cursor.visible = true;
-			Pause();
-			TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
 		}
 
 		if (hovering && flash == null)
 			StartCoroutine(flash = PromptFlash(2));
+	}
+
+	protected override void GameOver() {
+		timerText.text = "0";
+		prompt.SetActive(false);
+		Cursor.visible = true;
+		Pause();
+		TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
 	}
 
 	/// <summary> Looping fire spawn </summary>
