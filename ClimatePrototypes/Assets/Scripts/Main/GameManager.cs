@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager> {
 	bool titleScreen = true;
 	[HideInInspector] public Scene? titleScene = null;
 	public RegionController currentRegion;
+	[HideInInspector] public bool runningModel = false;
 
 	Dictionary<World.Region, int> visits = new Dictionary<World.Region, int> { { World.Region.Arctic, 0 }, { World.Region.Fire, 0 }, { World.Region.Forest, 0 }, { World.Region.City, 0 } };
 
@@ -79,21 +80,20 @@ public class GameManager : Singleton<GameManager> {
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.realtimeSinceStartup;
 
-		bool calcDone = true;
 		if (name == "Overworld" && Instance.runModel) {
-			calcDone = false;
-			Thread calcThread = new Thread(() => { World.Calc(); calcDone = true; });
+			GameManager.Instance.runningModel = true;
+			Thread calcThread = new Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
 			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 			calcThread.Start();
 		}
 
 		Instance.loadingScreen.SetActive(true);
 
-		while (!asyncLoad.isDone || !calcDone) {
+		while (!asyncLoad.isDone || GameManager.Instance.runningModel) {
 			yield return null;
 			// instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
-			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && calcDone) {
+			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && !GameManager.Instance.runningModel) {
 				Time.timeScale = 1;
 				asyncLoad.allowSceneActivation = true;
 				if (name == "Overworld") {
