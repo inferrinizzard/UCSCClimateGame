@@ -49,7 +49,8 @@ public class CityScript : RegionController {
 			"{" + right.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
 	}
 
-	void Start() {
+	protected override void Start() {
+		base.Start();
 		bills = LoadBills();
 		currentDifficulty = (int) World.impact < 2 ? BillDifficulty.Easy : (int) World.impact < 4 ? BillDifficulty.Med : BillDifficulty.Hard;
 		currentBillList = bills[currentDifficulty];

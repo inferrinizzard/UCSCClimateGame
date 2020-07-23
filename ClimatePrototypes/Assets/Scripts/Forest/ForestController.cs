@@ -7,14 +7,12 @@ using Pathfinding;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ForestController : MonoBehaviour {
-	public static ForestController Instance;
+public class ForestController : RegionController {
 	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default, emissionsTracker = default;
 	[SerializeField] int numActive;
 	[HideInInspector] public VolunteerUI selected;
 	public bool hasSelected { get => selected != null && !overUI; }
 
-	public float damage = 0;
 	[HideInInspector] public bool overUI = false;
 
 	[HideInInspector] public Transform agentParent, utility;
@@ -22,11 +20,12 @@ public class ForestController : MonoBehaviour {
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 	public List<Vector3Int> activeTrees = new List<Vector3Int>();
 
-	void Awake() => Instance = this;
+	protected override void GameOver() { }
 
 	public void UIHover(bool over) => overUI = over;
 
-	void Start() {
+	protected override void Start() {
+		base.Start();
 		agentParent = new GameObject("Agent Parent").transform;
 		agentParent.parent = transform;
 		utility = new GameObject("Utility").transform;

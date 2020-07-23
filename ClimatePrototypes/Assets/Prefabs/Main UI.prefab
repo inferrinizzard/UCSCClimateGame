@@ -1354,6 +1354,7 @@ MonoBehaviour:
   backButton: {fileID: 8003398447642868655}
   exitButton: {fileID: 8003398447528229762}
   returnPrompt: {fileID: 1849801715016199721}
+  navbar: {fileID: 8003398445869127380}
 --- !u!1 &8003398447145238657
 GameObject:
   m_ObjectHideFlags: 0

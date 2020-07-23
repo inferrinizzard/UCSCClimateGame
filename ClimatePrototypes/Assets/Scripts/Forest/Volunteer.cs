@@ -22,8 +22,8 @@ public class VolunteerActions {
 
 	public static void Plant(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
-		var task = ForestController.Instance.volunteers[v.ID];
-		ForestController.Instance.StartCoroutine(TreeGrow(task.volunteer, task.activeTile.Value));
+		var task = (ForestController.Instance as ForestController).volunteers[v.ID];
+		(ForestController.Instance as ForestController).StartCoroutine(TreeGrow(task.volunteer, task.activeTile.Value));
 	}
 
 	public static IEnumerator TreeGrow(Volunteer v, Vector3Int tilePos) {
@@ -34,7 +34,7 @@ public class VolunteerActions {
 		v.AssignTarget(v.origin);
 		ForestGrid.currentTrees.Add(new ForestTree(tilePos));
 		// if (i == 2)
-		// 	ForestController.Instance.activeTrees.Add(tilePos);
+		// 	(ForestController.Instance as ForestController).activeTrees.Add(tilePos);
 	}
 
 	public static IEnumerator WaitAndReturn(PathfindingAgent agent, float duration = 1) {
@@ -46,23 +46,23 @@ public class VolunteerActions {
 
 	public static void Protest(Volunteer v) {
 		v.anim.SetTrigger("Protesting");
-		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
+		(ForestController.Instance as ForestController).StartCoroutine(WaitAndReturn(v, 3));
 	}
 
 	public static IEnumerator ClearAndReturn(Volunteer v, Vector3Int tilePos) {
-		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
+		yield return (ForestController.Instance as ForestController).StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
 		ForestGrid.ClearHover(tilePos);
 		ForestGrid.map.SetTile(tilePos, ForestGrid.empty);
 	}
 
 	public static void Clear(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
-		var task = ForestController.Instance.volunteers[v.ID];
-		ForestController.Instance.StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
+		var task = (ForestController.Instance as ForestController).volunteers[v.ID];
+		(ForestController.Instance as ForestController).StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
 	}
 
 	public static void Capture(Volunteer v) {
 		v.anim.SetTrigger("Facility");
-		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
+		(ForestController.Instance as ForestController).StartCoroutine(WaitAndReturn(v, 3));
 	}
 }

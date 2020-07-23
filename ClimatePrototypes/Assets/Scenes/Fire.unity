@@ -824,7 +824,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 621930801}
-  - component: {fileID: 621930800}
   m_Layer: 0
   m_Name: Fire Controller
   m_TagString: Untagged
@@ -832,36 +831,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &621930800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621930799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b3aac3c94a8b14da9b6b4550181e0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  intro: {fileID: 11400000, guid: 8a22151f9d1db2b439334935bb13f4b4, type: 2}
-  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
-    type: 3}
-  paused: 0
-  backgrounds:
-  - {fileID: 870667301}
-  - {fileID: 742776274}
-  region: 0
-  timer: 60
-  numFires: 5
-  spawnDelayMin: 10
-  firePrefab: {fileID: 1688062329584212153, guid: bf0861234c595ca49987846a05a7408f,
-    type: 3}
-  damageText: {fileID: 582284132}
-  timerText: {fileID: 391386498}
-  waterSlider: {fileID: 1941709411}
-  spray: {fileID: 1597232355}
-  prompt: {fileID: 69987886}
 --- !u!4 &621930801
 Transform:
   m_ObjectHideFlags: 0
@@ -959,7 +928,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 621930800}
+      - m_Target: {fileID: 0}
         m_MethodName: AddWater
         m_Mode: 6
         m_Arguments:
@@ -1023,7 +992,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 621930800}
+        - m_Target: {fileID: 0}
           m_MethodName: SetHovering
           m_Mode: 6
           m_Arguments:
@@ -1038,7 +1007,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 621930800}
+        - m_Target: {fileID: 0}
           m_MethodName: SetHovering
           m_Mode: 6
           m_Arguments:
@@ -1324,6 +1293,7 @@ GameObject:
   - component: {fileID: 944617414}
   - component: {fileID: 944617413}
   - component: {fileID: 944617412}
+  - component: {fileID: 944617415}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1396,6 +1366,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &944617415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944617411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69b3aac3c94a8b14da9b6b4550181e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intro: {fileID: 11400000, guid: 8a22151f9d1db2b439334935bb13f4b4, type: 2}
+  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
+    type: 3}
+  paused: 0
+  backgrounds:
+  - {fileID: 870667301}
+  - {fileID: 742776274}
+  region: 0
+  fadeMat: {fileID: 0}
+  timer: 60
+  numFires: 5
+  spawnDelayMin: 10
+  firePrefab: {fileID: 1688062329584212153, guid: bf0861234c595ca49987846a05a7408f,
+    type: 3}
+  damageText: {fileID: 582284132}
+  timerText: {fileID: 391386498}
+  waterSlider: {fileID: 1941709411}
+  spray: {fileID: 1597232355}
+  prompt: {fileID: 69987886}
 --- !u!1001 &1120257511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1813,7 +1814,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 621930800}
+      - m_Target: {fileID: 0}
         m_MethodName: AddWater
         m_Mode: 6
         m_Arguments:

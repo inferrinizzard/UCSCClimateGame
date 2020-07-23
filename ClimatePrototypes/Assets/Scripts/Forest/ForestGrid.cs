@@ -37,7 +37,7 @@ public class ForestGrid : MonoBehaviour {
 	}
 
 	void Update() {
-		if (ForestController.Instance.hasSelected) {
+		if ((ForestController.Instance as ForestController).hasSelected) {
 			Vector3Int newHover = map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 			if (map.cellBounds.Contains(newHover)) {
 				if (newHover != hoverCell) {
@@ -50,11 +50,11 @@ public class ForestGrid : MonoBehaviour {
 			}
 			hoverCell = newHover;
 
-			if (Input.GetMouseButtonDown(0) && map.cellBounds.Contains(hoverCell) && !ForestController.Instance.activeTiles.Contains(hoverCell)) {
+			if (Input.GetMouseButtonDown(0) && map.cellBounds.Contains(hoverCell) && !(ForestController.Instance as ForestController).activeTiles.Contains(hoverCell)) {
 				if (map.GetTile(hoverCell) == empty)
-					ForestController.Instance.SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
+					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
 				else if (map.GetTile(hoverCell) == stump || map.GetTile(hoverCell) == dead)
-					ForestController.Instance.SetVolunteerTarget(hoverCell, VolunteerActions.Clear);
+					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Clear);
 			}
 		}
 	}
@@ -84,7 +84,7 @@ public class ForestTree { // TODO: do these get cleared?
 		this.tile = tile ?? ForestGrid.sprout;
 		// Debug.Log(this.tile);
 		this.pos = pos;
-		ForestController.Instance.StartCoroutine(Grow(0));
+		(ForestController.Instance as ForestController).StartCoroutine(Grow(0));
 		NeighbourCount();
 	}
 
@@ -95,11 +95,11 @@ public class ForestTree { // TODO: do these get cleared?
 		else {
 			float awaitTime = (ForestGrid.growthTime + (Random.value - .25f) * 2) * (1 + .5f * NeighbourCount() / 4f);
 			if (index == 4) {
-				ForestController.Instance.activeTrees.Add(pos);
+				(ForestController.Instance as ForestController).activeTrees.Add(pos);
 				awaitTime += index / 4f;
 			}
 			tile = ForestGrid.trees[index + 1];
-			ForestController.Instance.StartCoroutine(Grow(awaitTime));
+			(ForestController.Instance as ForestController).StartCoroutine(Grow(awaitTime));
 		}
 	}
 
