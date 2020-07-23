@@ -7,11 +7,9 @@ using UnityEngine.UI;
 
 public class ArcticController : RegionController {
 	/// <summary> Total level time </summary>
-	float timeLeft = 60f;
 	/// <summary> references to scene text assets </summary>
 	[SerializeField] Text scoreText = default, timerText = default;
 	/// <summary> Balls that landed </summary>
-	int damage = 0;
 	/// <summary> present Buffers </summary>
 	Buffer[] buffers;
 	/// <summary> Buffer parent </summary>
@@ -19,7 +17,6 @@ public class ArcticController : RegionController {
 
 	void Start() {
 		buffers = ice.GetComponentsInChildren<Buffer>();
-		// Intro();
 		int totalHealth = buffers.Length * buffers[0].health;
 		for (int i = 0; i < Math.Floor(EBM.F / EBM.maxF * totalHealth);) { //TODO: with temp instead
 			var buff = buffers[Random.Range(0, buffers.Length)];
@@ -31,25 +28,23 @@ public class ArcticController : RegionController {
 		}
 	}
 
-	void Update() {
-		// check timer
-		if ((timeLeft -= Time.deltaTime) < 0f) {
-			timeLeft = 0f;
-			Pause();
-			CalculateScore();
-		} else { // update text
+	protected override void Update() {
+		base.Update();
+		if (timer > 0) {
 			damage = 0;
 			foreach (Buffer b in buffers)
 				damage += b.health + 1;
 			scoreText.text = $"Ice Remaining: {damage}";
+			timerText.text = Mathf.Round(timer).ToString();
 		}
-
-		timerText.text = Mathf.Round(timeLeft).ToString();
 	}
 
-	void CalculateScore() {
+	protected override void GameOver() {
+		timerText.text = "0";
+		Pause();
+		UIController.Instance.SetPrompt(true);
 		// TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
 
-	double ProcessScore() => (Math.Log(Math.E * (5 * buffers.Length - damage) / 30d) / 3 + .75) / 1000d; // custom score function
+	double ProcessScore() => (Math.Log(Math.E * (5 * buffers.Length - damage) / 30d) / 3 + .75) / 1000d; // returns scale of 0-1ish
 }

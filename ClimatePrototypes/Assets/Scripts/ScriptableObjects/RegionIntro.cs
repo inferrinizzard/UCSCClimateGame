@@ -11,13 +11,13 @@ public class RegionIntro : ScriptableObject {
 
 	public string[] this [int i] {
 		get {
-			string[] output;
-			try {
-				output = new List<string[]>() { tutorial, secondVisit, thirdVisit }[i];
-			} catch {
-				output = new string[0];
-			}
-			return output;
+			if (i == 0)
+				return tutorial;
+			if (i == 1)
+				return secondVisit;
+			if (i == 2)
+				return thirdVisit;
+			return new string[0];
 		}
 	}
 }

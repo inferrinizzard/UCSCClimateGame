@@ -5,13 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class FireController : RegionController {
-	[SerializeField] float timer = 60f;
 	[SerializeField] int numFires = 5;
-	public static int fireCount = 0;
+	public int fireCount = 0;
 	[SerializeField] float spawnDelayMin = 10;
-	public static int damageRate = 30;
-	public static float damage = 0;
-	public static readonly float damageLimit = 200f;
+	public int damageRate = 30;
+	public readonly float damageLimit = 200f;
 	[SerializeField] GameObject firePrefab = default;
 	[SerializeField] Text damageText = default, timerText = default;
 	[SerializeField] Slider waterSlider = default;
@@ -29,26 +27,28 @@ public class FireController : RegionController {
 			StartCoroutine(SpawnFire());
 	}
 
-	void Update() {
-		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
+	protected override void Update() {
+		base.Update();
 		damageText.text = $"Damage: {damage}";
 		waterSlider.value = spray.currentWater / spray.maxWater;
 
 		if (timer > 0) {
+			timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 			if (spray.currentWater <= 0)
 				prompt.SetActive(true);
-		} else {
-			timerText.text = "0";
-			prompt.SetActive(false);
-			Cursor.visible = true;
-			Pause();
-			TriggerUpdate(() =>
-				World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore())
-			);
 		}
 
 		if (hovering && flash == null)
 			StartCoroutine(flash = PromptFlash(2));
+	}
+
+	protected override void GameOver() {
+		timerText.text = "0";
+		prompt.SetActive(false);
+		Cursor.visible = true;
+		UIController.Instance.SetPrompt(true);
+		Pause();
+		TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
 	}
 
 	/// <summary> Looping fire spawn </summary>

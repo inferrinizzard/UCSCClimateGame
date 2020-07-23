@@ -9,9 +9,9 @@ public class FireBackground : MonoBehaviour {
 	}
 
 	void Update() {
-		if (FireController.damage < FireController.damageLimit * .75)
-			baseBG.color = new Color(1, 1, 1, (1 - EaseMethods.QuadEaseIn(FireController.damage, 0, 1, FireController.damageLimit * .75f)));
-		else if (FireController.damage > FireController.damageLimit * .75)
+		if (FireController.Instance.damage < (FireController.Instance as FireController).damageLimit * .75)
+			baseBG.color = new Color(1, 1, 1, (1 - EaseMethods.QuadEaseIn(FireController.Instance.damage, 0, 1, (FireController.Instance as FireController).damageLimit * .75f)));
+		else if (FireController.Instance.damage > (FireController.Instance as FireController).damageLimit * .75)
 			baseBG.color = Color.clear;
 	}
 }

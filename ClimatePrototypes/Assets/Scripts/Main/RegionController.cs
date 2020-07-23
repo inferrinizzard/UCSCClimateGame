@@ -2,23 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class RegionController : MonoBehaviour {
+public abstract class RegionController : MonoBehaviour {
 	[HideInInspector] public static int _visited = 0;
 	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
-	// timer logic?
-	[HideInInspector] public bool paused = false;
-	protected bool updated = false;
-
-	[SerializeField] SpriteRenderer[] backgrounds = default;
-
-	public World.Region region;
-
 	protected GameObject introBlock;
 
+	protected float timer = 60f;
+	public float damage = 0f; // out of 100?
+
+	[HideInInspector] public bool paused = false;
+	protected bool updated = false;
+	protected abstract void GameOver();
+
+	public World.Region region;
+	public static RegionController Instance;
+	[SerializeField] SpriteRenderer[] backgrounds = default;
+
 	protected virtual void Awake() {
+		Instance = this;
 		foreach (var s in backgrounds)
 			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
 	}
@@ -40,12 +45,30 @@ public class RegionController : MonoBehaviour {
 		StartCoroutine(UIController.ClickToAdvance(introText, intro[visited], introButton.gameObject));
 	}
 
+	protected virtual void Update() {
+		timer -= Time.deltaTime;
+		if (timer < -1)
+			return;
+		if (timer <= 0) {
+			timer = -2;
+			GameOver();
+
+			if (GameManager.Instance.runModel) {
+				GameManager.Instance.runningModel = true;
+				System.Threading.Thread calcThread = new System.Threading.Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
+				calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
+				calcThread.Start();
+			}
+			// start model thread
+			// summon prompt
+		}
+	}
+
 	void SetPause(int on) => paused = (Time.timeScale = 1 - on) == 0;
 
-	protected void Pause(bool activatePrompt = true) {
+	protected void Pause() {
 		if (!paused) {
 			SetPause(1);
-			UIController.Instance.SetPrompt(activatePrompt);
 			updated = false;
 		}
 	}
