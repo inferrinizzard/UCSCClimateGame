@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+// using System.Threading;
 
 using Newtonsoft.Json;
 
@@ -80,12 +80,12 @@ public class GameManager : Singleton<GameManager> {
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.realtimeSinceStartup;
 
-		if (name == "Overworld" && Instance.runModel) {
-			GameManager.Instance.runningModel = true;
-			Thread calcThread = new Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
-			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
-			calcThread.Start();
-		}
+		// if (name == "Overworld" && Instance.runModel) {
+		// 	GameManager.Instance.runningModel = true;
+		// 	Thread calcThread = new Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
+		// 	calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
+		// 	calcThread.Start();
+		// }
 
 		Instance.loadingScreen.SetActive(true);
 

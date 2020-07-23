@@ -29,11 +29,11 @@ public class FireController : RegionController {
 
 	protected override void Update() {
 		base.Update();
-		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 		damageText.text = $"Damage: {damage}";
 		waterSlider.value = spray.currentWater / spray.maxWater;
 
 		if (timer > 0) {
+			timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 			if (spray.currentWater <= 0)
 				prompt.SetActive(true);
 		}
