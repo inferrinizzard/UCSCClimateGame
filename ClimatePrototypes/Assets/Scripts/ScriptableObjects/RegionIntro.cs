@@ -16,7 +16,7 @@ public class RegionIntro : ScriptableObject {
 			if (i == 1)
 				return secondVisit;
 			if (i == 2)
-				return secondVisit;
+				return thirdVisit;
 			return new string[0];
 		}
 	}

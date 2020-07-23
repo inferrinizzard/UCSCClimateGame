@@ -34,7 +34,6 @@ public abstract class RegionController : MonoBehaviour {
 	public void AssignRegion(string name) => region = (World.Region) System.Enum.Parse(typeof(World.Region), name);
 
 	public void Intro(int visited) {
-		Debug.Log(intro);
 		_visited = visited;
 		if (intro[visited].Length == 0)
 			return;
@@ -47,10 +46,11 @@ public abstract class RegionController : MonoBehaviour {
 	}
 
 	protected virtual void Update() {
+		timer -= Time.deltaTime;
 		if (timer < -1)
 			return;
-		if ((timer -= Time.deltaTime) <= 0) {
-			timer = 0;
+		if (timer <= 0) {
+			timer = -2;
 			GameOver();
 			// start model thread
 			// summon prompt
@@ -59,11 +59,9 @@ public abstract class RegionController : MonoBehaviour {
 
 	void SetPause(int on) => paused = (Time.timeScale = 1 - on) == 0;
 
-	protected void Pause(bool activatePrompt = true) {
-		Debug.Log(timer);
+	protected void Pause() {
 		if (!paused) {
 			SetPause(1);
-			UIController.Instance.SetPrompt(activatePrompt);
 			updated = false;
 		}
 	}

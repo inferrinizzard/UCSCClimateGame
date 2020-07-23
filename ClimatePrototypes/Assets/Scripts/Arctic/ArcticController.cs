@@ -17,7 +17,6 @@ public class ArcticController : RegionController {
 
 	void Start() {
 		buffers = ice.GetComponentsInChildren<Buffer>();
-		// Intro();
 		int totalHealth = buffers.Length * buffers[0].health;
 		for (int i = 0; i < Math.Floor(EBM.F / EBM.maxF * totalHealth);) { //TODO: with temp instead
 			var buff = buffers[Random.Range(0, buffers.Length)];
@@ -36,13 +35,14 @@ public class ArcticController : RegionController {
 			foreach (Buffer b in buffers)
 				damage += b.health + 1;
 			scoreText.text = $"Ice Remaining: {damage}";
+			timerText.text = Mathf.Round(timer).ToString();
 		}
-
-		timerText.text = Mathf.Round(timer).ToString();
 	}
 
 	protected override void GameOver() {
+		timerText.text = "0";
 		Pause();
+		UIController.Instance.SetPrompt(true);
 		// TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
 

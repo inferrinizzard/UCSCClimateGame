@@ -46,6 +46,7 @@ public class FireController : RegionController {
 		timerText.text = "0";
 		prompt.SetActive(false);
 		Cursor.visible = true;
+		UIController.Instance.SetPrompt(true);
 		Pause();
 		TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
 	}
