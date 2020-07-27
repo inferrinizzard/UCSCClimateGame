@@ -4,17 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldBubble : MonoBehaviour {
-	[SerializeField] float size = 8;
+	float size, minSize = .001f;
 	public Color colour;
 	GameObject bubble;
 	bool active = false;
 	Vector3 startPos;
 	public Dictionary<string, SpriteRenderer> icons = new Dictionary<string, SpriteRenderer>();
+	CircleCollider2D col;
 
 	void Awake() {
+		col = GetComponent<CircleCollider2D>();
 		bubble = transform.GetChild(0).gameObject;
+		size = bubble.transform.localScale.x;
 		startPos = bubble.transform.localPosition;
-		bubble.transform.localScale = Vector3.one * .01f;
+		bubble.transform.localScale = Vector3.one * minSize;
+		bubble.transform.Find("Base").GetComponent<SpriteRenderer>().color = colour;
 		foreach (SpriteRenderer icon in transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>()) {
 			icons.Add(icon.name.Replace("Icon", string.Empty), icon);
 			icon.gameObject.SetActive(false);
@@ -48,8 +52,12 @@ public class WorldBubble : MonoBehaviour {
 			bubble.SetActive(true);
 		for (var(start, step) = (Time.time, 0f); step < dur; step = Time.time - start) {
 			yield return null;
-			bubble.transform.localScale = (entering ? Mathf.Lerp(.001f, size, step / dur) : Mathf.Lerp(size, .001f, step / dur)) * Vector3.one;
-			bubble.transform.localPosition = entering ? Vector3.Lerp(transform.position, startPos, step / dur) : Vector3.Lerp(startPos, transform.position, step / dur);
+			float scale = entering ?
+				EaseMethods.CubicEaseOut(step / dur, minSize, size, size) :
+				EaseMethods.CubicEaseIn(1 - step / dur, minSize, size, size);
+			bubble.transform.localScale = scale * Vector3.one;
+			col.radius = scale / size * 7 + 3;
+			// bubble.transform.localPosition = entering ? Vector3.Lerp(transform.position, startPos, step / dur) : Vector3.Lerp(startPos, transform.position, step / dur);
 		}
 		if (!entering)
 			bubble.SetActive(false);
