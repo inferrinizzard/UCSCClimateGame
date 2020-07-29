@@ -8,11 +8,13 @@ public class IdentityManager : MonoBehaviour
 {
     public Identity id;
     public Moisture moisture;
+    public int fireVariance = 0;  // 0 for green, 1 for tree
     public enum Identity
     {
         Fire,
         Green,
-        Water
+        Water,
+        Tree
     }
     /// <summary>
     /// Controls the chance of it being ignited
@@ -45,18 +47,30 @@ public class IdentityManager : MonoBehaviour
             gameObject.GetComponent<FireID>().enabled = true;
             gameObject.GetComponent<WaterID>().enabled = false;
             gameObject.GetComponent<GreenID>().enabled = false;
+            gameObject.GetComponent<TreeID>().enabled = false;
+
         }
         if (id is Identity.Water)
         {
             gameObject.GetComponent<FireID>().enabled = false;
             gameObject.GetComponent<WaterID>().enabled = true;
             gameObject.GetComponent<GreenID>().enabled = false;
+            gameObject.GetComponent<TreeID>().enabled = false;
+
         }
         if (id is Identity.Green)
         {
             gameObject.GetComponent<FireID>().enabled = false;
             gameObject.GetComponent<WaterID>().enabled = false;
             gameObject.GetComponent<GreenID>().enabled = true;
+            gameObject.GetComponent<TreeID>().enabled = false;
+        }
+        if (id is Identity.Tree)
+        {
+            gameObject.GetComponent<FireID>().enabled = false;
+            gameObject.GetComponent<WaterID>().enabled = false;
+            gameObject.GetComponent<GreenID>().enabled = false;
+            gameObject.GetComponent<TreeID>().enabled = true;
         }
     }
 

@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaterID : MonoBehaviour
+public class TreeID : MonoBehaviour
 {
+    public Sprite tree1Sprite;
+    public Sprite tree2Sprite;
+    private Sprite myTreeSprite;
+
     private Color color = Color.clear;
     private SpriteRenderer sr;
-
-    public Sprite waterSprite;
     // Start is called before the first frame update
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+        myTreeSprite = Random.Range(0, 2) == 1? tree1Sprite: tree2Sprite;
     }
 
     // Update is called once per frame
@@ -22,7 +25,7 @@ public class WaterID : MonoBehaviour
 
     void VFXUpdate()
     {
-        sr.color = color;
-        //sr.sprite = waterSprite;
+        //sr.color = color;
+        sr.sprite = myTreeSprite;
     }
 }

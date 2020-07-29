@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class GreenID : MonoBehaviour
 {
-    private Color color = Color.green;
+    public Sprite greenSprite;
+
+    private Color color = Color.clear;
     private SpriteRenderer sr;
     // Start is called before the first frame update
     void Start()
@@ -21,5 +23,6 @@ public class GreenID : MonoBehaviour
     void VFXUpdate()
     {
         sr.color = color;
+        //sr.sprite = greenSprite;
     }
 }

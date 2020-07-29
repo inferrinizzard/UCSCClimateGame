@@ -5,7 +5,11 @@ using UnityEngine;
 
 public class FireID : MonoBehaviour
 {
-    private Color color = Color.red;
+    public Sprite fireGreenSprite;
+    public Sprite fireTreeSprite;
+    private Sprite myFireSprite;
+
+    private Color color = Color.white;
     private SpriteRenderer sr;
 
     private bool growing;
@@ -38,6 +42,7 @@ public class FireID : MonoBehaviour
     void VFXUpdate()
     {
         sr.color = color;
+        sr.sprite = GetComponent<IdentityManager>().fireVariance == 0 ? fireGreenSprite : fireTreeSprite;
     }
 
     void FireGrowth()

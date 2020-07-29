@@ -6,12 +6,15 @@ using UnityEngine.UI;
 
 public class PlayerInteractions : MonoBehaviour
 {
+    [Header("References")]
     public float speed = 10;
+
+    public Animator bladeAnimator;
 
     public TextMeshProUGUI leftWaterUI;
 
     private int water;
-    private int maxWater = 100;
+    private int maxWater = 50;
     private bool filling;
     
     //private GameObject myLine = new GameObject();
@@ -49,6 +52,7 @@ public class PlayerInteractions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GFXUpdate();
         leftWaterUI.text = water.ToString();
         
         //// Selection
@@ -71,6 +75,18 @@ public class PlayerInteractions : MonoBehaviour
             if (moving)
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetRegion.position, step);
+                
+                // align helicopter head with velocity
+                                   
+                /*
+                Quaternion rotation = Quaternion.LookRotation(targetRegion.position, Vector3.left);
+                transform.rotation = rotation;*/
+                
+                Vector3 vectorToTarget = targetRegion.position - transform.position;
+                float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - 90f;  // sprite off by 90f
+                Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * speed);
+                
                 if (transform.position == targetRegion.position)
                 {
                     moving = false;
@@ -115,20 +131,28 @@ public class PlayerInteractions : MonoBehaviour
         else if (playerCellID == IdentityManager.Identity.Water)
         {
             // replemish water
-            if (!filling && water < maxWater - 10)
+            if (!filling && water < maxWater )
             {
                 filling = true;
-                water += 10;
+                water += 1;
                 StartCoroutine(FillWater());
             }
             
         }
+        
+        
 
+    }
+
+    void GFXUpdate()
+    {
+        // rotate blades
+        bladeAnimator.SetBool("isMoving", playerPath.Count != 0);
     }
 
     IEnumerator FillWater()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         filling = false;
 
     }
@@ -151,9 +175,7 @@ public class PlayerInteractions : MonoBehaviour
         newLine.material = new Material(Shader.Find("Sprites/Default"));
         newLine.widthMultiplier = 0.1f;
 
-        /*newLine.SetPosition(0, transform.position);
-        newLine.SetPosition(1, targetRegion.position);*/
-        
+
         int seg = playerPath.Count;
         Vector3[] positions = new Vector3[seg + 1];
         positions[0] = gameObject.transform.position; // first point in line must be current player pos
