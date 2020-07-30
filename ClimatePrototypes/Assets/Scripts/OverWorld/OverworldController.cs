@@ -7,7 +7,7 @@ public class OverworldController : MonoBehaviour {
 	[SerializeField] GameObject worldWrapper = default;
 	[SerializeField] SpriteRenderer bg = default;
 
-	public Material fadeMat;
+	[HideInInspector] public Material fadeMat;
 
 	void Start() { fadeMat = new Material(Shader.Find("Screen/Fade")); }
 

@@ -9,9 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CityScript : RegionController {
-	[SerializeField] Text mainTitle = default; // TODO: fix
-	[SerializeField] TMPro.TextMeshProUGUI leftText = default, rightText = default;
-	[SerializeField] Text leftTitle = default, rightTitle = default;
+	[SerializeField] Text mainTitle = default, leftText = default, rightText = default, leftTitle = default, rightTitle = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
 	[SerializeField] SpriteRenderer leftPerson = default, rightPerson = default;
@@ -55,14 +53,16 @@ public class CityScript : RegionController {
 		currentDifficulty = (int) World.impact < 2 ? BillDifficulty.Easy : (int) World.impact < 4 ? BillDifficulty.Med : BillDifficulty.Hard;
 		currentBillList = bills[currentDifficulty];
 		currentBill = bills[currentDifficulty][currentBillIndex];
+
+		var persons = personContainer.GetComponentsInChildren<SpriteRenderer>().Select(sr => sr.sprite).OrderBy(x => Random.value).Take(2).ToList();
+		(leftPerson.sprite, rightPerson.sprite) = (persons[0], persons[1]);
+	}
+
+	protected override void Init() {
 		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => {
 			mainTitle.transform.root.gameObject.SetActive(true);
 			PrintBill(currentBill);
 		}));
-		// PrintBill(currentBill);
-
-		var persons = personContainer.GetComponentsInChildren<SpriteRenderer>().Select(sr => sr.sprite).OrderBy(x => Random.value).Take(2).ToList();
-		(leftPerson.sprite, rightPerson.sprite) = (persons[0], persons[1]);
 	}
 
 	protected override void GameOver() {

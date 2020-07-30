@@ -17,6 +17,7 @@ public abstract class RegionController : MonoBehaviour {
 	[HideInInspector] public bool paused = false;
 	protected bool updated = false;
 	protected abstract void GameOver();
+	protected virtual void Init() { }
 
 	public World.Region region;
 	public static RegionController Instance;
@@ -40,9 +41,7 @@ public abstract class RegionController : MonoBehaviour {
 	public void Intro(int visited) => StartCoroutine(IntroRoutine(visited));
 
 	IEnumerator IntroRoutine(int visited, float time = .5f) {
-		Debug.Log("pre fade");
 		yield return StartCoroutine(FadeIn(time));
-		Debug.Log("post fade");
 		_visited = visited;
 		if (intro[visited].Length == 0)
 			yield break;
@@ -51,7 +50,8 @@ public abstract class RegionController : MonoBehaviour {
 		var introText = introBlock.GetComponentInChildren<Text>();
 		var introButton = introBlock.GetComponentInChildren<Button>(true);
 		introButton?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => SetPause(0)));
-		StartCoroutine(UIController.ClickToAdvance(introText, intro[visited], introButton.gameObject));
+		yield return StartCoroutine(UIController.ClickToAdvance(introText, intro[visited], introButton.gameObject));
+		Init();
 	}
 
 	protected virtual void Update() {
