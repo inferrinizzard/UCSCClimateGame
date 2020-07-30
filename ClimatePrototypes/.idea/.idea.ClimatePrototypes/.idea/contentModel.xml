@@ -111,7 +111,13 @@
             <e p="UIMainScreenManager.cs" t="Include" />
           </e>
         </e>
+        <e p="Sprites" t="Include">
+          <e p="Subtropics-Proto" t="Include">
+            <e p="waterShader.shader" t="Include" />
+          </e>
+        </e>
         <e p="StartFire.cs" t="Include" />
+        <e p="SubtropicsCloud.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">
             <e p="LiberationSans - OFL.txt" t="Include" />

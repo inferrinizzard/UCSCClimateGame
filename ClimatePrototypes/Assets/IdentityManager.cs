@@ -8,13 +8,23 @@ public class IdentityManager : MonoBehaviour
 {
     public Identity id;
     public Moisture moisture;
-    public int fireVariance = 0;  // 0 for green, 1 for tree
+    
+    private int fireVariance = 0;  // 0 for green, 1 for tree. keep track of the nature of the cell before fire
     public enum Identity
     {
         Fire,
         Green,
         Water,
         Tree
+    }
+
+    public int GetFireVariance()
+    {
+        return fireVariance;
+    }
+    public void SetFireVariance(int x)
+    {
+        fireVariance = x;
     }
     /// <summary>
     /// Controls the chance of it being ignited

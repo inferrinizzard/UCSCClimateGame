@@ -6,11 +6,17 @@ using Boo.Lang;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class PopulateWorld : MonoBehaviour
 {
     [Header("References")] public TextMeshProUGUI windDirText;
+    public GameObject cloudPrefab;
+    public GameObject cellPrefab;
+    public GameObject waterPrefab;
+    public GameObject playerPrefab;
+    
     [Range(0, 100)] public int treeDensity;
     public enum windDir 
     {
@@ -21,6 +27,11 @@ public class PopulateWorld : MonoBehaviour
         SW
     }
     public windDir dir = windDir.None;
+    
+    [Space]
+    
+    [Header("SerializedFields")]
+    
     private static PopulateWorld _instance;
     private GameObject player;
     
@@ -43,34 +54,58 @@ public class PopulateWorld : MonoBehaviour
     public Vector3Int water2 = new Vector3Int(6, 3, 0);
     public Vector3Int water3 = new Vector3Int(6, 1, 0);
     
-    Vector3Int topleftCell = new Vector3Int(-18, 8, 0);
+    /*Vector3Int topleftCell = new Vector3Int(-18, 8, 0);
     Vector3Int topRightCell = new Vector3Int(16, 8, 0);
     Vector3Int bottomleftCell = new Vector3Int(-18, -10, 0);
-        
-    Vector3Int bottomrightCell = new Vector3Int(16, -10, 0);
+    Vector3Int bottomrightCell = new Vector3Int(16, -10, 0);*/
+    
+    public Vector3Int topleftCell = new Vector3Int(-36, 16, 0);
+    public Vector3Int topRightCell = new Vector3Int(32, 16, 0);
+    public Vector3Int bottomleftCell = new Vector3Int(-36, -20, 0);
+    public Vector3Int bottomrightCell = new Vector3Int(32, -20, 0);
     
     private Tilemap tilemap;
 
-    public GameObject cellPrefab;
-    public GameObject waterPrefab;
-    public GameObject playerPrefab;
+    
     
     private GameObject[,] cellArray;  // central cell data structure
     [SerializeField] private int width;
     [SerializeField] private int height;
-
+    
+    private int cloudNum = 10; // have 10 at all times, 5 will be visible on screen
+    private GameObject[] clouds;
     private bool waiting;
     // Start is called before the first frame update
     void Start()
     {
+        clouds = new GameObject[cloudNum];
         tilemap = transform.GetComponent<Tilemap>();
         gridLayout = transform.parent.GetComponentInParent<GridLayout>();
         PopulatePlayer();
         PopulateVanillaWorld();
         PopulateWater();
         PopulateTree();
+        PopulateCloud();
         StartCoroutine(WaitForFire(0));  // first fire mutation
     }
+
+    void PopulateCloud()
+    {
+        
+        Vector3 topLeftCloudPos = new Vector3(-16, 6, 0);
+        Vector3 topRightCloudPos = new Vector3(14, 6, 0);
+        Vector3 bottomRightCloudPos = new Vector3(14, -8, 0);
+
+        float x = (topRightCloudPos.x - topLeftCloudPos.x) / (cloudNum - 1);
+        float y = (topRightCloudPos.y - bottomRightCloudPos.y);
+        
+        
+        for (int i = 0; i < cloudNum; i++)
+        {
+            clouds[i] = Instantiate(cloudPrefab, new Vector3(topLeftCloudPos.x + i * x, Random.Range(topRightCloudPos.y, topRightCloudPos.y + 10) ,0), Quaternion.identity);
+        }
+    }
+    
 
     private void Update()
     {
@@ -159,10 +194,36 @@ public class PopulateWorld : MonoBehaviour
 
     private void PopulateTree()
     {
-        // go through all green cells, mutate 75% of them to trees
-        for (var i = 0; i <= width; i++)
+        // hand authored three regions of mountain areas filled with trees
+        // Region1   left top
+        int width1 = Random.Range(width / 4, width / 3);  // right
+        int height1 = Random.Range(height /3, height / 2);   // bottom
+        
+        // Region2    right
+        int width2_0 = Random.Range(width / 3 + 4, width / 2);   // left
+        int width2_1 = width;   // right
+        int height2_0 = Random.Range(height / 6, height / 5);  // bottom
+        int height2_1 = height *2 / 3;  // top 
+        
+        // Region3     bottom
+        int width3_0 = Random.Range(width /9, width / 6);  // left
+        int width3_1 = Random.Range(width * 8/9, width *9/ 10);  // right
+        int height3_0 = Random.Range(height * 2 / 3 + 4, height * 4 / 5); // top
+        int height3_1 = height;  // bottom
+        
+        GenerateTreeInRegion(0,width1, 0, height1);
+        GenerateTreeInRegion(width2_0,width2_1, height2_0, height2_1);
+        GenerateTreeInRegion(width3_0,width3_1, height3_0, height3_1);
+        
+        
+        
+    }
+
+    void GenerateTreeInRegion(int w0, int w1, int h0, int h1)
+    {
+        for (var i = w0; i <= w1; i++)
         {
-            for (var j = 0; j <= height; j++)
+            for (var j = h0; j <= h1; j++)
             {
                 GameObject go = cellArray[i, j];
                 if (go.GetComponent<IdentityManager>().id == IdentityManager.Identity.Green)
@@ -171,11 +232,10 @@ public class PopulateWorld : MonoBehaviour
                     if (seed < treeDensity)
                     {
                         go.GetComponent<IdentityManager>().id = IdentityManager.Identity.Tree;
-                        go.GetComponent<IdentityManager>().fireVariance = 1;  // if fire happens, set variance type to tree fire 
+                        go.GetComponent<IdentityManager>().SetFireVariance(1);  // if fire happens, set variance type to tree fire 
                     }
                 }
             }
-            
         }
         
     }
@@ -191,7 +251,8 @@ public class PopulateWorld : MonoBehaviour
         int randomY = Random.Range(0, height);
         GameObject go = cellArray[randomX, randomY];
         IdentityManager goID = go.GetComponent<IdentityManager>();
-        if (goID.id is IdentityManager.Identity.Green || goID.id is IdentityManager.Identity.Tree )  // can mutate green or tree
+        //if (goID.id is IdentityManager.Identity.Green || goID.id is IdentityManager.Identity.Tree )  // can mutate green or tree
+        if (goID.id is IdentityManager.Identity.Tree )
         {
             Debug.Log("fire id" + goID.id);
             goID.id = IdentityManager.Identity.Fire;
@@ -231,19 +292,19 @@ public class PopulateWorld : MonoBehaviour
         {
             return neighbors;
         }
-        else if (dir == windDir.NE)  // up right
+        else if (dir == windDir.SW)  // up right
         {
             neighborsDir[0] = neighbors[0];
             neighborsDir[1] = neighbors[2];
             return neighborsDir;
         }
-        else if (dir == windDir.NW)  // up left
+        else if (dir == windDir.SE)  // up left
         {
             neighborsDir[0] = neighbors[0];
             neighborsDir[1] = neighbors[1];
             return neighborsDir;
         }
-        else if (dir == windDir.SE)  // down right
+        else if (dir == windDir.NW)  // down right
         {
             neighborsDir[0] = neighbors[3];
             neighborsDir[1] = neighbors[2];

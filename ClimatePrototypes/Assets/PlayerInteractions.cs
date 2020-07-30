@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -74,7 +75,10 @@ public class PlayerInteractions : MonoBehaviour
             // Are we currently moving towards a region?
             if (moving)
             {
-                transform.position = Vector3.MoveTowards(transform.position, targetRegion.position, step);
+                targetRegion = playerPath[0];
+                
+                transform.position = Vector3.MoveTowards(transform.position, targetRegion.position, step);  // move player
+                Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, Camera.main.transform.position + targetRegion.position - transform.position, step);  // move camera
                 
                 // align helicopter head with velocity
                                    
@@ -119,9 +123,18 @@ public class PlayerInteractions : MonoBehaviour
             foreach (var neighbor in PopulateWorld.Instance.GetRadius(playerCell))
             {
                 IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
-                if (neighborID == IdentityManager.Identity.Fire && neighbor != null && water >= 0)
+                if (neighborID == IdentityManager.Identity.Fire && neighbor != null && water > 0)
                 {
-                    PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Green);
+                    // check nature of the cell
+                    if (neighbor.GetComponent<IdentityManager>().GetFireVariance() == 1) // if tree
+                    {
+                        neighbor.GetComponent<TreeID>().burnt = true;
+                        PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Tree);
+                    }
+                    else
+                    {
+                        PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Green);
+                    }
                     neighbor.GetComponent<IdentityManager>().moisture = IdentityManager.Moisture.Moist;
                     water--;  // use 1 water per cell
                 }
@@ -147,7 +160,8 @@ public class PlayerInteractions : MonoBehaviour
     void GFXUpdate()
     {
         // rotate blades
-        bladeAnimator.SetBool("isMoving", playerPath.Count != 0);
+        // bladeAnimator.SetBool("isMoving", playerPath.Count != 0);
+        bladeAnimator.SetBool("isMoving", true);
     }
 
     IEnumerator FillWater()
@@ -172,7 +186,9 @@ public class PlayerInteractions : MonoBehaviour
     
     void DrawPlayerPath()
     {
-        newLine.material = new Material(Shader.Find("Sprites/Default"));
+        //newLine.material = new Material(Shader.Find("Sprites/Default"));
+        newLine.material = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
+        newLine.material.SetTextureScale("_MainTex", new Vector2(10f, 1.0f));
         newLine.widthMultiplier = 0.1f;
 
 
@@ -187,12 +203,14 @@ public class PlayerInteractions : MonoBehaviour
         newLine.SetPositions(positions);
         
     }
+    
 
     public static bool addDestinationToPath(Transform region)
     {
         // if player is in selected and if region is not already in path 
         if (selected && !playerPath.Contains(region))
         {
+            playerPath.Clear();
             playerPath.Add(region);
             
             //PrintPlayerPath();         
