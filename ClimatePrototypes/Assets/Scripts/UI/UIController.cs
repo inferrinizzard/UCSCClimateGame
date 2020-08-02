@@ -12,6 +12,15 @@ public class UIController : Singleton<UIController> {
 	[SerializeField] Button exitButton = default;
 	[SerializeField] GameObject returnPrompt = default;
 	public GameObject navbar;
+	Dictionary<GameObject, bool> uiActiveStatus = new Dictionary<GameObject, bool>();
+
+	public void Toggle(GameObject obj) {
+		if (!uiActiveStatus.ContainsKey(obj))
+			uiActiveStatus.Add(obj, !obj.activeSelf);
+		else
+			uiActiveStatus[obj] = !uiActiveStatus[obj];
+		obj.SetActive(uiActiveStatus[obj]);
+	}
 
 	void OnEnable() {
 		worldNameText.text = World.worldName;
