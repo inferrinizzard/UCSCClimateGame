@@ -23,7 +23,7 @@ public class VolunteerActions {
 	public static void Plant(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
 		var task = (ForestController.Instance as ForestController).volunteers[v.ID];
-		(ForestController.Instance as ForestController).StartCoroutine(TreeGrow(task.volunteer, task.activeTile.Value));
+		ForestController.Instance.StartCoroutine(TreeGrow(task.volunteer, task.activeTile.Value));
 	}
 
 	public static IEnumerator TreeGrow(Volunteer v, Vector3Int tilePos) {
@@ -46,11 +46,11 @@ public class VolunteerActions {
 
 	public static void Protest(Volunteer v) {
 		v.anim.SetTrigger("Protesting");
-		(ForestController.Instance as ForestController).StartCoroutine(WaitAndReturn(v, 3));
+		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
 	}
 
 	public static IEnumerator ClearAndReturn(Volunteer v, Vector3Int tilePos) {
-		yield return (ForestController.Instance as ForestController).StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
+		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
 		ForestGrid.ClearHover(tilePos);
 		ForestGrid.map.SetTile(tilePos, ForestGrid.empty);
 	}
@@ -58,11 +58,11 @@ public class VolunteerActions {
 	public static void Clear(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
 		var task = (ForestController.Instance as ForestController).volunteers[v.ID];
-		(ForestController.Instance as ForestController).StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
+		ForestController.Instance.StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
 	}
 
 	public static void Capture(Volunteer v) {
 		v.anim.SetTrigger("Facility");
-		(ForestController.Instance as ForestController).StartCoroutine(WaitAndReturn(v, 3));
+		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
 	}
 }

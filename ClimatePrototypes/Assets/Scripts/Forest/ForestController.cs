@@ -20,7 +20,12 @@ public class ForestController : RegionController {
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 	public List<Vector3Int> activeTrees = new List<Vector3Int>();
 
-	protected override void GameOver() { }
+	protected override void GameOver() {
+		StopAllCoroutines();
+		// stop volunteers
+		// stop loggers
+		// stop trees?
+	}
 
 	public void UIHover(bool over) => overUI = over;
 
