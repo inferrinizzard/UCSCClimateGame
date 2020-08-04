@@ -13,17 +13,17 @@ public class PlayerInteractions : MonoBehaviour
     public Animator bladeAnimator;
 
     public TextMeshProUGUI leftWaterUI;
-
+    public TrailRenderer waterTR; 
+        
     private int water;
     private int maxWater = 50;
     private bool filling;
+    private float haveNotUsedWaterIn = 0;
     
     //private GameObject myLine = new GameObject();
     private Color highlightColor = new Color(176,0,132,255);
     private Color normalColor = new Color(255,119,221,255);
     private SpriteRenderer playerRenderer;
-
-    private static bool selected = true;
     
     private static List<Transform> playerPath = new List<Transform>();
 
@@ -43,6 +43,7 @@ public class PlayerInteractions : MonoBehaviour
     {
         playerRenderer = GetComponent<SpriteRenderer>();
         playerRenderer.color = normalColor;
+        waterTR.enabled = false;
         
         // draw line
         
@@ -55,18 +56,7 @@ public class PlayerInteractions : MonoBehaviour
     {
         GFXUpdate();
         leftWaterUI.text = water.ToString();
-        
-        //// Selection
-        if (selected)
-        {
-            playerRenderer.color = highlightColor;
 
-        }
-        else
-        {
-            playerRenderer.color = normalColor;
-        }
-        
         //// Pathfinding
         // if path is not empty, exhaust the path
         if (playerPath.Count != 0)
@@ -109,22 +99,27 @@ public class PlayerInteractions : MonoBehaviour
         if (targetRegion)
             DrawPlayerPath();
         
+        
         //// World Interaction        
         // check what cell player is on top of 
         playerCell = PopulateWorld.Instance.getCellObjectAtLoc(gameObject.transform.position);
         playerCellID = playerCell.GetComponent<IdentityManager>().id;
         playerCellMoisture = playerCell.GetComponent<IdentityManager>().moisture;
-        if (playerCellID == IdentityManager.Identity.Fire)
+
+        //PopulateWorld.Instance.MutateCell(playerCell, IdentityManager.Identity.Green);
+        //playerCellMoisture = IdentityManager.Moisture.Moist;
+        
+        // kill all immediate neighbors fire, radius buffer
+        foreach (var neighbor in PopulateWorld.Instance.GetRadius(playerCell))
         {
-            //PopulateWorld.Instance.MutateCell(playerCell, IdentityManager.Identity.Green);
-            //playerCellMoisture = IdentityManager.Moisture.Moist;
-            
-            // kill all immediate neighbors fire, radius buffer
-            foreach (var neighbor in PopulateWorld.Instance.GetRadius(playerCell))
+            if (neighbor != null)
             {
                 IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
                 if (neighborID == IdentityManager.Identity.Fire && neighbor != null && water > 0)
                 {
+                 
+                
+                
                     // check nature of the cell
                     if (neighbor.GetComponent<IdentityManager>().GetFireVariance() == 1) // if tree
                     {
@@ -137,11 +132,16 @@ public class PlayerInteractions : MonoBehaviour
                     }
                     neighbor.GetComponent<IdentityManager>().moisture = IdentityManager.Moisture.Moist;
                     water--;  // use 1 water per cell
+                    haveNotUsedWaterIn = 0;  // reset timer
+                    waterTR.enabled = true;   
+
                 }
-                    
             }
+            
+                
         }
-        else if (playerCellID == IdentityManager.Identity.Water)
+
+        if (playerCellID == IdentityManager.Identity.Water)
         {
             // replemish water
             if (!filling && water < maxWater )
@@ -150,7 +150,6 @@ public class PlayerInteractions : MonoBehaviour
                 water += 1;
                 StartCoroutine(FillWater());
             }
-            
         }
         
         
@@ -162,6 +161,14 @@ public class PlayerInteractions : MonoBehaviour
         // rotate blades
         // bladeAnimator.SetBool("isMoving", playerPath.Count != 0);
         bladeAnimator.SetBool("isMoving", true);
+        
+        // trail renderer
+        haveNotUsedWaterIn += Time.deltaTime;
+
+        if (haveNotUsedWaterIn >= 1f)  // turn off renderer if not used water in 1 sec
+        {
+            waterTR.enabled = false;
+        }
     }
 
     IEnumerator FillWater()
@@ -170,19 +177,6 @@ public class PlayerInteractions : MonoBehaviour
         filling = false;
 
     }
-
-    /// <summary>
-    /// Select player
-    /// </summary>
-    private void OnMouseDown()
-    {
-        Debug.Log("player selected");
-        // Toggle select status
-        selected = !selected;
-
-    }
-    
-    
     
     void DrawPlayerPath()
     {
@@ -207,8 +201,8 @@ public class PlayerInteractions : MonoBehaviour
 
     public static bool addDestinationToPath(Transform region)
     {
-        // if player is in selected and if region is not already in path 
-        if (selected && !playerPath.Contains(region))
+        // if region is not already in path 
+        if (!playerPath.Contains(region))
         {
             playerPath.Clear();
             playerPath.Add(region);
@@ -236,6 +230,18 @@ public class PlayerInteractions : MonoBehaviour
             
         }
         Debug.Log(pathString);
+    }
+    /// <summary>
+    /// Pulse effect when colliding with cloud
+    /// collision with cell prefab is disabled in physics setting
+    /// </summary>
+    /// <param name="other"></param>
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Cloud")
+        {
+            FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+        }
     }
     
     

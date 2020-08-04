@@ -17,16 +17,18 @@ public class PopulateWorld : MonoBehaviour
     public GameObject waterPrefab;
     public GameObject playerPrefab;
     
+    public GameObject watergo;
+    
     [Range(0, 100)] public int treeDensity;
     public enum windDir 
     {
-        None,
+        Calm,
         NE,
         NW,
         SE,
         SW
     }
-    public windDir dir = windDir.None;
+    public windDir dir = windDir.Calm;
     
     [Space]
     
@@ -65,7 +67,7 @@ public class PopulateWorld : MonoBehaviour
     public Vector3Int bottomrightCell = new Vector3Int(32, -20, 0);
     
     private Tilemap tilemap;
-
+    private float udpateWindTimer;
     
     
     private GameObject[,] cellArray;  // central cell data structure
@@ -89,8 +91,42 @@ public class PopulateWorld : MonoBehaviour
         StartCoroutine(WaitForFire(0));  // first fire mutation
     }
 
+    void UpdateWindDirection()
+    {
+        udpateWindTimer += Time.deltaTime;
+        if (udpateWindTimer >= 30)  // change wind dir every 30 sec
+        {
+            udpateWindTimer = 0;
+            int seed = Random.Range(0, 4);
+            switch (seed)
+            {
+                case 0:
+                    dir = windDir.Calm;
+                    break;
+                case 1:
+                    dir = windDir.NE;
+                    break;
+                case 2:
+                    dir = windDir.NW;
+                    break;
+                case 3:
+                    dir = windDir.SE;
+                    break;
+                case 4:
+                    dir = windDir.SW;
+                    break;
+                default:
+                    dir = windDir.Calm;
+                    break;
+
+            }
+        }
+    }
+
     void PopulateCloud()
     {
+        GameObject cloudParent = new GameObject();
+        cloudParent.name = "Clouds";
         
         Vector3 topLeftCloudPos = new Vector3(-16, 6, 0);
         Vector3 topRightCloudPos = new Vector3(14, 6, 0);
@@ -102,7 +138,9 @@ public class PopulateWorld : MonoBehaviour
         
         for (int i = 0; i < cloudNum; i++)
         {
+            //Debug.Log("clouds");
             clouds[i] = Instantiate(cloudPrefab, new Vector3(topLeftCloudPos.x + i * x, Random.Range(topRightCloudPos.y, topRightCloudPos.y + 10) ,0), Quaternion.identity);
+            clouds[i].transform.parent = cloudParent.transform;
         }
     }
     
@@ -110,6 +148,7 @@ public class PopulateWorld : MonoBehaviour
     private void Update()
     {
         GUIUpdate();
+        UpdateWindDirection();
         
         if (!waiting)
         {
@@ -138,6 +177,9 @@ public class PopulateWorld : MonoBehaviour
     }
     private void PopulateVanillaWorld()
     {
+        GameObject cellParent = new GameObject();
+        cellParent.name = "Cells"; 
+        
         // get corner positions of the world 
 
         width = topRightCell.x - topleftCell.x + 1;
@@ -152,6 +194,7 @@ public class PopulateWorld : MonoBehaviour
                 Vector3 pos = tilemap.GetCellCenterWorld(posInt);
                 // instantiate and construct 2d array
                 GameObject go = Instantiate(cellPrefab, pos, Quaternion.identity);
+                go.transform.parent = cellParent.transform;
                 IdentityManager goID = go.GetComponent<IdentityManager>();
                 goID.id = IdentityManager.Identity.Green;  // default to green
                 cellArray[i, j] = go;
@@ -188,9 +231,12 @@ public class PopulateWorld : MonoBehaviour
         Vector3 pos2 = tilemap.GetCellCenterWorld(new Vector3Int(cornerPos.x + 1, cornerPos.y + 1, 0));
         float unitWidth = pos2.x - pos1.x;
         Vector3 reservoirPos = new Vector3(pos1.x + (waterWidth / 2 - 0.25f) * unitWidth, pos1.y + (waterHeight / 2 + 0f) * unitWidth,0);
-        Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
+        watergo = Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
+        watergo.SetActive(true);
 
     }
+    
+    
 
     private void PopulateTree()
     {
@@ -254,7 +300,7 @@ public class PopulateWorld : MonoBehaviour
         //if (goID.id is IdentityManager.Identity.Green || goID.id is IdentityManager.Identity.Tree )  // can mutate green or tree
         if (goID.id is IdentityManager.Identity.Tree )
         {
-            Debug.Log("fire id" + goID.id);
+            //Debug.Log("fire id" + goID.id);
             goID.id = IdentityManager.Identity.Fire;
         }
     }
@@ -288,7 +334,7 @@ public class PopulateWorld : MonoBehaviour
         if(x > -0 && x <= width && y <= height && y >= 0) neighbors[3] =(cellArray[x - 1, y]); // down
         
         GameObject[] neighborsDir = new GameObject[2];
-        if (dir == windDir.None)  // no dir
+        if (dir == windDir.Calm)  // no dir
         {
             return neighbors;
         }
@@ -330,61 +376,21 @@ public class PopulateWorld : MonoBehaviour
         int x = cellPosition.x - topleftCell.x;  // convert pos vec3int to correct index in array
         int y = cellPosition.y - bottomleftCell.y;
 
-        /*GameObject[] radius = new GameObject[9];
-        if (x >= 0 && x <= width && y >= 0 && y < height)
+
+        int index = 0;
+        int r = 1;  // radius
+        
+        GameObject[] radius = new GameObject[9];  // if r = 1
+
+        for (int a = -r; a <= r; a++)
         {
-            radius[0] = (cellArray[x, y + 1]);
-         
+            for (int b = -r; b <= r; b++)
+            {
+                if( x+a >= 0 && x+a <= width && y+b <=height && y+b >= 0 )
+                    radius[index] = cellArray[x + a, y + b];
+                index++;
+            }
         }
-
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[1] =(cellArray[x, y - 1]);
-        if(x < width && x >= 0 && y <= height && y >= 0) radius[2] =(cellArray[x + 1, y]);
-        if(x > -0 && x <= width && y <= height && y >= 0) radius[3] =(cellArray[x - 1, y]);
-        
-        if(x >= 0 && x < width && y <= height && y > 0) radius[4] =(cellArray[x+1, y - 1]);
-        if(x < width && x >= 0 && y < height && y >= 0) radius[5] =(cellArray[x + 1, y+1]);
-        if(x > -0 && x <= width && y < height && y >= 0) radius[6] =(cellArray[x - 1, y+1]);
-        if(x > -0 && x <= width && y <= height && y > 0) radius[7] =(cellArray[x - 1, y-1]);
-        radius[8] = cell;*/
-        
-        GameObject[] radius = new GameObject[28];
-        if (x >= 0 && x <= width && y >= 0 && y < height)
-        {
-            radius[0] = (cellArray[x, y + 1]);
-         
-        }
-
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[1] =(cellArray[x, y - 1]);
-        if(x < width && x >= 0 && y <= height && y >= 0) radius[2] =(cellArray[x + 1, y]);
-        if(x > -0 && x <= width && y <= height && y >= 0) radius[3] =(cellArray[x - 1, y]);
-        
-        if(x >= 0 && x < width && y <= height && y > 0) radius[4] =(cellArray[x+1, y - 1]);
-        if(x < width && x >= 0 && y < height && y >= 0) radius[5] =(cellArray[x + 1, y+1]);
-        if(x > -0 && x <= width && y < height && y >= 0) radius[6] =(cellArray[x - 1, y+1]);
-        if(x > -0 && x <= width && y <= height && y > 0) radius[7] =(cellArray[x - 1, y-1]);
-        
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[8] =(cellArray[x-2, y + 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[9] =(cellArray[x-1, y + 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[10] =(cellArray[x, y + 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[11] =(cellArray[x+2, y + 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[12] =(cellArray[x+1, y + 2]);
-        
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[13] =(cellArray[x-2, y - 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[14] =(cellArray[x-1, y - 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[15] =(cellArray[x, y - 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[16] =(cellArray[x+2, y - 2]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[17] =(cellArray[x+1, y - 2]);
-        
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[18] =(cellArray[x-2, y + 1]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[19] =(cellArray[x-2, y]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[20] =(cellArray[x-2, y - 1]);
-        
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[21] =(cellArray[x+2, y + 1]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[22] =(cellArray[x+2, y]);
-        if(x >= 0 && x <= width && y <= height && y > 0) radius[23] =(cellArray[x+2, y - 1]);
-
-        radius[8] = cell;
-
         return radius;
     }
     

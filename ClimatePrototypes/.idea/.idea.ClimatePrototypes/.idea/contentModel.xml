@@ -110,6 +110,12 @@
             <e p="TreeGrowth.cs" t="Include" />
             <e p="UIMainScreenManager.cs" t="Include" />
           </e>
+          <e p="Xueer_Subtropics" t="Include">
+            <e p="RippleEffect" t="Include">
+              <e p="RippleEffect.cs" t="Include" />
+              <e p="RippleEffect.shader" t="Include" />
+            </e>
+          </e>
         </e>
         <e p="Sprites" t="Include">
           <e p="Subtropics-Proto" t="Include">
@@ -146,6 +152,7 @@
         <e p="TreeID.cs" t="Include" />
         <e p="WaterID.cs" t="Include" />
         <e p="WaterIHave.cs" t="Include" />
+        <e p="WaterIndicator.cs" t="Include" />
       </e>
       <e p="ClimatePrototypes.sln" t="IncludeFlat" />
       <e p="obj" t="ExcludeRecursive" />
