@@ -11,24 +11,27 @@ using Random = UnityEngine.Random;
 
 public class PopulateWorld : MonoBehaviour
 {
-    [Header("References")] public TextMeshProUGUI windDirText;
+    [Header("References")] 
+    public TextMeshProUGUI windSpeedTextUI;
+    public Transform windDirArrowUI;
+    
     public GameObject cloudPrefab;
     public GameObject cellPrefab;
     public GameObject waterPrefab;
     public GameObject playerPrefab;
     
-    public GameObject watergo;
+    [HideInInspector]public GameObject watergo;
     
     [Range(0, 100)] public int treeDensity;
     public enum windDir 
     {
-        Calm,
         NE,
         NW,
         SE,
         SW
     }
-    public windDir dir = windDir.Calm;
+    public windDir dir = windDir.NE;
+    public int windSpeed = 3;
     
     [Space]
     
@@ -89,6 +92,8 @@ public class PopulateWorld : MonoBehaviour
         PopulateTree();
         PopulateCloud();
         StartCoroutine(WaitForFire(0));  // first fire mutation
+
+        windSpeed = 10;
     }
 
     void UpdateWindDirection()
@@ -101,22 +106,24 @@ public class PopulateWorld : MonoBehaviour
             switch (seed)
             {
                 case 0:
-                    dir = windDir.Calm;
+                    dir = windDir.NE;
+                    windSpeed = Random.Range(5, 18);
                     break;
                 case 1:
-                    dir = windDir.NE;
+                    dir = windDir.NW;
+                    windSpeed = Random.Range(5, 18);
                     break;
                 case 2:
-                    dir = windDir.NW;
+                    dir = windDir.SE;
+                    windSpeed = Random.Range(5, 18);
                     break;
                 case 3:
-                    dir = windDir.SE;
-                    break;
-                case 4:
                     dir = windDir.SW;
+                    windSpeed = Random.Range(5, 18);
                     break;
                 default:
-                    dir = windDir.Calm;
+                    dir = windDir.NE;
+                    windSpeed = Random.Range(5, 18);
                     break;
 
             }
@@ -167,7 +174,51 @@ public class PopulateWorld : MonoBehaviour
 
     void GUIUpdate()
     {
-        windDirText.text = dir.ToString();
+        // text
+        windSpeedTextUI.text = windSpeed.ToString() + " mph";
+        // arrow size
+        float smooth = 5.0f;
+        float arrowSize = 0.3f + (windSpeed - 5) /2 *0.1f;
+        if (windSpeed == 0)
+        {
+            arrowSize = 0.3f;
+        }
+        
+        Vector3 targetSize = new Vector3(arrowSize, arrowSize, 0);
+        windDirArrowUI.localScale = Vector3.Slerp( windDirArrowUI.localScale, targetSize,  Time.deltaTime * smooth);
+        
+        // arrow dir
+        
+        float tiltAngle = 0f;
+        switch (dir)
+        {
+            case windDir.NE:
+                tiltAngle = 135f;
+                break;
+            case windDir.NW:
+                tiltAngle = -135f;
+                break;
+            case windDir.SE:
+                tiltAngle = 45f;
+                break;
+            case windDir.SW:
+                tiltAngle = -45f;
+                break;
+            default:
+                tiltAngle = 0;
+                break;
+
+        }
+
+        // Smoothly tilts a transform towards a target rotation.
+        //float tiltAroundZ = Input.GetAxis("Horizontal") * tiltAngle;
+
+        // Rotate the cube by converting the angles into a quaternion.
+        //Quaternion target = Quaternion.Euler(0, 0, tiltAroundZ);
+        Quaternion target = Quaternion.Euler(0, 0, tiltAngle);
+
+        // Dampen towards the target rotation
+        windDirArrowUI.rotation = Quaternion.Slerp( windDirArrowUI.rotation, target,  Time.deltaTime * smooth);
     }
     
     private void PopulatePlayer()
@@ -334,11 +385,8 @@ public class PopulateWorld : MonoBehaviour
         if(x > -0 && x <= width && y <= height && y >= 0) neighbors[3] =(cellArray[x - 1, y]); // down
         
         GameObject[] neighborsDir = new GameObject[2];
-        if (dir == windDir.Calm)  // no dir
-        {
-            return neighbors;
-        }
-        else if (dir == windDir.SW)  // up right
+
+        if (dir == windDir.SW)  // up right
         {
             neighborsDir[0] = neighbors[0];
             neighborsDir[1] = neighbors[2];

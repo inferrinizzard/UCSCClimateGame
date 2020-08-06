@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
@@ -13,6 +14,7 @@ public class PlayerInteractions : MonoBehaviour
     public Animator bladeAnimator;
 
     public TextMeshProUGUI leftWaterUI;
+    public Transform leftWaterBarUI;
     public TrailRenderer waterTR; 
         
     private int water;
@@ -56,6 +58,9 @@ public class PlayerInteractions : MonoBehaviour
     {
         GFXUpdate();
         leftWaterUI.text = water.ToString();
+        int height = water * 10;
+        leftWaterBarUI.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2 (120, height);  // set width is 120. water [0,50], height [0,500]
+        leftWaterBarUI.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(30, -(500-height) /2,0);
 
         //// Pathfinding
         // if path is not empty, exhaust the path

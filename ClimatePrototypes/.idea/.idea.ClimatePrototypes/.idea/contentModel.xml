@@ -118,7 +118,7 @@
           </e>
         </e>
         <e p="Sprites" t="Include">
-          <e p="Subtropics-Proto" t="Include">
+          <e p="Subtropics" t="Include">
             <e p="waterShader.shader" t="Include" />
           </e>
         </e>
