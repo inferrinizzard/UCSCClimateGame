@@ -9,10 +9,10 @@ using UnityEditor;
 using UnityEngine;
 
 public class BillEditor : EditorWindow {
-	static Dictionary<CityScript.BillDifficulty, List<CityScript.Bill>> bills = new Dictionary<CityScript.BillDifficulty, List<CityScript.Bill>>();
+	static Dictionary<CityScript.BillDifficulty, List<CityScript.BillData>> bills = new Dictionary<CityScript.BillDifficulty, List<CityScript.BillData>>();
 	static int index = 0;
 
-	static CityScript.Bill newBill = new CityScript.Bill("", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
+	static CityScript.BillData newBill = new CityScript.BillData("", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
 	static Dictionary<string, Dictionary<string, float>> newTags = new Dictionary<string, Dictionary<string, float>> { { "left", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } },
 		{ "right", new Dictionary<string, float> { { "co2", 0f }, { "land", 0f }, { "money", 0f }, { "opinion", 0f } } }
 	};
@@ -53,7 +53,7 @@ public class BillEditor : EditorWindow {
 			AssignBill(BillEditor.bills[deckName][index]);
 
 		if (BillEditor.bills[deckName].Count > 0) {
-			CityScript.Bill bill = BillEditor.bills[deckName][index];
+			CityScript.BillData bill = BillEditor.bills[deckName][index];
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Choose which Bill:");
@@ -92,7 +92,7 @@ public class BillEditor : EditorWindow {
 			if (GUILayout.Button("Reset"))
 				self.AssignBill(BillEditor.bills[deckName][index]);
 			if (GUILayout.Button("Add New Bill")) {
-				CityScript.Bill empty = new CityScript.Bill("new bill", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
+				CityScript.BillData empty = new CityScript.BillData("new bill", new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } }, new Dictionary<string, string> { { "title", "" }, { "body", "" }, { "tags", "" } });
 				bills[deckName].Add(empty);
 				// index = bill[deckName].Count - 1;
 			}
@@ -112,7 +112,7 @@ public class BillEditor : EditorWindow {
 			GUILayout.Label("No Bills in this deck Found");
 	}
 
-	void AssignBill(CityScript.Bill b) {
+	void AssignBill(CityScript.BillData b) {
 		newBill.name = b.name;
 		newBill.left = b.left;
 		newBill.right = b.right;

@@ -838,6 +838,7 @@ GameObject:
   m_Component:
   - component: {fileID: 419475879}
   - component: {fileID: 419475880}
+  - component: {fileID: 419475881}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -874,6 +875,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419475878}
   m_CullTransparentMesh: 0
+--- !u!114 &419475881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419475878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65b7e5b4d1497a47b722bae4a43f4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 880957940}
+  body: {fileID: 82958226}
+  iconWrapper: {fileID: 1062352636}
+  speed: 0
 --- !u!1001 &467103214
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1153,6 +1170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 603820103}
   - component: {fileID: 603820104}
+  - component: {fileID: 603820105}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -1189,6 +1207,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 603820102}
   m_CullTransparentMesh: 0
+--- !u!114 &603820105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603820102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65b7e5b4d1497a47b722bae4a43f4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 848522300}
+  body: {fileID: 478389874}
+  iconWrapper: {fileID: 1200261096}
+  speed: 0
 --- !u!1 &654851883
 GameObject:
   m_ObjectHideFlags: 0
@@ -1509,18 +1543,13 @@ MonoBehaviour:
     type: 3}
   damage: 0
   paused: 0
-  region: 0
+  region: 1
   backgrounds:
   - {fileID: 2114293290}
   mainTitle: {fileID: 1189416000}
-  leftText: {fileID: 478389874}
-  rightText: {fileID: 82958226}
-  leftTitle: {fileID: 848522300}
-  rightTitle: {fileID: 880957940}
+  left: {fileID: 603820105}
+  right: {fileID: 419475881}
   speed: 0.01
-  leftPerson: {fileID: 2107033079}
-  rightPerson: {fileID: 1698075305}
-  personContainer: {fileID: 274166960}
 --- !u!1 &848522298
 GameObject:
   m_ObjectHideFlags: 0

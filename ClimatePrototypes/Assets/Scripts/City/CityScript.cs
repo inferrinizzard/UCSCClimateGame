@@ -9,25 +9,22 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CityScript : RegionController {
-	[SerializeField] Text mainTitle = default, leftText = default, rightText = default, leftTitle = default, rightTitle = default;
+	[SerializeField] Text mainTitle = default;
+	[SerializeField] Bill left = default, right = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
-	[SerializeField] SpriteRenderer leftPerson = default, rightPerson = default;
-	[SerializeField] Transform personContainer = default;
-
-	Dictionary<BillDifficulty, List<Bill>> bills = new Dictionary<BillDifficulty, List<Bill>>();
+	Dictionary<BillDifficulty, List<BillData>> bills = new Dictionary<BillDifficulty, List<BillData>>();
 	public enum BillDifficulty { Easy, Med, Hard }
 	BillDifficulty currentDifficulty = BillDifficulty.Easy;
-	List<Bill> currentBillList = new List<Bill>();
+	List<BillData> currentBillList => bills[currentDifficulty];
 	int currentBillIndex = 0;
-	Bill currentBill;
-	List<Coroutine> coroutines = new List<Coroutine>();
+	BillData currentBill => currentBillList[currentBillIndex];
 
-	public struct Bill {
+	public struct BillData {
 		public string name;
 		public Dictionary<string, string> left, right;
 
-		public Bill(string _name, Dictionary<string, string> _left = null, Dictionary<string, string> _right = null) {
+		public BillData(string _name, Dictionary<string, string> _left = null, Dictionary<string, string> _right = null) {
 			name = _name;
 			left = _left;
 			right = _right;
@@ -35,11 +32,7 @@ public class CityScript : RegionController {
 
 		public Dictionary<string, string> this [string prop] {
 			get => prop == "left" ? this.left : this.right;
-			set {
-				if (prop == "left") { this.left = value; } else { this.right = value; }
-			}
-			// get => this.GetType().GetField(prop);
-			// set => this.GetType().GetField(prop).SetValue(this, value);
+			set { if (prop == "left") { this.left = value; } else { this.right = value; } }
 		}
 
 		public override string ToString() => System.String.Format("name:{0}, left:{1}, right:{2}", name,
@@ -51,11 +44,6 @@ public class CityScript : RegionController {
 		base.Start();
 		bills = LoadBills();
 		currentDifficulty = (int) World.impact < 2 ? BillDifficulty.Easy : (int) World.impact < 4 ? BillDifficulty.Med : BillDifficulty.Hard;
-		currentBillList = bills[currentDifficulty];
-		currentBill = bills[currentDifficulty][currentBillIndex];
-
-		var persons = personContainer.GetComponentsInChildren<SpriteRenderer>().Select(sr => sr.sprite).OrderBy(x => Random.value).Take(2).ToList();
-		(leftPerson.sprite, rightPerson.sprite) = (persons[0], persons[1]);
 	}
 
 	protected override void Init() {
@@ -65,13 +53,11 @@ public class CityScript : RegionController {
 		}));
 	}
 
-	protected override void GameOver() {
+	protected override void GameOver() { }
 
-	}
-
-	public static Dictionary<BillDifficulty, List<Bill>> LoadBills() =>
+	public static Dictionary<BillDifficulty, List<BillData>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level =>
-			(level, JsonConvert.DeserializeObject<List<Bill>>(Resources.Load<TextAsset>($"bills_{level}").text)))
+			(level, JsonConvert.DeserializeObject<List<BillData>>(Resources.Load<TextAsset>($"bills_{level}").text)))
 		.ToDictionary(x => (BillDifficulty) System.Enum.Parse(typeof(BillDifficulty), x.Item1, true), x => x.Item2);
 
 	public void ChooseBill(string side) {
@@ -79,30 +65,19 @@ public class CityScript : RegionController {
 			tag => Func.Lambda(
 				(string[] split) => World.GetFactor(split[0])?.Update(World.Region.City, null, float.Parse(split[1] + split[2])))
 			(SplitTag(tag)));
-		currentBill = GetNextBill();
-		// coroutines.ForEach(co => StopCoroutine(co));
-		coroutines = new List<Coroutine>();
-		// PrintBill(currentBill);
 	}
 
 	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|[-])");
 
-	void PrintBill(Bill currentBill) {
-		var mainCo = StartCoroutine(UIController.Typewriter(mainTitle, currentBill.name, speed));
-		var tCoL = StartCoroutine(UIController.Typewriter(leftTitle, currentBill.left["title"], speed));
-		var tCoR = StartCoroutine(UIController.Typewriter(rightTitle, currentBill.right["title"], speed));
-		var bCoL = StartCoroutine(UIController.Typewriter(leftText, currentBill.left["body"], speed));
-		var bCoR = StartCoroutine(UIController.Typewriter(rightText, currentBill.right["body"], speed));
-		coroutines = new List<Coroutine> { mainCo, tCoL, tCoR, bCoL, bCoR };
+	void PrintBill(BillData currentBill) {
+		left.Print(currentBill.left["title"], currentBill.left["body"]);
+		right.Print(currentBill.right["title"], currentBill.right["body"]);
 	}
 
-	Bill GetNextBill() {
+	void GetNextBill() {
 		if (currentBillIndex++ >= currentBillList.Count - 1) {
 			currentDifficulty = (BillDifficulty) (((int) currentDifficulty + 1) % 3);
 			currentBillIndex = 0;
 		}
-		return bills[currentDifficulty][currentBillIndex];
 	}
-
-	public void Return() => GameManager.Transition("Overworld");
 }
