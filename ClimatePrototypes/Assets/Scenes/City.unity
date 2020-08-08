@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 63701078}
   - component: {fileID: 63701077}
   m_Layer: 5
-  m_Name: Emissions
+  m_Name: co2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1099,7 +1099,7 @@ GameObject:
   - component: {fileID: 491975228}
   - component: {fileID: 491975227}
   m_Layer: 5
-  m_Name: Public Opinion
+  m_Name: opinion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1235,7 +1235,7 @@ GameObject:
   - component: {fileID: 654851886}
   - component: {fileID: 654851885}
   m_Layer: 5
-  m_Name: Emissions
+  m_Name: co2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1308,7 +1308,7 @@ GameObject:
   - component: {fileID: 702230805}
   - component: {fileID: 702230804}
   m_Layer: 5
-  m_Name: Economy
+  m_Name: money
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1381,7 +1381,7 @@ GameObject:
   - component: {fileID: 780193850}
   - component: {fileID: 780193849}
   m_Layer: 5
-  m_Name: Economy
+  m_Name: money
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1912,7 +1912,7 @@ GameObject:
   - component: {fileID: 1091467277}
   - component: {fileID: 1091467276}
   m_Layer: 5
-  m_Name: Land Use
+  m_Name: land
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2257,7 +2257,7 @@ GameObject:
   - component: {fileID: 1303482610}
   - component: {fileID: 1303482609}
   m_Layer: 5
-  m_Name: Public Opinion
+  m_Name: opinion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3054,7 +3054,7 @@ GameObject:
   - component: {fileID: 2044066900}
   - component: {fileID: 2044066899}
   m_Layer: 5
-  m_Name: Land Use
+  m_Name: land
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

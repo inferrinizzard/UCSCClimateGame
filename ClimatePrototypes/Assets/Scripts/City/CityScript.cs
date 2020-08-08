@@ -22,34 +22,43 @@ public class CityScript : RegionController {
 
 	public struct BillData {
 		public string name;
-		public Dictionary<string, string> left, right;
+		public BillHalf left, right;
 
-		public BillData(string _name, Dictionary<string, string> _left = null, Dictionary<string, string> _right = null) {
-			name = _name;
-			left = _left;
-			right = _right;
+		public struct BillHalf {
+			public string title, body, tags;
+			public Dictionary<string, float> effects;
+			public BillHalf(string title, string body, string tags) => (this.title, this.body, this.effects, this.tags) = (title, body, null, tags);
 		}
 
-		public Dictionary<string, string> this [string prop] {
-			get => prop == "left" ? this.left : this.right;
-			set { if (prop == "left") { this.left = value; } else { this.right = value; } }
+		public BillData(string name, Dictionary<string, string> left = null, Dictionary<string, string> right = null) {
+			this.name = name;
+			// this.left = new BillHalf(left["title"], left["body"], CityScript.ParseTag(left["tags"]));
+			// this.right = new BillHalf(right["title"], right["body"], CityScript.ParseTag(right["tags"]));
+			this.left = new BillHalf(left["title"], left["body"], left["tags"]);
+			this.right = new BillHalf(right["title"], right["body"], right["tags"]);
 		}
 
-		public override string ToString() => System.String.Format("name:{0}, left:{1}, right:{2}", name,
-			"{" + left.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}",
-			"{" + right.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
+		// public Dictionary<string, string> this [string prop] {
+		// 	get => prop == "left" ? this.left : this.right;
+		// 	set { if (prop == "left") { this.left = value; } else { this.right = value; } }
+		// }
+
+		// public override string ToString() => System.String.Format("name:{0}, left:{1}, right:{2}", name,
+		// 	"{" + left.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}",
+		// 	"{" + right.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
 	}
 
 	protected override void Start() {
 		base.Start();
 		bills = LoadBills();
 		currentDifficulty = (int) World.impact < 2 ? BillDifficulty.Easy : (int) World.impact < 4 ? BillDifficulty.Med : BillDifficulty.Hard;
+		(left.speed, right.speed) = (speed, speed);
 	}
 
 	protected override void Init() {
 		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => {
 			mainTitle.transform.root.gameObject.SetActive(true);
-			PrintBill(currentBill);
+			InitBill(currentBill);
 		}));
 	}
 
@@ -58,20 +67,15 @@ public class CityScript : RegionController {
 	public static Dictionary<BillDifficulty, List<BillData>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level =>
 			(level, JsonConvert.DeserializeObject<List<BillData>>(Resources.Load<TextAsset>($"bills_{level}").text)))
-		.ToDictionary(x => (BillDifficulty) System.Enum.Parse(typeof(BillDifficulty), x.Item1, true), x => x.Item2);
+		.ToDictionary(x => (BillDifficulty) System.Enum.Parse(typeof(BillDifficulty), x.Item1, true), x => { return x.Item2; });
 
-	public void ChooseBill(string side) {
-		currentBill[side]["tags"].Split().ForEach(
-			tag => Func.Lambda(
-				(string[] split) => World.GetFactor(split[0])?.Update(World.Region.City, null, float.Parse(split[1] + split[2])))
-			(SplitTag(tag)));
-	}
+	static Dictionary<string, float> ParseTag(string tag) => tag.Split().ToDictionary(t => Regex.Match(t, @"[A-z]*(?=\+|-)").ToString(), t => float.Parse(Regex.Match(t, @"(?:\+|-).*").ToString()));
 
-	public static string[] SplitTag(string tag) => Regex.Split(tag, @"([+]|[-])");
-
-	void PrintBill(BillData currentBill) {
-		left.Print(currentBill.left["title"], currentBill.left["body"]);
-		right.Print(currentBill.right["title"], currentBill.right["body"]);
+	void InitBill(BillData currentBill) {
+		currentBill.left.effects = ParseTag(currentBill.left.tags);
+		currentBill.right.effects = ParseTag(currentBill.right.tags);
+		left.SetBill(currentBill.left);
+		right.SetBill(currentBill.right);
 	}
 
 	void GetNextBill() {
