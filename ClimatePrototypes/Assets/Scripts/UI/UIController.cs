@@ -110,4 +110,9 @@ public class UIController : Singleton<UIController> {
 			nav.transform.position = new Vector3(nav.transform.position.x, startingHeight - step / time * height * (up ? -1 : 1), nav.transform.position.z);
 		}
 	}
+
+	public static void SetUIAlpha(GameObject ui, float a) {
+		foreach (var child in ui.GetComponentsInChildren<Graphic>())
+			child.color = new Color(child.color.r, child.color.g, child.color.b, a);
+	}
 }

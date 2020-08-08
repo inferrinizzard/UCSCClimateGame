@@ -84,4 +84,6 @@ public class CityScript : RegionController {
 			currentBillIndex = 0;
 		}
 	}
+
+	public void SetTransparent(GameObject ui) => UIController.SetUIAlpha(ui, .7f);
 }
