@@ -6,10 +6,11 @@ using Pathfinding;
 
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ForestController : RegionController {
-	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default, emissionsTracker = default;
-	[SerializeField] int numActive;
+	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default;
+	public int numActive;
 	[HideInInspector] public VolunteerUI selected;
 	public bool hasSelected { get => selected != null && !overUI; }
 
@@ -19,6 +20,8 @@ public class ForestController : RegionController {
 	public List<VolunteerTask> volunteers = new List<VolunteerTask>();
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 	public List<Vector3Int> activeTrees = new List<Vector3Int>();
+
+	[SerializeField] Slider emissionsTracker;
 
 	protected override void GameOver() {
 		StopAllCoroutines();
@@ -37,6 +40,12 @@ public class ForestController : RegionController {
 		utility.parent = transform;
 
 		uiPanel.GetComponentsInChildren<VolunteerUI>().Skip(numActive).ToList().ForEach(v => v.Deactivate());
+	}
+
+	protected override void Update() {
+		base.Update();
+		emissionsTracker.value = damage / 200f;
+		// reduce with station task ending + durin?
 	}
 
 	public PathfindingAgent NewAgent(GameObject prefab, Vector3 pos, Vector3 target) {

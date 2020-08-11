@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class StationTarget : MonoBehaviour {
+public class Station : MonoBehaviour {
 	BoxCollider2D col;
 	Dictionary<Transform, bool> subtargets = new Dictionary<Transform, bool>();
 	int awaitSubTargetReached = 0;

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Pathfinding;
 
@@ -49,20 +50,28 @@ public class VolunteerActions {
 		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
 	}
 
-	public static IEnumerator ClearAndReturn(Volunteer v, Vector3Int tilePos) {
-		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
-		ForestGrid.ClearHover(tilePos);
-		ForestGrid.map.SetTile(tilePos, ForestGrid.empty);
-	}
-
 	public static void Clear(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
 		var task = (ForestController.Instance as ForestController).volunteers[v.ID];
 		ForestController.Instance.StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
 	}
 
+	static IEnumerator ClearAndReturn(Volunteer v, Vector3Int tilePos) {
+		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
+		ForestGrid.ClearHover(tilePos);
+		ForestGrid.map.SetTile(tilePos, ForestGrid.empty);
+		ForestGrid.RemoveTree(tilePos);
+	}
 	public static void Capture(Volunteer v) {
 		v.anim.SetTrigger("Facility");
-		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
+		ForestController.Instance.StartCoroutine(CaptureAndReturn(v, 3));
+	}
+
+	static IEnumerator CaptureAndReturn(Volunteer v, float time) {
+		ForestController.Instance.StartCoroutine(WaitAndReturn(v, time));
+		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+			yield return null;
+			// check time ticks and do damage capture here
+		}
 	}
 }

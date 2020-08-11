@@ -3626,13 +3626,13 @@ MonoBehaviour:
   backgrounds: []
   volunteerPrefab: {fileID: 8216776056107443475}
   uiPanel: {fileID: 1631926910}
-  emissionsTracker: {fileID: 1653360900}
   numActive: 3
   selected: {fileID: 0}
   overUI: 0
   agentParent: {fileID: 0}
   utility: {fileID: 0}
   activeTrees: []
+  emissionsTracker: {fileID: 1653360902}
 --- !u!114 &396213019
 MonoBehaviour:
   m_ObjectHideFlags: 0
