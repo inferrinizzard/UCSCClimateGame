@@ -170,12 +170,14 @@ public class PopulateWorld : MonoBehaviour
         {
             RePopulateWorld();
         }
+
+        GetCellIDData(IdentityManager.Identity.Fire);
     }
 
     void GUIUpdate()
     {
         // text
-        windSpeedTextUI.text = windSpeed.ToString() + " mph";
+        windSpeedTextUI.text = windSpeed.ToString() + " km/h";
         // arrow size
         float smooth = 5.0f;
         float arrowSize = 0.3f + (windSpeed - 5) /2 *0.1f;
@@ -490,6 +492,31 @@ public class PopulateWorld : MonoBehaviour
         PopulatePlayer();
         StartCoroutine(WaitForFire(0));
         
+    }
+
+    public float GetCellIDData(IdentityManager.Identity id)
+    {
+        int totalCell = 0;
+        int cellWithIDCount = 0;
+        
+        foreach (var cell in cellArray)
+        {
+            totalCell++;
+            if (cell.GetComponent<IdentityManager>().id == id)
+            {
+                cellWithIDCount++;
+            }
+        }
+
+        float result = 100 - 100 * cellWithIDCount / totalCell;
+
+        Debug.Log("player performance is " +  result);
+        Debug.Log("reservoir size is " +  18);
+        Debug.Log("tree density is " +  treeDensity);
+        Debug.Log("fire spread / moisture loss rate is " + 3);
+
+        return result;
+
     }
     
     

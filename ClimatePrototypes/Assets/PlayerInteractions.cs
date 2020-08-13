@@ -245,9 +245,36 @@ public class PlayerInteractions : MonoBehaviour
     {
         if (other.gameObject.tag == "Cloud")
         {
-            FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+            //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+            StartCoroutine(FindObjectOfType<CameraShake>().Shake(0.40f, .10f));
+            StartCoroutine(SlowDown(3f));  // if hit cloud, slows down to 1/4 speed for 3 sec
         }
     }
+
+    IEnumerator SlowDown(float duration)
+    {
+        float elapsed = 0.0f;
+        float slowSpeed = speed / 4;  
+
+        while (elapsed < duration)
+        {
+            speed = slowSpeed;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // speed = Mathf.Lerp(slowSpeed,4 * slowSpeed, 0.25f); 
+        speed = 4 * slowSpeed; 
+    }
+    
+    /// <summary>
+    ///  player performance in a float [0,1]
+    /// </summary>
+    /// <returns></returns>
+    /*public float GetPlayerPerformance()
+    {
+        Debug.Log(VAR);
+    }*/
     
     
     
