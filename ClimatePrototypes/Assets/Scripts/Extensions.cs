@@ -41,13 +41,9 @@ public static class Extensions {
 		return t;
 	}
 
+	public static IEnumerable < (TSource, int) > Enumerator<TSource>(this IEnumerable<TSource> @this) => @this.Map((T, i) => (T, i));
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, TResult> func) => @this.Select(func);
 	public static IEnumerable<TResult> Map<TSource, TResult>(this IEnumerable<TSource> @this, Func<TSource, int, TResult> func) => @this.Select(func);
-	public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> @this, Func<TSource, bool> func) => @this.Where(func);
-	public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> @this, Func<TSource, int, bool> func) => @this.Where(func);
-	public static TSource Reduce<TSource>(this IEnumerable<TSource> @this, Func<TSource, TSource, TSource> func) => @this.Aggregate(func);
-	public static TAccumulate Reduce<TSource, TAccumulate>(this IEnumerable<TSource> @this, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func) => @this.Aggregate(seed, func);
-	public static TResult Reduce<TSource, TAccumulate, TResult>(this IEnumerable<TSource> @this, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func, Func<TAccumulate, TResult> resultSelector) => @this.Aggregate(seed, func, resultSelector);
 
 	///<summary> Same as GetComponentInChildren but does not return parent </summary>
 	///<returns> Component of type <typeparamref name="T"/> or null </returns>

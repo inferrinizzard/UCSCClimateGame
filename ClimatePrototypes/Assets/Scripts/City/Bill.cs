@@ -7,14 +7,12 @@ using UnityEngine.UI;
 
 public class Bill : MonoBehaviour {
 	[SerializeField] Text title = default, body = default;
-	float iconSize;
 	[SerializeField] GameObject iconWrapper = default;
-	RectTransform iconAnchor;
 	[HideInInspector] public float speed;
 
 	void Start() {
-		iconAnchor = iconWrapper.transform.GetChild(0) as RectTransform;
-		iconSize = iconAnchor.rect.width;
+		foreach (Transform child in iconWrapper.transform)
+			child.gameObject.SetActive(false);
 	}
 
 	public void SetBill(CityScript.BillData.BillHalf currentBill) {
@@ -23,8 +21,16 @@ public class Bill : MonoBehaviour {
 	}
 
 	void ArrangeIcons(Dictionary<string, float> effects) {
-		foreach (Transform child in iconWrapper.transform)
+		List<RectTransform> showIcons = new List<RectTransform>();
+		foreach (Transform child in iconWrapper.transform) {
 			child.gameObject.SetActive(effects.ContainsKey(child.name));
+			if (child.gameObject.activeSelf)
+				showIcons.Add(child as RectTransform);
+		}
+		float size = showIcons[0].rect.width;
+		int num = showIcons.Count;
+		foreach (var(child, i) in showIcons.Enumerator())
+			child.localPosition = new Vector2(size * ((i - num / 2) + (num % 2 == 1 ? 0 : .5f)), child.localPosition.y);
 	}
 
 	void Print(string titleText, string bodyText) {
