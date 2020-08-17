@@ -12,6 +12,15 @@ public class UIController : Singleton<UIController> {
 	[SerializeField] Button exitButton = default;
 	[SerializeField] GameObject returnPrompt = default;
 	public GameObject navbar;
+	Dictionary<GameObject, bool> uiActiveStatus = new Dictionary<GameObject, bool>();
+
+	public void Toggle(GameObject obj) {
+		if (!uiActiveStatus.ContainsKey(obj))
+			uiActiveStatus.Add(obj, !obj.activeSelf);
+		else
+			uiActiveStatus[obj] = !uiActiveStatus[obj];
+		obj.SetActive(uiActiveStatus[obj]);
+	}
 
 	void OnEnable() {
 		worldNameText.text = World.worldName;
@@ -100,5 +109,10 @@ public class UIController : Singleton<UIController> {
 			yield return null;
 			nav.transform.position = new Vector3(nav.transform.position.x, startingHeight - step / time * height * (up ? -1 : 1), nav.transform.position.z);
 		}
+	}
+
+	public static void SetUIAlpha(GameObject ui, float a) {
+		foreach (var child in ui.GetComponentsInChildren<Graphic>())
+			child.color = new Color(child.color.r, child.color.g, child.color.b, a);
 	}
 }

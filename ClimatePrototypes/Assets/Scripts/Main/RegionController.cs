@@ -61,15 +61,17 @@ public abstract class RegionController : MonoBehaviour {
 		if (timer <= 0) {
 			timer = -2;
 			GameOver();
-
-			if (GameManager.Instance.runModel) {
-				GameManager.Instance.runningModel = true;
-				System.Threading.Thread calcThread = new System.Threading.Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
-				calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
-				calcThread.Start();
-			}
-			// start model thread
+			StartModel();
 			// summon prompt
+		}
+	}
+
+	protected virtual void StartModel() {
+		if (GameManager.Instance.runModel) {
+			GameManager.Instance.runningModel = true;
+			System.Threading.Thread calcThread = new System.Threading.Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
+			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
+			calcThread.Start();
 		}
 	}
 
