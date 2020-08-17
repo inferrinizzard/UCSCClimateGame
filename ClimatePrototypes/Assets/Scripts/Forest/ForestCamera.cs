@@ -12,8 +12,8 @@ public class ForestCamera : MonoBehaviour {
 	void Start() {
 		foreach (var s in new [] { station, forest, factory })
 			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
-		station.transform.position = new Vector3(forest.sprite.bounds.min.x * 2, 0, 0) * forest.transform.localScale.x;
-		factory.transform.position = new Vector3(forest.sprite.bounds.max.x * 2, 0, 0) * forest.transform.localScale.x;
+		station.transform.position = new Vector3(forest.sprite.bounds.min.x * forest.transform.localScale.x - station.sprite.bounds.extents.x * station.transform.localScale.x, 0, 0);
+		factory.transform.position = new Vector3(forest.sprite.bounds.max.x * forest.transform.localScale.x + factory.sprite.bounds.extents.x * factory.transform.localScale.x, 0, 0);
 	}
 
 	void Update() {
