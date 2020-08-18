@@ -19,8 +19,12 @@ public class PopulateWorld : MonoBehaviour
     public GameObject cellPrefab;
     public GameObject waterPrefab;
     public GameObject playerPrefab;
+
+    public Sprite[] reservoirSprites;
     
     [HideInInspector]public GameObject watergo;
+    public GameObject watergo1;
+    public GameObject watergo2;
     
     [Range(0, 100)] public int treeDensity;
     public enum windDir 
@@ -177,7 +181,8 @@ public class PopulateWorld : MonoBehaviour
     void GUIUpdate()
     {
         // text
-        windSpeedTextUI.text = windSpeed.ToString() + " km/h";
+        //windSpeedTextUI.text = windSpeed.ToString() + " km/h";
+        windSpeedTextUI.text = " wind";
         // arrow size
         float smooth = 5.0f;
         float arrowSize = 0.3f + (windSpeed - 5) /2 *0.1f;
@@ -265,27 +270,126 @@ public class PopulateWorld : MonoBehaviour
     {
         // TODO: water size according to precipitation
         // currently art asset is 1:2, here size is 3:6
-        int waterX = 6;  // upper left corner location in array
+        
+        /*int waterX = 6;  // upper left corner location in array
         int waterY = 5;
         int waterWidth = 6;
-        int waterHeight = 3;
-        for (int i = waterX; i < waterX + waterWidth; i++)
+        int waterHeight = 3;*/
+        
+        
+        // procedurally generate reservoir
+        // ratio index = h/w
+        // 0 =  1,
+        // 1 = 1.3,
+        // 2 = 1.5,
+        // 3 = 0.5,
+        // 4 = 0.4 
+        int totalSize = 15;  // TODO: total precipitation queried here
+        
+        int ratio1 = Random.Range(0, 3);
+        int ratio2 = Random.Range(0, 3);
+
+        float waterh1 = Random.Range(2, 4);
+        float waterh2 = Random.Range(2, 4);
+        float waterw1 = waterh1 * ratio1;
+        float waterw2 = waterh2 * ratio2;
+        int waterX1 = 6;
+        int waterY1 = 5;
+        int waterX2 = 10;
+        int waterY2 = 3;
+
+        int reservoirCount = 2;
+        while (reservoirCount > 0)
         {
-            for (int j = waterY; j < waterY + waterHeight; j++)
+            reservoirCount--;
+            
+            int ratioIndex = Random.Range(0, 3);
+            //int ratioIndex = 0;
+            int waterHeight = 0;
+            int waterWidth = 0;
+
+            float ratio = 0f;
+            if (ratioIndex == 0)
             {
-                GameObject go = cellArray[i, j];
-                IdentityManager goID = go.GetComponent<IdentityManager>();
-                goID.id = IdentityManager.Identity.Water;
+                ratio = 1;
+                waterHeight = 1;
+                waterWidth = 1;
+            }else if (ratioIndex == 1)
+            {
+                ratio = 1.3f;
+                waterHeight = 4;
+                waterWidth = 3;
+            }else if (ratioIndex == 2)
+            {
+                ratio = 1.5f;
+                waterHeight = 3;
+                waterWidth = 2;
+            }else if (ratioIndex == 3)
+            {
+                ratio = 0.5f;
+                waterHeight = 1;
+                waterWidth = 2;
             }
+            else
+            {
+                ratio = 0.4f;
+                waterHeight = 2;
+                waterWidth = 5;
+            }
+            
+            int waterX = 0;
+            int waterY = 0;
+            
+            if (reservoirCount == 1)
+            {
+                 waterX = 6;
+                 waterY = 5;
+                 waterHeight *= 1;
+                 waterWidth *= 1;
+            }
+            else
+            {
+                 waterX = 15;
+                 waterY = 8;
+            }
+
+            
+            for (int i = waterX; i < waterX + waterWidth; i++)
+            {
+                for (int j = waterY; j < waterY + waterHeight; j++)
+                {
+                    GameObject go = cellArray[i, j];
+                    IdentityManager goID = go.GetComponent<IdentityManager>();
+                    goID.id = IdentityManager.Identity.Water;
+                }
+            }
+            //Vector3Int cornerPos = new Vector3Int(waterX, waterY, 0);
+            
+            /*Vector3Int cornerPos = GetVector3IntFromCellArray(waterX, waterY);
+            Vector3 pos1 = tilemap.GetCellCenterWorld(cornerPos);
+            Vector3 pos2 = tilemap.GetCellCenterWorld(new Vector3Int(cornerPos.x + 1, cornerPos.y + 1, 0));
+            float unitWidth = pos2.x - pos1.x;
+            Vector3 reservoirPos = new Vector3(pos1.x + (waterWidth / 2 - 0.25f) * unitWidth, pos1.y + (waterHeight / 2 + 0f) * unitWidth,0);*/
+            Vector3 pos1 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX, waterY));
+            Vector3 pos2 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX + waterWidth, waterY + waterHeight) );
+            Vector3 reservoirPos = (pos1 + pos2) / 2 + new Vector3(-0.25f,-0.25f,0);
+            watergo = Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
+            watergo.SetActive(true);
+            
+            watergo.GetComponent<SpriteRenderer>().sprite = reservoirSprites[ratioIndex];
+            watergo.GetComponent<SpriteRenderer>().size = new Vector2(waterWidth / 4,waterHeight /4 );
+            watergo.transform.localScale = new Vector3(0.4f,0.4f,1);
+            if (reservoirCount == 1)
+            {
+                watergo1 = watergo;
+            }
+            else
+            {
+                watergo2 = watergo;
+            }
+            
         }
-        //Vector3Int cornerPos = new Vector3Int(waterX, waterY, 0);
-        Vector3Int cornerPos = GetVector3IntFromCellArray(waterX, waterY);
-        Vector3 pos1 = tilemap.GetCellCenterWorld(cornerPos);
-        Vector3 pos2 = tilemap.GetCellCenterWorld(new Vector3Int(cornerPos.x + 1, cornerPos.y + 1, 0));
-        float unitWidth = pos2.x - pos1.x;
-        Vector3 reservoirPos = new Vector3(pos1.x + (waterWidth / 2 - 0.25f) * unitWidth, pos1.y + (waterHeight / 2 + 0f) * unitWidth,0);
-        watergo = Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
-        watergo.SetActive(true);
+        
 
     }
     

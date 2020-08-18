@@ -245,6 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heliTranform: {fileID: 498595634}
   waterPosition: {x: 0, y: 0, z: 0}
+  watergoIndex: 1
   speed: 180
 --- !u!1 &69987881
 GameObject:
@@ -1173,6 +1174,7 @@ Transform:
   - {fileID: 867563142}
   - {fileID: 66539257}
   - {fileID: 498595634}
+  - {fileID: 852522136}
   m_Father: {fileID: 1650592830}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1310,7 +1312,15 @@ MonoBehaviour:
   cellPrefab: {fileID: 281962110}
   waterPrefab: {fileID: 2064989791}
   playerPrefab: {fileID: 1650592827}
+  reservoirSprites:
+  - {fileID: 21300000, guid: a1e7d2ad536059d40b458c83ada4ebbb, type: 3}
+  - {fileID: 21300000, guid: 1c9b685c7b08e544e9a38b6ea0dfaa71, type: 3}
+  - {fileID: 21300000, guid: 9da629da9e5751846887f4261cd9d65c, type: 3}
+  - {fileID: 21300000, guid: b0ba391d1f90a5543b1a9cb2d5a59f48, type: 3}
+  - {fileID: 21300000, guid: c1ecaba77e44c0a43bfa474460351f80, type: 3}
   watergo: {fileID: 0}
+  watergo1: {fileID: 0}
+  watergo2: {fileID: 0}
   treeDensity: 90
   dir: 1
   windSpeed: 0
@@ -2281,6 +2291,103 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &852522135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 852522136}
+  - component: {fileID: 852522138}
+  - component: {fileID: 852522137}
+  m_Layer: 0
+  m_Name: WaterIndicator2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &852522136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852522135}
+  m_LocalRotation: {x: -0, y: -0, z: -0.2585661, w: 0.96599364}
+  m_LocalPosition: {x: 2.6800008, y: 0.07000003, z: 0}
+  m_LocalScale: {x: 0.3392701, y: 0.50000024, z: 1}
+  m_Children: []
+  m_Father: {fileID: 438785188}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -29.97}
+--- !u!114 &852522137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852522135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a939cc6117e7c647b674a176bf88a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heliTranform: {fileID: 498595634}
+  waterPosition: {x: 0, y: 0, z: 0}
+  watergoIndex: 2
+  speed: 180
+--- !u!212 &852522138
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852522135}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -299651671
+  m_SortingLayer: 6
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 64e2f8d66aa52c746937e253d67a475a, type: 3}
+  m_Color: {r: 0.3647059, g: 0.6784314, b: 0.7764706, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &867563141
 GameObject:
   m_ObjectHideFlags: 0
@@ -3684,7 +3791,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 20 mph
+  m_text: ' wind'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3712,8 +3819,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3753,7 +3860,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1685624826}
-    characterCount: 6
+    characterCount: 5
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -4849,7 +4956,7 @@ SpriteRenderer:
   m_SortingLayerID: 2099409631
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 891b9e8ea5037604f9ded04731a89277, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a1e7d2ad536059d40b458c83ada4ebbb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4869,7 +4976,7 @@ Transform:
   m_GameObject: {fileID: 2064989791}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.11, y: -9.95, z: 0}
-  m_LocalScale: {x: 1.9, y: 1.9, z: 2}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
@@ -4882,7 +4989,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064989791}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 7f2f0d261405543459acb3de52e95f34, type: 2}
   m_CullingMode: 0

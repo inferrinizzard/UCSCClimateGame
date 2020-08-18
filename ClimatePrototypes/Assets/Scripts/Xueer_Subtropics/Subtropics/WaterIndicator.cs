@@ -7,18 +7,26 @@ public class WaterIndicator : MonoBehaviour
 {
     public Transform heliTranform;
     public Vector3 waterPosition;
+    public int watergoIndex;
     public float speed = 10f;
 
     private void Start()
     {
+        
         //heliTranform = gameObject.transform.parent;
-        waterPosition = PopulateWorld.Instance.watergo.transform.position; // hard coded for now in populate world
+        if (watergoIndex == 1)
+        {
+            waterPosition = PopulateWorld.Instance.watergo1.transform.position; // hard coded for now in populate world
+        }
+        else
+        {
+            waterPosition = PopulateWorld.Instance.watergo2.transform.position; // hard coded for now in populate world
+        }
 
     }
 
     void FixedUpdate()
     {
-        waterPosition = PopulateWorld.Instance.watergo.transform.position;
         
         // Get degrees between two vectors
         Vector3 targetDir = waterPosition - heliTranform.position;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WaterID : MonoBehaviour
 {
-    private Color color = Color.clear;
+    private Color color = Color.clear;  // color to debug cell id
     private SpriteRenderer sr;
 
     public Sprite waterSprite;
