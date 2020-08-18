@@ -23,10 +23,10 @@ public class PopulateWorld : MonoBehaviour
     public Sprite[] reservoirSprites;
     
     [HideInInspector]public GameObject watergo;
-    public GameObject watergo1;
-    public GameObject watergo2;
+    [HideInInspector]public GameObject watergo1;
+    [HideInInspector]public GameObject watergo2;
     
-    [Range(0, 100)] public int treeDensity;
+    
     public enum windDir 
     {
         NE,
@@ -44,6 +44,19 @@ public class PopulateWorld : MonoBehaviour
     private static PopulateWorld _instance;
     private GameObject player;
     
+    
+    /// <summary>
+    /// Backend data
+    /// according to player performance, there are three difficulty
+    /// </summary>
+    [Space]
+    [Header("Backend")] 
+    [SerializeField]private int reservoirTotalSize;
+    [SerializeField]private int spreadability = 3;
+    public int difficulty = 3;
+    [SerializeField]private int performance;
+    [Range(0, 100)] public int treeDensity;
+
     public static PopulateWorld Instance { get { return _instance; } }
 
     private GridLayout gridLayout;
@@ -269,13 +282,8 @@ public class PopulateWorld : MonoBehaviour
     private void PopulateWater()
     {
         // TODO: water size according to precipitation
-        // currently art asset is 1:2, here size is 3:6
-        
-        /*int waterX = 6;  // upper left corner location in array
-        int waterY = 5;
-        int waterWidth = 6;
-        int waterHeight = 3;*/
-        
+        reservoirTotalSize = 0;
+
         
         // procedurally generate reservoir
         // ratio index = h/w
@@ -284,7 +292,7 @@ public class PopulateWorld : MonoBehaviour
         // 2 = 1.5,
         // 3 = 0.5,
         // 4 = 0.4 
-        int totalSize = 15;  // TODO: total precipitation queried here
+        
         
         int ratio1 = Random.Range(0, 3);
         int ratio2 = Random.Range(0, 3);
@@ -298,6 +306,7 @@ public class PopulateWorld : MonoBehaviour
         int waterX2 = 10;
         int waterY2 = 3;
 
+        
         int reservoirCount = 2;
         while (reservoirCount > 0)
         {
@@ -340,7 +349,7 @@ public class PopulateWorld : MonoBehaviour
             int waterX = 0;
             int waterY = 0;
             
-            if (reservoirCount == 1)
+            if (reservoirCount == 1)  // this is the last reservoir being generated
             {
                  waterX = 6;
                  waterY = 5;
@@ -351,6 +360,13 @@ public class PopulateWorld : MonoBehaviour
             {
                  waterX = 15;
                  waterY = 8;
+            }
+            
+            // at the easiest level, we increase reservoir size
+            if (difficulty == 1)
+            {
+                waterHeight *= 2;
+                waterWidth *= 2;
             }
 
             
@@ -363,13 +379,9 @@ public class PopulateWorld : MonoBehaviour
                     goID.id = IdentityManager.Identity.Water;
                 }
             }
-            //Vector3Int cornerPos = new Vector3Int(waterX, waterY, 0);
             
-            /*Vector3Int cornerPos = GetVector3IntFromCellArray(waterX, waterY);
-            Vector3 pos1 = tilemap.GetCellCenterWorld(cornerPos);
-            Vector3 pos2 = tilemap.GetCellCenterWorld(new Vector3Int(cornerPos.x + 1, cornerPos.y + 1, 0));
-            float unitWidth = pos2.x - pos1.x;
-            Vector3 reservoirPos = new Vector3(pos1.x + (waterWidth / 2 - 0.25f) * unitWidth, pos1.y + (waterHeight / 2 + 0f) * unitWidth,0);*/
+            reservoirTotalSize += waterHeight * waterWidth;
+            
             Vector3 pos1 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX, waterY));
             Vector3 pos2 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX + waterWidth, waterY + waterHeight) );
             Vector3 reservoirPos = (pos1 + pos2) / 2 + new Vector3(-0.25f,-0.25f,0);
@@ -378,7 +390,15 @@ public class PopulateWorld : MonoBehaviour
             
             watergo.GetComponent<SpriteRenderer>().sprite = reservoirSprites[ratioIndex];
             watergo.GetComponent<SpriteRenderer>().size = new Vector2(waterWidth / 4,waterHeight /4 );
-            watergo.transform.localScale = new Vector3(0.4f,0.4f,1);
+            if (difficulty == 1)
+            {
+                watergo.transform.localScale = new Vector3(0.4f,0.4f,1) * 2;
+            }
+            else
+            {
+                watergo.transform.localScale = new Vector3(0.4f,0.4f,1);
+            }
+            
             if (reservoirCount == 1)
             {
                 watergo1 = watergo;
@@ -417,9 +437,7 @@ public class PopulateWorld : MonoBehaviour
         GenerateTreeInRegion(0,width1, 0, height1);
         GenerateTreeInRegion(width2_0,width2_1, height2_0, height2_1);
         GenerateTreeInRegion(width3_0,width3_1, height3_0, height3_1);
-        
-        
-        
+
     }
 
     void GenerateTreeInRegion(int w0, int w1, int h0, int h1)
@@ -612,15 +630,37 @@ public class PopulateWorld : MonoBehaviour
             }
         }
 
-        float result = 100 - 100 * cellWithIDCount / totalCell;
+        performance = 100 - 100 * cellWithIDCount / totalCell;
+        Debug.Log("player performance is " +  performance);
+        return performance;
 
-        Debug.Log("player performance is " +  result);
-        Debug.Log("reservoir size is " +  18);
+    }
+    
+    /// <summary>
+    /// Tied to backend model
+    /// </summary>
+    public void QueryWorldData()
+    {
+        
+        Debug.Log("reservoir size is " +  reservoirTotalSize);
         Debug.Log("tree density is " +  treeDensity);
-        Debug.Log("fire spread / moisture loss rate is " + 3);
+        Debug.Log("fire spread / moisture loss rate is " + spreadability);
+    }
 
-        return result;
-
+    public void LoadNewGame()
+    {
+        if (performance >= 80)
+        {
+            difficulty = 3;
+        }
+        else if (performance >= 60)
+        {
+            difficulty = 2;
+        }
+        else
+        {
+            difficulty = 1;
+        }
     }
     
     

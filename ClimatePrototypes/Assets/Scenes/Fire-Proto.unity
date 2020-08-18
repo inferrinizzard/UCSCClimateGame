@@ -1321,9 +1321,13 @@ MonoBehaviour:
   watergo: {fileID: 0}
   watergo1: {fileID: 0}
   watergo2: {fileID: 0}
-  treeDensity: 90
   dir: 1
   windSpeed: 0
+  reservoirTotalSize: 0
+  spreadability: 3
+  difficulty: 1
+  performance: 0
+  treeDensity: 90
   fire1: {x: 0, y: 0, z: 0}
   water1: {x: 6, y: 2, z: 0}
   water2: {x: 6, y: 2, z: 0}
