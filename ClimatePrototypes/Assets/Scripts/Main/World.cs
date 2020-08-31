@@ -18,6 +18,14 @@ public static class World {
 	public static double averageTemp { get => temp?.Average() ?? 0; }
 	public static Dictionary<string, Dictionary<double, List<double>>> ranges;
 
+	public static void DetermineImpact() {
+		if (averageTemp > startingTemp.Average() + maxTempChange) {
+			Debug.Log("hey it's hot");
+			Debug.Break();
+			GameManager.Restart();
+		}
+	}
+
 	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
 		public string name, verbose;

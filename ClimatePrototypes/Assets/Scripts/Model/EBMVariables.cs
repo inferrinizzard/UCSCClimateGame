@@ -54,10 +54,7 @@ public partial class EBM {
 	static double _a0 = 0.7;
 	public static double a0 {
 		get => _a0;
-		set {
-			_a0 = value;
-			aw = a0 - a2 * x.PointwisePower(2);
-		}
+		set => (_a0, aw) = (value, value - a2 * x.PointwisePower(2));
 	}
 	/// <summary> Ice-free co-albedo spatial dependence  </summary>
 	static readonly double a2 = 0.1;

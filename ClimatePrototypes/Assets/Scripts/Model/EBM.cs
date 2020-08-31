@@ -6,6 +6,12 @@ using MathNet.Numerics.LinearAlgebra;
 using Interpolate = MathNet.Numerics.Interpolate;
 
 public partial class EBM {
+	public static void Reset() {
+		F = 0;
+		a0 = 0.7;
+		Clear();
+	}
+
 	public static(Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
 		T = T ?? 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
 		years = years == 0 ? dur : years;

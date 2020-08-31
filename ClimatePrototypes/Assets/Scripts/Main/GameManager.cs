@@ -29,6 +29,11 @@ public class GameManager : Singleton<GameManager> {
 		SceneManager.activeSceneChanged += instance.InitScene;
 	}
 
+	public static void Restart() {
+		SceneManager.LoadScene("TitleScreen");
+		EBM.Reset();
+	}
+
 	public void QuitGame(int exitStatus = 0) {
 		switch (exitStatus) {
 			case 0:
@@ -69,13 +74,6 @@ public class GameManager : Singleton<GameManager> {
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.realtimeSinceStartup;
-
-		// if (name == "Overworld" && Instance.runModel) {
-		// 	GameManager.Instance.runningModel = true;
-		// 	Thread calcThread = new Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
-		// 	calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
-		// 	calcThread.Start();
-		// }
 
 		Instance.loadingScreen.SetActive(true);
 
