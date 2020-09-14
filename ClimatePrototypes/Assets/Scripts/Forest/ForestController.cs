@@ -44,7 +44,7 @@ public class ForestController : RegionController {
 
 	protected override void Update() {
 		base.Update();
-		emissionsTracker.value = damage / 200f;
+		emissionsTracker.value = damage / 200f + .5f;
 		// reduce with station task ending + durin?
 	}
 

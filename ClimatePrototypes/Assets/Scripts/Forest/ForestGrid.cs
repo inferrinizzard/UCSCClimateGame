@@ -92,17 +92,18 @@ public class ForestTree { // TODO: do these get cleared?
 		this.pos = pos;
 		ForestController.Instance.StartCoroutine(Grow(0));
 		// NeighbourCount();
-		sequestration = ForestController.Instance.StartCoroutine(Sequestre(4));
+		sequestration = ForestController.Instance.StartCoroutine(Sequestre(4, initialDelay : 4 - index));
 	}
 
 	public override string ToString() => pos.ToString();
 
 	~ForestTree() {
-		Debug.Log($"destructor called on {this}");
+		// Debug.Log($"destructor called on {this}");
 		ForestController.Instance.StopCoroutine(sequestration);
 	}
 
-	IEnumerator Sequestre(float interval = 2) {
+	IEnumerator Sequestre(float interval = 2, float initialDelay = 0) {
+		yield return new WaitForSeconds(initialDelay);
 		yield return new WaitForSeconds(interval);
 		float effect = index >= 3 ? index * (1 - NeighbourCount() / 8f) : index == 2 ? 0 : -index;
 		ForestController.Instance.damage = Mathf.Max(ForestController.Instance.damage - effect / 2, 0);

@@ -63,15 +63,17 @@ public class VolunteerActions {
 		ForestGrid.RemoveTree(tilePos);
 	}
 	public static void Capture(Volunteer v) {
-		v.anim.SetTrigger("Facility");
+		// v.anim.SetTrigger("Facility");
 		ForestController.Instance.StartCoroutine(CaptureAndReturn(v, 3));
 	}
 
-	static IEnumerator CaptureAndReturn(Volunteer v, float time) {
+	static IEnumerator CaptureAndReturn(Volunteer v, float time, int steps = 20) {
 		ForestController.Instance.StartCoroutine(WaitAndReturn(v, time));
-		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
-			yield return null;
-			// check time ticks and do damage capture here
+		// for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+		// yield return null;
+		for (int i = steps; i > 0; i--) {
+			yield return new WaitForSeconds(time / steps);
+			ForestController.Instance.damage = Mathf.Max(-100, ForestController.Instance.damage - 1);
 		}
 	}
 }
