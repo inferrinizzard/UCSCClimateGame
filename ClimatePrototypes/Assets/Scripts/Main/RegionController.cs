@@ -12,11 +12,11 @@ public abstract class RegionController : MonoBehaviour {
 	protected GameObject introBlock;
 
 	protected float timer = 60f;
+	[SerializeField] protected Text timerText = default;
 	public float damage = 0f; // out of 100?
 
 	[HideInInspector] public bool paused = false;
 	protected bool updated = false;
-	protected abstract void GameOver();
 	protected virtual void Init() { }
 
 	public World.Region region;
@@ -56,6 +56,7 @@ public abstract class RegionController : MonoBehaviour {
 
 	protected virtual void Update() {
 		timer -= Time.deltaTime;
+		timerText.text = $"{Mathf.Floor(timer)}";
 		if (timer < -1)
 			return;
 		if (timer <= 0) {
@@ -64,6 +65,12 @@ public abstract class RegionController : MonoBehaviour {
 			StartModel();
 			// summon prompt
 		}
+	}
+
+	protected virtual void GameOver() {
+		timerText.text = "0";
+		UIController.Instance.SetPrompt(true);
+		Pause();
 	}
 
 	protected virtual void StartModel() {

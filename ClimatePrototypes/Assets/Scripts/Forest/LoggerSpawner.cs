@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LoggerSpawner : MonoBehaviour {
 	[SerializeField] GameObject loggerPrefab = default;
-	[SerializeField] float interval = 5;
+	[SerializeField] float interval = 15;
 	void Start() {
 		var loggerSpawner = StartCoroutine(SpawnLogger(interval));
 	}

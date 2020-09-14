@@ -16,7 +16,7 @@ public class ForestGrid : MonoBehaviour {
 	Vector3Int hoverCell;
 	[SerializeField] TileBase hoverTile = default;
 	public static List<ForestTree> currentTrees = new List<ForestTree>();
-	public static float growthTime = 10;
+	public static float growthTime = 20;
 
 	void Awake() {
 		trees = _trees;

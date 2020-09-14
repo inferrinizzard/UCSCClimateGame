@@ -24,10 +24,8 @@ public class ForestController : RegionController {
 	[SerializeField] Slider emissionsTracker;
 
 	protected override void GameOver() {
+		base.GameOver();
 		StopAllCoroutines();
-		// stop volunteers
-		// stop loggers
-		// stop trees?
 	}
 
 	public void UIHover(bool over) => overUI = over;
