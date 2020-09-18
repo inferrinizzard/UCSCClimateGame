@@ -17,6 +17,7 @@ public class ForestGrid : MonoBehaviour {
 	[SerializeField] TileBase hoverTile = default;
 	public static List<ForestTree> currentTrees = new List<ForestTree>();
 	public static float growthTime = 20;
+	// public List<ForestTree> treeMonitor;
 
 	void Awake() {
 		trees = _trees;
@@ -55,8 +56,11 @@ public class ForestGrid : MonoBehaviour {
 					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
 				else if (map.GetTile(hoverCell) == stump || map.GetTile(hoverCell) == dead)
 					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Clear);
+				ClearHover(hoverCell);
 			}
 		}
+
+		// treeMonitor = currentTrees;
 	}
 
 	public static void ClearHover(Vector3Int cell) {
@@ -67,11 +71,13 @@ public class ForestGrid : MonoBehaviour {
 	public static void RemoveTree(Vector3Int pos) {
 		var remove = ForestGrid.currentTrees.Find(tree => tree.pos == pos);
 		ForestGrid.currentTrees.Remove(remove);
+		// map.SetTile(remove.pos, empty);
 	}
 }
 
-public class ForestTree { // TODO: do these get cleared?
-	TileBase _tile;
+[System.Serializable]
+public class ForestTree {
+	[SerializeField] TileBase _tile;
 	TileBase tile {
 		get => _tile;
 		set {
@@ -82,12 +88,12 @@ public class ForestTree { // TODO: do these get cleared?
 	}
 	// TileBase tile { get=>ForestGrid.map.GetTile(pos); set=>ForestGrid.map.SetTile(pos, value);} 
 	public Vector3Int pos;
-	int index = -1;
+	[SerializeField] int index = -1;
 	public bool alive { get => index > 1; }
 	Coroutine sequestration;
 
 	public ForestTree(Vector3Int pos, TileBase tile = null) {
-		this.tile = tile ?? ForestGrid.sprout;
+		this.tile = tile ?? ForestGrid.empty;
 		// Debug.Log(this.tile);
 		this.pos = pos;
 		ForestController.Instance.StartCoroutine(Grow(0));

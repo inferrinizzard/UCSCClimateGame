@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class VolunteerUI : MonoBehaviour {
 	[SerializeField] Sprite[] bubbles = default;
-	[SerializeField] Sprite active = default, vacant = default;
+	[SerializeField] Sprite /*active = default,*/ vacant = default;
 	[SerializeField] GameObject selector = default, bubble = default;
 
 	bool selected { get => (ForestController.Instance as ForestController).selected == this; }

@@ -21,7 +21,7 @@ public class ForestController : RegionController {
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 	public List<Vector3Int> activeTrees = new List<Vector3Int>();
 
-	[SerializeField] Slider emissionsTracker;
+	[SerializeField] Slider emissionsTracker = default;
 
 	protected override void GameOver() {
 		base.GameOver();
@@ -32,6 +32,7 @@ public class ForestController : RegionController {
 
 	protected override void Start() {
 		base.Start();
+		damage = 100;
 		agentParent = new GameObject("Agent Parent").transform;
 		agentParent.parent = transform;
 		utility = new GameObject("Utility").transform;
@@ -42,7 +43,7 @@ public class ForestController : RegionController {
 
 	protected override void Update() {
 		base.Update();
-		emissionsTracker.value = damage / 200f + .5f;
+		emissionsTracker.value = damage / 200f;
 		// reduce with station task ending + durin?
 	}
 
@@ -67,7 +68,10 @@ public class ForestController : RegionController {
 		selected = null;
 
 		newVolunteer.OnReached.AddListener((PathfindingAgent agent) => onReached.Invoke(agent as Volunteer));
-		newVolunteer.OnReturn.AddListener(() => volunteers[newVolunteer.ID].UI.Reset());
+		newVolunteer.OnReturn.AddListener(() => {
+			volunteers[newVolunteer.ID]?.UI.Reset();
+			volunteers.RemoveAt(newVolunteer.ID);
+		});
 	}
 
 	public void SetVolunteerTarget(Vector3Int pos, UnityAction<Volunteer> onReached) {
@@ -76,6 +80,7 @@ public class ForestController : RegionController {
 	}
 }
 
+// [System.Serializable]
 public class VolunteerTask { //TODO: do these get cleared?
 	public Volunteer volunteer;
 	public VolunteerUI UI;
