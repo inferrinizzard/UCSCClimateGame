@@ -5,13 +5,9 @@ using UnityEngine;
 
 public class TreeID : MonoBehaviour {
 	[Header("References")]
-	public Sprite tree1Sprite;
-	public Sprite tree2Sprite;
-	public Sprite tree1BurntSprite;
-	public Sprite tree2BurntSprite;
-
-	public int alt = 0;
-
+	[SerializeField] Sprite[] trees = default;
+	[SerializeField] Sprite burntTree = default;
+	[HideInInspector] public int alt = 0;
 	public bool burnt = false;
 
 	private SpriteRenderer sr;
@@ -28,7 +24,6 @@ public class TreeID : MonoBehaviour {
 	}
 
 	void VFXUpdate() {
-		//sr.color = color;
-		sr.sprite = burnt ? (alt == 1) ? tree1BurntSprite : tree2BurntSprite : (alt == 1) ? tree1Sprite : tree2Sprite;
+		sr.sprite = burnt ? burntTree : trees[alt];
 	}
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 /// <summary>
@@ -9,7 +10,7 @@ public class IdentityManager : MonoBehaviour {
 	public Identity id;
 	public Moisture moisture = Moisture.Normal;
 	public int fireVariance { get; set; } = 0; // 0 for green, 1 for tree. keep track of the nature of the cell before fire
-	public enum Identity { Fire, Green, Water, Tree }
+	public enum Identity { Fire, Water, Green, Tree }
 
 	/// <summary> Controls the chance of it being ignited </summary>
 	public enum Moisture { Moist, /* not likely that it could be ignited */ Normal, Dry }
@@ -21,6 +22,11 @@ public class IdentityManager : MonoBehaviour {
 	}
 
 	void IdentityCheck() {
+		// System.Enum.GetValues(typeof(Identity))
+		// 	.Cast<Identity>()
+		// 	.Zip(new MonoBehaviour[] { GetComponent<FireID>(), GetComponent<WaterID>(), GetComponent<GreenID>(), GetComponent<TreeID>() },
+		// 		(a, b) => b.enabled = (id == a));
+
 		if (id is Identity.Fire) {
 			gameObject.GetComponent<FireID>().enabled = true;
 			gameObject.GetComponent<WaterID>().enabled = false;

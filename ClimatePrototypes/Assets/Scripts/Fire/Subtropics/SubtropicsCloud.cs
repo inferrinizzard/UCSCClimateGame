@@ -18,13 +18,13 @@ public class SubtropicsCloud : MonoBehaviour {
 	}
 
 	private void CheckVelocity() {
-		if (PopulateWorld.Instance.dir == PopulateWorld.windDir.NE) {
+		if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.NE) {
 			velocity = new Vector3(-1, -1, 0);
-		} else if (PopulateWorld.Instance.dir == PopulateWorld.windDir.NW) {
+		} else if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.NW) {
 			velocity = new Vector3(1, -1, 0);
-		} else if (PopulateWorld.Instance.dir == PopulateWorld.windDir.SE) {
+		} else if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.SE) {
 			velocity = new Vector3(-1, 1, 0);
-		} else if (PopulateWorld.Instance.dir == PopulateWorld.windDir.SW) {
+		} else if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.SW) {
 			velocity = new Vector3(1, 1, 0);
 		} else {
 			velocity = Vector3.zero;

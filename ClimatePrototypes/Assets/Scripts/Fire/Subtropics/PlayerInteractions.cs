@@ -87,13 +87,10 @@ public class PlayerInteractions : MonoBehaviour {
 					moving = false;
 					playerPath.Remove(targetRegion);
 				}
-
 			} else {
 				targetRegion = playerPath[0];
-
 				moving = true;
 			}
-
 		}
 		if (targetRegion)
 			DrawPlayerPath();
@@ -125,10 +122,8 @@ public class PlayerInteractions : MonoBehaviour {
 					water--; // use 1 water per cell
 					haveNotUsedWaterIn = 0; // reset timer
 					waterTR.enabled = true;
-
 				}
 			}
-
 		}
 
 		if (playerCellID == IdentityManager.Identity.Water) {
@@ -139,7 +134,6 @@ public class PlayerInteractions : MonoBehaviour {
 				StartCoroutine(FillWater());
 			}
 		}
-
 	}
 
 	void GFXUpdate() {
@@ -159,7 +153,6 @@ public class PlayerInteractions : MonoBehaviour {
 	IEnumerator FillWater() {
 		yield return new WaitForSeconds(0.1f);
 		filling = false;
-
 	}
 
 	void DrawPlayerPath() {
@@ -176,7 +169,6 @@ public class PlayerInteractions : MonoBehaviour {
 		}
 		newLine.positionCount = positions.Length;
 		newLine.SetPositions(positions);
-
 	}
 
 	public static bool addDestinationToPath(Transform region) {
@@ -187,10 +179,8 @@ public class PlayerInteractions : MonoBehaviour {
 
 			//PrintPlayerPath();         
 			return true;
-		} else {
-			return false;
 		}
-
+		return false;
 	}
 
 	/// <summary> {1} </summary>
@@ -202,6 +192,7 @@ public class PlayerInteractions : MonoBehaviour {
 		}
 		Debug.Log(pathString);
 	}
+
 	/// <summary>
 	/// Pulse effect when colliding with cloud
 	/// collision with cell prefab is disabled in physics setting
@@ -235,5 +226,4 @@ public class PlayerInteractions : MonoBehaviour {
 	{
 	    Debug.Log(VAR);
 	}*/
-
 }

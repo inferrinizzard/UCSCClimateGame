@@ -5,12 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FireID : MonoBehaviour {
-	public Sprite fireGreenSprite;
-	public Sprite fireTree1Sprite;
-	public Sprite fireTree2Sprite;
-	private Sprite myFireSprite;
-
-	private Color color = Color.white;
+	[SerializeField] Sprite fireGreenSprite = default;
+	[SerializeField] Sprite[] treeFires = default;
 	private SpriteRenderer sr;
 
 	private bool growing;
@@ -35,13 +31,11 @@ public class FireID : MonoBehaviour {
 	}
 
 	void VFXUpdate() {
-		sr.color = color;
 		if (GetComponent<IdentityManager>().fireVariance == 0) {
 			sr.sprite = fireGreenSprite;
 		} else {
-			sr.sprite = GetComponent<TreeID>().alt == 0 ? fireTree1Sprite : fireTree2Sprite;
+			sr.sprite = treeFires[GetComponent<TreeID>().alt];
 		}
-
 	}
 
 	void FireGrowth() {
@@ -55,15 +49,12 @@ public class FireID : MonoBehaviour {
 				if (neighborID == IdentityManager.Identity.Green && neighborMoisture != IdentityManager.Moisture.Moist) // if it is not already fire, or is water
 					PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Fire);
 			}
-
 		}
-
 	}
-	IEnumerator WaitForFire(float seconds) {
 
+	IEnumerator WaitForFire(float seconds) {
 		yield return new WaitForSeconds(seconds);
 		FireGrowth();
 		growing = false;
 	}
-
 }

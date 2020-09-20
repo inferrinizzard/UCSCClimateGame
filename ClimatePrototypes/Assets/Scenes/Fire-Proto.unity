@@ -625,7 +625,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5507700c9b7227645b4f4bef28f71e39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterSprite: {fileID: 21300000, guid: c799c4ea54687ae428083486c26737d1, type: 3}
 --- !u!114 &281962116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,8 +638,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireGreenSprite: {fileID: 21300000, guid: 5f64179f6c9568643b866103b9d6304e, type: 3}
-  fireTree1Sprite: {fileID: 21300000, guid: ca78e34e1c6ffd749b13e37610601f4a, type: 3}
-  fireTree2Sprite: {fileID: 21300000, guid: 3c112a60b015c8a47971c14eb1462258, type: 3}
+  treeFires:
+  - {fileID: 21300000, guid: ca78e34e1c6ffd749b13e37610601f4a, type: 3}
+  - {fileID: 21300000, guid: 3c112a60b015c8a47971c14eb1462258, type: 3}
 --- !u!61 &281962117
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -700,12 +700,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6875b428981c3c14e8469bfc836b03c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tree1Sprite: {fileID: 21300000, guid: 407da7c1744ea6e499a40a7a02aab0d1, type: 3}
-  tree2Sprite: {fileID: 21300000, guid: ddbf21109e8ac1d479b4ed0a74be1884, type: 3}
-  tree1BurntSprite: {fileID: 21300000, guid: 988a5e00ce48d104fbcac6281e9f371b, type: 3}
-  tree2BurntSprite: {fileID: 21300000, guid: 988a5e00ce48d104fbcac6281e9f371b, type: 3}
+  trees:
+  - {fileID: 21300000, guid: 407da7c1744ea6e499a40a7a02aab0d1, type: 3}
+  - {fileID: 21300000, guid: ddbf21109e8ac1d479b4ed0a74be1884, type: 3}
+  burntTree: {fileID: 21300000, guid: 988a5e00ce48d104fbcac6281e9f371b, type: 3}
+  alt: 0
   burnt: 0
-  treeVariance: 0
 --- !u!95 &281962120
 Animator:
   serializedVersion: 3
@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windSpeedTextUI: {fileID: 1685624826}
-  windDirArrowUI: {fileID: 1652024539}
+  WindDirArrowUI: {fileID: 1652024539}
   cloudPrefab: {fileID: 1898318544}
   cellPrefab: {fileID: 281962110}
   waterPrefab: {fileID: 2064989791}
@@ -1330,8 +1330,8 @@ MonoBehaviour:
   treeDensity: 90
   fire1: {x: 0, y: 0, z: 0}
   water1: {x: 6, y: 2, z: 0}
-  water2: {x: 6, y: 2, z: 0}
-  water3: {x: 6, y: 2, z: 0}
+  water2: {x: 6, y: 3, z: 0}
+  water3: {x: 6, y: 1, z: 0}
   topleftCell: {x: -18, y: 8, z: 0}
   topRightCell: {x: 16, y: 8, z: 0}
   bottomleftCell: {x: -18, y: -10, z: 0}
@@ -1433,7 +1433,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5507700c9b7227645b4f4bef28f71e39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterSprite: {fileID: 0}
 --- !u!114 &492705029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1447,8 +1446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireGreenSprite: {fileID: 0}
-  fireTree1Sprite: {fileID: 0}
-  fireTree2Sprite: {fileID: 0}
+  treeFires: []
 --- !u!114 &492705030
 MonoBehaviour:
   m_ObjectHideFlags: 0

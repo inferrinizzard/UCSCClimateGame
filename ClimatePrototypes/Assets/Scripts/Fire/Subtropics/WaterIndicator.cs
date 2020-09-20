@@ -11,14 +11,12 @@ public class WaterIndicator : MonoBehaviour {
 	public float speed = 10f;
 
 	private void Start() {
-
 		//heliTranform = gameObject.transform.parent;
 		if (watergoIndex == 1) {
 			waterPosition = PopulateWorld.Instance.watergo1.transform.position; // hard coded for now in populate world
 		} else {
 			waterPosition = PopulateWorld.Instance.watergo2.transform.position; // hard coded for now in populate world
 		}
-
 	}
 
 	void FixedUpdate() {
@@ -44,6 +42,5 @@ public class WaterIndicator : MonoBehaviour {
 		transform.up = -(heliTranform.transform.position - transform.position);
 		// rotate locally in z 20 to correct for the fact that point does not allign with local left
 		//gameObject.transform.Rotate(0f, 0.0f, 100f, Space.Self);   
-
 	}
 }

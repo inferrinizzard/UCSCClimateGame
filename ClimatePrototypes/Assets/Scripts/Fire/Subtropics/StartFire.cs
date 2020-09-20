@@ -7,17 +7,13 @@ using UnityEngine;
 public class StartFire : MonoBehaviour {
 	private bool isOnFire;
 	private SpriteRenderer fireRenderer;
-	private string fireName;
 	private Transform fireTransform;
-
 	private Color oriFireColor;
-
 	private bool waiting;
-	// Start is called before the first frame update
+
 	void Start() {
 
 		isOnFire = false;
-		fireName = gameObject.transform.name;
 		fireRenderer = GetComponent<SpriteRenderer>(); // grab my own spriteRenderer
 		oriFireColor = fireRenderer.color;
 		fireTransform = GetComponent<Transform>();
@@ -27,7 +23,6 @@ public class StartFire : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-
 		if (isOnFire) {
 			GrowFire();
 		}
@@ -36,11 +31,10 @@ public class StartFire : MonoBehaviour {
 			waiting = true;
 			float timer = UnityEngine.Random.Range(1f, 6.0f);
 			StartCoroutine(WaitFor(timer));
-
 		}
 	}
-	IEnumerator WaitFor(float s) {
 
+	IEnumerator WaitFor(float s) {
 		yield return new WaitForSeconds(s);
 		InitiateFire();
 		waiting = false;
@@ -60,7 +54,6 @@ public class StartFire : MonoBehaviour {
 			fireRenderer.color = oriFireColor;
 			isOnFire = false;
 		}
-
 	}
 
 	/// <summary>

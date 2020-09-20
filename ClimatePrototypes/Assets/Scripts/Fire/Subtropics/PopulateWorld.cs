@@ -15,7 +15,7 @@ using Random = UnityEngine.Random;
 public class PopulateWorld : MonoBehaviour {
 	[Header("References")]
 	public TextMeshProUGUI windSpeedTextUI;
-	public Transform windDirArrowUI;
+	public Transform WindDirArrowUI;
 
 	public GameObject cloudPrefab;
 	public GameObject cellPrefab;
@@ -28,15 +28,13 @@ public class PopulateWorld : MonoBehaviour {
 	[HideInInspector] public GameObject watergo1;
 	[HideInInspector] public GameObject watergo2;
 
-	public enum windDir { NE, NW, SE, SW }
-	public windDir dir = windDir.NE;
+	public enum WindDir { NE, NW, SE, SW }
+	public WindDir dir = WindDir.NE;
 	public int windSpeed = 3;
 
 	[Space]
 
 	[Header("SerializedFields")]
-
-	private static PopulateWorld _instance;
 	private GameObject player;
 
 	/// <summary>
@@ -51,16 +49,12 @@ public class PopulateWorld : MonoBehaviour {
 	[SerializeField] private int performance;
 	[Range(0, 100)] public int treeDensity;
 
-	public static PopulateWorld Instance { get { return _instance; } }
+	public static PopulateWorld Instance;
 
 	private GridLayout gridLayout;
 
 	private void Awake() {
-		if (_instance != null && _instance != this) {
-			Destroy(this.gameObject);
-		} else {
-			_instance = this;
-		}
+		Instance = this;
 	}
 
 	public Vector3Int fire1 = new Vector3Int(0, 0, 0);
@@ -111,23 +105,23 @@ public class PopulateWorld : MonoBehaviour {
 			int seed = Random.Range(0, 4);
 			switch (seed) {
 				case 0:
-					dir = windDir.NE;
+					dir = WindDir.NE;
 					windSpeed = Random.Range(5, 18);
 					break;
 				case 1:
-					dir = windDir.NW;
+					dir = WindDir.NW;
 					windSpeed = Random.Range(5, 18);
 					break;
 				case 2:
-					dir = windDir.SE;
+					dir = WindDir.SE;
 					windSpeed = Random.Range(5, 18);
 					break;
 				case 3:
-					dir = windDir.SW;
+					dir = WindDir.SW;
 					windSpeed = Random.Range(5, 18);
 					break;
 				default:
-					dir = windDir.NE;
+					dir = WindDir.NE;
 					windSpeed = Random.Range(5, 18);
 					break;
 
@@ -184,22 +178,22 @@ public class PopulateWorld : MonoBehaviour {
 		}
 
 		Vector3 targetSize = new Vector3(arrowSize, arrowSize, 0);
-		windDirArrowUI.localScale = Vector3.Slerp(windDirArrowUI.localScale, targetSize, Time.deltaTime * smooth);
+		WindDirArrowUI.localScale = Vector3.Slerp(WindDirArrowUI.localScale, targetSize, Time.deltaTime * smooth);
 
 		// arrow dir
 
 		float tiltAngle = 0f;
 		switch (dir) {
-			case windDir.NE:
+			case WindDir.NE:
 				tiltAngle = 135f;
 				break;
-			case windDir.NW:
+			case WindDir.NW:
 				tiltAngle = -135f;
 				break;
-			case windDir.SE:
+			case WindDir.SE:
 				tiltAngle = 45f;
 				break;
-			case windDir.SW:
+			case WindDir.SW:
 				tiltAngle = -45f;
 				break;
 			default:
@@ -216,7 +210,7 @@ public class PopulateWorld : MonoBehaviour {
 		Quaternion target = Quaternion.Euler(0, 0, tiltAngle);
 
 		// Dampen towards the target rotation
-		windDirArrowUI.rotation = Quaternion.Slerp(windDirArrowUI.rotation, target, Time.deltaTime * smooth);
+		WindDirArrowUI.rotation = Quaternion.Slerp(WindDirArrowUI.rotation, target, Time.deltaTime * smooth);
 	}
 
 	private void PopulatePlayer() {
@@ -442,17 +436,17 @@ public class PopulateWorld : MonoBehaviour {
 
 		GameObject[] neighborsDir = new GameObject[2];
 
-		if (dir == windDir.SW) // up right
+		if (dir == WindDir.SW) // up right
 		{
 			neighborsDir[0] = neighbors[0];
 			neighborsDir[1] = neighbors[2];
 			return neighborsDir;
-		} else if (dir == windDir.SE) // up left
+		} else if (dir == WindDir.SE) // up left
 		{
 			neighborsDir[0] = neighbors[0];
 			neighborsDir[1] = neighbors[1];
 			return neighborsDir;
-		} else if (dir == windDir.NW) // down right
+		} else if (dir == WindDir.NW) // down right
 		{
 			neighborsDir[0] = neighbors[3];
 			neighborsDir[1] = neighbors[2];
