@@ -46,9 +46,7 @@ public class StartFire : MonoBehaviour {
 		waiting = false;
 	}
 
-	/// <summary>
-	/// Initiate the fire
-	/// </summary>
+	/// <summary> Initiate the fire </summary>
 	private void InitiateFire() {
 		// change fireRenderer from brown(default) to red
 		//fireRenderer.color = Color.red;
@@ -56,9 +54,7 @@ public class StartFire : MonoBehaviour {
 		isOnFire = true;
 	}
 
-	/// <summary>
-	/// Initiate the fire
-	/// </summary>
+	/// <summary> Kill the fire </summary>
 	public void KillFire() {
 		if (isOnFire && WaterIHave.EnoughWater()) {
 			fireRenderer.color = oriFireColor;
@@ -82,25 +78,12 @@ public class StartFire : MonoBehaviour {
 		// Case 2: wind direction
 	}
 
-	/// <summary>
-	/// Put out a fire
-	/// </summary>
+	/// <summary> Put out a fire </summary>
 	private void OnMouseDown() {
-		/*// click on fire icon
-		// if on fire, puts out fire; Pre: with remaining water 
-		if (isOnFire && WaterIHave.EnoughWater())
-		{
-		    isOnFire = false;  // stops the fire growth
-		    fireRenderer.color = oriFireColor;
-		    WaterIHave.UseWater();
-		}*/
-
 		PlayerInteractions.addDestinationToPath(gameObject.transform);
 	}
 
-	/// <summary>
-	/// If another active fire touches me, I start fire.
-	/// </summary>
+	/// <summary> If another active fire touches me, I start fire. </summary>
 	/// <param name="other"></param>
 	private void OnTriggerEnter2D(Collider2D other) {
 		if (!isOnFire && other.gameObject.tag == "Fire") {

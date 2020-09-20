@@ -31,9 +31,7 @@ public class SubtropicsCloud : MonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// object pool for clouds, out of sight, destroy
-	/// </summary>
+	/// <summary> object pool for clouds, out of sight, destroy</summary>
 	void CheckDestroyEvent() {
 		if (transform.position.y < -7) {
 			//Destroy(gameObject);

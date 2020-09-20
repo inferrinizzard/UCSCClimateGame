@@ -7,26 +7,12 @@ using UnityEngine;
 /// </summary>
 public class IdentityManager : MonoBehaviour {
 	public Identity id;
-	public Moisture moisture;
-
-	private int fireVariance = 0; // 0 for green, 1 for tree. keep track of the nature of the cell before fire
+	public Moisture moisture = Moisture.Normal;
+	public int fireVariance { get; set; } = 0; // 0 for green, 1 for tree. keep track of the nature of the cell before fire
 	public enum Identity { Fire, Green, Water, Tree }
 
-	public int GetFireVariance() {
-		return fireVariance;
-	}
-	public void SetFireVariance(int x) {
-		fireVariance = x;
-	}
-	/// <summary>
-	/// Controls the chance of it being ignited
-	/// </summary>
+	/// <summary> Controls the chance of it being ignited </summary>
 	public enum Moisture { Moist, /* not likely that it could be ignited */ Normal, Dry }
-
-	// Start is called before the first frame update
-	void Start() {
-		moisture = Moisture.Normal; // defalt moisture for all cells
-	}
 
 	// Update is called once per frame
 	void Update() {

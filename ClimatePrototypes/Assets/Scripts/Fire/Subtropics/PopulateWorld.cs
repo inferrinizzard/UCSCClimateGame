@@ -271,10 +271,10 @@ public class PopulateWorld : MonoBehaviour {
 		float waterh2 = Random.Range(2, 4);
 		float waterw1 = waterh1 * ratio1;
 		float waterw2 = waterh2 * ratio2;
-		int waterX1 = 6;
-		int waterY1 = 5;
-		int waterX2 = 10;
-		int waterY2 = 3;
+		// int waterX1 = 6;
+		// int waterY1 = 5;
+		// int waterX2 = 10;
+		// int waterY2 = 3;
 
 		int reservoirCount = 2;
 		while (reservoirCount > 0) {
@@ -394,7 +394,7 @@ public class PopulateWorld : MonoBehaviour {
 					int seed = Random.Range(0, 100);
 					if (seed < treeDensity) {
 						go.GetComponent<IdentityManager>().id = IdentityManager.Identity.Tree;
-						go.GetComponent<IdentityManager>().SetFireVariance(1); // if fire happens, set variance type to tree fire 
+						go.GetComponent<IdentityManager>().fireVariance = 1; // if fire happens, set variance type to tree fire 
 					}
 				}
 			}
@@ -402,9 +402,7 @@ public class PopulateWorld : MonoBehaviour {
 
 	}
 
-	/// <summary>
-	/// Mutates grass to fire
-	/// </summary>
+	/// <summary> Mutates grass to fire</summary>
 	void MutateToFire() {
 		// pick a random cell
 		// if green, mutates to fire
@@ -425,9 +423,7 @@ public class PopulateWorld : MonoBehaviour {
 		waiting = false;
 	}
 
-	/// <summary>
-	/// Returns cell neighbors - 4 dir
-	/// </summary>
+	/// <summary> Returns cell neighbors - 4 dir</summary>
 	public GameObject[] GetNeighbors(GameObject cell) {
 		Vector3Int cellPosition = gridLayout.WorldToCell(cell.transform.position);
 
@@ -471,9 +467,7 @@ public class PopulateWorld : MonoBehaviour {
 		//return neighbors;
 	}
 
-	/// <summary>
-	/// Returns cell radius - outwards 2+ 
-	/// </summary>
+	/// <summary> Returns cell radius - outwards 2+ </summary>
 	public GameObject[] GetRadius(GameObject cell) {
 		Vector3Int cellPosition = gridLayout.WorldToCell(cell.transform.position);
 
@@ -495,9 +489,7 @@ public class PopulateWorld : MonoBehaviour {
 		return radius;
 	}
 
-	/// <summary>
-	/// Mutate cell and update ID
-	/// </summary>
+	/// <summary> Mutate cell and update ID</summary>
 	/// <param name="cell"></param>
 	/// <param name="targetID"></param>
 	public void MutateCell(GameObject cell, IdentityManager.Identity targetID) {
@@ -512,9 +504,7 @@ public class PopulateWorld : MonoBehaviour {
 
 	}
 
-	/// <summary>
-	/// Returns cell vec3int value given cell array 2d index
-	/// </summary>
+	/// <summary> Returns cell vec3int value given cell array 2d index</summary>
 	/// <param name="i"></param>
 	/// <param name="j"></param>
 	/// <returns></returns>
@@ -555,9 +545,7 @@ public class PopulateWorld : MonoBehaviour {
 
 	}
 
-	/// <summary>
-	/// Tied to backend model
-	/// </summary>
+	/// <summary> Tied to backend model</summary>
 	public void QueryWorldData() {
 
 		Debug.Log("reservoir size is " + reservoirTotalSize);

@@ -114,7 +114,7 @@ public class PlayerInteractions : MonoBehaviour {
 				if (neighborID == IdentityManager.Identity.Fire && neighbor != null && water > 0) {
 
 					// check nature of the cell
-					if (neighbor.GetComponent<IdentityManager>().GetFireVariance() == 1) // if tree
+					if (neighbor.GetComponent<IdentityManager>().fireVariance == 1) // if tree
 					{
 						neighbor.GetComponent<TreeID>().burnt = true;
 						PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Tree);
@@ -193,9 +193,7 @@ public class PlayerInteractions : MonoBehaviour {
 
 	}
 
-	/// <summary>
-	/// Utility prints
-	/// </summary>
+	/// <summary> {1} </summary>
 	static void PrintPlayerPath() {
 		string pathString = "";
 		foreach (Transform t in playerPath) {
@@ -231,9 +229,7 @@ public class PlayerInteractions : MonoBehaviour {
 		speed = 4 * slowSpeed;
 	}
 
-	/// <summary>
-	///  player performance in a float [0,1]
-	/// </summary>
+	/// <summary>  player performance in a float [0,1]</summary>
 	/// <returns></returns>
 	/*public float GetPlayerPerformance()
 	{

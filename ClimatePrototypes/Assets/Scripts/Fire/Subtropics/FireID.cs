@@ -15,7 +15,6 @@ public class FireID : MonoBehaviour {
 
 	private bool growing;
 
-	// Start is called before the first frame update
 	void Start() {
 		sr = GetComponent<SpriteRenderer>();
 	}
@@ -29,7 +28,6 @@ public class FireID : MonoBehaviour {
 		if (!growing) {
 			growing = true;
 			StartCoroutine(WaitForFire(4f));
-
 		}
 
 		//FireGrowth();
@@ -38,10 +36,10 @@ public class FireID : MonoBehaviour {
 
 	void VFXUpdate() {
 		sr.color = color;
-		if (GetComponent<IdentityManager>().GetFireVariance() == 0) {
+		if (GetComponent<IdentityManager>().fireVariance == 0) {
 			sr.sprite = fireGreenSprite;
 		} else {
-			sr.sprite = GetComponent<TreeID>().treeVariance == 1 ? fireTree1Sprite : fireTree2Sprite;
+			sr.sprite = GetComponent<TreeID>().alt == 0 ? fireTree1Sprite : fireTree2Sprite;
 		}
 
 	}

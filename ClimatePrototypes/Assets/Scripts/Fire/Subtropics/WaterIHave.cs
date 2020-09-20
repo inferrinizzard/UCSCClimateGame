@@ -8,8 +8,7 @@ public class WaterIHave : MonoBehaviour {
 	private static Transform waterTransform;
 	// Start is called before the first frame update
 	void Start() {
-		waterTransform = GetComponent<Transform>();
-
+		waterTransform = transform;
 	}
 
 	/// <summary>
@@ -21,13 +20,9 @@ public class WaterIHave : MonoBehaviour {
 		Vector3 waterChange = new Vector3(-1.0f, 0, 0);
 		waterTransform.localScale += waterChange;
 		// TODO update position 
-
 	}
 
-	/// <summary>
-	/// Check if have enough water to put out one fire
-	/// </summary>
-	/// <returns></returns>
+	/// <summary> Check if have enough water to put out one fire </summary>
 	public static bool EnoughWater() {
 		// water left
 		float left = waterTransform.localScale.x;
@@ -37,15 +32,12 @@ public class WaterIHave : MonoBehaviour {
 		return need > left ? false : true;
 	}
 
-	/// <summary>
-	/// Replenish water
-	/// </summary>
-	/// <returns></returns>
+	/// <summary> Replenish water </summary>
 	public static void AddWater() {
 		// water left
 		float left = waterTransform.localScale.x;
 		// water I get
-		float get = 1.0f;
+		// float get = 1.0f;
 		float full = 3.0f;
 
 		if (left < full) {
