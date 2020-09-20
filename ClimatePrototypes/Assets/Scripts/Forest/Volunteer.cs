@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Pathfinding;
 
@@ -23,7 +24,7 @@ public class VolunteerActions {
 	public static void Plant(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
 		var task = (ForestController.Instance as ForestController).volunteers[v.ID];
-		(ForestController.Instance as ForestController).StartCoroutine(TreeGrow(task.volunteer, task.activeTile.Value));
+		ForestController.Instance.StartCoroutine(TreeGrow(task.volunteer, task.activeTile.Value));
 	}
 
 	public static IEnumerator TreeGrow(Volunteer v, Vector3Int tilePos) {
@@ -46,23 +47,33 @@ public class VolunteerActions {
 
 	public static void Protest(Volunteer v) {
 		v.anim.SetTrigger("Protesting");
-		(ForestController.Instance as ForestController).StartCoroutine(WaitAndReturn(v, 3));
-	}
-
-	public static IEnumerator ClearAndReturn(Volunteer v, Vector3Int tilePos) {
-		yield return (ForestController.Instance as ForestController).StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
-		ForestGrid.ClearHover(tilePos);
-		ForestGrid.map.SetTile(tilePos, ForestGrid.empty);
+		ForestController.Instance.StartCoroutine(WaitAndReturn(v, 3));
 	}
 
 	public static void Clear(Volunteer v) {
 		v.anim.SetTrigger("Shoveling");
 		var task = (ForestController.Instance as ForestController).volunteers[v.ID];
-		(ForestController.Instance as ForestController).StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
+		ForestController.Instance.StartCoroutine(ClearAndReturn(v, task.activeTile.Value));
 	}
 
+	static IEnumerator ClearAndReturn(Volunteer v, Vector3Int tilePos) {
+		yield return ForestController.Instance.StartCoroutine(VolunteerActions.WaitAndReturn(v, 3));
+		ForestGrid.ClearHover(tilePos);
+		ForestGrid.map.SetTile(tilePos, ForestGrid.empty);
+		ForestGrid.RemoveTree(tilePos);
+	}
 	public static void Capture(Volunteer v) {
-		v.anim.SetTrigger("Facility");
-		(ForestController.Instance as ForestController).StartCoroutine(WaitAndReturn(v, 3));
+		// v.anim.SetTrigger("Facility");
+		ForestController.Instance.StartCoroutine(CaptureAndReturn(v, 3));
+	}
+
+	static IEnumerator CaptureAndReturn(Volunteer v, float time, int steps = 20) {
+		ForestController.Instance.StartCoroutine(WaitAndReturn(v, time));
+		// for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+		// yield return null;
+		for (int i = steps; i > 0; i--) {
+			yield return new WaitForSeconds(time / steps);
+			ForestController.Instance.damage = Mathf.Max(-100, ForestController.Instance.damage - 1);
+		}
 	}
 }

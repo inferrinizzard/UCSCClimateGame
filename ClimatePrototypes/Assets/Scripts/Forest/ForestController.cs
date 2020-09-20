@@ -6,10 +6,11 @@ using Pathfinding;
 
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ForestController : RegionController {
-	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default, emissionsTracker = default;
-	[SerializeField] int numActive;
+	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default;
+	public int numActive;
 	[HideInInspector] public VolunteerUI selected;
 	public bool hasSelected { get => selected != null && !overUI; }
 
@@ -20,18 +21,30 @@ public class ForestController : RegionController {
 	public List<Vector3Int> activeTiles { get => volunteers.Where(v => v.activeTile != null).Select(v => v.activeTile.Value).ToList(); }
 	public List<Vector3Int> activeTrees = new List<Vector3Int>();
 
-	protected override void GameOver() { }
+	[SerializeField] Slider emissionsTracker = default;
+
+	protected override void GameOver() {
+		base.GameOver();
+		StopAllCoroutines();
+	}
 
 	public void UIHover(bool over) => overUI = over;
 
 	protected override void Start() {
 		base.Start();
+		damage = 100;
 		agentParent = new GameObject("Agent Parent").transform;
 		agentParent.parent = transform;
 		utility = new GameObject("Utility").transform;
 		utility.parent = transform;
 
 		uiPanel.GetComponentsInChildren<VolunteerUI>().Skip(numActive).ToList().ForEach(v => v.Deactivate());
+	}
+
+	protected override void Update() {
+		base.Update();
+		emissionsTracker.value = damage / 200f;
+		// reduce with station task ending + durin?
 	}
 
 	public PathfindingAgent NewAgent(GameObject prefab, Vector3 pos, Vector3 target) {
@@ -55,7 +68,10 @@ public class ForestController : RegionController {
 		selected = null;
 
 		newVolunteer.OnReached.AddListener((PathfindingAgent agent) => onReached.Invoke(agent as Volunteer));
-		newVolunteer.OnReturn.AddListener(() => volunteers[newVolunteer.ID].UI.Reset());
+		newVolunteer.OnReturn.AddListener(() => {
+			volunteers[newVolunteer.ID]?.UI.Reset();
+			volunteers.RemoveAt(newVolunteer.ID);
+		});
 	}
 
 	public void SetVolunteerTarget(Vector3Int pos, UnityAction<Volunteer> onReached) {
@@ -64,6 +80,7 @@ public class ForestController : RegionController {
 	}
 }
 
+// [System.Serializable]
 public class VolunteerTask { //TODO: do these get cleared?
 	public Volunteer volunteer;
 	public VolunteerUI UI;

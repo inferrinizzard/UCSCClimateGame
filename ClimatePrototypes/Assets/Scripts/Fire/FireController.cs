@@ -11,7 +11,7 @@ public class FireController : RegionController {
 	public int damageRate = 30;
 	public readonly float damageLimit = 200f;
 	[SerializeField] GameObject firePrefab = default;
-	[SerializeField] Text damageText = default, timerText = default;
+	[SerializeField] Text damageText = default;
 	[SerializeField] Slider waterSlider = default;
 	[SerializeField] HoseSpray spray = default;
 	[SerializeField] WaterPrompt prompt = default;
@@ -44,11 +44,9 @@ public class FireController : RegionController {
 	}
 
 	protected override void GameOver() {
-		timerText.text = "0";
+		base.GameOver();
 		prompt.SetActive(false);
 		Cursor.visible = true;
-		UIController.Instance.SetPrompt(true);
-		Pause();
 		TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
 	}
 

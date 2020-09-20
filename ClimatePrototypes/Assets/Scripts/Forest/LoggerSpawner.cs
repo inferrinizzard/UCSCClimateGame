@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LoggerSpawner : MonoBehaviour {
 	[SerializeField] GameObject loggerPrefab = default;
-	[SerializeField] float interval = 5;
+	[SerializeField] float interval = 15;
 	void Start() {
 		var loggerSpawner = StartCoroutine(SpawnLogger(interval));
 	}
@@ -13,6 +13,7 @@ public class LoggerSpawner : MonoBehaviour {
 	IEnumerator SpawnLogger(float delay) {
 		yield return new WaitForSeconds(delay);
 		if ((ForestController.Instance as ForestController).activeTrees.Count > 0) {
+			// shuffle, sort, shift
 			var targetIndex = (int) (Random.value * (ForestController.Instance as ForestController).activeTrees.Count);
 			var target = (ForestController.Instance as ForestController).activeTrees[targetIndex];
 			(ForestController.Instance as ForestController).activeTrees.RemoveAt(targetIndex);

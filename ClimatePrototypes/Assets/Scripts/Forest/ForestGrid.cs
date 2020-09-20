@@ -16,7 +16,8 @@ public class ForestGrid : MonoBehaviour {
 	Vector3Int hoverCell;
 	[SerializeField] TileBase hoverTile = default;
 	public static List<ForestTree> currentTrees = new List<ForestTree>();
-	public static float growthTime = 5;
+	public static float growthTime = 20;
+	// public List<ForestTree> treeMonitor;
 
 	void Awake() {
 		trees = _trees;
@@ -55,18 +56,28 @@ public class ForestGrid : MonoBehaviour {
 					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
 				else if (map.GetTile(hoverCell) == stump || map.GetTile(hoverCell) == dead)
 					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Clear);
+				ClearHover(hoverCell);
 			}
 		}
+
+		// treeMonitor = currentTrees;
 	}
 
 	public static void ClearHover(Vector3Int cell) {
 		map.SetTile(new Vector3Int(cell.x, cell.y, 1), null);
 		map.SetColor(new Vector3Int(cell.x, cell.y, 1), Color.white);
 	}
+
+	public static void RemoveTree(Vector3Int pos) {
+		var remove = ForestGrid.currentTrees.Find(tree => tree.pos == pos);
+		ForestGrid.currentTrees.Remove(remove);
+		// map.SetTile(remove.pos, empty);
+	}
 }
 
-public class ForestTree { // TODO: do these get cleared?
-	TileBase _tile;
+[System.Serializable]
+public class ForestTree {
+	[SerializeField] TileBase _tile;
 	TileBase tile {
 		get => _tile;
 		set {
@@ -77,15 +88,32 @@ public class ForestTree { // TODO: do these get cleared?
 	}
 	// TileBase tile { get=>ForestGrid.map.GetTile(pos); set=>ForestGrid.map.SetTile(pos, value);} 
 	public Vector3Int pos;
-	int index = -1;
+	[SerializeField] int index = -1;
 	public bool alive { get => index > 1; }
+	Coroutine sequestration;
 
 	public ForestTree(Vector3Int pos, TileBase tile = null) {
-		this.tile = tile ?? ForestGrid.sprout;
+		this.tile = tile ?? ForestGrid.empty;
 		// Debug.Log(this.tile);
 		this.pos = pos;
-		(ForestController.Instance as ForestController).StartCoroutine(Grow(0));
-		NeighbourCount();
+		ForestController.Instance.StartCoroutine(Grow(0));
+		// NeighbourCount();
+		sequestration = ForestController.Instance.StartCoroutine(Sequestre(4, initialDelay : 4 - index));
+	}
+
+	public override string ToString() => pos.ToString();
+
+	~ForestTree() {
+		// Debug.Log($"destructor called on {this}");
+		ForestController.Instance.StopCoroutine(sequestration);
+	}
+
+	IEnumerator Sequestre(float interval = 2, float initialDelay = 0) {
+		yield return new WaitForSeconds(initialDelay);
+		yield return new WaitForSeconds(interval);
+		float effect = index >= 3 ? index * (1 - NeighbourCount() / 8f) : index == 2 ? 0 : -index;
+		ForestController.Instance.damage = Mathf.Max(ForestController.Instance.damage - effect / 2, 0);
+		sequestration = ForestController.Instance.StartCoroutine(Sequestre(interval));
 	}
 
 	IEnumerator Grow(float time) {
@@ -93,27 +121,25 @@ public class ForestTree { // TODO: do these get cleared?
 		if (index == ForestGrid.trees.Length - 1)
 			tile = ForestGrid.dead;
 		else {
-			float awaitTime = (ForestGrid.growthTime + (Random.value - .25f) * 2) * (1 + .5f * NeighbourCount() / 4f);
+			// float awaitTime = (ForestGrid.growthTime + (Random.value - .25f) * 2) * (1 + .5f * NeighbourCount() / 4f);
+			float awaitTime = ForestGrid.growthTime * (1 + NeighbourCount() / 4f) + (Random.value - .5f);
 			if (index == 4) {
 				(ForestController.Instance as ForestController).activeTrees.Add(pos);
-				awaitTime += index / 4f;
+				awaitTime *= 1.5f;
 			}
 			tile = ForestGrid.trees[index + 1];
-			(ForestController.Instance as ForestController).StartCoroutine(Grow(awaitTime));
+			ForestController.Instance.StartCoroutine(Grow(awaitTime));
 		}
 	}
 
+	static bool IsTree(TileBase tile) => tile != null && tile != ForestGrid.dead && tile != ForestGrid.stump && tile != ForestGrid.empty;
+	// float NeighbourCount() => (new [] { Vector3Int.up, Vector3Int.left, Vector3Int.right, Vector3Int.down }).Count(dir => IsTree(ForestGrid.map.GetTile(pos + dir)));
 	float NeighbourCount() {
-		int count = 0;
-		bool IsTree(TileBase tile) => tile != null && tile != ForestGrid.dead && tile != ForestGrid.stump && tile != ForestGrid.empty;
-		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.up)))
-			count++;
-		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.left)))
-			count++;
-		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.right)))
-			count++;
-		if (IsTree(ForestGrid.map.GetTile(pos + Vector3Int.down)))
-			count++;
-		return count;
+		return (new [] { Vector3Int.up, Vector3Int.left, Vector3Int.right, Vector3Int.down }).Count(dir => IsTree(ForestGrid.map.GetTile(pos + dir)));
+		// int count = 0;
+		// foreach (var dir in new [] { Vector3Int.up, Vector3Int.left, Vector3Int.right, Vector3Int.down })
+		// 	if (IsTree(ForestGrid.map.GetTile(pos + dir)))
+		// 		count++;
+		// return count;
 	}
 }

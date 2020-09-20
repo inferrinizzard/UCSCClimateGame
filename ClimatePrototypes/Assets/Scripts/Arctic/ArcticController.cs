@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class ArcticController : RegionController {
 	/// <summary> Total level time </summary>
 	/// <summary> references to scene text assets </summary>
-	[SerializeField] Text scoreText = default, timerText = default;
+	[SerializeField] Text scoreText = default;
 	/// <summary> Balls that landed </summary>
 	/// <summary> present Buffers </summary>
 	Buffer[] buffers;
@@ -41,9 +41,7 @@ public class ArcticController : RegionController {
 	}
 
 	protected override void GameOver() {
-		timerText.text = "0";
-		Pause();
-		UIController.Instance.SetPrompt(true);
+		base.GameOver();
 		// TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
 
