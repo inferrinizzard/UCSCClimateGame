@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WaterID : MonoBehaviour {
+	private Color color = Color.clear; // color to debug cell id
 	private SpriteRenderer sr;
-	// [SerializeField] Sprite waterSprite = default;
 
 	void Start() {
 		sr = GetComponent<SpriteRenderer>();
@@ -15,5 +15,8 @@ public class WaterID : MonoBehaviour {
 		VFXUpdate();
 	}
 
-	void VFXUpdate() { }
+	void VFXUpdate() {
+		sr.color = color;
+		//sr.sprite = waterSprite;
+	}
 }

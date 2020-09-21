@@ -7,16 +7,12 @@ using UnityEngine;
 public class WaterIndicator : MonoBehaviour {
 	public Transform heliTranform;
 	public Vector3 waterPosition;
-	public int watergoIndex;
+	public int reservoirIndex;
 	public float speed = 10f;
 
 	private void Start() {
 		//heliTranform = gameObject.transform.parent;
-		if (watergoIndex == 1) {
-			waterPosition = PopulateWorld.Instance.watergo1.transform.position; // hard coded for now in populate world
-		} else {
-			waterPosition = PopulateWorld.Instance.watergo2.transform.position; // hard coded for now in populate world
-		}
+		waterPosition = PopulateWorld.Instance.reservoirs[reservoirIndex].transform.position;
 	}
 
 	void FixedUpdate() {

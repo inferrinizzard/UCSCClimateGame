@@ -7,7 +7,7 @@ using UnityEngine;
 /// Controls the identity of the cell
 /// </summary>
 public class IdentityManager : MonoBehaviour {
-	public Identity id;
+	public Identity id = Identity.Green;
 	public Moisture moisture = Moisture.Normal;
 	public int fireVariance { get; set; } = 0; // 0 for green, 1 for tree. keep track of the nature of the cell before fire
 	public enum Identity { Fire, Water, Green, Tree }

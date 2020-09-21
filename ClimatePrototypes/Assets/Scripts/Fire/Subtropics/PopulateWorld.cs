@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using Boo.Lang;
-
 using TMPro;
 
 using UnityEngine;
@@ -17,24 +15,18 @@ public class PopulateWorld : MonoBehaviour {
 	public TextMeshProUGUI windSpeedTextUI;
 	public Transform WindDirArrowUI;
 
-	public GameObject cloudPrefab;
-	public GameObject cellPrefab;
-	public GameObject waterPrefab;
+	public GameObject cloudPrefab, cellPrefab, waterPrefab;
 	public GameObject playerPrefab;
 
 	public Sprite[] reservoirSprites;
 
-	[HideInInspector] public GameObject watergo;
-	[HideInInspector] public GameObject watergo1;
-	[HideInInspector] public GameObject watergo2;
+	[HideInInspector] public GameObject[] reservoirs = new GameObject[2];
 
 	public enum WindDir { NE, NW, SE, SW }
 	public WindDir dir = WindDir.NE;
-	public int windSpeed = 3;
+	public int windSpeed = 10;
 
-	[Space]
-
-	[Header("SerializedFields")]
+	[Space, Header("Serialized Fields")]
 	private GameObject player;
 
 	/// <summary>
@@ -50,22 +42,11 @@ public class PopulateWorld : MonoBehaviour {
 	[Range(0, 100)] public int treeDensity;
 
 	public static PopulateWorld Instance;
-
 	private GridLayout gridLayout;
 
 	private void Awake() {
 		Instance = this;
 	}
-
-	public Vector3Int fire1 = new Vector3Int(0, 0, 0);
-	public Vector3Int water1 = new Vector3Int(6, 2, 0);
-	public Vector3Int water2 = new Vector3Int(6, 3, 0);
-	public Vector3Int water3 = new Vector3Int(6, 1, 0);
-
-	/*Vector3Int topleftCell = new Vector3Int(-18, 8, 0);
-	Vector3Int topRightCell = new Vector3Int(16, 8, 0);
-	Vector3Int bottomleftCell = new Vector3Int(-18, -10, 0);
-	Vector3Int bottomrightCell = new Vector3Int(16, -10, 0);*/
 
 	public Vector3Int topleftCell = new Vector3Int(-36, 16, 0);
 	public Vector3Int topRightCell = new Vector3Int(32, 16, 0);
@@ -73,16 +54,13 @@ public class PopulateWorld : MonoBehaviour {
 	public Vector3Int bottomrightCell = new Vector3Int(32, -20, 0);
 
 	private Tilemap tilemap;
-	private float udpateWindTimer;
 
 	private GameObject[, ] cellArray; // central cell data structure
-	[SerializeField] private int width;
-	[SerializeField] private int height;
+	[SerializeField] private int width, height;
 
 	private int cloudNum = 10; // have 10 at all times, 5 will be visible on screen
 	private GameObject[] clouds;
-	private bool waiting;
-	// Start is called before the first frame update
+
 	void Start() {
 		clouds = new GameObject[cloudNum];
 		tilemap = transform.GetComponent<Tilemap>();
@@ -93,40 +71,14 @@ public class PopulateWorld : MonoBehaviour {
 		PopulateTree();
 		PopulateCloud();
 		StartCoroutine(WaitForFire(0)); // first fire mutation
-
-		windSpeed = 10;
+		StartCoroutine(UpdateWindDirection());
 	}
 
-	void UpdateWindDirection() {
-		udpateWindTimer += Time.deltaTime;
-		if (udpateWindTimer >= 30) // change wind dir every 30 sec
-		{
-			udpateWindTimer = 0;
-			int seed = Random.Range(0, 4);
-			switch (seed) {
-				case 0:
-					dir = WindDir.NE;
-					windSpeed = Random.Range(5, 18);
-					break;
-				case 1:
-					dir = WindDir.NW;
-					windSpeed = Random.Range(5, 18);
-					break;
-				case 2:
-					dir = WindDir.SE;
-					windSpeed = Random.Range(5, 18);
-					break;
-				case 3:
-					dir = WindDir.SW;
-					windSpeed = Random.Range(5, 18);
-					break;
-				default:
-					dir = WindDir.NE;
-					windSpeed = Random.Range(5, 18);
-					break;
-
-			}
-		}
+	IEnumerator UpdateWindDirection(float timer = 30) {
+		yield return new WaitForSeconds(timer);
+		dir = new [] { WindDir.NE, WindDir.NW, WindDir.SE, WindDir.SW }[Random.Range(0, 4)];
+		windSpeed = Random.Range(5, 18);
+		StartCoroutine(UpdateWindDirection());
 	}
 
 	void PopulateCloud() {
@@ -149,27 +101,11 @@ public class PopulateWorld : MonoBehaviour {
 
 	private void Update() {
 		GUIUpdate();
-		UpdateWindDirection();
-
-		if (!waiting) {
-			// randomly start fire
-			waiting = true;
-			float timer = UnityEngine.Random.Range(4.0f, 5.0f);
-			StartCoroutine(WaitForFire(timer));
-
-		}
-
-		if (Input.GetKeyDown(KeyCode.R)) {
-			RePopulateWorld();
-		}
-
 		GetCellIDData(IdentityManager.Identity.Fire);
 	}
 
 	void GUIUpdate() {
-		// text
-		//windSpeedTextUI.text = windSpeed.ToString() + " km/h";
-		windSpeedTextUI.text = " wind";
+		//windSpeedTextUI.text = $"{windSpeed} km/h";
 		// arrow size
 		float smooth = 5.0f;
 		float arrowSize = 0.3f + (windSpeed - 5) / 2 * 0.1f;
@@ -181,35 +117,8 @@ public class PopulateWorld : MonoBehaviour {
 		WindDirArrowUI.localScale = Vector3.Slerp(WindDirArrowUI.localScale, targetSize, Time.deltaTime * smooth);
 
 		// arrow dir
-
-		float tiltAngle = 0f;
-		switch (dir) {
-			case WindDir.NE:
-				tiltAngle = 135f;
-				break;
-			case WindDir.NW:
-				tiltAngle = -135f;
-				break;
-			case WindDir.SE:
-				tiltAngle = 45f;
-				break;
-			case WindDir.SW:
-				tiltAngle = -45f;
-				break;
-			default:
-				tiltAngle = 0;
-				break;
-
-		}
-
-		// Smoothly tilts a transform towards a target rotation.
-		//float tiltAroundZ = Input.GetAxis("Horizontal") * tiltAngle;
-
-		// Rotate the cube by converting the angles into a quaternion.
-		//Quaternion target = Quaternion.Euler(0, 0, tiltAroundZ);
+		float tiltAngle = Array.IndexOf(new [] { WindDir.NE, WindDir.SE, WindDir.SW, WindDir.NW }, dir) * -90 + 135;
 		Quaternion target = Quaternion.Euler(0, 0, tiltAngle);
-
-		// Dampen towards the target rotation
 		WindDirArrowUI.rotation = Quaternion.Slerp(WindDirArrowUI.rotation, target, Time.deltaTime * smooth);
 	}
 
@@ -222,7 +131,6 @@ public class PopulateWorld : MonoBehaviour {
 		cellParent.name = "Cells";
 
 		// get corner positions of the world 
-
 		width = topRightCell.x - topleftCell.x + 1;
 		height = topleftCell.y - bottomleftCell.y + 1;
 		cellArray = new GameObject[width + 1, height + 1];
@@ -234,87 +142,28 @@ public class PopulateWorld : MonoBehaviour {
 				// instantiate and construct 2d array
 				GameObject go = Instantiate(cellPrefab, pos, Quaternion.identity);
 				go.transform.parent = cellParent.transform;
-				IdentityManager goID = go.GetComponent<IdentityManager>();
-				goID.id = IdentityManager.Identity.Green; // default to green
+				go.GetComponent<IdentityManager>().id = IdentityManager.Identity.Green; // default to green
 				cellArray[i, j] = go;
 			}
-
 		}
 	}
 
-	/// <summary>
-	/// Create water cells
-	/// VFX: generate a water reservoir prefab in the correct ratio
-	/// </summary>
+	/// <summary> Create water cells </summary>
 	private void PopulateWater() {
 		// TODO: water size according to precipitation
 		reservoirTotalSize = 0;
+		int reservoirGen = Random.Range(0, 5);
 
-		// procedurally generate reservoir
-		// ratio index = h/w
-		// 0 =  1,
-		// 1 = 1.3,
-		// 2 = 1.5,
-		// 3 = 0.5,
-		// 4 = 0.4 
+		for (int r = 0; r < 2; r++) {
+			var(waterHeight, waterWidth) = new [] {
+				(1, 1), (4, 3), (3, 2), (1, 2), (2, 5)
+			}[reservoirGen];
 
-		int ratio1 = Random.Range(0, 3);
-		int ratio2 = Random.Range(0, 3);
-
-		float waterh1 = Random.Range(2, 4);
-		float waterh2 = Random.Range(2, 4);
-		float waterw1 = waterh1 * ratio1;
-		float waterw2 = waterh2 * ratio2;
-		// int waterX1 = 6;
-		// int waterY1 = 5;
-		// int waterX2 = 10;
-		// int waterY2 = 3;
-
-		int reservoirCount = 2;
-		while (reservoirCount > 0) {
-			reservoirCount--;
-
-			int ratioIndex = Random.Range(0, 3);
-			//int ratioIndex = 0;
-			int waterHeight = 0;
-			int waterWidth = 0;
-
-			float ratio = 0f;
-			if (ratioIndex == 0) {
-				ratio = 1;
-				waterHeight = 1;
-				waterWidth = 1;
-			} else if (ratioIndex == 1) {
-				ratio = 1.3f;
-				waterHeight = 4;
-				waterWidth = 3;
-			} else if (ratioIndex == 2) {
-				ratio = 1.5f;
-				waterHeight = 3;
-				waterWidth = 2;
-			} else if (ratioIndex == 3) {
-				ratio = 0.5f;
-				waterHeight = 1;
-				waterWidth = 2;
-			} else {
-				ratio = 0.4f;
-				waterHeight = 2;
-				waterWidth = 5;
-			}
-
-			int waterX = 0;
-			int waterY = 0;
-
-			if (reservoirCount == 1) // this is the last reservoir being generated
-			{
-				waterX = 6;
-				waterY = 5;
-				waterHeight *= 1;
-				waterWidth *= 1;
-			} else {
-				waterX = 15;
-				waterY = 8;
-			}
+			int waterX = 0, waterY = 0;
+			if (r == 1) // this is the last reservoir being generated
+				(waterX, waterY) = (6, 5);
+			else
+				(waterX, waterY) = (15, 8);
 
 			// at the easiest level, we increase reservoir size
 			if (difficulty == 1) {
@@ -325,8 +174,7 @@ public class PopulateWorld : MonoBehaviour {
 			for (int i = waterX; i < waterX + waterWidth; i++) {
 				for (int j = waterY; j < waterY + waterHeight; j++) {
 					GameObject go = cellArray[i, j];
-					IdentityManager goID = go.GetComponent<IdentityManager>();
-					goID.id = IdentityManager.Identity.Water;
+					go.GetComponent<IdentityManager>().id = IdentityManager.Identity.Water;
 				}
 			}
 
@@ -335,25 +183,15 @@ public class PopulateWorld : MonoBehaviour {
 			Vector3 pos1 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX, waterY));
 			Vector3 pos2 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX + waterWidth, waterY + waterHeight));
 			Vector3 reservoirPos = (pos1 + pos2) / 2 + new Vector3(-0.25f, -0.25f, 0);
-			watergo = Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
+			GameObject watergo = Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
 			watergo.SetActive(true);
 
-			watergo.GetComponent<SpriteRenderer>().sprite = reservoirSprites[ratioIndex];
+			watergo.GetComponent<SpriteRenderer>().sprite = reservoirSprites[reservoirGen];
 			watergo.GetComponent<SpriteRenderer>().size = new Vector2(waterWidth / 4, waterHeight / 4);
-			if (difficulty == 1) {
-				watergo.transform.localScale = new Vector3(0.4f, 0.4f, 1) * 2;
-			} else {
-				watergo.transform.localScale = new Vector3(0.4f, 0.4f, 1);
-			}
+			watergo.transform.localScale = new Vector3(0.4f, 0.4f, 1) * (difficulty == 1 ? 2 : 1);
 
-			if (reservoirCount == 1) {
-				watergo1 = watergo;
-			} else {
-				watergo2 = watergo;
-			}
-
+			reservoirs[r] = watergo;
 		}
-
 	}
 
 	private void PopulateTree() {
@@ -377,7 +215,6 @@ public class PopulateWorld : MonoBehaviour {
 		GenerateTreeInRegion(0, width1, 0, height1);
 		GenerateTreeInRegion(width2_0, width2_1, height2_0, height2_1);
 		GenerateTreeInRegion(width3_0, width3_1, height3_0, height3_1);
-
 	}
 
 	void GenerateTreeInRegion(int w0, int w1, int h0, int h1) {
@@ -393,7 +230,6 @@ public class PopulateWorld : MonoBehaviour {
 				}
 			}
 		}
-
 	}
 
 	/// <summary> Mutates grass to fire</summary>
@@ -414,7 +250,7 @@ public class PopulateWorld : MonoBehaviour {
 	IEnumerator WaitForFire(float s) {
 		yield return new WaitForSeconds(s);
 		MutateToFire();
-		waiting = false;
+		StartCoroutine(WaitForFire(Random.Range(4f, 5f)));
 	}
 
 	/// <summary> Returns cell neighbors - 4 dir</summary>
@@ -424,41 +260,28 @@ public class PopulateWorld : MonoBehaviour {
 		int x = cellPosition.x - topleftCell.x; // convert pos vec3int to correct index in array
 		int y = cellPosition.y - bottomleftCell.y;
 
-		GameObject[] neighbors = new GameObject[4];
-		if (x >= 0 && x <= width && y >= 0 && y < height) {
-			neighbors[0] = (cellArray[x, y + 1]); // up
+		// GameObject[] neighbours = new [] {
+		// 		(0, 1), (1, 0), (0, -1), (-1, 0)
+		// 	}.Select(d => (x + d.Item1, y + d.Item2))
+		// 	.Select(pos =>
+		// 		pos.Item1 >= 0 && pos.Item1 <= width &&
+		// 		pos.Item2 >= 0 && pos.Item2 <= height ?
+		// 		cellArray[pos.Item1, pos.Item2] : null
+		// 	).Where(go => go != null).ToArray();
 
-		}
+		// return dir.ToString().Select(d => Array.IndexOf(new int[] { 'S', 'E', 'W', 'N' }, d))
+		// 	.Select(n => n < neighbours.Length ? neighbours[n] : null)
+		// 	.Where(n => n != null).ToArray();
 
-		if (x >= 0 && x <= width && y <= height && y > 0) neighbors[1] = (cellArray[x, y - 1]); // left
-		if (x < width && x >= 0 && y <= height && y >= 0) neighbors[2] = (cellArray[x + 1, y]); // right
-		if (x > -0 && x <= width && y <= height && y >= 0) neighbors[3] = (cellArray[x - 1, y]); // down
-
-		GameObject[] neighborsDir = new GameObject[2];
-
-		if (dir == WindDir.SW) // up right
-		{
-			neighborsDir[0] = neighbors[0];
-			neighborsDir[1] = neighbors[2];
-			return neighborsDir;
-		} else if (dir == WindDir.SE) // up left
-		{
-			neighborsDir[0] = neighbors[0];
-			neighborsDir[1] = neighbors[1];
-			return neighborsDir;
-		} else if (dir == WindDir.NW) // down right
-		{
-			neighborsDir[0] = neighbors[3];
-			neighborsDir[1] = neighbors[2];
-			return neighborsDir;
-		} else // up right
-		{
-			neighborsDir[0] = neighbors[3];
-			neighborsDir[1] = neighbors[1];
-			return neighborsDir;
-		}
-
-		//return neighbors;
+		return dir.ToString().Select(d => new [] {
+				(0, -1), (1, 0), (-1, 0), (0, 1)
+			}[Array.IndexOf(new int[] { 'S', 'E', 'W', 'N' }, d)])
+			.Select(pos =>
+				pos.Item1 >= 0 && pos.Item1 <= width &&
+				pos.Item2 >= 0 && pos.Item2 <= height ?
+				cellArray[pos.Item1, pos.Item2] : null
+			).Where(go => go != null).ToArray();
+		// return neighbours;
 	}
 
 	/// <summary> Returns cell radius - outwards 2+ </summary>
@@ -495,7 +318,6 @@ public class PopulateWorld : MonoBehaviour {
 		int x = cellLoc.x - topleftCell.x; // convert pos vec3int to correct index in array
 		int y = cellLoc.y - bottomleftCell.y;
 		return cellArray[x, y];
-
 	}
 
 	/// <summary> Returns cell vec3int value given cell array 2d index</summary>
@@ -504,22 +326,6 @@ public class PopulateWorld : MonoBehaviour {
 	/// <returns></returns>
 	public Vector3Int GetVector3IntFromCellArray(int i, int j) {
 		return new Vector3Int(topleftCell.x + i, bottomleftCell.y + j, 0);
-	}
-
-	private void RePopulateWorld() {
-		Destroy(player);
-		for (var i = 0; i <= width; i++) {
-			for (var j = 0; j <= height; j++) {
-				Destroy(cellArray[i, j]);
-			}
-
-		}
-		PopulateVanillaWorld();
-		PopulateWater();
-		PopulateTree();
-		PopulatePlayer();
-		StartCoroutine(WaitForFire(0));
-
 	}
 
 	public float GetCellIDData(IdentityManager.Identity id) {
@@ -536,12 +342,10 @@ public class PopulateWorld : MonoBehaviour {
 		performance = 100 - 100 * cellWithIDCount / totalCell;
 		Debug.Log("player performance is " + performance);
 		return performance;
-
 	}
 
 	/// <summary> Tied to backend model</summary>
 	public void QueryWorldData() {
-
 		Debug.Log("reservoir size is " + reservoirTotalSize);
 		Debug.Log("tree density is " + treeDensity);
 		Debug.Log("fire spread / moisture loss rate is " + spreadability);
@@ -556,5 +360,4 @@ public class PopulateWorld : MonoBehaviour {
 			difficulty = 1;
 		}
 	}
-
 }
