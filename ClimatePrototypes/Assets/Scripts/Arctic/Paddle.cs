@@ -17,18 +17,8 @@ public class Paddle : MonoBehaviour {
 		paddleWidth = GetComponent<SpriteRenderer>().bounds.size.x;
 	}
 
-	private void Move(float input) {
-		paddleRb2d.velocity = Vector3.right * input * paddleSpeed;
-	}
-
 	private void Update() {
 		horizontalInput = Input.GetAxis("Horizontal");
-	}
-
-	private void LateUpdate() {
-		Vector3 viewPos = transform.position;
-		viewPos.x = Mathf.Clamp(viewPos.x, -screenBounds.x + paddleWidth / 2, screenBounds.x - paddleWidth / 2);
-		transform.position = viewPos;
 	}
 
 	private void FixedUpdate() {
@@ -37,5 +27,15 @@ public class Paddle : MonoBehaviour {
 		else {
 			Move(0f);
 		}
+	}
+
+	private void Move(float input) {
+		paddleRb2d.velocity = Vector3.right * input * paddleSpeed;
+	}
+
+	private void LateUpdate() {
+		Vector3 viewPos = transform.position;
+		viewPos.x = Mathf.Clamp(viewPos.x, -screenBounds.x + paddleWidth / 2, screenBounds.x - paddleWidth / 2);
+		transform.position = viewPos;
 	}
 }

@@ -14,7 +14,7 @@ public partial class EBM {
 		const double Rv = 461.5;
 		const double ep = 0.622;
 		Vector<double> es = es0 * (-Lv / Rv * (1 / (temp + 273.15f) - 1 / t0)).PointwiseExp();
-		Vector<double> qs = ep * es / press;
+		Vector<double> qs = ep / press * es;
 		return qs;
 	}
 
@@ -35,19 +35,21 @@ public partial class EBM {
 					E100.SetColumn(p, E);
 					T100.SetColumn(p, T);
 				}
-				Vector<double> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x); // aw*(E > 0) + ai*(E < 0)
-				Vector<double> C = alpha.PointwiseMultiply(S.Row(j)) + cg_tau * Tg - A; // alpha*S[i, :] + cg_tau*Tg - A
+				Vector<double> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x); // aw * (E > 0) + ai * (E < 0)
+				Vector<double> C = alpha.PointwiseMultiply(S.Row(j)) + cg_tau * Tg - A; // alpha * S[i, :] + cg_tau * Tg - A
 				Vector<double> T0 = C / (M - k * Lf / E);
 				T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0)); // E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)
-				E = E + dt * (C - M * T + Fb + F);
+				E = E + dt * (C - M * T + (Fb + F));
 				Vector<double> q = Rh * Humidity(Tg, Ps);
-				Vector<double> lht = dt * (diffop * (Lv * q / cp));
+				Vector<double> lht = (dt * diffop) * ((Lv / cp) * q);
+				var mklfe = M - k * Lf / E;
+				var signlesset0 = Sign0(Less, E, T0);
 				Tg = (kappa - Matrix<double>.Build.DiagonalOfDiagonalVector(
-					Sign0(Less, Sign0(Less, E, T0), dc / (M - k * Lf / E)) // np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)
+					Sign0(Less, signlesset0, dc / mklfe) // np.diag(dc / (M - kLf / E) * (T0 < 0) * (E < 0)
 				)).Solve(Tg + lht + dt_tau * (
-					Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A). // E/cw*(E >= 0)+(ai*S[i, :]-A)
+					Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A). // E / cw * (E >= 0) + (ai * S[i, :] - A)
 					Map2((a, b) => b != 0 ? a / b : 0, // funky division
-						Sign0(Less, Sign0(Less, E, T0), M - k * Lf / E)) // (M-kLf/E)*(T0 < 0)*(E < 0)
+						Sign0(Less, signlesset0, mklfe)) // (M - kLf / E) * (T0 < 0) * (E < 0)
 				));
 			}
 		}
@@ -79,18 +81,19 @@ public partial class EBM {
 		Matrix<double> hfin = Tfin + Lv * qfin / cp;
 
 		Vector<double> OneMinusX2 = (1 - x.PointwisePower(2));
-		Matrix<double> Fa = -D * MultiplyRowWise(GradVertical(hfin), OneMinusX2) * bands;
-		Matrix<double> Fla = -D * MultiplyRowWise(GradVertical(Lv * qfin / cp), OneMinusX2) * bands;
+		Matrix<double> Fa = -D * bands * MultiplyRowWise(GradVertical(hfin), OneMinusX2);
+		Matrix<double> Fla = -D * bands * MultiplyRowWise(GradVertical(Lv * qfin / cp), OneMinusX2);
 
-		Vector<double> w = ((OneMinusX2 - 1) / sigma / sigma).PointwiseExp();
+		Vector<double> w = (1d / sigma / sigma * (OneMinusX2 - 1)).PointwiseExp();
+		var oneMinusw = 1 - w;
 		Matrix<double> F_hc = MultiplyRowWise(Fa, w);
-		Matrix<double> F_eddy = MultiplyRowWise(Fa, (1 - w));
-		Matrix<double> Fl_eddy = MultiplyRowWise(Fla, (1 - w));
+		Matrix<double> F_eddy = MultiplyRowWise(Fa, oneMinusw);
+		Matrix<double> Fl_eddy = MultiplyRowWise(Fla, oneMinusw);
 
 		Vector<double> hfin_eq = hfin.Row(0);
 		Matrix<double> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale) [x] - i);
 		Matrix<double> psi = F_hc.PointwiseDivide(gms);
-		Matrix<double> Fl_hc = -(Lv * qfin / cp).PointwiseMultiply(psi);
+		Matrix<double> Fl_hc = (-Lv / cp * qfin).PointwiseMultiply(psi);
 
 		Matrix<double> Fl = Fl_hc + Fl_eddy;
 		Matrix<double> EminusP = GradVertical(Fl) * bands;

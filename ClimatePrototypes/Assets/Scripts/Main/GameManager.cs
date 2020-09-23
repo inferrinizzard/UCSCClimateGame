@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+// using System.Threading;
+
+using Newtonsoft.Json;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,29 +12,23 @@ public class GameManager : Singleton<GameManager> {
 	public bool runModel = true;
 	[SerializeField] GameObject loadingScreen = default;
 	[SerializeField] GameObject quitPrompt = default;
-	bool titleScreen = true;
-	[HideInInspector] public Scene? titleScene = null;
 	public RegionController currentRegion;
+	[HideInInspector] public bool runningModel = false;
 
 	Dictionary<World.Region, int> visits = new Dictionary<World.Region, int> { { World.Region.Arctic, 0 }, { World.Region.Fire, 0 }, { World.Region.Forest, 0 }, { World.Region.City, 0 } };
 
 	public override void Awake() {
 		base.Awake();
-		if (Instance.runModel && World.averageTemp == 0)
+		if (Instance.runModel && World.averageTemp == 0) {
 			World.Init();
+			World.ranges = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<double, List<double>>>>(Resources.Load<TextAsset>("ipcc").text);
+		}
 		// SpeedTest.VectorAllocTest();
 	}
 
 	void Start() {
 		FindCurrentRegion(SceneManager.GetActiveScene());
 		SceneManager.activeSceneChanged += instance.InitScene;
-
-		if (titleScreen && SceneManager.GetActiveScene().name == "Overworld" && titleScene == null) {
-			UIController.Instance.gameObject.SetActive(false);
-			SceneManager.LoadScene("TitleScreen", LoadSceneMode.Additive);
-			titleScene = SceneManager.GetSceneByName("TitleScreen");
-			titleScreen = false;
-		}
 	}
 
 	public void QuitGame(int exitStatus = 0) {
@@ -75,25 +71,26 @@ public class GameManager : Singleton<GameManager> {
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.realtimeSinceStartup;
 
-		bool calcDone = true;
-		if (name == "Overworld" && Instance.runModel) {
-			calcDone = false;
-			Thread calcThread = new Thread(() => { World.Calc(); calcDone = true; });
-			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
-			calcThread.Start();
-		}
+		// if (name == "Overworld" && Instance.runModel) {
+		// 	GameManager.Instance.runningModel = true;
+		// 	Thread calcThread = new Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
+		// 	calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
+		// 	calcThread.Start();
+		// }
 
 		Instance.loadingScreen.SetActive(true);
 
-		while (!asyncLoad.isDone || !calcDone) {
+		while (!asyncLoad.isDone || GameManager.Instance.runningModel) {
 			yield return null;
 			// instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
-			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && calcDone) {
+			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && !GameManager.Instance.runningModel) {
 				Time.timeScale = 1;
 				asyncLoad.allowSceneActivation = true;
-				if (name == "Overworld")
+				if (name == "Overworld") {
 					UIController.Instance.IncrementTurn();
+					World.DetermineImpact();
+				}
 				UIController.Instance.SetPrompt(false);
 				Cursor.visible = true;
 				yield break;

@@ -11,6 +11,16 @@ public class UIController : Singleton<UIController> {
 	[SerializeField] Button backButton = default;
 	[SerializeField] Button exitButton = default;
 	[SerializeField] GameObject returnPrompt = default;
+	public GameObject navbar;
+	Dictionary<GameObject, bool> uiActiveStatus = new Dictionary<GameObject, bool>();
+
+	public void Toggle(GameObject obj) {
+		if (!uiActiveStatus.ContainsKey(obj))
+			uiActiveStatus.Add(obj, !obj.activeSelf);
+		else
+			uiActiveStatus[obj] = !uiActiveStatus[obj];
+		obj.SetActive(uiActiveStatus[obj]);
+	}
 
 	void OnEnable() {
 		worldNameText.text = World.worldName;
@@ -88,5 +98,21 @@ public class UIController : Singleton<UIController> {
 					button.SetActive(true);
 			}
 		}
+	}
+
+	public static IEnumerator SlideNav(Transform nav, bool up = false, float time = .5f) {
+		float height = (nav.transform as RectTransform).rect.height;
+		nav.transform.position = nav.transform.position + Vector3.up * height * (up ? 0 : 1);
+		float startingHeight = nav.transform.position.y;
+
+		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+			yield return null;
+			nav.transform.position = new Vector3(nav.transform.position.x, startingHeight - step / time * height * (up ? -1 : 1), nav.transform.position.z);
+		}
+	}
+
+	public static void SetUIAlpha(GameObject ui, float a) {
+		foreach (var child in ui.GetComponentsInChildren<Graphic>())
+			child.color = new Color(child.color.r, child.color.g, child.color.b, a);
 	}
 }

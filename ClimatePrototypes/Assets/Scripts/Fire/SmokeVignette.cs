@@ -11,13 +11,13 @@ public class SmokeVignette : MonoBehaviour {
 
 	void Update() {
 		for (int i = 0; i < breakpoints.Length; i++)
-			if (FireController.damage > breakpoints[i] * FireController.damageLimit) {
+			if (FireController.Instance.damage > breakpoints[i] * (FireController.Instance as FireController).damageLimit) {
 				sr.enabled = true;
 				sr.sprite = smoke[i]; // TODO: fade these
 				// sr.color = new Color(1,1,1,EaseMethods.QuadEaseIn)
 				break;
 			}
-		if (FireController.damage < breakpoints[breakpoints.Length - 1])
+		if (FireController.Instance.damage < breakpoints[breakpoints.Length - 1])
 			sr.enabled = false;
 	}
 }

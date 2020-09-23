@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : MonoBehaviour {
+	/// <summary> . </summary>
 	Vector2 force = new Vector2(2, 5);
 	Rigidbody2D rb;
 	Vector2 screenMin, screenMax;
@@ -18,6 +19,7 @@ public class Ball : MonoBehaviour {
 	}
 
 	void Update() {
+		// check position
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x || transform.position.y < screenMin.y || (transform.position.y > screenMax.y && rb.velocity.y > 0))
 			Destroy(gameObject);
 	}

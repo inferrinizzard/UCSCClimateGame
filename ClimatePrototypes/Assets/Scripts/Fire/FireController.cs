@@ -5,15 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class FireController : RegionController {
-	[SerializeField] float timer = 60f;
 	[SerializeField] int numFires = 5;
-	public static int fireCount = 0;
+	public int fireCount = 0;
 	[SerializeField] float spawnDelayMin = 10;
-	public static int damageRate = 30;
-	public static float damage = 0;
-	public static readonly float damageLimit = 200f;
+	public int damageRate = 30;
+	public readonly float damageLimit = 200f;
 	[SerializeField] GameObject firePrefab = default;
-	[SerializeField] Text damageText = default, timerText = default;
+	[SerializeField] Text damageText = default;
 	[SerializeField] Slider waterSlider = default;
 	[SerializeField] HoseSpray spray = default;
 	[SerializeField] WaterPrompt prompt = default;
@@ -21,7 +19,8 @@ public class FireController : RegionController {
 	IEnumerator flash = null;
 	float margin;
 
-	void Start() {
+	protected override void Start() {
+		base.Start();
 		timerText.text = string.Format("{00}", timer);
 
 		margin = Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2) (firePrefab.GetComponent<SpriteRenderer>().bounds.max);
@@ -29,28 +28,29 @@ public class FireController : RegionController {
 			StartCoroutine(SpawnFire());
 	}
 
-	void Update() {
-		timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
+	protected override void Update() {
+		base.Update();
 		damageText.text = $"Damage: {damage}";
 		waterSlider.value = spray.currentWater / spray.maxWater;
 
 		if (timer > 0) {
+			timerText.text = string.Format("{00}", Mathf.Floor(timer -= Time.deltaTime));
 			if (spray.currentWater <= 0)
 				prompt.SetActive(true);
-		} else {
-			timerText.text = "0";
-			prompt.SetActive(false);
-			Cursor.visible = true;
-			Pause();
-			TriggerUpdate(() =>
-				World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore())
-			);
 		}
 
 		if (hovering && flash == null)
 			StartCoroutine(flash = PromptFlash(2));
 	}
 
+	protected override void GameOver() {
+		base.GameOver();
+		prompt.SetActive(false);
+		Cursor.visible = true;
+		TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
+	}
+
+	/// <summary> Looping fire spawn </summary>
 	IEnumerator SpawnFire() {
 		if (fireCount < numFires) {
 			Fire newFire = Instantiate(firePrefab, RandomPoint(margin), Quaternion.identity, transform).GetComponent<Fire>();
@@ -78,6 +78,7 @@ public class FireController : RegionController {
 		return new Vector3(Mathf.Clamp(randomPos.x, margin + min.x, max.x - margin), Mathf.Clamp(randomPos.y, margin + min.y, max.y - margin), 0);
 	}
 
+	/// <summary> Water slider flash </summary>
 	IEnumerator PromptFlash(float speed) {
 		Slider preview = Instantiate(waterSlider.gameObject, waterSlider.transform.parent).GetComponentInChildren<Slider>();
 		Destroy(preview.transform.GetChild(1).gameObject);
