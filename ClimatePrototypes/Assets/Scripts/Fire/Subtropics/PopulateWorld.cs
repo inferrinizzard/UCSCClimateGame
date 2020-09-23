@@ -3,16 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using TMPro;
-
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class PopulateWorld : MonoBehaviour {
 	[Header("References")]
-	public TextMeshProUGUI windSpeedTextUI;
+	public Text windSpeedTextUI;
 	public Transform WindDirArrowUI;
 
 	public GameObject cloudPrefab, cellPrefab, waterPrefab;

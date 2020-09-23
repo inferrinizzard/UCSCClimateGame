@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using TMPro;
-
 using UnityEditor;
 
 using UnityEngine;
@@ -15,7 +13,7 @@ public class PlayerInteractions : MonoBehaviour {
 
 	public Animator bladeAnimator;
 
-	public TextMeshProUGUI leftWaterUI;
+	public Text leftWaterUI;
 	public Transform leftWaterBarUI;
 	public TrailRenderer waterTR;
 
