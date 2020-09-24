@@ -12,7 +12,7 @@ public class WaterIndicator : MonoBehaviour {
 
 	private void Start() {
 		//heliTranform = gameObject.transform.parent;
-		waterPosition = PopulateWorld.Instance.reservoirs[reservoirIndex].transform.position;
+		waterPosition = SubtropicsController.Instance.world.reservoirs[reservoirIndex].transform.position;
 	}
 
 	void FixedUpdate() {

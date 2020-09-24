@@ -40,14 +40,14 @@ public class FireID : MonoBehaviour {
 
 	void FireGrowth() {
 		// if I am fire, I ignite my non-fire neighbors coroutine
-		GameObject[] myNeighbors = PopulateWorld.Instance.GetNeighbors(gameObject);
+		GameObject[] myNeighbors = SubtropicsController.Instance.world.GetNeighbors(gameObject);
 
 		foreach (var neighbor in myNeighbors) {
 			if (neighbor != null) {
 				IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
 				IdentityManager.Moisture neighborMoisture = neighbor.GetComponent<IdentityManager>().moisture;
 				if (neighborID == IdentityManager.Identity.Green && neighborMoisture != IdentityManager.Moisture.Moist) // if it is not already fire, or is water
-					PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Fire);
+					SubtropicsController.Instance.world.MutateCell(neighbor, IdentityManager.Identity.Fire);
 			}
 		}
 	}

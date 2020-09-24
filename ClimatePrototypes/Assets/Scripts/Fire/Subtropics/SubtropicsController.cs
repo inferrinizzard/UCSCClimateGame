@@ -10,10 +10,12 @@ public class SubtropicsController : RegionController {
 
 	[HideInInspector] public Wind wind;
 	public int difficulty = 3;
+	public SubtropicsWorld world;
 
 	protected override void Start() {
 		base.Start();
 		wind = GetComponent<Wind>();
+		world = GetComponent<SubtropicsWorld>();
 	}
 
 	protected override void Update() {
@@ -25,7 +27,7 @@ public class SubtropicsController : RegionController {
 	}
 
 	public float GetFirePercentage() {
-		var(fire, trees) = PopulateWorld.Instance.cellArray.Cast<GameObject>().Select(obj =>
+		var(fire, trees) = SubtropicsController.Instance.world.cellArray.Cast<GameObject>().Select(obj =>
 			(obj.GetComponent<IdentityManager>().id == IdentityManager.Identity.Fire ? 1 : 0, obj.GetComponent<IdentityManager>().id == IdentityManager.Identity.Tree ? 1 : 0)
 		).Aggregate((tup, obj) => (tup.Item1 + obj.Item1, tup.Item2 + obj.Item2));
 

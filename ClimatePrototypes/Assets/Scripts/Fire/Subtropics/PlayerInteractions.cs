@@ -95,15 +95,15 @@ public class PlayerInteractions : MonoBehaviour {
 
 		//// World Interaction        
 		// check what cell player is on top of 
-		playerCell = PopulateWorld.Instance.getCellObjectAtLoc(gameObject.transform.position);
+		playerCell = SubtropicsController.Instance.world.getCellObjectAtLoc(gameObject.transform.position);
 		playerCellID = playerCell.GetComponent<IdentityManager>().id;
 		playerCellMoisture = playerCell.GetComponent<IdentityManager>().moisture;
 
-		//PopulateWorld.Instance.MutateCell(playerCell, IdentityManager.Identity.Green);
+		//SubtropicsController.Instance.world.MutateCell(playerCell, IdentityManager.Identity.Green);
 		//playerCellMoisture = IdentityManager.Moisture.Moist;
 
 		// kill all immediate neighbors fire, radius buffer
-		foreach (var neighbor in PopulateWorld.Instance.GetRadius(playerCell)) {
+		foreach (var neighbor in SubtropicsController.Instance.world.GetRadius(playerCell)) {
 			if (neighbor != null) {
 				IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
 				if (neighborID == IdentityManager.Identity.Fire && neighbor != null && water > 0) {
@@ -112,9 +112,9 @@ public class PlayerInteractions : MonoBehaviour {
 					if (neighbor.GetComponent<IdentityManager>().fireVariance == 1) // if tree
 					{
 						neighbor.GetComponent<TreeID>().burnt = true;
-						PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Tree);
+						SubtropicsController.Instance.world.MutateCell(neighbor, IdentityManager.Identity.Tree);
 					} else {
-						PopulateWorld.Instance.MutateCell(neighbor, IdentityManager.Identity.Green);
+						SubtropicsController.Instance.world.MutateCell(neighbor, IdentityManager.Identity.Green);
 					}
 					neighbor.GetComponent<IdentityManager>().moisture = IdentityManager.Moisture.Moist;
 					water--; // use 1 water per cell

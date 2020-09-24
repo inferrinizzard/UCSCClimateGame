@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class PopulateWorld : MonoBehaviour {
+public class SubtropicsWorld : MonoBehaviour {
 	public GameObject cloudPrefab, cellPrefab, waterPrefab;
 	public Sprite[] reservoirSprites;
 
@@ -26,12 +26,7 @@ public class PopulateWorld : MonoBehaviour {
 	[SerializeField] private int spreadability = 3;
 	[Range(0, 100)] public int treeDensity;
 
-	public static PopulateWorld Instance;
 	private GridLayout gridLayout;
-
-	private void Awake() {
-		Instance = this;
-	}
 
 	public Vector3Int topleftCell = new Vector3Int(-36, 16, 0);
 	public Vector3Int topRightCell = new Vector3Int(32, 16, 0);
