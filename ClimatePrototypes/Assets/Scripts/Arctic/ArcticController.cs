@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ArcticController : RegionController {
+	public static ArcticController Instance { get => instance as ArcticController; }
 	/// <summary> Total level time </summary>
 	/// <summary> references to scene text assets </summary>
 	[SerializeField] Text scoreText = default;
@@ -14,6 +15,8 @@ public class ArcticController : RegionController {
 	Buffer[] buffers;
 	/// <summary> Buffer parent </summary>
 	[SerializeField] Transform ice = default;
+
+	public bool summer = true;
 
 	protected override void Start() {
 		base.Start();
