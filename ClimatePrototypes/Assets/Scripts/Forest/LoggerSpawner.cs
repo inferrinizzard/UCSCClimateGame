@@ -12,11 +12,11 @@ public class LoggerSpawner : MonoBehaviour {
 
 	IEnumerator SpawnLogger(float delay) {
 		yield return new WaitForSeconds(delay);
-		if ((ForestController.Instance as ForestController).activeTrees.Count > 0) {
+		if (ForestController.Instance.activeTrees.Count > 0) {
 			// shuffle, sort, shift
-			var targetIndex = (int) (Random.value * (ForestController.Instance as ForestController).activeTrees.Count);
-			var target = (ForestController.Instance as ForestController).activeTrees[targetIndex];
-			(ForestController.Instance as ForestController).activeTrees.RemoveAt(targetIndex);
+			var targetIndex = (int) (Random.value * ForestController.Instance.activeTrees.Count);
+			var target = ForestController.Instance.activeTrees[targetIndex];
+			ForestController.Instance.activeTrees.RemoveAt(targetIndex);
 
 			SetLoggerTarget(target, LoggerActions.Chop);
 		}
@@ -24,7 +24,7 @@ public class LoggerSpawner : MonoBehaviour {
 	}
 
 	public void SetLoggerTarget(Vector3Int pos, UnityEngine.Events.UnityAction<Logger> onReached) {
-		var newLogger = (ForestController.Instance as ForestController).NewAgent(loggerPrefab, transform.position, (Vector3) pos) as Logger;
+		var newLogger = ForestController.Instance.NewAgent(loggerPrefab, transform.position, (Vector3) pos) as Logger;
 		newLogger.choppingTile = pos;
 
 		newLogger.OnReached.AddListener((PathfindingAgent agent) => onReached.Invoke(agent as Logger));

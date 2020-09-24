@@ -17,7 +17,7 @@ public class Factory : MonoBehaviour {
 
 	void FixedUpdate() {
 		if (step++ % 10 == 0)
-			ForestController.Instance.damage += damageMultiplier * ((1 - protesters / (ForestController.Instance as ForestController).numActive) * 2 / 3f + 1 / 3f);
+			ForestController.Instance.damage += damageMultiplier * ((1 - protesters / ForestController.Instance.numActive) * 2 / 3f + 1 / 3f);
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
@@ -31,8 +31,8 @@ public class Factory : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		if ((ForestController.Instance as ForestController).hasSelected) {
-			(ForestController.Instance as ForestController).SetVolunteerTarget(Camera.main.ScreenToWorldPoint(Input.mousePosition), VolunteerActions.Protest);
+		if (ForestController.Instance.hasSelected) {
+			ForestController.Instance.SetVolunteerTarget(Camera.main.ScreenToWorldPoint(Input.mousePosition), VolunteerActions.Protest);
 		}
 	}
 }

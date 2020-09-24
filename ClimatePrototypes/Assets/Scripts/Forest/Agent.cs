@@ -24,7 +24,7 @@ public class PathfindingAgent : MonoBehaviour {
 		origin = transform.position;
 
 		pathTarget = new GameObject($"Path Target[{name}]").transform;
-		pathTarget.parent = (ForestController.Instance as ForestController).agentParent;
+		pathTarget.parent = ForestController.Instance.agentParent;
 		targetGoal = pathTarget.gameObject.AddComponent<AIGoalReached>();
 		targetGoal.myAgent = gameObject;
 

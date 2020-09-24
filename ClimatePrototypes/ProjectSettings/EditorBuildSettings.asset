@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Arctic.unity
     guid: fbcce027f5bed4ef3aca5463e329fb16
   - enabled: 1
-    path: Assets/Scenes/Fire.unity
+    path: Assets/Scenes/Fire-Old.unity
     guid: 99a46e809b76f334d98474a2f2836e5f
+  - enabled: 1
+    path: Assets/Scenes/Fire.unity
+    guid: 43934bbe47c840c478ea5beb22b115b4
   m_configObjects: {}

@@ -19,7 +19,7 @@ public class Station : MonoBehaviour {
 	void Update() {
 		if (awaitSubTargetReached > 0)
 			foreach (var kvp in subtargets)
-				foreach (var task in (ForestController.Instance as ForestController).volunteers)
+				foreach (var task in ForestController.Instance.volunteers)
 					if ((task.volunteer.transform.position - kvp.Key.position).sqrMagnitude < .05) {
 						subtargets[kvp.Key] = false;
 						awaitSubTargetReached--;
@@ -34,10 +34,10 @@ public class Station : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		if ((ForestController.Instance as ForestController).hasSelected) {
+		if (ForestController.Instance.hasSelected) {
 			var selectedTarget = subtargets.Where(kvp => !kvp.Value).OrderBy(kvp => kvp.Key.position.y).ElementAt(0).Key;
 			subtargets[selectedTarget] = true;
-			(ForestController.Instance as ForestController).SetVolunteerTarget(selectedTarget.position, VolunteerActions.Capture);
+			ForestController.Instance.SetVolunteerTarget(selectedTarget.position, VolunteerActions.Capture);
 		}
 	}
 }

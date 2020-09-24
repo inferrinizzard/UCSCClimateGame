@@ -20,13 +20,13 @@ public abstract class RegionController : MonoBehaviour {
 	protected virtual void Init() { }
 
 	public World.Region region;
-	public static RegionController Instance;
+	protected static RegionController instance;
 	[SerializeField] SpriteRenderer[] backgrounds = default;
 
 	Material fadeMat;
 
 	protected virtual void Awake() {
-		Instance = this;
+		instance = this;
 		foreach (var s in backgrounds)
 			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
 	}
@@ -74,7 +74,7 @@ public abstract class RegionController : MonoBehaviour {
 	}
 
 	protected virtual void StartModel() {
-		if (GameManager.Instance.runModel) {
+		if (GameManager.Instance.runModel && !GameManager.Instance.runningModel) {
 			GameManager.Instance.runningModel = true;
 			System.Threading.Thread calcThread = new System.Threading.Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
 			calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;

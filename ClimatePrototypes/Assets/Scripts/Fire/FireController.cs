@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class FireController : RegionController {
+	public static FireController Instance { get => instance as FireController; }
+
 	[SerializeField] int numFires = 5;
 	public int fireCount = 0;
 	[SerializeField] float spawnDelayMin = 10;
