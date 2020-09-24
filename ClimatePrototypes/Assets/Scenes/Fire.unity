@@ -466,6 +466,8 @@ GameObject:
   - component: {fileID: 475960691}
   - component: {fileID: 475960690}
   - component: {fileID: 475960692}
+  - component: {fileID: 475960693}
+  - component: {fileID: 475960694}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -582,8 +584,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7a398bbc9ff2ff4199aa223e8a9380f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windSpeedTextUI: {fileID: 1685624826}
-  WindDirArrowUI: {fileID: 1652024539}
   cloudPrefab: {fileID: 958545058275904950, guid: 325b4ef0a0377f64fb8252497ac6abc9,
     type: 3}
   cellPrefab: {fileID: 9129418839244638135, guid: 183a262cb31566a4c8d6d2490f0a3c0c,
@@ -599,8 +599,6 @@ MonoBehaviour:
   reservoirs:
   - {fileID: 0}
   - {fileID: 0}
-  dir: 1
-  windSpeed: 0
   reservoirTotalSize: 0
   spreadability: 3
   difficulty: 1
@@ -612,6 +610,43 @@ MonoBehaviour:
   bottomrightCell: {x: 16, y: -10, z: 0}
   width: 0
   height: 0
+--- !u!114 &475960693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475960688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14b9fd2ba4b26ad468d02160ef168549, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windSpeedText: {fileID: 1685624826}
+  WindDirArrow: {fileID: 1652024539}
+  dir: 0
+  windSpeed: 10
+--- !u!114 &475960694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475960688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3d797d8bd2f9341b6bc945ed7082c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intro: {fileID: 11400000, guid: 8a22151f9d1db2b439334935bb13f4b4, type: 2}
+  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
+    type: 3}
+  timerText: {fileID: 0}
+  damage: 0
+  paused: 0
+  region: 3
+  backgrounds: []
+  wind: {fileID: 0}
 --- !u!1 &498595633
 GameObject:
   m_ObjectHideFlags: 0

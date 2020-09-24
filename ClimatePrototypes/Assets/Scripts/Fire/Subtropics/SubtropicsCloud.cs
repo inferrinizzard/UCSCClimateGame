@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 
 public class SubtropicsCloud : MonoBehaviour {
 	private Vector3 velocity;
-
 	public float speed;
 
 	// Update is called once per frame
@@ -18,17 +18,14 @@ public class SubtropicsCloud : MonoBehaviour {
 	}
 
 	private void CheckVelocity() {
-		if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.NE) {
-			velocity = new Vector3(-1, -1, 0);
-		} else if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.NW) {
-			velocity = new Vector3(1, -1, 0);
-		} else if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.SE) {
-			velocity = new Vector3(-1, 1, 0);
-		} else if (PopulateWorld.Instance.dir == PopulateWorld.WindDir.SW) {
-			velocity = new Vector3(1, 1, 0);
-		} else {
-			velocity = Vector3.zero;
-		}
+		velocity = SubtropicsController.Instance.wind.dir.ToString()
+			.Select(d => (
+				new Dictionary<char, Vector3> { { 'S', Vector3.down },
+					{ 'N', Vector3.up },
+					{ 'W', Vector3.left },
+					{ 'E', Vector3.right }
+				}
+			) [d]).Aggregate((acc, d) => acc + d);
 	}
 
 	/// <summary> object pool for clouds, out of sight, destroy</summary>
