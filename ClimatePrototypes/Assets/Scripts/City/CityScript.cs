@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CityScript : RegionController {
+	public static CityScript Instance { get => instance as CityScript; }
+
 	[SerializeField] Text mainTitle = default;
 	[SerializeField] Bill left = default, right = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;

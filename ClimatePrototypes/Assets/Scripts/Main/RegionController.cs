@@ -20,13 +20,13 @@ public abstract class RegionController : MonoBehaviour {
 	protected virtual void Init() { }
 
 	public World.Region region;
-	public static RegionController Instance;
+	protected static RegionController instance;
 	[SerializeField] SpriteRenderer[] backgrounds = default;
 
 	Material fadeMat;
 
 	protected virtual void Awake() {
-		Instance = this;
+		instance = this;
 		foreach (var s in backgrounds)
 			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
 	}

@@ -38,7 +38,7 @@ public class ForestGrid : MonoBehaviour {
 	}
 
 	void Update() {
-		if ((ForestController.Instance as ForestController).hasSelected) {
+		if (ForestController.Instance.hasSelected) {
 			Vector3Int newHover = map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 			if (map.cellBounds.Contains(newHover)) {
 				if (newHover != hoverCell) {
@@ -51,11 +51,11 @@ public class ForestGrid : MonoBehaviour {
 			}
 			hoverCell = newHover;
 
-			if (Input.GetMouseButtonDown(0) && map.cellBounds.Contains(hoverCell) && !(ForestController.Instance as ForestController).activeTiles.Contains(hoverCell)) {
+			if (Input.GetMouseButtonDown(0) && map.cellBounds.Contains(hoverCell) && !ForestController.Instance.activeTiles.Contains(hoverCell)) {
 				if (map.GetTile(hoverCell) == empty)
-					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
+					ForestController.Instance.SetVolunteerTarget(hoverCell, VolunteerActions.Plant);
 				else if (map.GetTile(hoverCell) == stump || map.GetTile(hoverCell) == dead)
-					(ForestController.Instance as ForestController).SetVolunteerTarget(hoverCell, VolunteerActions.Clear);
+					ForestController.Instance.SetVolunteerTarget(hoverCell, VolunteerActions.Clear);
 				ClearHover(hoverCell);
 			}
 		}
@@ -124,7 +124,7 @@ public class ForestTree {
 			// float awaitTime = (ForestGrid.growthTime + (Random.value - .25f) * 2) * (1 + .5f * NeighbourCount() / 4f);
 			float awaitTime = ForestGrid.growthTime * (1 + NeighbourCount() / 4f) + (Random.value - .5f);
 			if (index == 4) {
-				(ForestController.Instance as ForestController).activeTrees.Add(pos);
+				ForestController.Instance.activeTrees.Add(pos);
 				awaitTime *= 1.5f;
 			}
 			tile = ForestGrid.trees[index + 1];

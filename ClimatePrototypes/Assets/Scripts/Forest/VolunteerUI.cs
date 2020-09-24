@@ -9,7 +9,7 @@ public class VolunteerUI : MonoBehaviour {
 	[SerializeField] Sprite /*active = default,*/ vacant = default;
 	[SerializeField] GameObject selector = default, bubble = default;
 
-	bool selected { get => (ForestController.Instance as ForestController).selected == this; }
+	bool selected { get => ForestController.Instance.selected == this; }
 	Animator animator;
 
 	void Start() {
@@ -23,7 +23,7 @@ public class VolunteerUI : MonoBehaviour {
 	}
 
 	public void SelectUI() {
-		(ForestController.Instance as ForestController).selected = selected != this ? this : null;
+		ForestController.Instance.selected = selected != this ? this : null;
 		selector.SetActive(selected);
 	}
 

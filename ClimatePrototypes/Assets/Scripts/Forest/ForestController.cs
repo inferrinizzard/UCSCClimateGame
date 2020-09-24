@@ -9,6 +9,8 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ForestController : RegionController {
+	public static ForestController Instance { get => instance as ForestController; }
+
 	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default;
 	public int numActive;
 	[HideInInspector] public VolunteerUI selected;
