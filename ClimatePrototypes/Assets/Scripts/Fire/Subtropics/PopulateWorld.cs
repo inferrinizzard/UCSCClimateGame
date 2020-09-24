@@ -14,7 +14,6 @@ public class PopulateWorld : MonoBehaviour {
 	public Transform WindDirArrowUI;
 
 	public GameObject cloudPrefab, cellPrefab, waterPrefab;
-	public GameObject playerPrefab;
 
 	public Sprite[] reservoirSprites;
 
@@ -63,7 +62,6 @@ public class PopulateWorld : MonoBehaviour {
 		clouds = new GameObject[cloudNum];
 		tilemap = transform.GetComponent<Tilemap>();
 		gridLayout = transform.parent.GetComponentInParent<GridLayout>();
-		PopulatePlayer();
 		PopulateVanillaWorld();
 		PopulateWater();
 		PopulateTree();
@@ -120,10 +118,6 @@ public class PopulateWorld : MonoBehaviour {
 		WindDirArrowUI.rotation = Quaternion.Slerp(WindDirArrowUI.rotation, target, Time.deltaTime * smooth);
 	}
 
-	private void PopulatePlayer() {
-		player = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-		player.SetActive(true);
-	}
 	private void PopulateVanillaWorld() {
 		GameObject cellParent = new GameObject();
 		cellParent.name = "Cells";
