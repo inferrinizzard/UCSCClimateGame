@@ -15,7 +15,6 @@ public class PopulateWorld : MonoBehaviour {
 	[HideInInspector] public GameObject[] reservoirs = new GameObject[2];
 
 	[Space, Header("Serialized Fields")]
-	private GameObject player;
 
 	/// <summary>
 	/// Backend data
@@ -25,8 +24,6 @@ public class PopulateWorld : MonoBehaviour {
 	[Header("Backend")]
 	[SerializeField] private int reservoirTotalSize;
 	[SerializeField] private int spreadability = 3;
-	public int difficulty = 3;
-	[SerializeField] private int performance;
 	[Range(0, 100)] public int treeDensity;
 
 	public static PopulateWorld Instance;
@@ -43,7 +40,7 @@ public class PopulateWorld : MonoBehaviour {
 
 	private Tilemap tilemap;
 
-	private GameObject[, ] cellArray; // central cell data structure
+	public GameObject[, ] cellArray; // central cell data structure
 	[SerializeField] private int width, height;
 
 	private int cloudNum = 10; // have 10 at all times, 5 will be visible on screen
@@ -52,7 +49,7 @@ public class PopulateWorld : MonoBehaviour {
 	void Start() {
 		clouds = new GameObject[cloudNum];
 		tilemap = transform.GetComponent<Tilemap>();
-		gridLayout = transform.parent.GetComponentInParent<GridLayout>();
+		gridLayout = this.GetComponentInParent<GridLayout>();
 		PopulateVanillaWorld();
 		PopulateWater();
 		PopulateTree();
@@ -76,10 +73,6 @@ public class PopulateWorld : MonoBehaviour {
 			clouds[i] = Instantiate(cloudPrefab, new Vector3(topLeftCloudPos.x + i * x, Random.Range(topRightCloudPos.y, topRightCloudPos.y + 10), 0), Quaternion.identity);
 			clouds[i].transform.parent = cloudParent.transform;
 		}
-	}
-
-	private void Update() {
-		GetCellIDData(IdentityManager.Identity.Fire);
 	}
 
 	private void PopulateVanillaWorld() {
@@ -122,7 +115,7 @@ public class PopulateWorld : MonoBehaviour {
 				(waterX, waterY) = (15, 8);
 
 			// at the easiest level, we increase reservoir size
-			if (difficulty == 1) {
+			if (SubtropicsController.Instance.difficulty == 1) {
 				waterHeight *= 2;
 				waterWidth *= 2;
 			}
@@ -144,7 +137,7 @@ public class PopulateWorld : MonoBehaviour {
 
 			watergo.GetComponent<SpriteRenderer>().sprite = reservoirSprites[reservoirGen];
 			watergo.GetComponent<SpriteRenderer>().size = new Vector2(waterWidth / 4, waterHeight / 4);
-			watergo.transform.localScale = new Vector3(0.4f, 0.4f, 1) * (difficulty == 1 ? 2 : 1);
+			watergo.transform.localScale = new Vector3(0.4f, 0.4f, 1) * (SubtropicsController.Instance.difficulty == 1 ? 2 : 1);
 
 			reservoirs[r] = watergo;
 		}
@@ -288,22 +281,6 @@ public class PopulateWorld : MonoBehaviour {
 		return new Vector3Int(topleftCell.x + i, bottomleftCell.y + j, 0);
 	}
 
-	public float GetCellIDData(IdentityManager.Identity id) {
-		int totalCell = 0;
-		int cellWithIDCount = 0;
-
-		foreach (var cell in cellArray) {
-			totalCell++;
-			if (cell.GetComponent<IdentityManager>().id == id) {
-				cellWithIDCount++;
-			}
-		}
-
-		performance = 100 - 100 * cellWithIDCount / totalCell;
-		Debug.Log("player performance is " + performance);
-		return performance;
-	}
-
 	/// <summary> Tied to backend model</summary>
 	public void QueryWorldData() {
 		Debug.Log("reservoir size is " + reservoirTotalSize);
@@ -311,13 +288,13 @@ public class PopulateWorld : MonoBehaviour {
 		Debug.Log("fire spread / moisture loss rate is " + spreadability);
 	}
 
-	public void LoadNewGame() {
-		if (performance >= 80) {
-			difficulty = 3;
-		} else if (performance >= 60) {
-			difficulty = 2;
-		} else {
-			difficulty = 1;
-		}
-	}
+	// public void LoadNewGame() {
+	// 	if (performance >= 80) {
+	// 		difficulty = 3;
+	// 	} else if (performance >= 60) {
+	// 		difficulty = 2;
+	// 	} else {
+	// 		difficulty = 1;
+	// 	}
+	// }
 }
