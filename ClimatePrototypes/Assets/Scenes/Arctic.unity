@@ -1732,6 +1732,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Paddle
       objectReference: {fileID: 0}
+    - target: {fileID: 3330338654449602564, guid: b201077b1a723ff4cb25e811cf5c27ae,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 5.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330338654449602564, guid: b201077b1a723ff4cb25e811cf5c27ae,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330338654449602564, guid: b201077b1a723ff4cb25e811cf5c27ae,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330338654449602564, guid: b201077b1a723ff4cb25e811cf5c27ae,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3330338654449602566, guid: b201077b1a723ff4cb25e811cf5c27ae,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1787,5 +1807,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3330338654449602566, guid: b201077b1a723ff4cb25e811cf5c27ae,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330338654449602566, guid: b201077b1a723ff4cb25e811cf5c27ae,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330338654449602567, guid: b201077b1a723ff4cb25e811cf5c27ae,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 013929f3510fee24c898344ed2ed17ba,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b201077b1a723ff4cb25e811cf5c27ae, type: 3}
