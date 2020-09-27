@@ -16,6 +16,7 @@ public class Wind : MonoBehaviour {
 	public int windSpeed = 10;
 
 	void Start() {
+		dir = (WindDir) System.Enum.GetValues(typeof(WindDir)).GetValue(Random.Range(0, 4));
 		StartCoroutine(UpdateWindDirection());
 	}
 
@@ -43,7 +44,7 @@ public class Wind : MonoBehaviour {
 
 	IEnumerator UpdateWindDirection(float timer = 30) {
 		yield return new WaitForSeconds(timer);
-		dir = new [] { WindDir.NE, WindDir.NW, WindDir.SE, WindDir.SW }[Random.Range(0, 4)];
+		dir = (WindDir) System.Enum.GetValues(typeof(WindDir)).GetValue(Random.Range(0, 4));
 		windSpeed = Random.Range(5, 18);
 		StartCoroutine(UpdateWindDirection());
 	}

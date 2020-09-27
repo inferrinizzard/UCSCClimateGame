@@ -20,18 +20,16 @@ public class SubtropicsWorld : MonoBehaviour {
 	/// Backend data
 	/// according to player performance, there are three difficulty
 	/// </summary>
-	[Space]
-	[Header("Backend")]
 	[SerializeField] private int reservoirTotalSize;
 	[SerializeField] private int spreadability = 3;
 	[Range(0, 100)] public int treeDensity;
 
 	private GridLayout gridLayout;
 
-	public Vector3Int topleftCell = new Vector3Int(-36, 16, 0);
+	public Vector3Int topLeftCell = new Vector3Int(-36, 16, 0);
 	public Vector3Int topRightCell = new Vector3Int(32, 16, 0);
-	public Vector3Int bottomleftCell = new Vector3Int(-36, -20, 0);
-	public Vector3Int bottomrightCell = new Vector3Int(32, -20, 0);
+	public Vector3Int bottomLeftCell = new Vector3Int(-36, -20, 0);
+	public Vector3Int bottomRightCell = new Vector3Int(32, -20, 0);
 
 	private Tilemap tilemap;
 
@@ -53,35 +51,29 @@ public class SubtropicsWorld : MonoBehaviour {
 	}
 
 	void PopulateCloud() {
-		GameObject cloudParent = new GameObject();
-		cloudParent.name = "Clouds";
-
-		Vector3 topLeftCloudPos = new Vector3(-16, 6, 0);
-		Vector3 topRightCloudPos = new Vector3(14, 6, 0);
-		Vector3 bottomRightCloudPos = new Vector3(14, -8, 0);
-
-		float x = (topRightCloudPos.x - topLeftCloudPos.x) / (cloudNum - 1);
-		float y = (topRightCloudPos.y - bottomRightCloudPos.y);
+		GameObject cloudParent = new GameObject("Clouds");
+		var bottomBound = gridLayout.CellToWorld(bottomLeftCell);
+		var topBound = gridLayout.CellToWorld(topRightCell);
+		var centre = (bottomBound + topBound) / 2;
+		var dist = (topBound - bottomBound) / 2;
 
 		for (int i = 0; i < cloudNum; i++) {
-			//Debug.Log("clouds");
-			clouds[i] = Instantiate(cloudPrefab, new Vector3(topLeftCloudPos.x + i * x, Random.Range(topRightCloudPos.y, topRightCloudPos.y + 10), 0), Quaternion.identity);
+			clouds[i] = Instantiate(cloudPrefab, new Vector3(Random.Range(-dist.x, dist.x), Random.Range(-dist.y, dist.y), 0) + centre, Quaternion.identity);
 			clouds[i].transform.parent = cloudParent.transform;
 		}
 	}
 
 	private void PopulateVanillaWorld() {
-		GameObject cellParent = new GameObject();
-		cellParent.name = "Cells";
+		GameObject cellParent = new GameObject("Cells");
 
 		// get corner positions of the world 
-		width = topRightCell.x - topleftCell.x + 1;
-		height = topleftCell.y - bottomleftCell.y + 1;
+		width = topRightCell.x - topLeftCell.x + 1;
+		height = topLeftCell.y - bottomLeftCell.y + 1;
 		cellArray = new GameObject[width + 1, height + 1];
 
 		for (var i = 0; i <= width; i++) {
 			for (var j = 0; j <= height; j++) {
-				Vector3Int posInt = new Vector3Int(topleftCell.x + i, bottomleftCell.y + j, 0);
+				Vector3Int posInt = new Vector3Int(topLeftCell.x + i, bottomLeftCell.y + j, 0);
 				Vector3 pos = tilemap.GetCellCenterWorld(posInt);
 				// instantiate and construct 2d array
 				GameObject go = Instantiate(cellPrefab, pos, Quaternion.identity);
@@ -115,12 +107,9 @@ public class SubtropicsWorld : MonoBehaviour {
 				waterWidth *= 2;
 			}
 
-			for (int i = waterX; i < waterX + waterWidth; i++) {
-				for (int j = waterY; j < waterY + waterHeight; j++) {
-					GameObject go = cellArray[i, j];
-					go.GetComponent<IdentityManager>().id = IdentityManager.Identity.Water;
-				}
-			}
+			for (int i = waterX; i < waterX + waterWidth; i++)
+				for (int j = waterY; j < waterY + waterHeight; j++)
+					cellArray[i, j].GetComponent<IdentityManager>().id = IdentityManager.Identity.Water;
 
 			reservoirTotalSize += waterHeight * waterWidth;
 
@@ -164,12 +153,12 @@ public class SubtropicsWorld : MonoBehaviour {
 	void GenerateTreeInRegion(int w0, int w1, int h0, int h1) {
 		for (var i = w0; i <= w1; i++) {
 			for (var j = h0; j <= h1; j++) {
-				GameObject go = cellArray[i, j];
-				if (go.GetComponent<IdentityManager>().id == IdentityManager.Identity.Green) {
+				IdentityManager I = cellArray[i, j].GetComponent<IdentityManager>();
+				if (I.id == IdentityManager.Identity.Green) {
 					int seed = Random.Range(0, 100);
 					if (seed < treeDensity) {
-						go.GetComponent<IdentityManager>().id = IdentityManager.Identity.Tree;
-						go.GetComponent<IdentityManager>().fireVariance = 1; // if fire happens, set variance type to tree fire 
+						I.id = IdentityManager.Identity.Tree;
+						I.fireVariance = 1; // if fire happens, set variance type to tree fire 
 					}
 				}
 			}
@@ -180,14 +169,11 @@ public class SubtropicsWorld : MonoBehaviour {
 	void MutateToFire() {
 		// pick a random cell
 		// if green, mutates to fire
-		int randomX = Random.Range(0, width);
-		int randomY = Random.Range(0, height);
-		GameObject go = cellArray[randomX, randomY];
-		IdentityManager goID = go.GetComponent<IdentityManager>();
-		//if (goID.id is IdentityManager.Identity.Green || goID.id is IdentityManager.Identity.Tree )  // can mutate green or tree
-		if (goID.id is IdentityManager.Identity.Tree) {
-			//Debug.Log("fire id" + goID.id);
-			goID.id = IdentityManager.Identity.Fire;
+		IdentityManager I = cellArray[Random.Range(0, width), Random.Range(0, height)].GetComponent<IdentityManager>();
+		//if (I.id is IdentityManager.Identity.Green || I.id is IdentityManager.Identity.Tree )  // can mutate green or tree
+		if (I.id is IdentityManager.Identity.Tree) {
+			//Debug.Log("fire id" + I.id);
+			I.id = IdentityManager.Identity.Fire;
 		}
 	}
 
@@ -201,8 +187,8 @@ public class SubtropicsWorld : MonoBehaviour {
 	public GameObject[] GetNeighbors(GameObject cell) {
 		Vector3Int cellPosition = gridLayout.WorldToCell(cell.transform.position);
 
-		int x = cellPosition.x - topleftCell.x; // convert pos vec3int to correct index in array
-		int y = cellPosition.y - bottomleftCell.y;
+		int x = cellPosition.x - topLeftCell.x; // convert pos vec3int to correct index in array
+		int y = cellPosition.y - bottomLeftCell.y;
 
 		// GameObject[] neighbours = new [] {
 		// 		(0, 1), (1, 0), (0, -1), (-1, 0)
@@ -218,7 +204,8 @@ public class SubtropicsWorld : MonoBehaviour {
 		// 	.Where(n => n != null).ToArray();
 
 		return SubtropicsController.Instance.wind.dir.ToString().Select(d => (
-				new Dictionary<char, Vector2Int> { { 'S', Vector2Int.down },
+				new Dictionary<char, Vector2Int> { 
+					{ 'S', Vector2Int.down },
 					{ 'N', Vector2Int.up },
 					{ 'W', Vector2Int.left },
 					{ 'E', Vector2Int.right }
@@ -236,8 +223,8 @@ public class SubtropicsWorld : MonoBehaviour {
 	public GameObject[] GetRadius(GameObject cell) {
 		Vector3Int cellPosition = gridLayout.WorldToCell(cell.transform.position);
 
-		int x = cellPosition.x - topleftCell.x; // convert pos vec3int to correct index in array
-		int y = cellPosition.y - bottomleftCell.y;
+		int x = cellPosition.x - topLeftCell.x; // convert pos vec3int to correct index in array
+		int y = cellPosition.y - bottomLeftCell.y;
 
 		int index = 0;
 		int r = 1; // radius
@@ -263,8 +250,8 @@ public class SubtropicsWorld : MonoBehaviour {
 
 	public GameObject getCellObjectAtLoc(Vector3 worldPos) {
 		Vector3Int cellLoc = gridLayout.WorldToCell(worldPos);
-		int x = cellLoc.x - topleftCell.x; // convert pos vec3int to correct index in array
-		int y = cellLoc.y - bottomleftCell.y;
+		int x = cellLoc.x - topLeftCell.x; // convert pos vec3int to correct index in array
+		int y = cellLoc.y - bottomLeftCell.y;
 		return cellArray[x, y];
 	}
 
@@ -273,7 +260,7 @@ public class SubtropicsWorld : MonoBehaviour {
 	/// <param name="j"></param>
 	/// <returns></returns>
 	public Vector3Int GetVector3IntFromCellArray(int i, int j) {
-		return new Vector3Int(topleftCell.x + i, bottomleftCell.y + j, 0);
+		return new Vector3Int(topLeftCell.x + i, bottomLeftCell.y + j, 0);
 	}
 
 	/// <summary> Tied to backend model</summary>

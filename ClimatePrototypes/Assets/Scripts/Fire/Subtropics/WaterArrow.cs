@@ -12,7 +12,7 @@ public class WaterArrow : MonoBehaviour {
 
 	void Start() {
 		player = SubtropicsController.Instance.player;
-		waterPosition = SubtropicsController.Instance.world?.reservoirs[reservoirIndex].transform.position ?? Vector3.zero;
+		waterPosition = SubtropicsController.World?.reservoirs[reservoirIndex].transform.position ?? Vector3.zero;
 	}
 
 	void FixedUpdate() {

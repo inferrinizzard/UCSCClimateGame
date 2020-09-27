@@ -6,33 +6,49 @@ using System.Linq;
 using UnityEngine;
 
 public class SubtropicsCloud : MonoBehaviour {
-	private Vector3 velocity;
-	public float speed;
+	[SerializeField] float speed = 0;
+	Vector2 worldMin, worldMax;
 
-	// Update is called once per frame
+	Vector2 velocity;
+
+	void Start() {
+		var world = SubtropicsController.World;
+		// Debug.Log(SubtropicsController.World.GetComponent<UnityEngine.Tilemaps.TilemapRenderer>().bounds);
+		worldMin = world.GetComponentInParent<GridLayout>().CellToWorld(world.bottomLeftCell);
+		worldMax = world.GetComponentInParent<GridLayout>().CellToWorld(world.topRightCell);
+		this.Print(worldMin, worldMax);
+	}
+
 	void Update() {
-		CheckVelocity();
-		CheckDestroyEvent();
-
-		transform.position += velocity * speed * Time.deltaTime;
+		transform.position += CheckVelocity() * speed * Time.deltaTime;
+		Wrap();
 	}
 
-	private void CheckVelocity() {
+	Vector3 CheckVelocity() =>
 		velocity = SubtropicsController.Instance.wind.dir.ToString()
-			.Select(d => (
-				new Dictionary<char, Vector3> { { 'S', Vector3.down },
-					{ 'N', Vector3.up },
-					{ 'W', Vector3.left },
-					{ 'E', Vector3.right }
-				}
-			) [d]).Aggregate((acc, d) => acc + d);
-	}
+		.Select(d => (
+			new Dictionary<char, Vector3> { 
+				{ 'S', Vector3.down },
+				{ 'N', Vector3.up },
+				{ 'W', Vector3.left },
+				{ 'E', Vector3.right }
+			}
+		) [d]).Aggregate((acc, d) => acc + d);
 
-	/// <summary> object pool for clouds, out of sight, destroy</summary>
-	void CheckDestroyEvent() {
-		if (transform.position.y < -7) {
-			//Destroy(gameObject);
-		}
+	void Wrap() {
+		Vector3 worldCentre = (worldMax + worldMin) / 2;
+		Vector3 worldDist = (worldMax - worldMin) / 2;
+		if (transform.position.x > worldMax.x && velocity.x > 0)
+			transform.position = new Vector3(worldCentre.x + worldDist.x * 1.25f, transform.position.y, transform.position.z);
+		if (transform.position.x < worldMin.x && velocity.x < 0)
+			transform.position = new Vector3(worldCentre.x + worldDist.x * 1.25f, transform.position.y, transform.position.z);
+		if (transform.position.y > worldMax.y && velocity.y > 0)
+			transform.position = new Vector3(transform.position.x, worldCentre.y + worldDist.y * 1.25f, transform.position.z);
+		if (transform.position.y < worldMin.y && velocity.y < 0)
+			transform.position = new Vector3(transform.position.x, worldCentre.y + worldDist.y * 1.25f, transform.position.z);
+		// if (transform.position.x > worldMax.x || transform.position.x < worldMin.x)
+		// 	transform.position += Vector3.right * (-transform.position.x + (transform.position.x > worldMax.x ? worldMin.x : worldMax.x) * 1.25f);
+		// if (transform.position.y > worldMax.y || transform.position.y < worldMin.y)
+		// 	transform.position += Vector3.up * (-transform.position.y + (transform.position.y > worldMax.y ? worldMin.y : worldMax.y) * 1.25f);
 	}
-
 }

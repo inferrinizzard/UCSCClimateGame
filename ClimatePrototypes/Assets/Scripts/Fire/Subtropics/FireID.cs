@@ -23,14 +23,14 @@ public class FireID : Tile {
 
 	void FireGrowth() {
 		// if I am fire, I ignite my non-fire neighbors coroutine
-		GameObject[] myNeighbors = SubtropicsController.Instance.world.GetNeighbors(gameObject);
+		GameObject[] myNeighbors = SubtropicsController.World.GetNeighbors(gameObject);
 
 		foreach (var neighbor in myNeighbors) {
 			if (neighbor != null) {
 				IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
 				IdentityManager.Moisture neighborMoisture = neighbor.GetComponent<IdentityManager>().moisture;
 				if (neighborID == IdentityManager.Identity.Green && neighborMoisture != IdentityManager.Moisture.Moist) // if it is not already fire, or is water
-					SubtropicsController.Instance.world.MutateCell(neighbor, IdentityManager.Identity.Fire);
+					SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Fire);
 			}
 		}
 	}
