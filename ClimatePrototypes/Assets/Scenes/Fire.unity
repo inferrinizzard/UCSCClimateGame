@@ -150,7 +150,7 @@ Transform:
   m_LocalScale: {x: 0.3392701, y: 0.50000024, z: 1}
   m_Children: []
   m_Father: {fileID: 438785188}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -29.97}
 --- !u!212 &66539258
 SpriteRenderer:
@@ -213,7 +213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a939cc6117e7c647b674a176bf88a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heliTranform: {fileID: 498595634}
   waterPosition: {x: 0, y: 0, z: 0}
   reservoirIndex: 0
   speed: 180
@@ -448,8 +447,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 867563142}
-  - {fileID: 66539257}
   - {fileID: 498595634}
+  - {fileID: 66539257}
   - {fileID: 852522136}
   m_Father: {fileID: 1650592830}
   m_RootOrder: 0
@@ -644,8 +643,10 @@ MonoBehaviour:
   paused: 0
   region: 3
   backgrounds: []
+  player: {fileID: 1650592830}
   wind: {fileID: 0}
   difficulty: 3
+  world: {fileID: 0}
 --- !u!1 &498595633
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,7 +678,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 438785188}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &498595635
 SpriteRenderer:
@@ -1028,9 +1029,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a939cc6117e7c647b674a176bf88a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heliTranform: {fileID: 498595634}
   waterPosition: {x: 0, y: 0, z: 0}
-  reservoirIndex: 0
+  reservoirIndex: 1
   speed: 180
 --- !u!212 &852522138
 SpriteRenderer:
@@ -2552,7 +2552,7 @@ PrefabInstance:
     - target: {fileID: 8003398447064074192, guid: 5b327410d7ac9db419b2785b56c9eca1,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8003398447064074195, guid: 5b327410d7ac9db419b2785b56c9eca1,
         type: 3}

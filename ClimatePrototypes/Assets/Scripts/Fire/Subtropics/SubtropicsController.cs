@@ -8,9 +8,10 @@ using UnityEngine.UI;
 public class SubtropicsController : RegionController {
 	public static SubtropicsController Instance { get => instance as SubtropicsController; }
 
+	public Transform player;
 	[HideInInspector] public Wind wind;
-	public int difficulty = 3;
-	public SubtropicsWorld world;
+	[HideInInspector] public int difficulty = 3;
+	[HideInInspector] public SubtropicsWorld world;
 
 	protected override void Start() {
 		base.Start();
