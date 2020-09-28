@@ -143,7 +143,7 @@ def main():
     np_e = f(lat)
     alpha = 0.07  # assume precip increases by 7% per degree warming
     # need local, annual - mean temp from control (F=0) simulation to scale precip
-    tfin_ctl, Efin_ctl, Tfin_ctl = model(F=0.)
+    _, Efin_ctl, Tfin_ctl = model(F=0.)
     dT = np.mean(Tfin, axis=1) - np.mean(Tfin_ctl, axis=1)
     dp_e = dT * alpha * np_e  # change in net precip compared to control
     net_precip = np_e + dp_e  # P - E (units mm / day)

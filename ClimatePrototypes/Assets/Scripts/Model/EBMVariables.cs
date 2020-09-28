@@ -12,6 +12,7 @@ public partial class EBM {
 	public static Vector<double> energy;
 	/// <summary> Public energy </summary>
 	public static Vector<double> precip;
+	static Vector<double> tempControl = null, energyControl = null;
 
 	// space-time vars
 	/// <summary> Number of latitudinal bands </summary>

@@ -113,6 +113,8 @@ public partial class EBM {
 		var(T100, E100) = Integrate(input == null ? null : Vector<double>.Build.Dense(input.ToArray()), years, timesteps);
 		temp = T100.Column(99);
 		energy = E100.Column(99);
+		if (tempControl is null)
+			(tempControl, energyControl) = (temp, energy);
 		// precip = CalcPrecip(T100).Column(99);
 		precip = null;
 		// return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
