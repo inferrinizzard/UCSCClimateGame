@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 2072777403796196788}
   - component: {fileID: 2072777403796196791}
   - component: {fileID: 2072777403796196790}
-  - component: {fileID: 190663028581502527}
   - component: {fileID: 4518090395556987545}
+  - component: {fileID: 2090219403319581807}
   m_Layer: 0
   m_Name: Low Cloud
   m_TagString: Cloud
@@ -60,6 +60,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -128,21 +129,6 @@ PlatformEffector2D:
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
---- !u!114 &190663028581502527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2072777403796196785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f57a7757b0d6d5243a53d30aebee997f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sideForce: 1
-  brightCloud: {fileID: 21300000, guid: 798e0855130a79b499b2b89e1d021527, type: 3}
-  darkCloud: {fileID: 21300000, guid: fa53343f6b2bf7b46ba372d7c46630b7, type: 3}
 --- !u!50 &4518090395556987545
 Rigidbody2D:
   serializedVersion: 4
@@ -164,3 +150,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2090219403319581807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072777403796196785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 582f8ebced8aca34a9e7b5b253493fdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3

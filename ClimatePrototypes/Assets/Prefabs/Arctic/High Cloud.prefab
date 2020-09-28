@@ -61,6 +61,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -141,7 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 582f8ebced8aca34a9e7b5b253493fdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sideForce: 2
+  speed: 5
+  type: 0
 --- !u!50 &2962960792814458994
 Rigidbody2D:
   serializedVersion: 4

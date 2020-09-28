@@ -8,21 +8,29 @@ public class CloudSpawner : MonoBehaviour {
 	[SerializeField] CloudType type = CloudType.High;
 	[SerializeField] GameObject cloudPrefab = default;
 	[SerializeField] bool canSpawn = true;
-	private float cloudSpawnWaitSeconds = 8f;
+	[SerializeField] float cloudSpawnWaitSeconds = 8f;
 	Transform cloudParent;
 
-	enum CloudType { High, Low }
+	public enum CloudType { High, Low }
 
-	private void Start() {
+	bool left = true;
+
+	void Start() {
 		cloudParent = new GameObject($"{type.ToString()} Cloud").transform;
-		StartCoroutine(SpawnCloud());
+		if (canSpawn)
+			StartCoroutine(SpawnCloud());
+		if (Random.value >.5) {
+			left = false;
+			transform.position = Vector3.Scale(transform.position, new Vector3(-1, 1, 1));
+		}
 	}
 
 	IEnumerator SpawnCloud() {
-		while (canSpawn) {
-			if (ArcticController._visited > 0)
-				Instantiate(cloudPrefab, transform.position + transform.up * Random.Range(-0.5f, 1), Quaternion.identity, cloudParent);
-			yield return new WaitForSeconds(Random.Range(5f, cloudSpawnWaitSeconds));
-		}
+		yield return new WaitForSeconds(Random.Range(5f, cloudSpawnWaitSeconds));
+		// if (ArcticController._visited > 0)
+		var cloud = Instantiate(cloudPrefab, transform.position + transform.up * Random.Range(-0.5f, 1f), Quaternion.identity, cloudParent).GetComponent<Cloud>();
+		if (!left)
+			cloud.Flip();
+		StartCoroutine(SpawnCloud());
 	}
 }
