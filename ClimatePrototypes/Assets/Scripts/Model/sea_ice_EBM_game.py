@@ -1,11 +1,11 @@
-#!/software/anaconda3/bin
+#! / software / anaconda3 / bin
 
 """ 
 
 This code is based on the (dry) EBM described in Wagner, T.J. and I. Eisenman, 2015: 
 How Climate Model Complexity Influences Sea Ice Stability. J. Climate, 28, 
-3998–4014, https://doi.org/10.1175/JCLI-D-14-00654.1
-See additional documentation at http://eisenman.ucsd.edu/code.html 
+3998–4014, https://doi.org / 10.1175 / JCLI - D-14 - 00654.1
+See additional documentation at http://eisenman.ucsd.edu / code.html 
 
 """
 
@@ -25,74 +25,74 @@ start_time = datetime.time()
 n = 24
 nt = 1000
 dur = 30
-dt = 1./nt
+dt = 1. / nt
 if dur < 30:
     raise Exception('Run duration must be at least 30 years')
 # if n < 48:
 #     raise Exception('Grid resolution must be at least 48 latitudes')
 
 # Spatial Grid
-dx = 1./n  # grid box width
-x = np.arange(dx/2, 1, dx)  # native grid
+dx = 1. / n  # grid box width
+x = np.arange(dx / 2, 1, dx)  # native grid
 lat = np.rad2deg(np.arcsin(x))
 xb = np.arange(dx, 1, dx)
 
 
 def model(F=0.):
 
-    D = 0.6  # diffusivity for heat transport (W m^-2 K^-1)
-    S1 = 338  # insolation seasonal dependence (W m^-2)
-    A = 193  # OLR when T = 0 (W m^-2)
-    B = 2.1  # OLR temperature dependence (W m^-2 K^-1)
-    cw = 9.8  # ocean mixed layer heat capacity (W yr m^-2 K^-1)
-    S0 = 420  # insolation at equator (W m^-2)
-    S2 = 240  # insolation spatial dependence (W m^-2)
-    a0 = 0.7  # ice-free co-albedo at equator
-    a2 = 0.1  # ice=free co-albedo spatial dependence
-    ai = 0.4  # co-albedo where there is sea ice
-    Fb = 4  # heat flux from ocean below (W m^-2)
-    # F = 0 # radiative forcing (W m^-2)
-    k = 2  # sea ice thermal conductivity (W m^-2 K^-1)
-    Lf = 9.5  # sea ice latent heat of fusion (W yr m^-3)
-    cg = 0.01*cw  # ghost layer heat capacity(W yr m^-2 K^-1)
+    D = 0.6  # diffusivity for heat transport (W m^ - 2 K^ - 1)
+    S1 = 338  # insolation seasonal dependence (W m^ - 2)
+    A = 193  # OLR when T = 0 (W m^ - 2)
+    B = 2.1  # OLR temperature dependence (W m^ - 2 K^ - 1)
+    cw = 9.8  # ocean mixed layer heat capacity (W yr m^ - 2 K^ - 1)
+    S0 = 420  # insolation at equator (W m^ - 2)
+    S2 = 240  # insolation spatial dependence (W m^ - 2)
+    a0 = 0.7  # ice - free co - albedo at equator
+    a2 = 0.1  # ice=free co - albedo spatial dependence
+    ai = 0.4  # co - albedo where there is sea ice
+    Fb = 4  # heat flux from ocean below (W m^ - 2)
+    # F = 0 # radiative forcing (W m^ - 2)
+    k = 2  # sea ice thermal conductivity (W m^ - 2 K^ - 1)
+    Lf = 9.5  # sea ice latent heat of fusion (W yr m^ - 3)
+    cg = 0.01 * cw  # ghost layer heat capacity(W yr m^ - 2 K^ - 1)
     tau = 1e-5  # ghost layer coupling timescale (yr)
 
-    print(f'The diffusivity for heat transport is {D} W/m2/K')
-    print(f'The radiative forcing is {F} W/m2')
+    print(f'The diffusivity for heat transport is {D} W / m2 / K')
+    print(f'The radiative forcing is {F} W / m2')
 
     # Diffusion Operator (WE15, Appendix A)
-    lam = D/dx**2*(1-xb**2)
-    L1 = np.append(0, -lam)
+    lam = D / dx**2 * (1 - xb**2)
+    L1 = np.append(0,  -lam)
     L2 = np.append(-lam, 0)
-    L3 = -L1-L2
-    diffop = -np.diag(L3[:-1] if n == 3 or n == 6 or n == 24 else L3) - \
-        np.diag(L2[:n-1], 1) - np.diag(L1[1:n], -1)
+    L3 = -L1 - L2
+    diffop = -np.diag(L3[: - 1] if n == 3 or n == 6 or n == 24 else L3) - \
+        np.diag(L2[:n - 1], 1) - np.diag(L1[1:n],  - 1)
 
     # Definitions for implicit scheme on Tg
-    cg_tau = cg/tau
-    dt_tau = dt/tau
-    dc = dt_tau*cg_tau
-    kappa = (1+dt_tau)*np.identity(n)-dt*diffop/cg
+    cg_tau = cg / tau
+    dt_tau = dt / tau
+    dc = dt_tau * cg_tau
+    kappa = (1 + dt_tau) * np.identity(n) - dt * diffop / cg
 
     # Seasonal forcing (WE15 eq.3)
-    ty = np.arange(dt/2, 1+dt/2, dt)
-    S = (np.tile(S0-S2*x**2, [nt, 1]) -
-         np.tile(S1*np.cos(2*np.pi*ty), [n, 1]).T*np.tile(x, [nt, 1]))
+    ty = np.arange(dt / 2, 1 + dt / 2, dt)
+    S = (np.tile(S0 - S2 * x**2, [nt, 1]) -
+         np.tile(S1 * np.cos(2 * np.pi * ty), [n, 1]).T * np.tile(x, [nt, 1]))
 
     # Further definitions
-    M = B+cg_tau
-    aw = a0-a2*x**2  # open water albedo
-    kLf = k*Lf
+    M = B + cg_tau
+    aw = a0 - a2 * x**2  # open water albedo
+    kLf = k * Lf
 
-    # Set up output arrays, saving 100 timesteps/year
-    E100 = np.zeros((n, dur*100))
-    T100 = np.zeros((n, dur*100))
+    # Set up output arrays, saving 100 timesteps / year
+    E100 = np.zeros((n, dur * 100))
+    T100 = np.zeros((n, dur * 100))
     p = 0
 
     # Initial conditions
-    T = 7.5+20*(1-2*x**2)
+    T = 7.5 + 20 * (1 - 2 * x**2)
     Tg = T
-    E = cw*T
+    E = cw * T
 
     # Integration (see WE15_NumericIntegration.pdf)
     # Loop over Years
@@ -100,21 +100,21 @@ def model(F=0.):
         # Loop within One Year
         for i in range(nt):
             # store 100 timesteps per year
-            if i % (nt/100) == 0:
+            if i % (nt / 100) == 0:
                 E100[:, p] = E
                 T100[:, p] = T
                 p += 1
             # forcing
-            alpha = aw*(E > 0) + ai*(E < 0)  # WE15, eq.4
-            C = alpha*S[i, :] + cg_tau*Tg - A + F
+            alpha = aw * (E > 0) + ai * (E < 0)  # WE15, eq.4
+            C = alpha * S[i, :] + cg_tau * Tg - A + F
             # surface temperature
-            T0 = C/(M-kLf/E)  # WE15, eq.A3
-            T = E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)  # WE15, eq.9
+            T0 = C / (M - kLf / E)  # WE15, eq.A3
+            T = E / cw * (E >= 0) + T0 * (E < 0) * (T0 < 0)  # WE15, eq.9
             # Forward Euler on E
-            E = E+dt*(C-M*T+Fb)  # WE15, eq.A2
+            E = E + dt * (C - M * T + Fb)  # WE15, eq.A2
             # Implicit Euler on Tg
-            Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0 < 0)*(E < 0)),
-                                 Tg + (dt_tau*(E/cw*(E >= 0)+(ai*S[i, :]-A+F)/(M-kLf/E)*(T0 < 0)*(E < 0))))
+            Tg = np.linalg.solve(kappa - np.diag(dc / (M - kLf / E) * (T0 < 0) * (E < 0)),
+                                 Tg + (dt_tau * (E / cw * (E >= 0) + (ai * S[i, :] - A + F) / (M - kLf / E) * (T0 < 0) * (E < 0))))
 
 #    print('year %d complete' %(years))
 
@@ -129,30 +129,29 @@ def model(F=0.):
 
 
 def main():
-
     # Integrate EBM
     tfin, Efin, Tfin = model(F=0.)
 
     print("--- %s seconds ---" % (datetime.time() - start_time))
 
     os.chdir(os.path.dirname(__file__))
-    # Annual-mean hydrological cycle
+    # Annual - mean hydrological cycle
     p_e = np.load("MERRA_P_E.dat")
-    # MERRA has uniform grid-spacing
+    # MERRA has uniform grid - spacing
     lat_p_e = np.linspace(-90., 90., len(p_e))
     f = interp1d(lat_p_e[lat_p_e > 0], p_e[lat_p_e > 0])  # northern hemi only
     np_e = f(lat)
     alpha = 0.07  # assume precip increases by 7% per degree warming
-    # need local, annual-mean temp from control (F=0) simulation to scale precip
+    # need local, annual - mean temp from control (F=0) simulation to scale precip
     tfin_ctl, Efin_ctl, Tfin_ctl = model(F=0.)
     dT = np.mean(Tfin, axis=1) - np.mean(Tfin_ctl, axis=1)
     dp_e = dT * alpha * np_e  # change in net precip compared to control
-    net_precip = np_e + dp_e  # P-E (units mm/day)
+    net_precip = np_e + dp_e  # P - E (units mm / day)
 
     fig0 = plt.figure()
     plt.plot(x, net_precip)
     plt.xlabel('x')
-    plt.ylabel('P-E [mm/day]')
+    plt.ylabel('P - E [mm / day]')
     plt.grid()
 
     # WE15, Figure 2: Default Steady State Climatology
@@ -202,7 +201,7 @@ def main():
     Lf = 9.5  # sea ice latent heat of fusion (W yr m^-3)
     plt.subplot(1, 4, 3)
     clevsh = np.arange(0.00001, 5.5, .5)
-    icethick = -Efin/Lf*(Efin < 0)
+    icethick = -Efin / Lf * (Efin < 0)
     plt.contourf(tfin, x, icethick, clevsh)
     plt.colorbar()
     # plot ice edge on h
