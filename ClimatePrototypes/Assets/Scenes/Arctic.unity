@@ -88,9 +88,9 @@ MonoBehaviour:
   paused: 0
   region: 0
   backgrounds: []
+  dayNight: {fileID: 252524349}
   scoreText: {fileID: 1730636744}
   ice: {fileID: 680337532}
-  summer: 1
 --- !u!4 &82
 Transform:
   m_ObjectHideFlags: 0

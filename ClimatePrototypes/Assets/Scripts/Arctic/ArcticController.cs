@@ -7,16 +7,12 @@ using UnityEngine.UI;
 
 public class ArcticController : RegionController {
 	public static ArcticController Instance { get => instance as ArcticController; }
-	/// <summary> Total level time </summary>
-	/// <summary> references to scene text assets </summary>
-	[SerializeField] Text scoreText = default;
-	/// <summary> Balls that landed </summary>
-	/// <summary> present Buffers </summary>
-	Buffer[] buffers;
-	/// <summary> Buffer parent </summary>
-	[SerializeField] Transform ice = default;
 
-	public bool summer = true;
+	public DayNightCycle dayNight;
+	[SerializeField] Text scoreText = default;
+	/// <summary> present Buffers </summary>
+	[HideInInspector] public Buffer[] buffers;
+	[SerializeField] Transform ice = default;
 
 	protected override void Start() {
 		base.Start();
@@ -39,7 +35,6 @@ public class ArcticController : RegionController {
 			foreach (Buffer b in buffers)
 				damage += b.health + 1;
 			scoreText.text = $"Ice Remaining: {damage}";
-			timerText.text = Mathf.Round(timer).ToString();
 		}
 	}
 
