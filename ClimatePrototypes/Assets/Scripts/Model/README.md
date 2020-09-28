@@ -1,26 +1,9 @@
 # **EBM**
 
 ## **Background**
-The energy balance model (EBM) is a moist version of the EBM described in Wagner and Eisenman (2015). The time evolution of E(t, x) is determined at each latitude by the net energy flux into the atmospheric column and surface below:
+The energy balance model (EBM) is described in the following paper: Wagner, T.J. and I. Eisenman, 2015: How Climate Model Complexity Influences Sea Ice Stability. J. Climate, 28, 3998–4014, https://doi.org/10.1175/JCLI-D-14-00654.1. Original code and documentation for dry model are available at http://eisenman.ucsd.edu/code.html.
 
-![equation](https://latex.codecogs.com/gif.latex?%5Cfrac%7B%5Cpartial%20E%7D%7B%5Cpartial%20t%7D%20%3D%20aS%20-%20L%20&plus;%20D%5Cnabla%5E2%20h%20&plus;%20F%20&plus;%20F_b)
-
-Solar radiation S(t,x) depends on season and latitude. The fraction of incident solar radiation that is absorbed is called the planetary co-albedo, a. It depends on factors including the solar zenith angle, clouds, and the presence of reflective ice.
-
-Outgoing longwave radiation is represented as a linear function of surface temperature
-
-![equation](https://latex.codecogs.com/gif.latex?%5BA&plus;B%28T-T_m%29%5D)
-where A and B are empirical parameters and T_m the melting point.
-
-Atmospheric energy transport is governed by the diffusion of moist static energy. On a spherical Earth, meridional diffusion takes the form 
-
-![equation](https://latex.codecogs.com/gif.latex?D%5Cnabla%5E2%20h%20%3D%20D%5Cfrac%7B%5Cpartial%7D%7B%5Cpartial%20x%7D%5Cbigg%5B%281-x%5E2%29%5Cfrac%7B%5Cpartial%20h%7D%7B%5Cpartial%20x%7D%5Cbigg%5D)
-
-D is the diffusivity, and moist static energy is defined in units of temperature as 
-![equation](https://latex.codecogs.com/gif.latex?%24h%3DT&plus;L%5Cmathcal%7BH%7Dc_p%5E%7B-1%7Dq_s%24)
-, assuming constant relative humidity H of 80% (Merlis and Henry, 2018). L is latent heat of vaporization, cp is specific heat of air at constant pressure, qs is saturation specific humidity.
-
-Radiative forcing, F, and heat flux into the model domain from the ocean below, Fb, are global parameters.
+The time evolution of surface enthalpy E(t, x) is determined at each latitude by the net energy flux into the atmospheric column and surface below by seasonally varying solar radition, outgoing longwave radiation, diffusive atmospheric heat transport, and ocean heat flux. The fraction of incident solar radiation that is absorbed is called the planetary, or top-of-atmosphere (TOA), coalbedo (i.e., one minus albedo). It depends on factors including the solar zenith angle, clouds, and the presence of reflective ice at the surface. The model is forced by a uniform value, F, which can be interpreted as a change in atmospheric carbon dioxide. Additionally, the EBM includes a representation of thermodynamic sea ice growth and melt, which affects surface temperature.
 
 ## **Initialisation**
 
@@ -49,24 +32,30 @@ Three main values can be read from EBM
 
 `Vector<T>` can be accessed like any array, documentation available [here](https://numerics.mathdotnet.com/api/MathNet.Numerics.LinearAlgebra.Double/Vector.htm) and [here](https://numerics.mathdotnet.com/api/MathNet.Numerics.LinearAlgebra/VectorBuilder%601.htm)(constructor).
 
-## **Changing Values**
+## **Model Parameters**
 
-The following values may be adjusted during runtime:
+In general the default model parameters should *not* be adjusted:
   
-| Variable | Data Type | Description                                                         | Default |
-| -------- | --------- | ------------------------------------------------------------------- | ------- |
-| `EBM.F`  | `double`  | Radiative Forcing, affected by atmospheric amount of CO2            | `0`     |
-| `EBM.Fb` | `double`  | Heat Flux from deep ocean to base of sea ice or ocean mixed layer   | `4`     |
-| `EBM.S0` | `double`  | Solar radiation at equator, affected by orbital parameters          | `420`   |
-| `EBM.S1` | `double`  | Solar radiation seasonal dependence, affected by orbital parameters | `338`   |
+| Variable | Data Type | Description                                                            | Default |
+| -------- | --------- | ---------------------------------------------------------------------- | ------- |
+| `EBM.Fb` | `double`  | Heat Flux from deep ocean to base of sea ice or ocean mixed layer      | `4`     |
+| `EBM.S0` | `double`  | Solar radiation at equator, affected by orbital parameters             | `420`   |
+| `EBM.S1` | `double`  | Solar radiation seasonal dependence, affected by orbital parameters    | `338`   |
+| `EBM.S2` | `double`  | Solar radiation spatial dependence, affected by orbital parameters     | `240`   |
+| `EBM.cw` | `double`  | Ocean Heat Capacity                                                    | `9.8`   |
+| `EBM.D`  | `double`  | Heat Transport Diffusivity, adjusts sea ice boundaries                 | `0.6`   |
+| `EBM.A`  | `double`  | Outgoing Longwave Radiation at T=0 deg. C, controls base climate state | `193`   |
+| `EBM.B`  | `double`  | Longwave feedback parameter, affects amount of warming                 | `2.1`   |
+| `EBM.a0` | `double`  | Ice-free coalbedo at equator                                           | `0.7`   |
+| `EBM.a2` | `double`  | Ice-free coalbedo spatial dependence                                   | `0.1`   |
+| `EBM.ai` | `double`  | Coalbedo where there is sea ice                                        | `0.4`   |
 
-These values are to be adjusted before runtime:
+These values may be adjusted before runtime:
 
-| Variable | Data Type | Description                                                    | Default | Alt Value |
-| -------- | --------- | -------------------------------------------------------------- | ------- | --------- |
-| `EBM.n`  | `int`     | Latitudinal bands, number of data points to calculate          | `12`    | `24`      |
-| `EBM.cw` | `double`  | Ocean Heat Capacity, controls the speed of model stabilisation | `9.8`   | `0.98`    |
-| `EBM.D`  | `double`  | Heat Transport Diffusivity, adjusts sea ice boundaries         | `0.5`   | `0.45`    |
+| Variable | Data Type | Description                                            | Default |
+| -------- | --------- | -------------------------------------------------------| ------- |
+| `EBM.F`  | `double`  | Radiative Forcing, represents change in CO2            | `0`     |
+| `EBM.n`  | `int`     | Latitudinal bands, number of data points to calculate  | `24`    |
 
 You can just assign new values based on game conditions and rerun the model with `EBM.calc()`<br>
 ie. `EBM.F = 4; // assigns new forcing value`
@@ -81,8 +70,3 @@ ie. `EBM.F = 4; // assigns new forcing value`
 
 \* Assigned internally to `7.5 + 20 * (1-x**2)`<br>
 After adjusting parameters and rerun-ing the model with `EBM.Calc()`, temp, energy, and precip will be updated with new values.
-
-### References
-Wagner, T.J. and I. Eisenman, 2015: How Climate Model Complexity Influences Sea Ice Stability. J. Climate, 28, 3998–4014, https://doi.org/10.1175/JCLI-D-14-00654.1. Original code and documentation for dry model available at http://eisenman.ucsd.edu/code.html.
-Merlis, T.M. and M. Henry, 2018: Simple Estimates of Polar Amplification in Moist Diffusive Energy Balance Models. J. Climate, 31, 5811–5824, https://doi.org/10.1175/JCLI-D-17-0578.1 
-
