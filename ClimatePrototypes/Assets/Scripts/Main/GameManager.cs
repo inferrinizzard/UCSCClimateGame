@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-// using System.Threading;
 
 using Newtonsoft.Json;
 
@@ -20,10 +19,9 @@ public class GameManager : Singleton<GameManager> {
 	public override void Awake() {
 		base.Awake();
 		if (Instance.runModel && World.averageTemp == 0) {
-			World.Init();
-			World.ranges = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<double, List<double>>>>(Resources.Load<TextAsset>("ipcc").text);
+			World.Calc();
+			// World.ranges = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<double, List<double>>>>(Resources.Load<TextAsset>("ipcc").text);
 		}
-		// SpeedTest.VectorAllocTest();
 	}
 
 	void Start() {
@@ -89,7 +87,7 @@ public class GameManager : Singleton<GameManager> {
 				asyncLoad.allowSceneActivation = true;
 				if (name == "Overworld") {
 					UIController.Instance.IncrementTurn();
-					World.DetermineImpact();
+					// World.DetermineImpact();
 				}
 				UIController.Instance.SetPrompt(false);
 				Cursor.visible = true;
