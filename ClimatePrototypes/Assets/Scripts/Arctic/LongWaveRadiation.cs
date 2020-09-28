@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LongWaveRadiation : MonoBehaviour {
-	private float upForce = 10f;
-	private float sideForce = 10f;
+	Vector2 force = new Vector2(1, 5);
 	Rigidbody2D rb;
-	Vector2 screenMin;
-	Vector2 screenMax;
+	Vector2 screenMin, screenMax;
 
 	// Start is called before the first frame update
 	void Start() {
@@ -16,7 +14,7 @@ public class LongWaveRadiation : MonoBehaviour {
 		screenMax = Camera.main.ViewportToWorldPoint(Vector2.one);
 		rb = GetComponent<Rigidbody2D>();
 
-		Vector2 force = new Vector2(Random.Range(-sideForce, sideForce), Random.Range(-upForce, upForce));
+		force = new Vector2(Random.Range(-force.x, force.x), Random.Range(-force.y, force.y));
 		rb.velocity = force.normalized * 5f;
 	}
 
