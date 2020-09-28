@@ -130,6 +130,7 @@ public partial class EBM {
 				j == cuts.Length || x.Index <= cuts[j] ? j : ++j)
 			.Select(x => x.Select(v => v.Value)))
 		(n == -1 ? regions : n, 0);
+
 	public static double[] Condense(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => x.Average()).ToArray();
 	// static double Average(IEnumerable<double> vec) { return x.Average(); }
 
