@@ -40,7 +40,7 @@ public partial class EBM {
 	/// <remarks> Edit this to adjust model speed </remarks>
 	static readonly double cw = 9.8;
 	/// <summary> Diffusivity for heat transport(W m^-2 K^-1)  </summary>
-	static readonly double D = 0.5;
+	static readonly double D = 0.6;
 
 	/// <summary> Insolation at equator(W m^-2)  </summary>
 	static readonly double S0 = 420;
@@ -67,15 +67,15 @@ public partial class EBM {
 	public static double F = 0;
 	public static double maxF = 16;
 
-	// misc consts
-	/// <summary> Latent heat of vaporization(J kg^-1) </summary>
-	static readonly double Lv = 2500000;
-	/// <summary> Heat capacity of air at constant pressure(J kg^-1 K^-1) </summary>
-	static readonly double cp = 1004.6;
-	/// <summary> Relative humidity </summary>
-	static readonly double Rh = 0.8;
-	/// <summary> Surface pressure(Pa) </summary>
-	static readonly double Ps = 100000;
+	// // misc consts
+	// /// <summary> Latent heat of vaporization(J kg^-1) </summary>
+	// static readonly double Lv = 2500000;
+	// /// <summary> Heat capacity of air at constant pressure(J kg^-1 K^-1) </summary>
+	// static readonly double cp = 1004.6;
+	// /// <summary> Relative humidity </summary>
+	// static readonly double Rh = 0.8;
+	// /// <summary> Surface pressure(Pa) </summary>
+	// static readonly double Ps = 100000;
 	/// <summary> Heat flux from ocean below(W m^-2) </summary>
 	public static double Fb = 4;
 	/// <summary> Sea ice thermal conductivity(W m^-2 K^-1) </summary>

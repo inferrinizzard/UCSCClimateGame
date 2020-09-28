@@ -6,17 +6,17 @@ using MathNet.Numerics.LinearAlgebra;
 
 public partial class EBM {
 	// array overload
-	public static Vector<double> Humidity(double[] temp, double press) => Humidity(Vector<double>.Build.Dense(temp), press);
-	// calculates saturation specific humidity based on temperature
-	public static Vector<double> Humidity(Vector<double> temp, double press) {
-		const double es0 = 610.78;
-		const double t0 = 273.16;
-		const double Rv = 461.5;
-		const double ep = 0.622;
-		Vector<double> es = es0 * (-Lv / Rv * (1 / (temp + 273.15f) - 1 / t0)).PointwiseExp();
-		Vector<double> qs = ep / press * es;
-		return qs;
-	}
+	// public static Vector<double> Humidity(double[] temp, double press) => Humidity(Vector<double>.Build.Dense(temp), press);
+	// // calculates saturation specific humidity based on temperature
+	// public static Vector<double> Humidity(Vector<double> temp, double press) {
+	// 	const double es0 = 610.78;
+	// 	const double t0 = 273.16;
+	// 	const double Rv = 461.5;
+	// 	const double ep = 0.622;
+	// 	Vector<double> es = es0 * (-Lv / Rv * (1 / (temp + 273.15f) - 1 / t0)).PointwiseExp();
+	// 	Vector<double> qs = ep / press * es;
+	// 	return qs;
+	// }
 
 	public static(Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
 		T = T ?? 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
@@ -27,32 +27,30 @@ public partial class EBM {
 		Vector<double> Tg = Vector<double>.Build.DenseOfVector(T);
 		Vector<double> E = Tg * cw;
 
-		int p = -1, m = -1;
-		for (int i = 0; i < years; i++) {
+		for (var(i, p) = (0, 0); i < years; i++)
 			for (int j = 0; j < timesteps; j++) {
-				if ((p + 1) * 10 == ++m) {
-					p++;
+				if (j % (nt / 100f) == 0) {
 					E100.SetColumn(p, E);
 					T100.SetColumn(p, T);
+					p++;
 				}
 				Vector<double> alpha = E.PointwiseSign().PointwiseMultiply(aw).Map(x => x < 0 ? aI : x); // aw * (E > 0) + ai * (E < 0)
-				Vector<double> C = alpha.PointwiseMultiply(S.Row(j)) + cg_tau * Tg - A; // alpha * S[i, :] + cg_tau * Tg - A
+				Vector<double> C = alpha.PointwiseMultiply(S.Row(j)) + cg_tau * Tg - A + F; // alpha * S[i, :] + cg_tau * Tg - A
 				Vector<double> T0 = C / (M - k * Lf / E);
 				T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0)); // E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)
-				E = E + dt * (C - M * T + (Fb + F));
-				Vector<double> q = Rh * Humidity(Tg, Ps);
-				Vector<double> lht = (dt * diffop) * ((Lv / cp) * q);
+				E = E + dt * (C - M * T + Fb);
+				// Vector<double> q = Rh * Humidity(Tg, Ps);
+				// Vector<double> lht = (dt * diffop) * ((Lv / cp) * q);
 				var mklfe = M - k * Lf / E;
 				var signlesset0 = Sign0(Less, E, T0);
 				Tg = (kappa - Matrix<double>.Build.DiagonalOfDiagonalVector(
 					Sign0(Less, signlesset0, dc / mklfe) // np.diag(dc / (M - kLf / E) * (T0 < 0) * (E < 0)
-				)).Solve(Tg + lht + dt_tau * (
-					Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A). // E / cw * (E >= 0) + (ai * S[i, :] - A)
+				)).Solve(Tg + dt_tau * (
+					Sign0(GreatOrE, E) / cw + (aI * S.Row(j) - A + F). // E / cw * (E >= 0) + (ai * S[i, :] - A)
 					Map2((a, b) => b != 0 ? a / b : 0, // funky division
 						Sign0(Less, signlesset0, mklfe)) // (M - kLf / E) * (T0 < 0) * (E < 0)
 				));
 			}
-		}
 		// TODO: rewrite this?
 		return (
 			Matrix<double>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Skip(T100.ColumnCount - 100).ToArray()), // Tfin
@@ -75,31 +73,31 @@ public partial class EBM {
 	/// <summary> Calculates Precipitation of regions</summary>
 	/// <param name="Tfin"> <c>Matrix</c> of final temp </param>
 	/// <returns> <c>Matrix</c> of Evapouration - Precipitation per region </returns>
-	public static Matrix<double> CalcPrecip(Matrix<double> Tfin) {
-		double[][] TfinArr = Tfin.ToRowArrays();
-		Matrix<double> qfin = Rh * Matrix<double>.Build.DenseOfRowVectors(TfinArr.Select(r => Humidity(r, Ps)));
-		Matrix<double> hfin = Tfin + Lv * qfin / cp;
+	// public static Matrix<double> CalcPrecip(Matrix<double> Tfin) {
+	// 	double[][] TfinArr = Tfin.ToRowArrays();
+	// 	Matrix<double> qfin = Rh * Matrix<double>.Build.DenseOfRowVectors(TfinArr.Select(r => Humidity(r, Ps)));
+	// 	Matrix<double> hfin = Tfin + Lv * qfin / cp;
 
-		Vector<double> OneMinusX2 = (1 - x.PointwisePower(2));
-		Matrix<double> Fa = -D * bands * MultiplyRowWise(GradVertical(hfin), OneMinusX2);
-		Matrix<double> Fla = -D * bands * MultiplyRowWise(GradVertical(Lv * qfin / cp), OneMinusX2);
+	// 	Vector<double> OneMinusX2 = (1 - x.PointwisePower(2));
+	// 	Matrix<double> Fa = -D * bands * MultiplyRowWise(GradVertical(hfin), OneMinusX2);
+	// 	Matrix<double> Fla = -D * bands * MultiplyRowWise(GradVertical(Lv * qfin / cp), OneMinusX2);
 
-		Vector<double> w = (1d / sigma / sigma * (OneMinusX2 - 1)).PointwiseExp();
-		var oneMinusw = 1 - w;
-		Matrix<double> F_hc = MultiplyRowWise(Fa, w);
-		Matrix<double> F_eddy = MultiplyRowWise(Fa, oneMinusw);
-		Matrix<double> Fl_eddy = MultiplyRowWise(Fla, oneMinusw);
+	// 	Vector<double> w = (1d / sigma / sigma * (OneMinusX2 - 1)).PointwiseExp();
+	// 	var oneMinusw = 1 - w;
+	// 	Matrix<double> F_hc = MultiplyRowWise(Fa, w);
+	// 	Matrix<double> F_eddy = MultiplyRowWise(Fa, oneMinusw);
+	// 	Matrix<double> Fl_eddy = MultiplyRowWise(Fla, oneMinusw);
 
-		Vector<double> hfin_eq = hfin.Row(0);
-		Matrix<double> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale) [x] - i);
-		Matrix<double> psi = F_hc.PointwiseDivide(gms);
-		Matrix<double> Fl_hc = (-Lv / cp * qfin).PointwiseMultiply(psi);
+	// 	Vector<double> hfin_eq = hfin.Row(0);
+	// 	Matrix<double> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale) [x] - i);
+	// 	Matrix<double> psi = F_hc.PointwiseDivide(gms);
+	// 	Matrix<double> Fl_hc = (-Lv / cp * qfin).PointwiseMultiply(psi);
 
-		Matrix<double> Fl = Fl_hc + Fl_eddy;
-		Matrix<double> EminusP = GradVertical(Fl) * bands;
+	// 	Matrix<double> Fl = Fl_hc + Fl_eddy;
+	// 	Matrix<double> EminusP = GradVertical(Fl) * bands;
 
-		return EminusP;
-	}
+	// 	return EminusP;
+	// }
 
 	/// <summary> Runs main integration model </summary>
 	/// <param name="input"> Optional starting temp for model, will default in model </param>
@@ -115,8 +113,10 @@ public partial class EBM {
 		var(T100, E100) = Integrate(input == null ? null : Vector<double>.Build.Dense(input.ToArray()), years, timesteps);
 		temp = T100.Column(99);
 		energy = E100.Column(99);
-		precip = CalcPrecip(T100).Column(99);
-		return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
+		// precip = CalcPrecip(T100).Column(99);
+		precip = null;
+		// return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
+		return (Condense(temp, regions), Condense(energy, regions), null);
 	}
 
 	public static void Clear() => (temp, energy, precip) = (null, null, null);
