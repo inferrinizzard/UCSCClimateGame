@@ -20,4 +20,13 @@ public class Paddle : MonoBehaviour {
 	void FixedUpdate() => Move(Mathf.Abs(horizontalInput) > 0.1f ? horizontalInput : 0);
 	void Move(float input) => rb2D.velocity = Vector3.right * input * paddleSpeed;
 	void LateUpdate() => transform.position += (Mathf.Clamp(transform.position.x, -screenBounds.x + paddleWidth / 2, screenBounds.x - paddleWidth / 2) - transform.position.x) * Vector3.right;
+
+	void OnCollisionEnter2D(Collision2D other) {
+		RadiationBall ball = other.transform.GetComponent<RadiationBall>();
+		if (ball.radiationType == SolarRadiationSpawner.Radiation.ShortWave) {
+			// flip ?
+		} else {
+			// shorten paddle
+		}
+	}
 }

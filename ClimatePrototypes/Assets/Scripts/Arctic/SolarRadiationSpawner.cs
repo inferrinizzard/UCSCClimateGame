@@ -8,6 +8,8 @@ public class SolarRadiationSpawner : MonoBehaviour {
 	[SerializeField] GameObject ballPrefab = default;
 	Transform radiationParent;
 
+	public enum Radiation { LongWave, ShortWave }
+
 	void Start() {
 		StartCoroutine(EmitBall(3));
 		radiationParent = new GameObject("Solar Radiation").transform;

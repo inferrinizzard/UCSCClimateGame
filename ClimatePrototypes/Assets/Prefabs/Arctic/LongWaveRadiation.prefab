@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1111486439586294899}
   - component: {fileID: 1111486439586294896}
   - component: {fileID: 1111486439586294903}
-  - component: {fileID: 8526133407968820003}
+  - component: {fileID: -3653563079284366700}
   m_Layer: 0
   m_Name: LongWaveRadiation
   m_TagString: SolarRadiation
@@ -120,7 +120,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.6}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &8526133407968820003
+--- !u!114 &-3653563079284366700
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,6 +129,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1111486439586294892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00862d65fff2bbb4b80eccbc83dfffda, type: 3}
+  m_Script: {fileID: 11500000, guid: 01ad5a67538d9c6428f819bfba02f642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  force: {x: 1, y: 5}
+  radiationType: 0
