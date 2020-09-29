@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using MathNet.Numerics.LinearAlgebra;
+using Interpolate = MathNet.Numerics.Interpolate;
 
 public partial class EBM {
 	// array overload
@@ -99,6 +100,17 @@ public partial class EBM {
 	// 	return EminusP;
 	// }
 
+	public static Vector<double> CalcPrecip(Vector<double> temp) {
+		// move these out
+		Vector<double> lat = Vector<double>.Asin(x).Map(x => x / Math.PI * 180);
+		Vector<double> lat_p_e = Vector<double>.Build.Dense(p_e.Length, i => i / 2d - 90).SubVector(181, 180);
+		var f = Interpolate.Common(lat_p_e, p_e.Skip(181));
+		Vector<double> np_e = lat.Map(l => f.Interpolate(l));
+		Vector<double> dT = temp - tempControl;
+		Vector<double> dp_e = dT.PointwiseMultiply(np_e) * alpha;
+		return np_e + dp_e;
+	}
+
 	/// <summary> Runs main integration model </summary>
 	/// <param name="input"> Optional starting temp for model, will default in model </param>
 	/// <param name="years"> Optional duration to run model, will default to <see cref="dur"/> </param>
@@ -113,12 +125,14 @@ public partial class EBM {
 		var(T100, E100) = Integrate(input == null ? null : Vector<double>.Build.Dense(input.ToArray()), years, timesteps);
 		temp = T100.Column(99);
 		energy = E100.Column(99);
-		if (tempControl is null)
-			(tempControl, energyControl) = (temp, energy);
-		// precip = CalcPrecip(T100).Column(99);
-		precip = null;
-		// return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
-		return (Condense(temp, regions), Condense(energy, regions), null);
+		if (tempControl is null) {
+			tempControl = Vector<double>.Build.DenseOfEnumerable(T100.FoldByRow((mean, col) => mean + col / T100.ColumnCount, 0d));
+			// (tempControl, energyControl) = (temp, energy);
+			p_e = p_e_raw.Split(',').Select(num => Double.Parse(num.Trim(new [] { '\n', ' ', '\t' }))).ToArray();
+		}
+		precip = CalcPrecip(Vector<double>.Build.DenseOfEnumerable(T100.FoldByRow((mean, col) => mean + col / T100.ColumnCount, 0d)));
+		Print(precip);
+		return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
 	}
 
 	public static void Clear() => (temp, energy, precip) = (null, null, null);
