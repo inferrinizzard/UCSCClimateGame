@@ -6,19 +6,6 @@ using MathNet.Numerics.LinearAlgebra;
 using Interpolate = MathNet.Numerics.Interpolate;
 
 public partial class EBM {
-	// array overload
-	// public static Vector<double> Humidity(double[] temp, double press) => Humidity(Vector<double>.Build.Dense(temp), press);
-	// // calculates saturation specific humidity based on temperature
-	// public static Vector<double> Humidity(Vector<double> temp, double press) {
-	// 	const double es0 = 610.78;
-	// 	const double t0 = 273.16;
-	// 	const double Rv = 461.5;
-	// 	const double ep = 0.622;
-	// 	Vector<double> es = es0 * (-Lv / Rv * (1 / (temp + 273.15f) - 1 / t0)).PointwiseExp();
-	// 	Vector<double> qs = ep / press * es;
-	// 	return qs;
-	// }
-
 	public static(Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
 		T = T ?? 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
 		years = years == 0 ? dur : years;
@@ -40,8 +27,6 @@ public partial class EBM {
 				Vector<double> T0 = C / (M - k * Lf / E);
 				T = Sign0(GreatOrE, E) / cw + Sign0(Less, Sign0(Less, E, T0)); // E/cw*(E >= 0)+T0*(E < 0)*(T0 < 0)
 				E = E + dt * (C - M * T + Fb);
-				// Vector<double> q = Rh * Humidity(Tg, Ps);
-				// Vector<double> lht = (dt * diffop) * ((Lv / cp) * q);
 				var mklfe = M - k * Lf / E;
 				var signlesset0 = Sign0(Less, E, T0);
 				Tg = (kappa - Matrix<double>.Build.DiagonalOfDiagonalVector(
@@ -52,60 +37,14 @@ public partial class EBM {
 						Sign0(Less, signlesset0, mklfe)) // (M - kLf / E) * (T0 < 0) * (E < 0)
 				));
 			}
-		// TODO: rewrite this?
-		return (
-			Matrix<double>.Build.DenseOfColumnArrays(T100.ToColumnArrays().Skip(T100.ColumnCount - 100).ToArray()), // Tfin
-			Matrix<double>.Build.DenseOfColumnArrays(E100.ToColumnArrays().Skip(E100.ColumnCount - 100).ToArray()) // Efin
-		);
-	}
-	static Matrix<double> MultiplyRowWise(Matrix<double> mat, Vector<double> vec) => mat.MapIndexed((x, y, i) => i * vec[x]);
 
-	static Matrix<double> GradVertical(Matrix<double> mat) => Matrix<double>.Build.DenseOfColumnArrays(mat.ToColumnArrays().Select(col => {
-		double[] gradCol = new double[col.Length];
-		gradCol[0] = col[1] - col[0];
-		for (int i = 1; i < col.Length - 1; i++)
-			gradCol[i] = (col[i + 1] - col[i - 1]) / 2;
-		gradCol[col.Length - 1] = col[col.Length - 1] - col[col.Length - 2];
-		gradCol[0] -= gradCol[1] - gradCol[0];
-		gradCol[col.Length - 1] += gradCol[col.Length - 1] - gradCol[col.Length - 2];
-		return gradCol;
-	}));
+		return (T100.SubMatrix(0, T100.RowCount, T100.ColumnCount - 100, 100), E100.SubMatrix(0, E100.RowCount, E100.ColumnCount - 100, 100));
+	}
 
 	/// <summary> Calculates Precipitation of regions</summary>
-	/// <param name="Tfin"> <c>Matrix</c> of final temp </param>
-	/// <returns> <c>Matrix</c> of Evapouration - Precipitation per region </returns>
-	// public static Matrix<double> CalcPrecip(Matrix<double> Tfin) {
-	// 	double[][] TfinArr = Tfin.ToRowArrays();
-	// 	Matrix<double> qfin = Rh * Matrix<double>.Build.DenseOfRowVectors(TfinArr.Select(r => Humidity(r, Ps)));
-	// 	Matrix<double> hfin = Tfin + Lv * qfin / cp;
-
-	// 	Vector<double> OneMinusX2 = (1 - x.PointwisePower(2));
-	// 	Matrix<double> Fa = -D * bands * MultiplyRowWise(GradVertical(hfin), OneMinusX2);
-	// 	Matrix<double> Fla = -D * bands * MultiplyRowWise(GradVertical(Lv * qfin / cp), OneMinusX2);
-
-	// 	Vector<double> w = (1d / sigma / sigma * (OneMinusX2 - 1)).PointwiseExp();
-	// 	var oneMinusw = 1 - w;
-	// 	Matrix<double> F_hc = MultiplyRowWise(Fa, w);
-	// 	Matrix<double> F_eddy = MultiplyRowWise(Fa, oneMinusw);
-	// 	Matrix<double> Fl_eddy = MultiplyRowWise(Fla, oneMinusw);
-
-	// 	Vector<double> hfin_eq = hfin.Row(0);
-	// 	Matrix<double> gms = hfin.MapIndexed((x, y, i) => (hfin_eq * gms_scale) [x] - i);
-	// 	Matrix<double> psi = F_hc.PointwiseDivide(gms);
-	// 	Matrix<double> Fl_hc = (-Lv / cp * qfin).PointwiseMultiply(psi);
-
-	// 	Matrix<double> Fl = Fl_hc + Fl_eddy;
-	// 	Matrix<double> EminusP = GradVertical(Fl) * bands;
-
-	// 	return EminusP;
-	// }
-
+	/// <param name="temp"> <c>Vector</c> of final temp column means</param>
+	/// <returns> <c>Vector</c> of Precipitation - Evapouration per region </returns>
 	public static Vector<double> CalcPrecip(Vector<double> temp) {
-		// move these out
-		Vector<double> lat = Vector<double>.Asin(x).Map(x => x / Math.PI * 180);
-		Vector<double> lat_p_e = Vector<double>.Build.Dense(p_e.Length, i => i / 2d - 90).SubVector(181, 180);
-		var f = Interpolate.Common(lat_p_e, p_e.Skip(181));
-		Vector<double> np_e = lat.Map(l => f.Interpolate(l));
 		Vector<double> dT = temp - tempControl;
 		Vector<double> dp_e = dT.PointwiseMultiply(np_e) * alpha;
 		return np_e + dp_e;
@@ -125,14 +64,20 @@ public partial class EBM {
 		var(T100, E100) = Integrate(input == null ? null : Vector<double>.Build.Dense(input.ToArray()), years, timesteps);
 		temp = T100.Column(99);
 		energy = E100.Column(99);
-		if (tempControl is null) {
-			tempControl = Vector<double>.Build.DenseOfEnumerable(T100.FoldByRow((mean, col) => mean + col / T100.ColumnCount, 0d));
-			// (tempControl, energyControl) = (temp, energy);
-			p_e = p_e_raw.Split(',').Select(num => Double.Parse(num.Trim(new [] { '\n', ' ', '\t' }))).ToArray();
-		}
+
+		if (tempControl is null) InitFirstRun(T100);
+
 		precip = CalcPrecip(Vector<double>.Build.DenseOfEnumerable(T100.FoldByRow((mean, col) => mean + col / T100.ColumnCount, 0d)));
-		Print(precip);
 		return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
+	}
+
+	static void InitFirstRun(Matrix<double> T100) {
+		tempControl = Vector<double>.Build.DenseOfEnumerable(T100.FoldByRow((mean, col) => mean + col / T100.ColumnCount, 0d));
+		// (tempControl, energyControl) = (temp, energy);
+		p_e = p_e_raw.Split(',').Select(num => Double.Parse(num.Trim(new [] { '\n', ' ', '\t' }))).ToArray();
+		lat_p_e = Vector<double>.Build.Dense(p_e.Length, i => i / 2d - 90).SubVector(181, 180);
+		f = Interpolate.Common(lat_p_e, p_e.Skip(181));
+		np_e = lat.Map(l => f.Interpolate(l));
 	}
 
 	public static void Clear() => (temp, energy, precip) = (null, null, null);

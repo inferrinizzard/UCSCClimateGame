@@ -3,6 +3,7 @@ using System.Linq;
 
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
+using IInterpolation = MathNet.Numerics.Interpolation.IInterpolation;
 
 public partial class EBM {
 	// output vectors
@@ -12,7 +13,7 @@ public partial class EBM {
 	public static Vector<double> energy;
 	/// <summary> Public energy </summary>
 	public static Vector<double> precip;
-	static Vector<double> tempControl = null, energyControl = null;
+	static Vector<double> tempControl = null; //, energyControl = null;
 
 	// space-time vars
 	/// <summary> Number of latitudinal bands </summary>
@@ -85,10 +86,6 @@ public partial class EBM {
 	static readonly double Lf = 9.5;
 	/// <summary> Ghost layer heat capacity(W yr m^-2 K^-1) </summary>
 	static readonly double cg = cw / 100;
-	/// <summary> Ratio of MSE aloft to near surface, equatorial MSE </summary>
-	static readonly double gms_scale = 2; // was 1.06
-	/// <summary> Characteristic width for gaussian weighting function </summary>
-	static readonly double sigma = 0.4; // was 0.3
 
 	// # Diffusion Operator (WE15, Appendix A)
 	static readonly Vector<double> lam = D / dx / dx * (1 - xb.PointwisePower(2));
@@ -127,6 +124,11 @@ public partial class EBM {
 			Matrix<double>.Build.DenseOfRowVectors(new Vector<double>[nt].Map(v => x).ToArray()));
 	//could optimise with indices if needed
 
+	// precip constant values
+	static Vector<double> lat = Vector<double>.Asin(x).Map(x => x / Math.PI * 180);
+	static Vector<double> lat_p_e;
+	static IInterpolation f;
+	static Vector<double> np_e;
 	static readonly double alpha = 0.07;
 	static double[] p_e;
 
