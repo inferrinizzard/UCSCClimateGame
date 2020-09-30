@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1111486439586294897}
   - component: {fileID: 1111486439586294896}
   - component: {fileID: 1111486439586294903}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: SolarRadiation
   m_TagString: SolarRadiation
   m_Icon: {fileID: 0}

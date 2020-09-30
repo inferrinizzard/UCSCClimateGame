@@ -15,9 +15,12 @@ public class ArcticController : RegionController {
 	/// <summary> present Buffers </summary>
 	[HideInInspector] public Buffer[] buffers;
 	[SerializeField] Transform ice = default;
+	[HideInInspector] public Transform longWaveParent;
 
 	protected override void Start() {
 		base.Start();
+		longWaveParent = new GameObject("Long Wave Ray").transform;
+
 		buffers = ice.GetComponentsInChildren<Buffer>();
 		int totalHealth = buffers.Length * buffers[0].health;
 		for (int i = 0; i < Math.Floor(EBM.F / EBM.maxF * totalHealth);) { //TODO: with temp instead

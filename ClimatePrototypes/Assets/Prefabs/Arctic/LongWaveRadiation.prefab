@@ -132,5 +132,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01ad5a67538d9c6428f819bfba02f642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: {x: 1, y: 5}
+  force: {x: 0.5, y: 3}
   radiationType: 0
