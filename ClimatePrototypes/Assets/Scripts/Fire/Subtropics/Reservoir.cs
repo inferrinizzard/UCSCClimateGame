@@ -21,6 +21,6 @@ public class Reservoir : MonoBehaviour {
 		    WaterIHave.UseWater();
 		}*/
 
-		PlayerInteractions.AddDestinationToPath(transform);
+		SubtropicsController.Instance.player.target = transform.position;
 	}
 }

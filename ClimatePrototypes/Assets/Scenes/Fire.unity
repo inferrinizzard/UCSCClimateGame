@@ -326,7 +326,7 @@ MonoBehaviour:
   paused: 0
   region: 3
   backgrounds: []
-  player: {fileID: 1650592830}
+  player: {fileID: 1650592828}
   wind: {fileID: 0}
   difficulty: 3
   world: {fileID: 0}
@@ -2051,7 +2051,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  bladeAnimator: {fileID: 867563144}
   leftWaterUI: {fileID: 389145095}
   leftWaterBarUI: {fileID: 1483101053}
   waterTR: {fileID: 498595636}

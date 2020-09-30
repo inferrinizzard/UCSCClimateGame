@@ -11,7 +11,7 @@ public class WaterArrow : MonoBehaviour {
 	[SerializeField] float speed = 10f;
 
 	void Start() {
-		player = SubtropicsController.Instance.player;
+		player = SubtropicsController.Instance.player.transform;
 		waterPosition = SubtropicsController.World?.reservoirs[reservoirIndex].transform.position ?? Vector3.zero;
 	}
 

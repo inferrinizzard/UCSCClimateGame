@@ -8,39 +8,39 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerInteractions : MonoBehaviour {
-	[Header("References")]
 	[SerializeField] float speed = 10;
-
-	Animator bladeAnimator;
-
+	[Header("References")]
 	[SerializeField] Text leftWaterUI = default;
 	[SerializeField] Transform leftWaterBarUI = default;
-	[SerializeField] TrailRenderer waterTR = default;
+	Animator bladeAnimator;
+	TrailRenderer waterTR;
 
-	int water;
-	int maxWater = 50;
-	bool filling;
+	int water, maxWater = 50;
+	bool filling = false, slow = false;
 	float lastUsedWater = 0;
 
 	Color highlightColor = new Color(176, 0, 132, 255), normalColor = new Color(255, 119, 221, 255);
 	SpriteRenderer playerRenderer;
 
-	static List<Transform> playerPath = new List<Transform>();
+	public Vector3? target;
 
-	public bool moving;
-	Transform targetRegion;
-
-	public GameObject line;
+	[SerializeField] GameObject line = default;
 	LineRenderer newLine;
 
 	void Start() {
 		bladeAnimator = GetComponentInChildren<Animator>();
+		waterTR = GetComponentInChildren<TrailRenderer>();
 		playerRenderer = GetComponent<SpriteRenderer>();
 		playerRenderer.color = normalColor;
 		waterTR.enabled = false;
 
 		// draw line
 		newLine = line.GetComponent<LineRenderer>();
+		//newLine.material = new Material(Shader.Find("Sprites/Default"));
+		newLine.material = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
+		newLine.material.SetTextureScale("_MainTex", new Vector2(10f, 1.0f));
+		newLine.widthMultiplier = 0.1f;
+
 		bladeAnimator.SetBool("isMoving", true);
 		water = maxWater;
 	}
@@ -62,33 +62,22 @@ public class PlayerInteractions : MonoBehaviour {
 	}
 
 	void Path() {
-		// if path is not empty, exhaust the path
-		if (playerPath.Count != 0) {
+		if (target != null) {
 			float step = speed * Time.deltaTime;
 			// Are we currently moving towards a region?
-			if (moving) {
-				targetRegion = playerPath[0];
+			transform.position = Vector3.MoveTowards(transform.position, target.Value, step); // move player
+			Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, Camera.main.transform.position + target.Value - transform.position, step); // move camera
+			// TODO: nest camera under player
 
-				transform.position = Vector3.MoveTowards(transform.position, targetRegion.position, step); // move player
-				Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, Camera.main.transform.position + targetRegion.position - transform.position, step); // move camera
-				// TODO: nest camera under player
+			Vector3 vectorToTarget = target.Value - transform.position;
+			float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - 90f;
+			Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+			transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * speed);
 
-				Vector3 vectorToTarget = targetRegion.position - transform.position;
-				float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - 90f;
-				Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-				transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * speed);
-
-				if (transform.position == targetRegion.position) {
-					moving = false;
-					playerPath.Remove(targetRegion);
-				}
-			} else {
-				targetRegion = playerPath[0];
-				moving = true;
-			}
-		}
-		if (targetRegion)
+			if (transform.position == target)
+				target = null;
 			DrawPlayerPath();
+		}
 	}
 
 	void Extinguish() {
@@ -100,23 +89,20 @@ public class PlayerInteractions : MonoBehaviour {
 
 		// kill all immediate neighbors fire, radius buffer
 		foreach (var neighbor in SubtropicsController.World.GetRadius(playerCell.gameObject)) {
-			if (neighbor != null) {
-				IdentityManager neighborID = neighbor.GetComponent<IdentityManager>();
-				if (neighborID.id == IdentityManager.Identity.Fire && neighbor != null && water > 0) {
-
-					// check nature of the cell
-					if (neighborID.fireVariance == 1) // if tree
-					{
-						neighbor.GetComponent<TreeID>().burnt = true;
-						SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Tree);
-					} else {
-						SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Green);
-					}
-					neighborID.moisture = IdentityManager.Moisture.Moist;
-					water--; // use 1 water per cell
-					lastUsedWater = 0; // reset timer
-					waterTR.enabled = true;
+			IdentityManager neighborID = neighbor.GetComponent<IdentityManager>();
+			if (neighborID.id == IdentityManager.Identity.Fire && water > 0) {
+				// check nature of the cell
+				if (neighborID.fireVariance == 1) // if tree
+				{
+					neighbor.GetComponent<TreeID>().burnt = true;
+					SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Tree);
+				} else {
+					SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Green);
 				}
+				neighborID.moisture = IdentityManager.Moisture.Moist;
+				water--; // use 1 water per cell
+				lastUsedWater = 0; // reset timer
+				waterTR.enabled = true;
 			}
 		}
 
@@ -133,35 +119,12 @@ public class PlayerInteractions : MonoBehaviour {
 	}
 
 	void DrawPlayerPath() {
-		//newLine.material = new Material(Shader.Find("Sprites/Default"));
-		newLine.material = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
-		newLine.material.SetTextureScale("_MainTex", new Vector2(10f, 1.0f));
-		newLine.widthMultiplier = 0.1f;
-
-		int seg = playerPath.Count;
-		Vector3[] positions = new Vector3[seg + 1];
-		positions[0] = gameObject.transform.position; // first point in line must be current player pos
-		for (int i = 1; i < seg + 1; i++) {
-			positions[i] = playerPath[i - 1].position;
-		}
-		newLine.positionCount = positions.Length;
-		newLine.SetPositions(positions);
+		if (target != null) {
+			newLine.positionCount = 2;
+			newLine.SetPositions(new Vector3[] { transform.position, target.Value });
+		} else
+			newLine.positionCount = 0;
 	}
-
-	public static bool AddDestinationToPath(Transform region) {
-		// if region is not already in path 
-		if (!playerPath.Contains(region)) {
-			// TODO: make singular vector
-			playerPath.Clear();
-			playerPath.Add(region);
-			//PrintPlayerPath();         
-			return true;
-		}
-		return false;
-	}
-
-	/// <summary> {1} </summary>
-	static void PrintPlayerPath() => Debug.Log(string.Join(", ", playerPath.Select(p => p.transform.position)));
 
 	/// <summary>
 	/// Pulse effect when colliding with cloud
@@ -169,20 +132,23 @@ public class PlayerInteractions : MonoBehaviour {
 	/// </summary>
 	/// <param name="other"></param>
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.tag == "Cloud") {
+		if (other.transform.TryGetComponent(out SubtropicsCloud cloud)) {
 			//Camera.maib.GetComponent<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
 			StartCoroutine(Camera.main.GetComponent<CameraShake>().Shake(0.40f, .10f));
-			StartCoroutine(SlowDown(3f)); // if hit cloud, slows down to 1/4 speed for 3 sec
+			if (!slow)
+				StartCoroutine(SlowDown(3f)); // if hit cloud, slows down to 1/4 speed for 3 sec
 		}
 	}
 
 	IEnumerator SlowDown(float duration, float factor = 4) {
 		float slowSpeed = speed / factor;
+		slow = true;
 		for (float elapsed = 0.0f; elapsed < duration; elapsed += Time.deltaTime) {
 			speed = slowSpeed;
 			yield return null;
 		}
 		// speed = Mathf.Lerp(slowSpeed,factor * slowSpeed, 0.25f); 
+		slow = false;
 		speed = factor * slowSpeed;
 	}
 }

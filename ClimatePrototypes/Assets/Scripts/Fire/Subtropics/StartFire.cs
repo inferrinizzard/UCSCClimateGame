@@ -73,7 +73,7 @@
 
 // 	/// <summary> Put out a fire </summary>
 // 	private void OnMouseDown() {
-// 		PlayerInteractions.addDestinationToPath(gameObject.transform);
+// 		SubtropicsController.Instance.player.target = gameObject.transform.position;
 // 	}
 
 // 	/// <summary> If another active fire touches me, I start fire. </summary>
