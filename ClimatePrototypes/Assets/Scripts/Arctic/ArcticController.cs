@@ -16,14 +16,17 @@ public class ArcticController : RegionController {
 	[HideInInspector] public Buffer[] buffers;
 	[SerializeField] Transform ice = default;
 	[HideInInspector] public Transform longWaveParent;
+	[HideInInspector] public float tempInfluence;
 
 	protected override void Start() {
 		base.Start();
 		longWaveParent = new GameObject("Long Wave Ray").transform;
+		tempInfluence = (float) (World.temp[2] - World.startingTemp[2]) / World.maxTempChange;
+		Debug.Log($"Arctic temp influence is: {tempInfluence}");
 
 		buffers = ice.GetComponentsInChildren<Buffer>();
 		int totalHealth = buffers.Length * buffers[0].health;
-		for (int i = 0; i < Math.Floor(EBM.F / EBM.maxF * totalHealth);) { //TODO: with temp instead
+		for (int i = 0; i < Math.Floor(tempInfluence * totalHealth);) { //TODO: with temp instead
 			var buff = buffers[Random.Range(0, buffers.Length)];
 			if (buff.health > 0) {
 				buff.health--;

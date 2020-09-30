@@ -15,6 +15,7 @@ public class Cloud : MonoBehaviour {
 		screenMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
 		screenMax = Camera.main.ViewportToWorldPoint(Vector2.one);
 		sr = GetComponent<SpriteRenderer>();
+		// add colour change based on temp influence here
 		GetComponent<Rigidbody2D>().velocity = new Vector2(flipped ? -speed : speed, 0);
 	}
 

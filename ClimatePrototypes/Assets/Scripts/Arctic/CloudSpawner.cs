@@ -26,8 +26,7 @@ public class CloudSpawner : MonoBehaviour {
 	}
 
 	IEnumerator SpawnCloud() {
-		yield return new WaitForSeconds(Random.Range(5f, cloudSpawnWaitSeconds));
-		// if (ArcticController._visited > 0)
+		yield return new WaitForSeconds(Random.Range(3f, cloudSpawnWaitSeconds) * (1 - .5f * ArcticController.Instance.tempInfluence) * (ArcticController.Instance.summer ? 1 : .8f));
 		Instantiate(cloudPrefab, transform.position + transform.up * Random.Range(-0.5f, 1f), Quaternion.identity, cloudParent).GetComponent<Cloud>().flipped = !left;
 		StartCoroutine(SpawnCloud());
 	}

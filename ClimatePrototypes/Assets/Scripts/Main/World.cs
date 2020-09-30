@@ -13,7 +13,8 @@ public static class World {
 	public static string worldName = "";
 	public static float money = 100f, publicOpinion = 0f;
 	public static int turn = 1;
-	public static double[] temp, energy, precip;
+	public static double[] temp, energy, precip, startingTemp;
+	public static float maxTempChange = 10f;
 	public static double averageTemp { get => temp?.Average() ?? 0; }
 	public static Impact impact = Impact.Stage1;
 	public static Dictionary<string, Dictionary<double, List<double>>> ranges;
@@ -68,7 +69,8 @@ public static class World {
 
 	public static void Init() {
 		Calc();
-
+		startingTemp = new double[temp.Length];
+		temp.CopyTo(startingTemp, 0);
 		// FinishCalc(StartCalc().Wait());
 	}
 
