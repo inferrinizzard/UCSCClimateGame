@@ -12,6 +12,7 @@ public class DayNightCycle : MonoBehaviour {
 	[SerializeField] float transitionTime = 1.5f;
 
 	void Start() {
+		isDayTime = ArcticController.Instance._visited % 2 == 0;
 		var srs = GetComponentsInChildren<SpriteRenderer>();
 		(daySR, nightSR) = (srs[0], srs[1]);
 

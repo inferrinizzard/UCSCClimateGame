@@ -21,6 +21,8 @@ public class RadiationBall : MonoBehaviour {
 			force = new Vector2(Random.Range(-force.x, force.x), Random.Range(-force.y, force.y));
 			rb.velocity = force.normalized * 5f;
 		}
+
+		transform.eulerAngles = Vector3.forward * (Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg + 90);
 	}
 
 	void Update() {

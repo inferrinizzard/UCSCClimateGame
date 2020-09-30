@@ -11,14 +11,15 @@ public class SolarRadiationSpawner : MonoBehaviour {
 	public enum Radiation { LongWave, ShortWave }
 
 	void Start() {
-		StartCoroutine(EmitBall(3));
 		radiationParent = new GameObject("Solar Radiation").transform;
+		StartCoroutine(EmitBall(3));
 	}
 
 	IEnumerator EmitBall(float delay = 0) {
 		yield return new WaitForSeconds(delay);
 		yield return new WaitForSeconds(ballEmitWaitSeconds);
-		Instantiate(ballPrefab, transform.position + Vector3.right * Random.Range(5, -5), Quaternion.identity, radiationParent);
+		if (ArcticController.Instance.dayNight.isDayTime)
+			Instantiate(ballPrefab, transform.position + Vector3.right * Random.Range(5, -5), Quaternion.identity, radiationParent);
 		StartCoroutine(EmitBall());
 	}
 }
