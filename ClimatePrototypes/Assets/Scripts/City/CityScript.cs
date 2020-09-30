@@ -50,8 +50,7 @@ public class CityScript : RegionController {
 		// 	"{" + right.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
 	}
 
-	protected override void Start() {
-		base.Start();
+	void Start() {
 		bills = LoadBills();
 		currentDifficulty = BillDifficulty.Easy;
 		(left.speed, right.speed) = (speed, speed);

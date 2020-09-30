@@ -27,8 +27,7 @@ public class ForestController : RegionController {
 
 	public void UIHover(bool over) => overUI = over;
 
-	protected override void Start() {
-		base.Start();
+	void Start() {
 		damage = 100;
 		agentParent = new GameObject("Agent Parent").transform;
 		agentParent.parent = transform;

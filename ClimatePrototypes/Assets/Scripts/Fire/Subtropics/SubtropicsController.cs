@@ -17,8 +17,7 @@ public class SubtropicsController : RegionController {
 	[HideInInspector] public SubtropicsWorld world;
 	public static SubtropicsWorld World { get => Instance.world; }
 
-	protected override void Start() {
-		base.Start();
+	void Start() {
 		wind = GetComponentInChildren<Wind>();
 		world = GetComponentInChildren<SubtropicsWorld>();
 	}

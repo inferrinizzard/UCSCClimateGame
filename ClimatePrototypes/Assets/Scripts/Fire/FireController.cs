@@ -21,8 +21,7 @@ public class FireController : RegionController {
 	IEnumerator flash = null;
 	float margin;
 
-	protected override void Start() {
-		base.Start();
+	void Start() {
 		timerText.text = string.Format("{00}", timer);
 
 		margin = Func.Lambda((Vector3 vec) => Mathf.Max(vec.x, vec.y) / 2) (firePrefab.GetComponent<SpriteRenderer>().bounds.max);
