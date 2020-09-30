@@ -56,14 +56,13 @@ public abstract class RegionController : MonoBehaviour {
 
 	protected virtual void Update() {
 		timer -= Time.deltaTime;
-		timerText.text = $"{Mathf.Floor(timer)}";
+		timerText.text = $"{Mathf.Max(0, Mathf.Floor(timer))}";
 		if (timer < -1)
 			return;
 		if (timer <= 0) {
 			timer = -2;
 			GameOver();
 			StartModel();
-			// summon prompt
 		}
 	}
 

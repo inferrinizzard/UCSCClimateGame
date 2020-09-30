@@ -49,7 +49,7 @@ public class FireController : RegionController {
 		base.GameOver();
 		prompt.SetActive(false);
 		Cursor.visible = true;
-		TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
+		// TriggerUpdate(() => World.co2.Update(World.Region.Fire, World.Region.City, ProcessScore() * -.7));
 	}
 
 	/// <summary> Looping fire spawn </summary>

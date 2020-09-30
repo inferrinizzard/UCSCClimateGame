@@ -20,7 +20,7 @@ public static class World {
 
 	public static void DetermineImpact() {
 		if (averageTemp > startingTemp.Average() + maxTempChange) {
-			Debug.Log("hey it's hot");
+			Debug.Log("hey it's hot, you might wanna restart");
 			Debug.Break();
 			GameManager.Restart();
 		}
@@ -37,8 +37,8 @@ public static class World {
 			update = updateFunction;
 		}
 
-		public void Update(Region scene, Region? dest, double delta) {
-			lineToDraw.Add((scene, dest ?? Region.Forest, name));
+		public void Update(Region scene, double delta, Region? dest = null) {
+			lineToDraw.Add((scene, dest ?? Region.City, name));
 			Debug.Log($"change {verbose} by {delta}");
 			update.Invoke(delta);
 		}

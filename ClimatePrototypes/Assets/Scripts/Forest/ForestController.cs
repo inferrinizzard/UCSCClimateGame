@@ -25,11 +25,6 @@ public class ForestController : RegionController {
 
 	[SerializeField] Slider emissionsTracker = default;
 
-	protected override void GameOver() {
-		base.GameOver();
-		StopAllCoroutines();
-	}
-
 	public void UIHover(bool over) => overUI = over;
 
 	protected override void Start() {
@@ -46,7 +41,13 @@ public class ForestController : RegionController {
 	protected override void Update() {
 		base.Update();
 		emissionsTracker.value = damage / 200f;
-		// reduce with station task ending + durin?
+	}
+
+	protected override void GameOver() {
+		base.GameOver();
+		StopAllCoroutines();
+		double effect = damage / 200;
+		TriggerUpdate(() => World.co2.Update(region, delta : effect * 1.18)); // [-1.18, 1.18]
 	}
 
 	public PathfindingAgent NewAgent(GameObject prefab, Vector3 pos, Vector3 target) {
