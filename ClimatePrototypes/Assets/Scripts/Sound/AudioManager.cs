@@ -24,8 +24,10 @@ public class AudioManager : Singleton<AudioManager> {
 		sfxSource2 = gameObject.AddComponent<AudioSource>();
 		sfxSource3 = gameObject.AddComponent<AudioSource>();
 		musicSource = gameObject.AddComponent<AudioSource>();
+		musicSource.loop = true;
 	}
 
+	public void Play(string sound) => Play(GetSound(sound));
 	public void Play(Sound sound) {
 		AudioSource channel = GetChannel(sound.type);
 		sound.source = channel;
@@ -49,6 +51,7 @@ public class AudioManager : Singleton<AudioManager> {
 			return sfxSource3;
 		}
 	}
+
 	public static Sound GetSound(string name) => Instance.sounds.Find(s => s.name == name);
 	public void PlaySound(AudioClip clip) => Play(GetSound(clip.name));
 }

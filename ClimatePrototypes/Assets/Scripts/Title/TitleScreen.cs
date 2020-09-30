@@ -21,6 +21,8 @@ public class TitleScreen : MonoBehaviour {
 			SceneManager.sceneLoaded += SetOverWorldActive;
 		} else SetOverWorldActive(SceneManager.GetSceneByName("Overworld"), LoadSceneMode.Single);
 
+		AudioManager.Instance.Play("BGM_Menu");
+
 		for (int i = 0; i < uiReveal.Length; i++) {
 			foreach (Graphic g in uiReveal[i].GetComponentsInChildren<Graphic>())
 				g.color = new Color(g.color.r, g.color.g, g.color.b, 0);
