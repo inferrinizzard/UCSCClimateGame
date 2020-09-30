@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public class ArcticController : RegionController {
 	public static ArcticController Instance { get => instance as ArcticController; }
 
-	public DayNightCycle dayNight;
+	public bool summer { get => cycle.isSummer; }
+
+	[SerializeField] SeasonCycle cycle = default;
 	[SerializeField] Text scoreText = default;
 	/// <summary> present Buffers </summary>
 	[HideInInspector] public Buffer[] buffers;

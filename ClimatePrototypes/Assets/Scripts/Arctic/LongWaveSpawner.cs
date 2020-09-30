@@ -15,7 +15,7 @@ public class LongWaveSpawner : MonoBehaviour {
 
 	IEnumerator EmitBall(float waitTime) {
 		yield return new WaitForSeconds(waitTime);
-		for (int i = 0; i < (ArcticController.Instance.dayNight.isDayTime ? 2 : 3); i++)
+		for (int i = 0; i < (ArcticController.Instance.summer ? 2 : 3); i++)
 			Instantiate(longWavePrefab, transform.position, Quaternion.identity, longWaveParent);
 		StartCoroutine(EmitBall(ballEmitWaitSeconds));
 	}

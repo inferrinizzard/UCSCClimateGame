@@ -18,7 +18,7 @@ public class SolarRadiationSpawner : MonoBehaviour {
 	IEnumerator EmitBall(float delay = 0) {
 		yield return new WaitForSeconds(delay);
 		yield return new WaitForSeconds(ballEmitWaitSeconds);
-		if (ArcticController.Instance.dayNight.isDayTime)
+		if (ArcticController.Instance.summer)
 			Instantiate(ballPrefab, transform.position + Vector3.right * Random.Range(5, -5), Quaternion.identity, radiationParent);
 		StartCoroutine(EmitBall());
 	}

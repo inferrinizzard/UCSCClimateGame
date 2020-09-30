@@ -16,7 +16,7 @@ public class Buffer : MonoBehaviour {
 		AssignSprite();
 	}
 
-	public void AssignSprite(int i = -1) => sr.sprite = ArcticController.Instance.dayNight.isDayTime ? summerSprite[i > 0 ? i : health] : winterSprite[i > 0 ? i : health];
+	public void AssignSprite(int i = -1) => sr.sprite = ArcticController.Instance.summer ? summerSprite[i > 0 ? i : health] : winterSprite[i > 0 ? i : health];
 
 	void OnTriggerEnter2D(Collider2D collision) {
 		if (collision.transform.TryGetComponent(out RadiationBall R)) {

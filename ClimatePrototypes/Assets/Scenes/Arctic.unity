@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96197f3478ee25c418320b497cf159cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _visited: 0
   intro: {fileID: 11400000, guid: ba780126df272254bb0ac069fff1a329, type: 2}
   introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
     type: 3}
@@ -88,7 +89,7 @@ MonoBehaviour:
   paused: 0
   region: 0
   backgrounds: []
-  dayNight: {fileID: 252524349}
+  cycle: {fileID: 252524349}
   scoreText: {fileID: 1730636744}
   buffers: []
   ice: {fileID: 680337532}
@@ -364,7 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3613382f2a73bb948b19ddff45db3bf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDayTime: 0
+  isSummer: 0
   transitionTime: 1.5
 --- !u!1001 &677356128
 PrefabInstance:
@@ -523,6 +524,7 @@ MonoBehaviour:
   cloudPrefab: {fileID: 2072777403796196785, guid: 12e19168afda23640a539e808481c8c4,
     type: 3}
   canSpawn: 1
+  cloudSpawnWaitSeconds: 8
 --- !u!1 &1194167032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,6 +1185,7 @@ MonoBehaviour:
   cloudPrefab: {fileID: 7585854367735539506, guid: a31bc0f67f59aa94cbff89c7de934caf,
     type: 3}
   canSpawn: 1
+  cloudSpawnWaitSeconds: 8
 --- !u!1001 &1703692309
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1447,7 +1450,7 @@ GameObject:
   - component: {fileID: 1862081967}
   - component: {fileID: 1862081968}
   m_Layer: 0
-  m_Name: BackgroundNight
+  m_Name: BackgroundWinter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1573,7 +1576,7 @@ GameObject:
   - component: {fileID: 1921775659}
   - component: {fileID: 1921775660}
   m_Layer: 0
-  m_Name: BackgroundDay
+  m_Name: BackgroundSummer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
