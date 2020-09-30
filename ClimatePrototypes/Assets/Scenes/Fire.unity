@@ -145,13 +145,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 66539256}
-  m_LocalRotation: {x: -0, y: -0, z: -0.2585661, w: 0.96599364}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7372774, w: 0.67559016}
   m_LocalPosition: {x: 2.6800008, y: 0.07000003, z: 0}
   m_LocalScale: {x: 0.3392701, y: 0.50000024, z: 1}
   m_Children: []
   m_Father: {fileID: 438785188}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -29.97}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -95}
 --- !u!212 &66539258
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1010,13 +1010,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852522135}
-  m_LocalRotation: {x: -0, y: -0, z: -0.2585661, w: 0.96599364}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7372774, w: 0.67559016}
   m_LocalPosition: {x: 2.6800008, y: 0.07000003, z: 0}
   m_LocalScale: {x: 0.3392701, y: 0.50000024, z: 1}
   m_Children: []
   m_Father: {fileID: 438785188}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -29.97}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -95}
 --- !u!114 &852522137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2053,8 +2053,6 @@ MonoBehaviour:
   speed: 2
   leftWaterUI: {fileID: 389145095}
   leftWaterBarUI: {fileID: 1483101053}
-  waterTR: {fileID: 498595636}
-  moving: 0
   line: {fileID: 1219017126}
 --- !u!212 &1650592829
 SpriteRenderer:

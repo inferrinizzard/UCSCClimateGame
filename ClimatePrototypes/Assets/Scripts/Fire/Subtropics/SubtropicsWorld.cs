@@ -20,24 +20,24 @@ public class SubtropicsWorld : MonoBehaviour {
 	/// Backend data
 	/// according to player performance, there are three difficulty
 	/// </summary>
-	[SerializeField] private int reservoirTotalSize;
-	[SerializeField] private int spreadability = 3;
+	[SerializeField] int reservoirTotalSize;
+	[SerializeField] int spreadability = 3;
 	[Range(0, 100)] public int treeDensity;
 
-	private GridLayout gridLayout;
+	GridLayout gridLayout;
 
 	public Vector3Int topLeftCell = new Vector3Int(-36, 16, 0);
 	public Vector3Int topRightCell = new Vector3Int(32, 16, 0);
 	public Vector3Int bottomLeftCell = new Vector3Int(-36, -20, 0);
 	public Vector3Int bottomRightCell = new Vector3Int(32, -20, 0);
 
-	private Tilemap tilemap;
+	Tilemap tilemap;
 
 	public GameObject[, ] cellArray; // central cell data structure
-	[SerializeField] private int width, height;
+	[SerializeField] int width, height;
 
-	private int cloudNum = 10; // have 10 at all times, 5 will be visible on screen
-	private GameObject[] clouds;
+	int cloudNum = 10; // have 10 at all times, 5 will be visible on screen
+	GameObject[] clouds;
 
 	void Start() {
 		clouds = new GameObject[cloudNum];
@@ -63,7 +63,7 @@ public class SubtropicsWorld : MonoBehaviour {
 		}
 	}
 
-	private void PopulateVanillaWorld() {
+	void PopulateVanillaWorld() {
 		GameObject cellParent = new GameObject("Cells");
 
 		// get corner positions of the world 
@@ -85,7 +85,7 @@ public class SubtropicsWorld : MonoBehaviour {
 	}
 
 	/// <summary> Create water cells </summary>
-	private void PopulateWater() {
+	void PopulateWater() {
 		// TODO: water size according to precipitation
 		reservoirTotalSize = 0;
 		int reservoirGen = Random.Range(0, 5);
@@ -116,18 +116,19 @@ public class SubtropicsWorld : MonoBehaviour {
 			Vector3 pos1 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX, waterY));
 			Vector3 pos2 = tilemap.GetCellCenterWorld(GetVector3IntFromCellArray(waterX + waterWidth, waterY + waterHeight));
 			Vector3 reservoirPos = (pos1 + pos2) / 2 + new Vector3(-0.25f, -0.25f, 0);
-			GameObject watergo = Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
-			watergo.SetActive(true);
+			GameObject water = Instantiate(waterPrefab, reservoirPos, Quaternion.identity);
+			water.SetActive(true);
 
-			watergo.GetComponent<SpriteRenderer>().sprite = reservoirSprites[reservoirGen];
-			watergo.GetComponent<SpriteRenderer>().size = new Vector2(waterWidth / 4, waterHeight / 4);
-			watergo.transform.localScale = new Vector3(0.4f, 0.4f, 1) * (SubtropicsController.Instance.difficulty == 1 ? 2 : 1);
+			water.GetComponent<SpriteRenderer>().sprite = reservoirSprites[reservoirGen];
+			water.GetComponent<SpriteRenderer>().size = new Vector2(waterWidth / 4, waterHeight / 4);
+			water.transform.localScale = new Vector3(0.4f, 0.4f, 1) * (SubtropicsController.Instance.difficulty == 1 ? 2 : 1);
 
-			reservoirs[r] = watergo;
+			reservoirs[r] = water;
+			SubtropicsController.Instance.player.GetComponentsInChildren<WaterArrow>() [r].waterPosition = water.transform.position;
 		}
 	}
 
-	private void PopulateTree() {
+	void PopulateTree() {
 		// hand authored three regions of mountain areas filled with trees
 		// Region1   left top
 		int width1 = Random.Range(width / 4, width / 3); // right
@@ -155,8 +156,7 @@ public class SubtropicsWorld : MonoBehaviour {
 			for (var j = h0; j <= h1; j++) {
 				IdentityManager I = cellArray[i, j].GetComponent<IdentityManager>();
 				if (I.id == IdentityManager.Identity.Green) {
-					int seed = Random.Range(0, 100);
-					if (seed < treeDensity) {
+					if (Random.value * 100 < treeDensity) {
 						I.id = IdentityManager.Identity.Tree;
 						I.fireVariance = 1; // if fire happens, set variance type to tree fire 
 					}
@@ -219,32 +219,21 @@ public class SubtropicsWorld : MonoBehaviour {
 	}
 
 	/// <summary> Returns cell radius - outwards 2+ </summary>
-	public GameObject[] GetRadius(GameObject cell) {
-		Vector3Int cellPosition = gridLayout.WorldToCell(cell.transform.position);
+	public List<IdentityManager> GetRadius(Vector3 pos) {
+		Vector3Int cellPosition = gridLayout.WorldToCell(pos);
 
 		int x = cellPosition.x - topLeftCell.x; // convert pos vec3int to correct index in array
 		int y = cellPosition.y - bottomLeftCell.y;
 
-		int index = 0;
 		int r = 1; // radius
 
-		GameObject[] radius = new GameObject[9]; // if r = 1
+		List<IdentityManager> area = new List<IdentityManager>();
 
-		for (int a = -r; a <= r; a++) {
-			for (int b = -r; b <= r; b++) {
+		for (int a = -r; a <= r; a++)
+			for (int b = -r; b <= r; b++)
 				if (x + a >= 0 && x + a <= width && y + b <= height && y + b >= 0)
-					radius[index] = cellArray[x + a, y + b];
-				index++;
-			}
-		}
-		return radius;
-	}
-
-	/// <summary> Mutate cell and update ID</summary>
-	/// <param name="cell"></param>
-	/// <param name="targetID"></param>
-	public void MutateCell(GameObject cell, IdentityManager.Identity targetID) {
-		cell.GetComponent<IdentityManager>().id = targetID;
+					area.Add(cellArray[x + a, y + b].GetComponent<IdentityManager>());
+		return area;
 	}
 
 	public GameObject GetCell(Vector3 worldPos) {

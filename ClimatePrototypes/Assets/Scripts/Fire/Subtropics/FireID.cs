@@ -30,7 +30,7 @@ public class FireID : Tile {
 				IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
 				IdentityManager.Moisture neighborMoisture = neighbor.GetComponent<IdentityManager>().moisture;
 				if (neighborID == IdentityManager.Identity.Green && neighborMoisture != IdentityManager.Moisture.Moist) // if it is not already fire, or is water
-					SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Fire);
+					neighborID = IdentityManager.Identity.Fire;
 			}
 		}
 	}

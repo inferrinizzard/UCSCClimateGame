@@ -88,18 +88,17 @@ public class PlayerInteractions : MonoBehaviour {
 		//playerCell.moisture = IdentityManager.Moisture.Moist;
 
 		// kill all immediate neighbors fire, radius buffer
-		foreach (var neighbor in SubtropicsController.World.GetRadius(playerCell.gameObject)) {
-			IdentityManager neighborID = neighbor.GetComponent<IdentityManager>();
-			if (neighborID.id == IdentityManager.Identity.Fire && water > 0) {
+		foreach (var neighbor in SubtropicsController.World.GetRadius(playerCell.transform.position)) {
+			if (neighbor.id == IdentityManager.Identity.Fire && water > 0) {
 				// check nature of the cell
-				if (neighborID.fireVariance == 1) // if tree
+				if (neighbor.fireVariance == 1) // if tree
 				{
 					neighbor.GetComponent<TreeID>().burnt = true;
-					SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Tree);
+					neighbor.id = IdentityManager.Identity.Tree;
 				} else {
-					SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Green);
+					neighbor.id = IdentityManager.Identity.Green;
 				}
-				neighborID.moisture = IdentityManager.Moisture.Moist;
+				neighbor.moisture = IdentityManager.Moisture.Moist;
 				water--; // use 1 water per cell
 				lastUsedWater = 0; // reset timer
 				waterTR.enabled = true;

@@ -12,6 +12,7 @@ public class TreeID : Tile {
 
 	void Start() {
 		alt = Random.Range(0, 2);
+		UpdateTile();
 	}
 
 	protected override void UpdateTile() {

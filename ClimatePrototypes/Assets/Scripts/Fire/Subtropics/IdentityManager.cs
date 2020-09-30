@@ -10,7 +10,7 @@ public class IdentityManager : MonoBehaviour {
 	Identity _id = Identity.Green;
 	public Identity id { get => _id; set { _id = value; UpdateTile(); } }
 	public Moisture moisture = Moisture.Normal;
-	public int fireVariance { get; set; } = 0; // 0 for green, 1 for tree. keep track of the nature of the cell before fire
+	public int fireVariance = 0; // 0 for green, 1 for tree. keep track of the nature of the cell before fire
 	public enum Identity { Fire, Water, Green, Tree }
 	/// <summary> Controls the chance of it being ignited </summary>
 	public enum Moisture { Moist, /* not likely that it could be ignited */ Normal, Dry }

@@ -6,13 +6,12 @@ using UnityEngine;
 
 public class WaterArrow : MonoBehaviour {
 	Transform player;
-	[HideInInspector] public Vector3 waterPosition;
+	public Vector3 waterPosition;
 	[SerializeField] int reservoirIndex = 0;
 	[SerializeField] float speed = 10f;
 
 	void Start() {
 		player = SubtropicsController.Instance.player.transform;
-		waterPosition = SubtropicsController.World?.reservoirs[reservoirIndex].transform.position ?? Vector3.zero;
 	}
 
 	void FixedUpdate() {
@@ -26,7 +25,7 @@ public class WaterArrow : MonoBehaviour {
 		float rotateSpeed = Mathf.Sign(crossP) * speed;
 
 		if (Mathf.Abs(180 - angle) > 15) // damping
-			transform.RotateAround(player.transform.position, new Vector3(0, 0, 1), rotateSpeed * Time.fixedDeltaTime);
+			transform.RotateAround(player.transform.position, Vector3.forward, rotateSpeed * Time.fixedDeltaTime);
 
 		// point local right to parent object - red-axis-x
 		transform.up = -(player.transform.position - transform.position);
