@@ -53,7 +53,7 @@ public class CityScript : RegionController {
 	protected override void Start() {
 		base.Start();
 		bills = LoadBills();
-		currentDifficulty = (int) World.impact < 2 ? BillDifficulty.Easy : (int) World.impact < 4 ? BillDifficulty.Med : BillDifficulty.Hard;
+		currentDifficulty = BillDifficulty.Easy;
 		(left.speed, right.speed) = (speed, speed);
 	}
 

@@ -4,50 +4,33 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class FireID : MonoBehaviour {
+public class FireID : Tile {
 	[SerializeField] Sprite fireGreenSprite = default;
 	[SerializeField] Sprite[] treeFires = default;
-	private SpriteRenderer sr;
-
-	private bool growing;
 
 	void Start() {
-		sr = GetComponent<SpriteRenderer>();
+		StartCoroutine(WaitForFire(4f));
 	}
 
-	private void OnEnable() {
-		//VFXUpdate();
-	}
-
-	// Update is called once per frame
-	void Update() {
-		if (!growing) {
-			growing = true;
-			StartCoroutine(WaitForFire(4f));
-		}
-
-		//FireGrowth();
-		VFXUpdate();
-	}
-
-	void VFXUpdate() {
-		if (GetComponent<IdentityManager>().fireVariance == 0) {
-			sr.sprite = fireGreenSprite;
-		} else {
-			sr.sprite = treeFires[GetComponent<TreeID>().alt];
+	protected override void UpdateTile() {
+		if (idManager.id == IdentityManager.Identity.Fire) {
+			if (idManager.fireVariance == 0)
+				sr.sprite = fireGreenSprite;
+			else
+				sr.sprite = treeFires[GetComponent<TreeID>().alt];
 		}
 	}
 
 	void FireGrowth() {
 		// if I am fire, I ignite my non-fire neighbors coroutine
-		GameObject[] myNeighbors = SubtropicsController.Instance.world.GetNeighbors(gameObject);
+		GameObject[] myNeighbors = SubtropicsController.World.GetNeighbors(gameObject);
 
 		foreach (var neighbor in myNeighbors) {
 			if (neighbor != null) {
 				IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
 				IdentityManager.Moisture neighborMoisture = neighbor.GetComponent<IdentityManager>().moisture;
 				if (neighborID == IdentityManager.Identity.Green && neighborMoisture != IdentityManager.Moisture.Moist) // if it is not already fire, or is water
-					SubtropicsController.Instance.world.MutateCell(neighbor, IdentityManager.Identity.Fire);
+					neighborID = IdentityManager.Identity.Fire;
 			}
 		}
 	}
@@ -55,6 +38,7 @@ public class FireID : MonoBehaviour {
 	IEnumerator WaitForFire(float seconds) {
 		yield return new WaitForSeconds(seconds);
 		FireGrowth();
-		growing = false;
+		UpdateTile();
+		StartCoroutine(WaitForFire(seconds));
 	}
 }

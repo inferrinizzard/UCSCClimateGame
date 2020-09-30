@@ -101,13 +101,14 @@ def main(F):
     # For a quicker computation, use the parameters:
     # n = 100
     # nt = 1000
-    n = 24
+    # n = 24
+    n = 48
     nt = 1000
     dur = 30
-    dt = 1 / float(nt)
+    dt = 1. / nt
 
     # Spatial Grid
-    dx = 1.0 / n  # grid box width
+    dx = 1. / n  # grid box width
     x = np.arange(dx / 2, 1 + dx / 2, dx)  # native grid
     xb = np.arange(dx, 1, dx)
 

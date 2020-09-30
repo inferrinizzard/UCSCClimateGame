@@ -13,17 +13,10 @@ public static class World {
 	public static string worldName = "";
 	public static float money = 100f, publicOpinion = 0f;
 	public static int turn = 1;
-	public static double[] temp, energy, precip;
+	public static double[] temp, energy, precip, startingTemp;
+	public static float maxTempChange = 10f;
 	public static double averageTemp { get => temp?.Average() ?? 0; }
-	public static Impact impact = Impact.Stage1;
 	public static Dictionary<string, Dictionary<double, List<double>>> ranges;
-
-	public enum Impact { Stage1, Stage2, Stage3, Stage4, Stage5 }
-
-	public static void DetermineImpact() {
-		var avgTemp = averageTemp;
-		impact = (Impact) Math.Max(0, ranges["temperature"].ToList().FindIndex(kvp => kvp.Value[turn] > avgTemp) - 1);
-	}
 
 	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
@@ -68,8 +61,8 @@ public static class World {
 
 	public static void Init() {
 		Calc();
-
-		// FinishCalc(StartCalc().Wait());
+		startingTemp = new double[temp.Length];
+		temp.CopyTo(startingTemp, 0);
 	}
 
 	public static void Calc(bool useTemp = true, int years = 0, int steps = 0) {

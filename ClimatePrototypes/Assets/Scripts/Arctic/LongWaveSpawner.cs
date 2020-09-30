@@ -4,36 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LongWaveSpawner : MonoBehaviour {
-	private bool canEmit = true;
-	//private bool hasEmit = false;
-	private float ballEmitWaitSeconds = 5.0f;
+	float ballEmitWaitSeconds = 5.0f;
 	[SerializeField] GameObject longWavePrefab = default;
-	private int numberofLongWave = 3;
 
-	Transform longWaveParent;
-	void Start() {
-		longWaveParent = new GameObject().transform;
-		longWaveParent.name = "Long Wave Ray";
-		StartCoroutine(EmitBallWait(1f));
-	}
+	void Start() => StartCoroutine(EmitBall(1f));
 
-	void Update() {
-		if (canEmit)
-			EmitBall();
-	}
-
-	private void EmitBall() {
-		for (int i = 0; i < numberofLongWave; i++) {
-			Instantiate(longWavePrefab, transform.position, Quaternion.identity, longWaveParent);
-		}
-		StartCoroutine(EmitBallWait(ballEmitWaitSeconds));
-		//hasEmit = true;
-	}
-
-	IEnumerator EmitBallWait(float waitTime) {
-		canEmit = false;
+	IEnumerator EmitBall(float waitTime) {
 		yield return new WaitForSeconds(waitTime);
-		canEmit = true;
+		for (int i = 0; i < (ArcticController.Instance.summer ? 2 : 3); i++)
+			Instantiate(longWavePrefab, transform.position, Quaternion.identity, ArcticController.Instance.longWaveParent);
+		StartCoroutine(EmitBall(ballEmitWaitSeconds * (ArcticController.Instance.summer ? 1 : 2 / 3f)));
 	}
-
 }

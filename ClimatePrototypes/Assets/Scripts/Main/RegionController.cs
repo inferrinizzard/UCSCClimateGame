@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public abstract class RegionController : MonoBehaviour {
-	[HideInInspector] public static int _visited = 0;
+	[HideInInspector] public int _visited = 0;
 	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
 	protected GameObject introBlock;

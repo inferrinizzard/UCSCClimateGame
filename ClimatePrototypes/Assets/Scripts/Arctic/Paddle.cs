@@ -1,41 +1,35 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 public class Paddle : MonoBehaviour {
-	private Rigidbody2D paddleRb2d;
-	public float paddleSpeed = 5f;
-	private float horizontalInput = 0f;
-	private Vector2 screenBounds;
-	private float paddleWidth;
+	Rigidbody2D rb2D;
+	[SerializeField] float paddleSpeed = 5f;
+	float horizontalInput = 0f;
+	Vector2 screenBounds;
+	float paddleWidth;
 
 	void Start() {
-		paddleRb2d = GetComponent<Rigidbody2D>();
+		rb2D = GetComponent<Rigidbody2D>();
 		screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
 		paddleWidth = GetComponent<SpriteRenderer>().bounds.size.x;
 	}
 
-	private void Update() {
-		horizontalInput = Input.GetAxis("Horizontal");
+	void Update() => horizontalInput = Input.GetAxis("Horizontal");
+	void FixedUpdate() => Move(Mathf.Abs(horizontalInput) > 0.1f ? horizontalInput : 0);
+	void Move(float input) => rb2D.velocity = Vector3.right * input * paddleSpeed;
+	void LateUpdate() => transform.position += (Mathf.Clamp(transform.position.x, -screenBounds.x + paddleWidth / 2, screenBounds.x - paddleWidth / 2) - transform.position.x) * Vector3.right;
+
+	void OnCollisionEnter2D(Collision2D other) {
+		var ball = other.transform.GetComponent<RadiationBall>();
+		if (ball.radiationType == SolarRadiationSpawner.Radiation.ShortWave) ball.Orient();
 	}
 
-	private void FixedUpdate() {
-		if (Mathf.Abs(horizontalInput) > 0.1f)
-			Move(horizontalInput);
-		else {
-			Move(0f);
+	void OnTriggerEnter2D(Collider2D other) {
+		if (other.transform.GetComponent<RadiationBall>().radiationType == SolarRadiationSpawner.Radiation.LongWave) {
+			transform.localScale = new Vector3(Mathf.Max(.5f, transform.localScale.x * .95f), 1, 1);
+			Destroy(other.gameObject);
 		}
-	}
-
-	private void Move(float input) {
-		paddleRb2d.velocity = Vector3.right * input * paddleSpeed;
-	}
-
-	private void LateUpdate() {
-		Vector3 viewPos = transform.position;
-		viewPos.x = Mathf.Clamp(viewPos.x, -screenBounds.x + paddleWidth / 2, screenBounds.x - paddleWidth / 2);
-		transform.position = viewPos;
 	}
 }
