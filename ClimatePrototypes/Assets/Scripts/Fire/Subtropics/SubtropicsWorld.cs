@@ -204,8 +204,7 @@ public class SubtropicsWorld : MonoBehaviour {
 		// 	.Where(n => n != null).ToArray();
 
 		return SubtropicsController.Instance.wind.dir.ToString().Select(d => (
-				new Dictionary<char, Vector2Int> { 
-					{ 'S', Vector2Int.down },
+				new Dictionary<char, Vector2Int> { { 'S', Vector2Int.down },
 					{ 'N', Vector2Int.up },
 					{ 'W', Vector2Int.left },
 					{ 'E', Vector2Int.right }
@@ -248,7 +247,7 @@ public class SubtropicsWorld : MonoBehaviour {
 		cell.GetComponent<IdentityManager>().id = targetID;
 	}
 
-	public GameObject getCellObjectAtLoc(Vector3 worldPos) {
+	public GameObject GetCell(Vector3 worldPos) {
 		Vector3Int cellLoc = gridLayout.WorldToCell(worldPos);
 		int x = cellLoc.x - topLeftCell.x; // convert pos vec3int to correct index in array
 		int y = cellLoc.y - bottomLeftCell.y;

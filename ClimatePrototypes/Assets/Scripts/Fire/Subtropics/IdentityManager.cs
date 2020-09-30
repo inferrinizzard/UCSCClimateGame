@@ -20,7 +20,7 @@ public class IdentityManager : MonoBehaviour {
 	void OnMouseDown() {
 		// if clicked on cell, add this to player path
 		//Debug.Log("cell clicked");
-		PlayerInteractions.addDestinationToPath(gameObject.transform);
+		PlayerInteractions.AddDestinationToPath(gameObject.transform);
 	}
 }
 

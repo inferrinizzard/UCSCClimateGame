@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEditor;
 
@@ -9,57 +9,59 @@ using UnityEngine.UI;
 
 public class PlayerInteractions : MonoBehaviour {
 	[Header("References")]
-	public float speed = 10;
+	[SerializeField] float speed = 10;
 
-	public Animator bladeAnimator;
+	Animator bladeAnimator;
 
-	public Text leftWaterUI;
-	public Transform leftWaterBarUI;
-	public TrailRenderer waterTR;
+	[SerializeField] Text leftWaterUI = default;
+	[SerializeField] Transform leftWaterBarUI = default;
+	[SerializeField] TrailRenderer waterTR = default;
 
-	private int water;
-	private int maxWater = 50;
-	private bool filling;
-	private float haveNotUsedWaterIn = 0;
+	int water;
+	int maxWater = 50;
+	bool filling;
+	float lastUsedWater = 0;
 
-	//private GameObject myLine = new GameObject();
-	private Color highlightColor = new Color(176, 0, 132, 255);
-	private Color normalColor = new Color(255, 119, 221, 255);
-	private SpriteRenderer playerRenderer;
+	Color highlightColor = new Color(176, 0, 132, 255), normalColor = new Color(255, 119, 221, 255);
+	SpriteRenderer playerRenderer;
 
-	private static List<Transform> playerPath = new List<Transform>();
+	static List<Transform> playerPath = new List<Transform>();
 
 	public bool moving;
-	private Transform targetRegion;
+	Transform targetRegion;
 
 	public GameObject line;
-	private LineRenderer newLine;
+	LineRenderer newLine;
 
-	private GameObject playerCell;
-	private IdentityManager.Identity playerCellID;
-	private IdentityManager.Moisture playerCellMoisture;
-
-	// Start is called before the first frame update
 	void Start() {
+		bladeAnimator = GetComponentInChildren<Animator>();
 		playerRenderer = GetComponent<SpriteRenderer>();
 		playerRenderer.color = normalColor;
 		waterTR.enabled = false;
 
 		// draw line
-
 		newLine = line.GetComponent<LineRenderer>();
+		bladeAnimator.SetBool("isMoving", true);
 		water = maxWater;
 	}
 
-	// Update is called once per frame
 	void Update() {
-		GFXUpdate();
+		lastUsedWater += Time.deltaTime;
+
+		if (lastUsedWater >= 1f) // turn off renderer if not used water in 1 sec
+			waterTR.enabled = false;
+
 		leftWaterUI.text = water.ToString();
 		int height = water * 10;
-		leftWaterBarUI.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(120, height); // set width is 120. water [0,50], height [0,500]
-		leftWaterBarUI.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(30, -(500 - height) / 2, 0);
+		(leftWaterBarUI as RectTransform).sizeDelta = new Vector2(120, height); // set width is 120. water [0,50], height [0,500]
+		(leftWaterBarUI as RectTransform).localPosition = new Vector3(30, -(500 - height) / 2, 0);
+		// convert to slider
 
-		//// Pathfinding
+		Path();
+		Extinguish();
+	}
+
+	void Path() {
 		// if path is not empty, exhaust the path
 		if (playerPath.Count != 0) {
 			float step = speed * Time.deltaTime;
@@ -69,15 +71,10 @@ public class PlayerInteractions : MonoBehaviour {
 
 				transform.position = Vector3.MoveTowards(transform.position, targetRegion.position, step); // move player
 				Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, Camera.main.transform.position + targetRegion.position - transform.position, step); // move camera
-
-				// align helicopter head with velocity
-
-				/*
-				Quaternion rotation = Quaternion.LookRotation(targetRegion.position, Vector3.left);
-				transform.rotation = rotation;*/
+				// TODO: nest camera under player
 
 				Vector3 vectorToTarget = targetRegion.position - transform.position;
-				float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - 90f; // sprite off by 90f
+				float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - 90f;
 				Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
 				transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * speed);
 
@@ -92,59 +89,41 @@ public class PlayerInteractions : MonoBehaviour {
 		}
 		if (targetRegion)
 			DrawPlayerPath();
+	}
 
-		//// World Interaction        
+	void Extinguish() {
 		// check what cell player is on top of 
-		playerCell = SubtropicsController.World.getCellObjectAtLoc(gameObject.transform.position);
-		playerCellID = playerCell.GetComponent<IdentityManager>().id;
-		playerCellMoisture = playerCell.GetComponent<IdentityManager>().moisture;
+		var playerCell = SubtropicsController.World.GetCell(gameObject.transform.position).GetComponent<IdentityManager>();
 
 		//SubtropicsController.World.MutateCell(playerCell, IdentityManager.Identity.Green);
-		//playerCellMoisture = IdentityManager.Moisture.Moist;
+		//playerCell.moisture = IdentityManager.Moisture.Moist;
 
 		// kill all immediate neighbors fire, radius buffer
-		foreach (var neighbor in SubtropicsController.World.GetRadius(playerCell)) {
+		foreach (var neighbor in SubtropicsController.World.GetRadius(playerCell.gameObject)) {
 			if (neighbor != null) {
-				IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
-				if (neighborID == IdentityManager.Identity.Fire && neighbor != null && water > 0) {
+				IdentityManager neighborID = neighbor.GetComponent<IdentityManager>();
+				if (neighborID.id == IdentityManager.Identity.Fire && neighbor != null && water > 0) {
 
 					// check nature of the cell
-					if (neighbor.GetComponent<IdentityManager>().fireVariance == 1) // if tree
+					if (neighborID.fireVariance == 1) // if tree
 					{
 						neighbor.GetComponent<TreeID>().burnt = true;
 						SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Tree);
 					} else {
 						SubtropicsController.World.MutateCell(neighbor, IdentityManager.Identity.Green);
 					}
-					neighbor.GetComponent<IdentityManager>().moisture = IdentityManager.Moisture.Moist;
+					neighborID.moisture = IdentityManager.Moisture.Moist;
 					water--; // use 1 water per cell
-					haveNotUsedWaterIn = 0; // reset timer
+					lastUsedWater = 0; // reset timer
 					waterTR.enabled = true;
 				}
 			}
 		}
 
-		if (playerCellID == IdentityManager.Identity.Water) {
-			// replemish water
-			if (!filling && water < maxWater) {
-				filling = true;
-				water += 1;
-				StartCoroutine(FillWater());
-			}
-		}
-	}
-
-	void GFXUpdate() {
-		// rotate blades
-		// bladeAnimator.SetBool("isMoving", playerPath.Count != 0);
-		bladeAnimator.SetBool("isMoving", true);
-
-		// trail renderer
-		haveNotUsedWaterIn += Time.deltaTime;
-
-		if (haveNotUsedWaterIn >= 1f) // turn off renderer if not used water in 1 sec
-		{
-			waterTR.enabled = false;
+		if (!filling && water < maxWater) {
+			filling = true;
+			water += 1;
+			StartCoroutine(FillWater());
 		}
 	}
 
@@ -169,12 +148,12 @@ public class PlayerInteractions : MonoBehaviour {
 		newLine.SetPositions(positions);
 	}
 
-	public static bool addDestinationToPath(Transform region) {
+	public static bool AddDestinationToPath(Transform region) {
 		// if region is not already in path 
 		if (!playerPath.Contains(region)) {
+			// TODO: make singular vector
 			playerPath.Clear();
 			playerPath.Add(region);
-
 			//PrintPlayerPath();         
 			return true;
 		}
@@ -182,46 +161,28 @@ public class PlayerInteractions : MonoBehaviour {
 	}
 
 	/// <summary> {1} </summary>
-	static void PrintPlayerPath() {
-		string pathString = "";
-		foreach (Transform t in playerPath) {
-			pathString += t.position.ToString() + ", ";
-
-		}
-		Debug.Log(pathString);
-	}
+	static void PrintPlayerPath() => Debug.Log(string.Join(", ", playerPath.Select(p => p.transform.position)));
 
 	/// <summary>
 	/// Pulse effect when colliding with cloud
 	/// collision with cell prefab is disabled in physics setting
 	/// </summary>
 	/// <param name="other"></param>
-	private void OnTriggerEnter2D(Collider2D other) {
+	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.tag == "Cloud") {
-			//FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
-			StartCoroutine(FindObjectOfType<CameraShake>().Shake(0.40f, .10f));
+			//Camera.maib.GetComponent<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+			StartCoroutine(Camera.main.GetComponent<CameraShake>().Shake(0.40f, .10f));
 			StartCoroutine(SlowDown(3f)); // if hit cloud, slows down to 1/4 speed for 3 sec
 		}
 	}
 
-	IEnumerator SlowDown(float duration) {
-		float elapsed = 0.0f;
-		float slowSpeed = speed / 4;
-
-		while (elapsed < duration) {
+	IEnumerator SlowDown(float duration, float factor = 4) {
+		float slowSpeed = speed / factor;
+		for (float elapsed = 0.0f; elapsed < duration; elapsed += Time.deltaTime) {
 			speed = slowSpeed;
-			elapsed += Time.deltaTime;
 			yield return null;
 		}
-
-		// speed = Mathf.Lerp(slowSpeed,4 * slowSpeed, 0.25f); 
-		speed = 4 * slowSpeed;
+		// speed = Mathf.Lerp(slowSpeed,factor * slowSpeed, 0.25f); 
+		speed = factor * slowSpeed;
 	}
-
-	/// <summary>  player performance in a float [0,1]</summary>
-	/// <returns></returns>
-	/*public float GetPlayerPerformance()
-	{
-	    Debug.Log(VAR);
-	}*/
 }

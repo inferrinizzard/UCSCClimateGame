@@ -11,7 +11,7 @@ public class Reservoir : MonoBehaviour {
 	}
 
 	/// <summary> Put out a fire</summary>
-	private void OnMouseDown() {
+	void OnMouseDown() {
 		/*// click on fire icon
 		// if on fire, puts out fire; Pre: with remaining water 
 		if (isOnFire && WaterIHave.EnoughWater())
@@ -21,6 +21,6 @@ public class Reservoir : MonoBehaviour {
 		    WaterIHave.UseWater();
 		}*/
 
-		PlayerInteractions.addDestinationToPath(gameObject.transform);
+		PlayerInteractions.AddDestinationToPath(transform);
 	}
 }
