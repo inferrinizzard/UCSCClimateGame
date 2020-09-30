@@ -16,8 +16,8 @@ public class SubtropicsController : RegionController {
 
 	protected override void Start() {
 		base.Start();
-		wind = GetComponent<Wind>();
-		world = GetComponent<SubtropicsWorld>();
+		wind = GetComponentInChildren<Wind>();
+		world = GetComponentInChildren<SubtropicsWorld>();
 	}
 
 	protected override void Update() {
@@ -25,6 +25,7 @@ public class SubtropicsController : RegionController {
 	}
 
 	protected override void GameOver() {
+		base.GameOver();
 		Debug.Log(GetFirePercentage());
 	}
 
