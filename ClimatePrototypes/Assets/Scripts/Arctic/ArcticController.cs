@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Math = System.Math;
 
 using UnityEngine;
@@ -11,7 +12,6 @@ public class ArcticController : RegionController {
 	public bool summer { get => cycle.isSummer; }
 
 	[SerializeField] SeasonCycle cycle = default;
-	[SerializeField] Text scoreText = default;
 	/// <summary> present Buffers </summary>
 	[HideInInspector] public Buffer[] buffers;
 	[SerializeField] Transform ice = default;
@@ -30,18 +30,9 @@ public class ArcticController : RegionController {
 		}
 	}
 
-	protected override void Update() {
-		base.Update();
-		if (timer > 0) {
-			damage = 0;
-			foreach (Buffer b in buffers)
-				damage += b.health + 1;
-			scoreText.text = $"Ice Remaining: {damage}";
-		}
-	}
-
 	protected override void GameOver() {
 		base.GameOver();
+		Debug.Log($"Remaining {buffers.Select(b => b.health).Aggregate((sum, b) => b + sum)} ice of total {buffers.Length * 5} ice");
 		// TriggerUpdate(() => World.albedo.Update(World.Region.Arctic, World.Region.City, ProcessScore()));
 	}
 
