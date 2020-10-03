@@ -22,11 +22,13 @@ public class Paddle : MonoBehaviour {
 	void LateUpdate() => transform.position += (Mathf.Clamp(transform.position.x, -screenBounds.x + paddleWidth / 2, screenBounds.x - paddleWidth / 2) - transform.position.x) * Vector3.right;
 
 	void OnCollisionEnter2D(Collision2D other) {
+		AudioManager.Instance.Play("SFX_Paddle_Bounce");
 		var ball = other.transform.GetComponent<RadiationBall>();
 		if (ball.radiationType == SolarRadiationSpawner.Radiation.ShortWave) ball.Orient();
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
+		AudioManager.Instance.Play("SFX_Paddle_Bounce");
 		if (other.transform.GetComponent<RadiationBall>().radiationType == SolarRadiationSpawner.Radiation.LongWave) {
 			transform.localScale = new Vector3(Mathf.Max(.5f, transform.localScale.x * .95f), 1, 1);
 			Destroy(other.gameObject);
