@@ -20,6 +20,12 @@ public class Bill : MonoBehaviour {
 		ArrangeIcons(currentBill.effects);
 	}
 
+	void Print(string titleText, string bodyText) {
+		StartCoroutine(UIController.Typewriter(title, titleText, speed));
+		StartCoroutine(UIController.Typewriter(body, bodyText, speed));
+	}
+
+	/// <summary> Turn off icons that are not on bill </summary>
 	void ArrangeIcons(Dictionary<string, float> effects) {
 		List<RectTransform> showIcons = new List<RectTransform>();
 		foreach (Transform child in iconWrapper.transform) {
@@ -27,14 +33,10 @@ public class Bill : MonoBehaviour {
 			if (child.gameObject.activeSelf)
 				showIcons.Add(child as RectTransform);
 		}
+
 		float size = showIcons[0].rect.width;
 		int num = showIcons.Count;
-		foreach (var(child, i) in showIcons.Enumerator())
+		foreach ( var (child, i) in showIcons.Enumerator())
 			child.localPosition = new Vector2(size * ((i - num / 2) + (num % 2 == 1 ? 0 : .5f)), child.localPosition.y);
-	}
-
-	void Print(string titleText, string bodyText) {
-		StartCoroutine(UIController.Typewriter(title, titleText, speed));
-		StartCoroutine(UIController.Typewriter(body, bodyText, speed));
 	}
 }

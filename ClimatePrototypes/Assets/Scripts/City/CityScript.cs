@@ -8,24 +8,26 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CityScript : RegionController {
-	public static CityScript Instance { get => instance as CityScript; }
+public class CityScript : RegionController { // TODO: maybe rename to CityController for consistency
+	public static CityScript Instance { get => instance as CityScript; } // static instance
+	public enum BillDifficulty { Easy, Med, Hard }
+
+	BillDifficulty currentDifficulty = BillDifficulty.Easy;
+	Dictionary<BillDifficulty, List<BillData>> bills = new Dictionary<BillDifficulty, List<BillData>>();
+	List<BillData> currentBillList => bills[currentDifficulty];
+	BillData currentBill => currentBillList[currentBillIndex];
+	int currentBillIndex = 0;
 
 	[SerializeField] Text mainTitle = default;
 	[SerializeField] Bill left = default, right = default;
 	[SerializeField, Range(0.01f, 0.1f)] float speed = .1f;
 
-	Dictionary<BillDifficulty, List<BillData>> bills = new Dictionary<BillDifficulty, List<BillData>>();
-	public enum BillDifficulty { Easy, Med, Hard }
-	BillDifficulty currentDifficulty = BillDifficulty.Easy;
-	List<BillData> currentBillList => bills[currentDifficulty];
-	int currentBillIndex = 0;
-	BillData currentBill => currentBillList[currentBillIndex];
-
+	/// <summary> Namespace to hold bill data </summary>
 	public struct BillData {
 		public string name;
 		public BillHalf left, right;
 
+		/// <summary> inner struct for each half to preserve namespace </summary>
 		public struct BillHalf {
 			public string title, body, tags;
 			public Dictionary<string, float> effects;
@@ -34,20 +36,9 @@ public class CityScript : RegionController {
 
 		public BillData(string name, Dictionary<string, string> left = null, Dictionary<string, string> right = null) {
 			this.name = name;
-			// this.left = new BillHalf(left["title"], left["body"], CityScript.ParseTag(left["tags"]));
-			// this.right = new BillHalf(right["title"], right["body"], CityScript.ParseTag(right["tags"]));
 			this.left = new BillHalf(left["title"], left["body"], left["tags"]);
 			this.right = new BillHalf(right["title"], right["body"], right["tags"]);
 		}
-
-		// public Dictionary<string, string> this [string prop] {
-		// 	get => prop == "left" ? this.left : this.right;
-		// 	set { if (prop == "left") { this.left = value; } else { this.right = value; } }
-		// }
-
-		// public override string ToString() => System.String.Format("name:{0}, left:{1}, right:{2}", name,
-		// 	"{" + left.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}",
-		// 	"{" + right.Map(kvp => $"{kvp.Key}:[{kvp.Value}]").Reduce((acc, s) => $"{acc} {s}") + "}");
 	}
 
 	void Start() {
@@ -56,14 +47,12 @@ public class CityScript : RegionController {
 		(left.speed, right.speed) = (speed, speed);
 	}
 
-	protected override void Init() {
+	protected override void Init() { // called from parent
 		introBlock.GetComponentInChildren<Button>(true)?.onClick.AddListener(new UnityEngine.Events.UnityAction(() => {
 			mainTitle.transform.root.gameObject.SetActive(true);
 			InitBill(currentBill);
 		}));
 	}
-
-	protected override void GameOver() { }
 
 	public static Dictionary<BillDifficulty, List<BillData>> LoadBills() =>
 		new string[] { "easy", "med", "hard" }.Map(level =>

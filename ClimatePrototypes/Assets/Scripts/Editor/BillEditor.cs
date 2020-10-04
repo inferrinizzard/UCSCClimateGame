@@ -1,3 +1,9 @@
+/*
+ * If you want to use this class, you will need to refactor
+ * for the new BillData namespace struct + BillHalf format
+ * structure for the Bill data will be documented on the drive / README
+ */
+
 // using System.Collections.Generic;
 // using System.IO;
 // using System.Linq;
