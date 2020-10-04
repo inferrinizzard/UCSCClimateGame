@@ -12,7 +12,8 @@ public partial class EBM {
 		Clear();
 	}
 
-	public static(Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
+	/// <summary> Does entire timestep integration calculation </summary>
+	public static (Matrix<double>, Matrix<double>) Integrate(Vector<double> T = null, int years = 0, int timesteps = 0) {
 		T = T ?? 7.5f + 20 * (1 - 2 * x.PointwisePower(2));
 		years = years == 0 ? dur : years;
 		timesteps = timesteps == 0 ? nt : timesteps;
@@ -21,7 +22,7 @@ public partial class EBM {
 		Vector<double> Tg = Vector<double>.Build.DenseOfVector(T);
 		Vector<double> E = Tg * cw;
 
-		for (var(i, p) = (0, 0); i < years; i++)
+		for (var (i, p) = (0, 0); i < years; i++)
 			for (int j = 0; j < timesteps; j++) {
 				if (j % (nt / 100f) == 0) {
 					E100.SetColumn(p, E);
@@ -48,8 +49,8 @@ public partial class EBM {
 	}
 
 	/// <summary> Calculates Precipitation of regions</summary>
-	/// <param name="temp"> <c>Vector</c> of final temp column means</param>
-	/// <returns> <c>Vector</c> of Precipitation - Evapouration per region </returns>
+	/// <param name="temp"> `Vector` of final temp column means</param>
+	/// <returns> `Vector` of Precipitation - Evapouration per region </returns>
 	public static Vector<double> CalcPrecip(Vector<double> temp) {
 		Vector<double> dT = temp - tempControl;
 		Vector<double> dp_e = dT.PointwiseMultiply(np_e) * alpha;
@@ -66,7 +67,7 @@ public partial class EBM {
 	/// </code>
 	/// </example>
 	/// <returns> Tuple of double arrays(temp, energy, precip)</returns>
-	public static(double[], double[], double[]) Calc(IEnumerable<double> input = null, int years = 0, int timesteps = 0) {
+	public static (double[], double[], double[]) Calc(IEnumerable<double> input = null, int years = 0, int timesteps = 0) {
 		var(T100, E100) = Integrate(input == null ? null : Vector<double>.Build.Dense(input.ToArray()), years, timesteps);
 		temp = T100.Column(99);
 		energy = E100.Column(99);
@@ -77,6 +78,7 @@ public partial class EBM {
 		return (Condense(temp, regions), Condense(energy, regions), Condense(precip, regions));
 	}
 
+	/// <summary> Initialises precipidation data array and control temp </summary>
 	static void InitFirstRun(Matrix<double> T100) {
 		tempControl = Vector<double>.Build.DenseOfEnumerable(T100.FoldByRow((mean, col) => mean + col / T100.ColumnCount, 0d));
 		// (tempControl, energyControl) = (temp, energy);
@@ -88,6 +90,10 @@ public partial class EBM {
 
 	public static void Clear() => (temp, energy, precip) = (null, null, null);
 
+	/// <summary> arbitrary IEnumerable slicer </summary>
+	/// <param name="vec"> array-like to be cut </param>
+	/// <param name="n"> number of equal cuts </param>
+	/// <param name="cuts"> array of indices for arbitrary divisions </param>
 	public static IEnumerable<IEnumerable<double>> Slice(IEnumerable<double> vec, int n = -1, int[] cuts = null) =>
 		Func.Lambda((int m, int j) => vec.Select((x, i) =>
 				new { Index = i, Value = x })
@@ -99,14 +105,15 @@ public partial class EBM {
 		(n == -1 ? regions : n, 0);
 
 	public static double[] Condense(IEnumerable<double> vec, int n, int[] cuts = null) => Slice(vec, n, cuts).Select(x => x.Average()).ToArray();
-	// static double Average(IEnumerable<double> vec) { return x.Average(); }
 
-	static Predicate < (double, double) > Less = ((double, double) t) => t.Item1 < t.Item2;
-	static Predicate < (double, double) > GreatOrE = ((double, double) t) => t.Item1 >= t.Item2;
-	public static Vector<double> Sign0(Predicate < (double, double) > op, Vector<double> vec, Vector<double> result = null) => (result ?? vec).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
+	// static double Average(IEnumerable<double> vec) { return x.Average(); } // template for custom averaging function
+
+	static Predicate<(double, double)> Less = ((double, double) t) => t.Item1 < t.Item2; // condition for ↓
+	static Predicate<(double, double)> GreatOrE = ((double, double) t) => t.Item1 >= t.Item2; // condition for ↓
+	/// <summary> Represents python syntax of `x * (x < 0)` where `x` is a list </summary>
+	public static Vector<double> Sign0(Predicate<(double, double)> op, Vector<double> vec, Vector<double> result = null) => (result ?? vec).PointwiseMultiply(vec.Map(x => op((x, 0d)) ? 1d : 0d));
+
+	// debug printing function
 	static void Print(IEnumerable<double> nums) => UnityEngine.Debug.Log(nums == null ? "null" : nums.AsString());
 	static void Print(double num) => UnityEngine.Debug.Log(num);
 }
-
-// public sealed class Lambda<T> { public static Func<T, T> Cast = x => x; }
-// cast lambda delegate

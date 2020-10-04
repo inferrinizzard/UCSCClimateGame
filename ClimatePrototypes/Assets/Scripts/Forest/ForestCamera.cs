@@ -18,7 +18,7 @@ public class ForestCamera : MonoBehaviour {
 
 	IEnumerator SlideCamera(Vector2 target, Ease ease, float time = 1) {
 		Vector2 startPos = transform.position;
-		for (var(start, step) = (Time.time, 0f); step <= time; step = Time.time - start) {
+		for (var (start, step) = (Time.time, 0f); step <= time; step = Time.time - start) {
 			yield return null;
 			transform.position = (Vector3) (ease.Invoke(step / time, 0, 1, 1) * (target - startPos) + startPos) + Vector3.forward * transform.position.z;
 		}

@@ -24,7 +24,7 @@ public class ForestGrid : MonoBehaviour {
 	void Start() {
 		map = GetComponentInChildren<Tilemap>();
 
-		for (var(i, max) = (0, (int) map.size.x * map.size.y / 2 * 1); i < max; i++) {
+		for (var (i, max) = (0, (int) map.size.x * map.size.y / 2 * 1); i < max; i++) {
 			var randomPos = (Vector3) (map.cellBounds.max - map.cellBounds.min);
 			randomPos.Scale(new Vector3(Random.value, Random.value, Random.value));
 			var randomPosInt = Vector3Int.FloorToInt(randomPos) + map.cellBounds.min;

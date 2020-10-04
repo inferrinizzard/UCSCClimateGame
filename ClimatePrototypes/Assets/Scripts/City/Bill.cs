@@ -36,7 +36,7 @@ public class Bill : MonoBehaviour {
 
 		float size = showIcons[0].rect.width;
 		int num = showIcons.Count;
-		foreach ( var (child, i) in showIcons.Enumerator())
+		foreach (var (child, i) in showIcons.Enumerator())
 			child.localPosition = new Vector2(size * ((i - num / 2) + (num % 2 == 1 ? 0 : .5f)), child.localPosition.y);
 	}
 }
