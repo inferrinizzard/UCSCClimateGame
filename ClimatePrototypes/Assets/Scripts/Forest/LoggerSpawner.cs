@@ -6,14 +6,11 @@ using UnityEngine;
 public class LoggerSpawner : MonoBehaviour {
 	[SerializeField] GameObject loggerPrefab = default;
 	[SerializeField] float interval = 15;
-	void Start() {
-		var loggerSpawner = StartCoroutine(SpawnLogger(interval));
-	}
+	void Start() => StartCoroutine(SpawnLogger(interval));
 
 	IEnumerator SpawnLogger(float delay) {
 		yield return new WaitForSeconds(delay);
 		if (ForestController.Instance.activeTrees.Count > 0) {
-			// shuffle, sort, shift
 			var targetIndex = (int) (Random.value * ForestController.Instance.activeTrees.Count);
 			var target = ForestController.Instance.activeTrees[targetIndex];
 			ForestController.Instance.activeTrees.RemoveAt(targetIndex);
@@ -28,6 +25,6 @@ public class LoggerSpawner : MonoBehaviour {
 		newLogger.choppingTile = pos;
 
 		newLogger.OnReached.AddListener((PathfindingAgent agent) => onReached.Invoke(agent as Logger));
-		newLogger.OnReturn.AddListener(() => { Debug.Log("logger returned"); });
+		// newLogger.OnReturn.AddListener(() => { Debug.Log("logger returned"); });
 	}
 }

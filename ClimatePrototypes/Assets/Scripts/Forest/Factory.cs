@@ -21,18 +21,15 @@ public class Factory : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.CompareTag("Player")) {
-			if (other.TryGetComponent(out Volunteer v)) {
-				Debug.Log(other.gameObject);
-				v.OnReached.Invoke(v);
-				v.Stop();
-			}
+		if (other.TryGetComponent(out Volunteer v)) {
+			// Debug.Log(other.gameObject);
+			v.OnReached.Invoke(v);
+			v.Stop();
 		}
 	}
 
 	void OnMouseDown() {
-		if (ForestController.Instance.hasSelected) {
+		if (ForestController.Instance.hasSelected)
 			ForestController.Instance.SetVolunteerTarget(Camera.main.ScreenToWorldPoint(Input.mousePosition), VolunteerActions.Protest);
-		}
 	}
 }

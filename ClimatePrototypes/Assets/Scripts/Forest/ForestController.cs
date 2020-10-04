@@ -9,14 +9,13 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ForestController : RegionController {
-	public static ForestController Instance { get => instance as ForestController; }
+	public static ForestController Instance { get => instance as ForestController; } // static instance
 
 	[SerializeField] GameObject volunteerPrefab = default, uiPanel = default;
-	public int numActive;
 	[HideInInspector] public VolunteerUI selected;
-	public bool hasSelected { get => selected != null && !overUI; }
-
+	public int numActive;
 	[HideInInspector] public bool overUI = false;
+	public bool hasSelected { get => selected != null && !overUI; }
 
 	[HideInInspector] public Transform agentParent, utility;
 	public List<VolunteerTask> volunteers = new List<VolunteerTask>();
@@ -39,7 +38,7 @@ public class ForestController : RegionController {
 
 	protected override void Update() {
 		base.Update();
-		emissionsTracker.value = damage / 200f;
+		emissionsTracker.value = damage / 200f; // TODO: fix slider visual logic, positive and negative but from the middle out
 	}
 
 	protected override void GameOver() {
@@ -49,6 +48,7 @@ public class ForestController : RegionController {
 		TriggerUpdate(() => World.co2.Update(region, delta : effect * 1.18)); // [-1.18, 1.18]
 	}
 
+	/// <summary> Generates new volunteer / logger on click </summary>
 	public PathfindingAgent NewAgent(GameObject prefab, Vector3 pos, Vector3 target) {
 		var newAgent = GameObject.Instantiate(prefab, pos, Quaternion.identity, agentParent).GetComponent<PathfindingAgent>();
 		newAgent.transform.position = new Vector3(newAgent.transform.position.x, newAgent.transform.position.y, 0);
@@ -59,6 +59,7 @@ public class ForestController : RegionController {
 		return newAgent;
 	}
 
+	/// <summary> Creates volunteer and applies path target </summary>
 	public void SetVolunteerTarget(Vector3 pos, UnityAction<Volunteer> onReached) {
 		var newVolunteer = NewAgent(volunteerPrefab, Camera.main.ScreenToWorldPoint(selected.transform.position), pos) as Volunteer;
 		newVolunteer.ID = volunteers.Count;
@@ -76,6 +77,7 @@ public class ForestController : RegionController {
 		});
 	}
 
+	/// <summary> Vector3Int overload (for ForestGrid) </summary>
 	public void SetVolunteerTarget(Vector3Int pos, UnityAction<Volunteer> onReached) {
 		SetVolunteerTarget((Vector3) pos, onReached);
 		volunteers[volunteers.Count - 1].activeTile = pos;
@@ -83,7 +85,7 @@ public class ForestController : RegionController {
 }
 
 // [System.Serializable]
-public class VolunteerTask { //TODO: do these get cleared?
+public class VolunteerTask {
 	public Volunteer volunteer;
 	public VolunteerUI UI;
 	public Vector3Int? activeTile;

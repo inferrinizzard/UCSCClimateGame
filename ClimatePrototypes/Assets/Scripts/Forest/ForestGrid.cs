@@ -19,13 +19,10 @@ public class ForestGrid : MonoBehaviour {
 	public static float growthTime = 20;
 	// public List<ForestTree> treeMonitor;
 
-	void Awake() {
-		trees = _trees;
-	}
+	void Awake() => trees = _trees;
 
 	void Start() {
 		map = GetComponentInChildren<Tilemap>();
-		// Debug.Log(map.cellBounds); //boundsInt
 
 		for (var(i, max) = (0, (int) map.size.x * map.size.y / 2 * 1); i < max; i++) {
 			var randomPos = (Vector3) (map.cellBounds.max - map.cellBounds.min);
@@ -46,9 +43,8 @@ public class ForestGrid : MonoBehaviour {
 					map.SetTile(new Vector3Int(newHover.x, newHover.y, 1), hoverTile);
 					map.SetColor(new Vector3Int(newHover.x, newHover.y, 1), new Color(1, 1, 1, .3f));
 				}
-			} else {
+			} else
 				ClearHover(hoverCell);
-			}
 			hoverCell = newHover;
 
 			if (Input.GetMouseButtonDown(0) && map.cellBounds.Contains(hoverCell) && !ForestController.Instance.activeTiles.Contains(hoverCell)) {
@@ -59,8 +55,6 @@ public class ForestGrid : MonoBehaviour {
 				ClearHover(hoverCell);
 			}
 		}
-
-		// treeMonitor = currentTrees;
 	}
 
 	public static void ClearHover(Vector3Int cell) {
@@ -103,10 +97,7 @@ public class ForestTree {
 
 	public override string ToString() => pos.ToString();
 
-	~ForestTree() {
-		// Debug.Log($"destructor called on {this}");
-		ForestController.Instance.StopCoroutine(sequestration);
-	}
+	~ForestTree() => ForestController.Instance.StopCoroutine(sequestration);
 
 	IEnumerator Sequestre(float interval = 2, float initialDelay = 0) {
 		yield return new WaitForSeconds(initialDelay);
@@ -133,13 +124,6 @@ public class ForestTree {
 	}
 
 	static bool IsTree(TileBase tile) => tile != null && tile != ForestGrid.dead && tile != ForestGrid.stump && tile != ForestGrid.empty;
-	// float NeighbourCount() => (new [] { Vector3Int.up, Vector3Int.left, Vector3Int.right, Vector3Int.down }).Count(dir => IsTree(ForestGrid.map.GetTile(pos + dir)));
-	float NeighbourCount() {
-		return (new [] { Vector3Int.up, Vector3Int.left, Vector3Int.right, Vector3Int.down }).Count(dir => IsTree(ForestGrid.map.GetTile(pos + dir)));
-		// int count = 0;
-		// foreach (var dir in new [] { Vector3Int.up, Vector3Int.left, Vector3Int.right, Vector3Int.down })
-		// 	if (IsTree(ForestGrid.map.GetTile(pos + dir)))
-		// 		count++;
-		// return count;
-	}
+	// TODO: maybe store this array somewhere and not instantiate every time 
+	float NeighbourCount() => (new [] { Vector3Int.up, Vector3Int.left, Vector3Int.right, Vector3Int.down }).Count(dir => IsTree(ForestGrid.map.GetTile(pos + dir)));
 }

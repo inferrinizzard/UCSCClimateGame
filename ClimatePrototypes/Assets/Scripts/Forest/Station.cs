@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Station : MonoBehaviour {
+public class Station : MonoBehaviour { // TODO: remove subtargets and make it more like Factory
 	BoxCollider2D col;
 	Dictionary<Transform, bool> subtargets = new Dictionary<Transform, bool>();
 	int awaitSubTargetReached = 0;

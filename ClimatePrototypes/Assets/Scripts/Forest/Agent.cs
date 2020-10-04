@@ -7,14 +7,20 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class PathfindingAgent : MonoBehaviour {
+	// AStarPath variables // TODO: roll your own A* instead of using lib
 	protected AIDestinationSetter setter;
-	protected Transform pathTarget;
 	protected AIGoalReached targetGoal;
 	protected AIPath pathfinder;
+	/// <summary> path start pos </summary>
 	[HideInInspector] public Vector3 origin;
+	/// <summary> path end pos </summary>
+	protected Transform pathTarget;
 	[HideInInspector] public Animator anim;
+	/// <summary> callback for when end of path reached </summary>
 	public AgentUnityEvent OnReached;
+	/// <summary> callback for when task done and return </summary>
 	public UnityEvent OnReturn;
+	/// <summary> used to identify Volunteer in list </summary>
 	[HideInInspector] public int ID = -1;
 
 	void Awake() {
