@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+/// <summary> Protected class that persists in all scenes, Do not touch! </summary>
 public class Singleton<T> : MonoBehaviour where T : Component {
 	protected static T instance;
 	public static T Instance {

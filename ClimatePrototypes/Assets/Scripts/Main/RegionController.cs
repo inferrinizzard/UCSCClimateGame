@@ -7,16 +7,16 @@ using UnityEngine.UI;
 
 public abstract class RegionController : MonoBehaviour {
 	[HideInInspector] public int visits = 0;
-	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
+	public RegionIntro intro;
 	protected GameObject introBlock;
 
-	protected float timer = 60f;
 	[SerializeField] protected Text timerText = default;
+	protected float timer = 60f;
 	public float damage = 0f; // out of 100?
 
 	[HideInInspector] public bool paused = false;
-	protected bool updated = false;
+	protected bool updated = false; // TODO: this variable currently does nothing
 	protected virtual void Init() { }
 
 	public World.Region region;
@@ -29,8 +29,8 @@ public abstract class RegionController : MonoBehaviour {
 			s.transform.localScale = Vector3.one * GetScreenToWorldHeight / s.sprite.bounds.size.y;
 	}
 
-	public static float GetScreenToWorldHeight { get => Camera.main.ViewportToWorldPoint(Vector2.one).y - Camera.main.ViewportToWorldPoint(Vector2.zero).y; }
-	public static float GetScreenToWorldWidth { get => Camera.main.ViewportToWorldPoint(Vector2.one).x - Camera.main.ViewportToWorldPoint(Vector2.zero).x; }
+	public static float GetScreenToWorldHeight { get => Camera.main.ViewportToWorldPoint(Vector2.one).y - Camera.main.ViewportToWorldPoint(Vector2.zero).y; } // TODO: global variable class
+	public static float GetScreenToWorldWidth { get => Camera.main.ViewportToWorldPoint(Vector2.one).x - Camera.main.ViewportToWorldPoint(Vector2.zero).x; } // TODO: global variable class
 
 	public void AssignRegion(string name) => region = (World.Region) System.Enum.Parse(typeof(World.Region), name);
 
@@ -53,10 +53,10 @@ public abstract class RegionController : MonoBehaviour {
 	protected virtual void Update() {
 		timer -= Time.deltaTime;
 		timerText.text = $"{Mathf.Max(0, Mathf.Floor(timer))}";
-		if (timer < -1)
+		if (timer < -1) // if region does not have timer, like City
 			return;
 		if (timer <= 0) {
-			timer = -2;
+			timer = -2; // -2 is finished state
 			GameOver();
 			StartModel();
 		}
@@ -68,6 +68,7 @@ public abstract class RegionController : MonoBehaviour {
 		Pause();
 	}
 
+	/// <summary> Opens a new thread to run the EBM model in the background while Unity manages UI </summary>
 	protected virtual void StartModel() {
 		if (GameManager.Instance.runModel && !GameManager.Instance.runningModel) {
 			GameManager.Instance.runningModel = true;

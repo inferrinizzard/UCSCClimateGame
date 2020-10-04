@@ -8,12 +8,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager> {
-	public bool runModel = true;
-	[SerializeField] GameObject loadingScreen = default;
-	[SerializeField] GameObject quitPrompt = default;
-	public RegionController currentRegion;
+	[SerializeField] GameObject loadingScreen = default, quitPrompt = default;
 	[HideInInspector] public bool runningModel = false;
+	public bool runModel = true;
 
+	public RegionController currentRegion;
 	Dictionary<World.Region, int> visits = new Dictionary<World.Region, int> { { World.Region.Arctic, 0 }, { World.Region.Fire, 0 }, { World.Region.Forest, 0 }, { World.Region.City, 0 } };
 
 	public override void Awake() {
@@ -52,23 +51,21 @@ public class GameManager : Singleton<GameManager> {
 		instance.loadingScreen.SetActive(false);
 		UIController.Instance.ToggleBackButton(to.name != "Overworld");
 		if (to.name == "Overworld")
-			AudioManager.Instance.Play("BGM_Menu");
+			AudioManager.Instance.Play("BGM_Menu"); // TODO: sound name variable class
 		else
-			AudioManager.Instance.Play("BGM_" + to.name);
-		FindCurrentRegion(to);
-		// if (to.name == "Overworld")
-		// 	this.Print(World.averageTemp, EBM.F); // temp limit: start + 2 (17.5?)
+			AudioManager.Instance.Play("BGM_" + to.name); // TODO: sound name variable class
+		if (to.name != "Overworld")
+			FindCurrentRegion(to);
 	}
 
 	void FindCurrentRegion(Scene s) {
-		if (s.name != "Overworld")
-			foreach (GameObject o in s.GetRootGameObjects())
-				if (o.TryComponent<RegionController>(out currentRegion)) {
-					currentRegion.AssignRegion(s.name);
-					currentRegion.Intro(visits[currentRegion.region]++);
-					currentRegion.visits = visits[currentRegion.region];
-					break;
-				}
+		foreach (GameObject o in s.GetRootGameObjects()) // RegionController child must be on root obj
+			if (o.TryComponent<RegionController>(out currentRegion)) {
+				currentRegion.AssignRegion(s.name);
+				currentRegion.Intro(visits[currentRegion.region]++);
+				currentRegion.visits = visits[currentRegion.region];
+				break;
+			}
 	}
 
 	public static void Transition(string scene) => instance.StartCoroutine(LoadScene(scene));
@@ -79,20 +76,17 @@ public class GameManager : Singleton<GameManager> {
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.realtimeSinceStartup;
 
-		Instance.loadingScreen.SetActive(true);
+		Instance.loadingScreen.SetActive(true); // TODO: news scroll during loading screen
 
 		while (!asyncLoad.isDone || GameManager.Instance.runningModel) {
 			yield return null;
-			// instance.loadingBar.normalizedValue = asyncLoad.progress / .9f;
 
-			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && !GameManager.Instance.runningModel) {
+			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && !GameManager.Instance.runningModel) { // awaits both model and scene load
 				Time.timeScale = 1;
 				asyncLoad.allowSceneActivation = true;
 				AudioManager.Instance.StopMusic(); // could move earlier and play new music during newsscroll
-				if (name == "Overworld") {
+				if (name == "Overworld")
 					UIController.Instance.IncrementTurn();
-					// World.DetermineImpact();
-				}
 				UIController.Instance.SetPrompt(false);
 				Cursor.visible = true;
 				yield break;

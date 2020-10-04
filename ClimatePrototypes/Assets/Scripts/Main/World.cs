@@ -10,15 +10,18 @@ using UnityEngine;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
 public static class World {
+	public enum Region { Arctic, City, Forest, Fire }
+
 	public static string worldName = "";
 	public static float money = 100f, publicOpinion = 0f;
 	public static int turn = 1;
 	public static double[] temp, energy, precip, startingTemp;
 	public static float maxTempChange = 10f;
 	public static double averageTemp { get => temp?.Average() ?? 0; }
-	public static Dictionary<string, Dictionary<double, List<double>>> ranges;
+	public static Dictionary<string, Dictionary<double, List<double>>> ranges; // TODO: currently unused
+	public static List < (Region, Region, string) > lineToDraw = new List < (Region, Region, string) > (); // TODO: this draws lines on the overworld, store it there instead?
 
-	public static void DetermineImpact() {
+	public static void DetermineImpact() { // TODO: set up restart prompt or auto with player guide
 		if (averageTemp > startingTemp.Average() + maxTempChange) {
 			Debug.Log("hey it's hot, you might wanna restart");
 			Debug.Break();
@@ -26,7 +29,6 @@ public static class World {
 		}
 	}
 
-	public enum Region { Arctic, City, Forest, Fire }
 	public struct Factor {
 		public string name, verbose;
 		Action<double> update;
@@ -44,13 +46,12 @@ public static class World {
 		}
 	}
 
-	public static List < (Region, Region, string) > lineToDraw = new List < (Region, Region, string) > ();
-
 	public static readonly Factor co2 = new Factor("co2", "Emissions", new Action<double>(deltaF => EBM.F += deltaF)),
 		albedo = new Factor("land", "LandUse", new Action<double>(deltaa0 => EBM.a0 += deltaa0)), //was s1
 		economy = new Factor("money", "Economy", new Action<double>(delta => money += (float) delta)),
 		opinion = new Factor("opinion", "PublicOpinion", new Action<double>(delta => publicOpinion += (float) delta));
 
+	/// <summary> Get factor from shorthand or full name, strings are bad so this Method is too </summary>
 	public static Factor? GetFactor(string factor) {
 		bool RegexCheck(string pattern) => new Regex(pattern, RegexOptions.IgnoreCase).IsMatch(factor);
 		switch (factor) {
@@ -67,6 +68,7 @@ public static class World {
 		}
 	}
 
+	/// <summary> Called on game start </summary>
 	public static void Init() {
 		Calc();
 		startingTemp = new double[temp.Length];
