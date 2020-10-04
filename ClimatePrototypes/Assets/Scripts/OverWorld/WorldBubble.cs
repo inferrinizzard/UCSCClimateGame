@@ -18,8 +18,8 @@ public class WorldBubble : MonoBehaviour {
 		size = bubble.transform.localScale.x;
 		startPos = bubble.transform.localPosition;
 		bubble.transform.localScale = Vector3.one * minSize;
-		bubble.transform.Find("Base").GetComponent<SpriteRenderer>().color = colour;
-		foreach (SpriteRenderer icon in transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>()) {
+		bubble.transform.Find("Base").GetComponent<SpriteRenderer>().color = colour; // TODO: never use Find
+		foreach (SpriteRenderer icon in transform.Find("Icons").GetComponentsInChildren<SpriteRenderer>()) { // TODO: never use Find
 			icons.Add(icon.name.Replace("Icon", string.Empty), icon);
 			icon.gameObject.SetActive(false);
 		}
@@ -46,11 +46,12 @@ public class WorldBubble : MonoBehaviour {
 			StartCoroutine(Bubble(entering: false, dur: .25f));
 	}
 
+	/// <summary> expands and collapses bubble </summary>
 	IEnumerator Bubble(bool entering, float dur, Vector2 pos = default(Vector2)) {
 		active = entering;
 		if (entering)
 			bubble.SetActive(true);
-		for (var(start, step) = (Time.time, 0f); step < dur; step = Time.time - start) {
+		for (var (start, step) = (Time.time, 0f); step < dur; step = Time.time - start) {
 			yield return null;
 			float scale = entering ?
 				EaseMethods.CubicEaseOut(step / dur, minSize, size, size) :
@@ -66,7 +67,7 @@ public class WorldBubble : MonoBehaviour {
 	IEnumerator EnterRegion(Vector3 bubblePos, float time = .5f) {
 		StartCoroutine(UIController.SlideNav(UIController.Instance.navbar.transform, up : true));
 		Vector3 camStartPos = Camera.main.transform.position;
-		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+		for (var (start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
 			yield return null;
 			Camera.main.transform.position = Vector3.Lerp(camStartPos, bubblePos, step / time);
 			Camera.main.orthographicSize = 5 * (1 - step / time); // slow

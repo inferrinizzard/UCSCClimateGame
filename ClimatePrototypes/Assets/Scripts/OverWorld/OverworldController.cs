@@ -8,7 +8,6 @@ public class OverworldController : MonoBehaviour {
 	[SerializeField] Transform moon = default;
 	Transform world;
 	[SerializeField] SpriteRenderer bg = default;
-
 	[HideInInspector] public Material fadeMat;
 
 	void Start() {
@@ -32,17 +31,15 @@ public class OverworldController : MonoBehaviour {
 
 			moon.transform.position = new Vector2(x, y) + (Vector2) world.position;
 			moon.transform.eulerAngles = Vector3.forward * Mathf.Sin(step) * Mathf.Rad2Deg;
-			if (Mathf.Sin(step) > 0)
-				moonSprite.sortingOrder = 0;
-			else
-				moonSprite.sortingOrder = -2;
+			moonSprite.sortingOrder = Mathf.Sin(step) > 0 ? 0 : 2;
 		}
 	}
 
+	/// <summary> used to load world in from title screen </summary>
 	public void SendToBottom() {
 		Camera.main.transform.position = Vector3.forward * -10;
-		bg.transform.position = new Vector3(bg.transform.position.x, -Camera.main.ViewportToWorldPoint(Vector2.zero).y - bg.bounds.extents.y, bg.transform.position.z);
-		Camera.main.transform.position = new Vector3(0, bg.bounds.min.y - Camera.main.ViewportToWorldPoint(Vector2.zero).y, -10);
+		bg.transform.position = new Vector3(bg.transform.position.x, -Camera.main.ViewportToWorldPoint(Vector2.zero).y - bg.bounds.extents.y, bg.transform.position.z); // TODO: global variable class
+		Camera.main.transform.position = new Vector3(0, bg.bounds.min.y - Camera.main.ViewportToWorldPoint(Vector2.zero).y, -10); // TODO: global variable class
 	}
 
 	public void ClearWorld() {
@@ -53,7 +50,7 @@ public class OverworldController : MonoBehaviour {
 	public IEnumerator EnterWorld(float time = 1) {
 		ClearWorld();
 		SpriteRenderer[] sprites = worldWrapper.GetComponentsInChildren<SpriteRenderer>();
-		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+		for (var (start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
 			yield return null;
 			foreach (var sr in sprites)
 				sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, step);
