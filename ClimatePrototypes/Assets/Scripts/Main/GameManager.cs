@@ -51,6 +51,10 @@ public class GameManager : Singleton<GameManager> {
 	void InitScene(Scene from, Scene to) {
 		instance.loadingScreen.SetActive(false);
 		UIController.Instance.ToggleBackButton(to.name != "Overworld");
+		if (to.name == "Overworld")
+			AudioManager.Instance.Play("BGM_Menu");
+		else
+			AudioManager.Instance.Play("BGM_" + to.name);
 		FindCurrentRegion(to);
 		// if (to.name == "Overworld")
 		// 	this.Print(World.averageTemp, EBM.F); // temp limit: start + 2 (17.5?)
@@ -84,6 +88,7 @@ public class GameManager : Singleton<GameManager> {
 			if (asyncLoad.progress >= .9f && Time.realtimeSinceStartup - start > 1 && !GameManager.Instance.runningModel) {
 				Time.timeScale = 1;
 				asyncLoad.allowSceneActivation = true;
+				AudioManager.Instance.StopMusic(); // could move earlier and play new music during newsscroll
 				if (name == "Overworld") {
 					UIController.Instance.IncrementTurn();
 					// World.DetermineImpact();

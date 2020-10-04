@@ -20,6 +20,7 @@ public class Buffer : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collision) {
 		if (collision.transform.TryGetComponent(out RadiationBall R)) {
+			AudioManager.Instance.Play("SFX_Ice_Break");
 			if (health > 0)
 				AssignSprite(--health);
 			else

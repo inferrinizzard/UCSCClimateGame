@@ -13,7 +13,8 @@ public class AudioManager : Singleton<AudioManager> {
 	musicSource;
 	public enum AudioType { SFX, Music }
 
-	void Awake() {
+	public override void Awake() {
+		base.Awake();
 		// collect sounds here? maybe even read from sound resources
 	}
 
@@ -24,8 +25,12 @@ public class AudioManager : Singleton<AudioManager> {
 		sfxSource2 = gameObject.AddComponent<AudioSource>();
 		sfxSource3 = gameObject.AddComponent<AudioSource>();
 		musicSource = gameObject.AddComponent<AudioSource>();
+		musicSource.loop = true;
 	}
 
+	public void StopMusic() => musicSource.Stop();
+
+	public void Play(string sound) => Play(GetSound(sound));
 	public void Play(Sound sound) {
 		AudioSource channel = GetChannel(sound.type);
 		sound.source = channel;
@@ -33,9 +38,7 @@ public class AudioManager : Singleton<AudioManager> {
 		channel.volume = sound.volume;
 		channel.pitch = sound.pitch;
 		channel.Play();
-		Debug.Log($"played {sound} on channel {channel}");
-		// Debug.Log(channel);
-		// Debug.Log(sound);
+		// Debug.Log($"played {sound} on channel {channel.name}");
 	}
 
 	AudioSource GetChannel(AudioType type) {
@@ -49,6 +52,7 @@ public class AudioManager : Singleton<AudioManager> {
 			return sfxSource3;
 		}
 	}
+
 	public static Sound GetSound(string name) => Instance.sounds.Find(s => s.name == name);
 	public void PlaySound(AudioClip clip) => Play(GetSound(clip.name));
 }

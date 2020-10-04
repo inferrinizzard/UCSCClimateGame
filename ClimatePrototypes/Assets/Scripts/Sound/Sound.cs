@@ -6,11 +6,11 @@ public class Sound {
 	public string name { get => clip.name; }
 	public AudioClip clip;
 	public AudioManager.AudioType type;
-	[Range(0, 1)] public float volume = 1;
-	[Range(.1f, .3f)] public float pitch = 1;
+	[Range(0, 1)] public float volume = .5f;
+	[Range(-3f, 3f)] public float pitch = 1;
 	[HideInInspector] public AudioSource source;
 
-	public Sound(AudioClip clip, float volume = 1, float pitch = 1) {
+	public Sound(AudioClip clip, float volume = .5f, float pitch = 1) {
 		this.clip = clip;
 		this.volume = volume;
 		this.pitch = pitch;
