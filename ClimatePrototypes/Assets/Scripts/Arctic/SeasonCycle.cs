@@ -20,12 +20,11 @@ public class SeasonCycle : MonoBehaviour {
 		fadeIn = (float step, float dur) => EaseMethods.CubicEaseOut(step, 0, 1, dur);
 		fadeOut = (float step, float dur) => EaseMethods.CubicEaseIn(dur - step, 0, 1, dur);
 
-		StartCoroutine(ChangeDayNight(isSummer));
+		StartCoroutine(ChangeSeasons());
 	}
 
-	/// <summary> Controls day-night cycle. </summary>
-	IEnumerator ChangeDayNight(bool currentSeason, float duration = .5f) {
-		isSummer = currentSeason;
+	/// <summary> Controls seasonal cycle. </summary>
+	IEnumerator ChangeSeasons(float duration = .5f) {
 		for (float timer = duration; timer > dayDuration - transitionTime; timer -= Time.deltaTime) {
 			yield return null;
 			float step = timer - (dayDuration - transitionTime);
@@ -34,6 +33,7 @@ public class SeasonCycle : MonoBehaviour {
 		}
 		ArcticController.Instance.buffers.ToList().ForEach(b => b.AssignSprite());
 		yield return new WaitForSeconds(duration);
-		StartCoroutine(ChangeDayNight(!currentSeason, dayDuration));
+		isSummer = !isSummer;
+		StartCoroutine(ChangeSeasons(dayDuration));
 	}
 }

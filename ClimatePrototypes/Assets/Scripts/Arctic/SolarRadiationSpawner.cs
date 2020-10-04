@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class SolarRadiationSpawner : MonoBehaviour {
+public class SolarRadiationSpawner : MonoBehaviour { // TODO: rename to be consistent with LongWaveSpawner
+	public enum Radiation { LongWave, ShortWave }
+
 	[SerializeField] float ballEmitWaitSeconds = 2f;
 	[SerializeField] GameObject ballPrefab = default;
 	Transform radiationParent;
-
-	public enum Radiation { LongWave, ShortWave }
 
 	void Start() {
 		radiationParent = new GameObject("Solar Radiation").transform;

@@ -5,14 +5,13 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class CloudSpawner : MonoBehaviour {
+	public enum CloudType { High, Low }
+
 	[SerializeField] CloudType type = CloudType.High;
 	[SerializeField] GameObject cloudPrefab = default;
 	[SerializeField] bool canSpawn = true;
 	[SerializeField] float cloudSpawnWaitSeconds = 8f;
 	Transform cloudParent;
-
-	public enum CloudType { High, Low }
-
 	bool left = true;
 
 	void Start() {

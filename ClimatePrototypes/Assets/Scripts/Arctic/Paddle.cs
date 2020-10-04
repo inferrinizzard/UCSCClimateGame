@@ -6,9 +6,9 @@ using UnityEngine;
 public class Paddle : MonoBehaviour {
 	Rigidbody2D rb2D;
 	[SerializeField] float paddleSpeed = 5f;
-	float horizontalInput = 0f;
-	Vector2 screenBounds;
 	float paddleWidth;
+	float horizontalInput = 0f;
+	Vector2 screenBounds; // TODO: global variable class
 
 	void Start() {
 		rb2D = GetComponent<Rigidbody2D>();
@@ -21,14 +21,16 @@ public class Paddle : MonoBehaviour {
 	void Move(float input) => rb2D.velocity = Vector3.right * input * paddleSpeed;
 	void LateUpdate() => transform.position += (Mathf.Clamp(transform.position.x, -screenBounds.x + paddleWidth / 2, screenBounds.x - paddleWidth / 2) - transform.position.x) * Vector3.right;
 
+	/// <summary> handles short wave radiation </summary>
 	void OnCollisionEnter2D(Collision2D other) {
-		AudioManager.Instance.Play("SFX_Paddle_Bounce");
+		AudioManager.Instance.Play("SFX_Paddle_Bounce"); // TODO: audio global name class
 		var ball = other.transform.GetComponent<RadiationBall>();
 		if (ball.radiationType == SolarRadiationSpawner.Radiation.ShortWave) ball.Orient();
 	}
 
+	/// <summary> handles long wave radiation </summary>
 	void OnTriggerEnter2D(Collider2D other) {
-		AudioManager.Instance.Play("SFX_Paddle_Bounce");
+		AudioManager.Instance.Play("SFX_Paddle_Bounce"); // TODO: audio global name class
 		if (other.transform.GetComponent<RadiationBall>().radiationType == SolarRadiationSpawner.Radiation.LongWave) {
 			transform.localScale = new Vector3(Mathf.Max(.5f, transform.localScale.x * .95f), 1, 1);
 			Destroy(other.gameObject);

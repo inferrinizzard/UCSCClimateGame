@@ -5,9 +5,9 @@ using UnityEngine;
 using Radiation = SolarRadiationSpawner.Radiation;
 
 public class RadiationBall : MonoBehaviour {
-	[SerializeField] Vector2 force = new Vector2(2, 5);
 	Rigidbody2D rb;
-	Vector2 screenMin, screenMax;
+	[SerializeField] Vector2 force = new Vector2(2, 5);
+	Vector2 screenMin, screenMax; // TODO: global variable class
 	public Radiation radiationType = Radiation.ShortWave;
 
 	void Start() {
@@ -24,11 +24,13 @@ public class RadiationBall : MonoBehaviour {
 		Orient();
 	}
 
+	/// <summary> points ball in proper direction </summary>
 	public void Orient() => transform.eulerAngles = Vector3.forward * (Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg + 90);
 
 	void FixedUpdate() {
 		if (transform.position.y < screenMin.y)
 			ArcticController.Instance.damage += 10;
+		// TODO: do this ↓ better with array + linq
 		if (transform.position.x < screenMin.x || transform.position.x > screenMax.x || transform.position.y < screenMin.y || (transform.position.y > screenMax.y && rb.velocity.y > 0))
 			Destroy(gameObject);
 	}
