@@ -17,7 +17,6 @@ public class SubtropicsPlayer : MonoBehaviour {
 	bool filling = false, slow = false;
 	float lastUsedWater = 0;
 
-	Color highlightColor = new Color(176, 0, 132, 255), normalColor = new Color(255, 119, 221, 255);
 	SpriteRenderer playerRenderer;
 
 	public Vector3? target;
@@ -29,7 +28,6 @@ public class SubtropicsPlayer : MonoBehaviour {
 		bladeAnimator = GetComponentInChildren<Animator>();
 		waterTR = GetComponentInChildren<TrailRenderer>();
 		playerRenderer = GetComponent<SpriteRenderer>();
-		playerRenderer.color = normalColor;
 		waterTR.enabled = false;
 
 		// draw line
