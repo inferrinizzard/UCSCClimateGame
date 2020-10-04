@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 public class SubtropicsCloud : MonoBehaviour {
 	[SerializeField] float speed = 0;
-	Vector2 worldMin, worldMax;
+	Vector2 worldMin, worldMax; // TODO: global variable class
 	Vector2 velocity;
 
 	void Start() {
@@ -25,7 +24,7 @@ public class SubtropicsCloud : MonoBehaviour {
 	Vector3 CheckVelocity() =>
 		velocity = SubtropicsController.Instance.wind.dir.ToString()
 		.Select(d => (
-			new Dictionary<char, Vector3> { 
+			new Dictionary<char, Vector3> { // TODO: move this dictionary to SubtropicsController or SubtropicsWorld, used elsewhere
 				{ 'S', Vector3.down },
 				{ 'N', Vector3.up },
 				{ 'W', Vector3.left },
@@ -34,6 +33,7 @@ public class SubtropicsCloud : MonoBehaviour {
 		) [d]).Aggregate((acc, d) => acc + d);
 
 	void Wrap() {
+		// TODO: make this ↓ better with array + linq
 		Vector3 worldDist = (worldMax - worldMin) / 2;
 		if (transform.position.x > worldMax.x && velocity.x > 0)
 			transform.position = new Vector3(-worldDist.x * 1.5f, transform.position.y, transform.position.z);

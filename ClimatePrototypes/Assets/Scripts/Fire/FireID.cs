@@ -4,13 +4,11 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class FireID : Tile {
+public class FireID : Tile { // TODO: rename FireID to something like FireTile
 	[SerializeField] Sprite fireGreenSprite = default;
 	[SerializeField] Sprite[] treeFires = default;
 
-	void Start() {
-		StartCoroutine(WaitForFire(4f));
-	}
+	void Start() => StartCoroutine(WaitForFire(4f));
 
 	protected override void UpdateTile() {
 		if (idManager.id == IdentityManager.Identity.Fire) {
@@ -25,14 +23,13 @@ public class FireID : Tile {
 		// if I am fire, I ignite my non-fire neighbors coroutine
 		GameObject[] myNeighbors = SubtropicsController.World.GetNeighbors(gameObject);
 
-		foreach (var neighbor in myNeighbors) {
+		foreach (var neighbor in myNeighbors)
 			if (neighbor != null) {
 				IdentityManager.Identity neighborID = neighbor.GetComponent<IdentityManager>().id;
 				IdentityManager.Moisture neighborMoisture = neighbor.GetComponent<IdentityManager>().moisture;
 				if (neighborID == IdentityManager.Identity.Green && neighborMoisture != IdentityManager.Moisture.Moist) // if it is not already fire, or is water
 					neighborID = IdentityManager.Identity.Fire;
 			}
-		}
 	}
 
 	IEnumerator WaitForFire(float seconds) {

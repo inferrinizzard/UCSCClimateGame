@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class GreenID : Tile {
+public class GreenID : Tile { // TODO: rename to something l;ike GrassTile or GreenTile
 	// [SerializeField] Sprite greenSprite = default;
 
 	protected override void UpdateTile() {

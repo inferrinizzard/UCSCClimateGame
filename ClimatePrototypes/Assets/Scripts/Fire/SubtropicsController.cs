@@ -9,7 +9,7 @@ using Math = System.Math;
 using GlobalWorld = World;
 
 public class SubtropicsController : RegionController {
-	public static SubtropicsController Instance { get => instance as SubtropicsController; }
+	public static SubtropicsController Instance { get => instance as SubtropicsController; } // static instance
 
 	public SubtropicsPlayer player;
 	[HideInInspector] public Wind wind;
@@ -22,20 +22,17 @@ public class SubtropicsController : RegionController {
 		world = GetComponentInChildren<SubtropicsWorld>();
 	}
 
-	protected override void Update() {
-		base.Update();
-	}
-
 	protected override void GameOver() {
 		base.GameOver();
 		// Debug.Log(GetFirePercentage());
 		double effect = GetFirePercentage();
 		TriggerUpdate(() => GlobalWorld.co2.Update(region, delta: -effect)); // [-1, 0]
+		// TODO: make the effect non linear
 		// TriggerUpdate(() => GlobalWorld.co2.Update(region, delta: -Math.Min(1, Math.Log(effect)))); // [-1, 0]
 	}
 
 	public float GetFirePercentage() {
-		var(fire, trees) = world.cellArray.Cast<GameObject>().Select(obj =>
+		var (fire, trees) = world.cellArray.Cast<GameObject>().Select(obj =>
 			(obj.GetComponent<IdentityManager>().id == IdentityManager.Identity.Fire ? 1 : 0, obj.GetComponent<IdentityManager>().id == IdentityManager.Identity.Tree ? 1 : 0)
 		).Aggregate((tup, obj) => (tup.Item1 + obj.Item1, tup.Item2 + obj.Item2));
 

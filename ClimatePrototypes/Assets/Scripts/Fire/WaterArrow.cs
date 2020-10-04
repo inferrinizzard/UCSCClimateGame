@@ -9,11 +9,9 @@ public class WaterArrow : MonoBehaviour {
 	public Vector3 waterPosition;
 	[SerializeField] float speed = 10f;
 
-	void Start() {
-		player = SubtropicsController.Instance.player.transform;
-	}
+	void Start() => player = SubtropicsController.Instance.player.transform;
 
-	void FixedUpdate() {
+	void FixedUpdate() { // TODO: fix this rotation math
 		// Get degrees between two vectors
 		Vector3 targetDir = waterPosition - player.position;
 		Vector3 currentDir = (player.position - transform.position);

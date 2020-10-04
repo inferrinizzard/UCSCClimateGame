@@ -8,11 +8,11 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class Wind : MonoBehaviour {
+	public enum WindDir { NE, NW, SE, SW }
+
+	public WindDir dir = WindDir.NE;
 	public Text windSpeedText;
 	public Transform WindDirArrow;
-
-	public enum WindDir { NE, NW, SE, SW }
-	public WindDir dir = WindDir.NE;
 	public int windSpeed = 10;
 
 	void Start() {
@@ -37,7 +37,7 @@ public class Wind : MonoBehaviour {
 		WindDirArrow.localScale = Vector3.Slerp(WindDirArrow.localScale, targetSize, Time.deltaTime * smooth);
 
 		// arrow dir
-		float tiltAngle = Array.IndexOf(new [] { WindDir.NE, WindDir.SE, WindDir.SW, WindDir.NW }, dir) * -90 + 135;
+		float tiltAngle = Array.IndexOf(new [] { WindDir.NE, WindDir.SE, WindDir.SW, WindDir.NW }, dir) * -90 + 135; // TODO: use Enum values casted as array instead of anon instance
 		Quaternion target = Quaternion.Euler(0, 0, tiltAngle);
 		WindDirArrow.rotation = Quaternion.Slerp(WindDirArrow.rotation, target, Time.deltaTime * smooth);
 	}

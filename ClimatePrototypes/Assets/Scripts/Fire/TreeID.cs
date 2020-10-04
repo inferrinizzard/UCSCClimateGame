@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class TreeID : Tile {
-	[Header("References")]
+public class TreeID : Tile { // TODO: rename to like TreeTile or something
 	[SerializeField] Sprite[] trees = default;
 	[SerializeField] Sprite burntTree = default;
 	[HideInInspector] public int alt = 0;
