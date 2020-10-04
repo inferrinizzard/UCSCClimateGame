@@ -6,14 +6,15 @@ using UnityEngine.UI;
 
 public class UIController : Singleton<UIController> {
 	public Text worldNameText;
-	[SerializeField] Text moneyText = default;
-	[SerializeField] Text turnText = default;
-	[SerializeField] Button backButton = default;
-	[SerializeField] Button exitButton = default;
+	[SerializeField] Text moneyText = default,
+	turnText = default;
+	[SerializeField] Button backButton = default,
+	exitButton = default;
 	[SerializeField] GameObject returnPrompt = default;
 	public GameObject navbar;
 	Dictionary<GameObject, bool> uiActiveStatus = new Dictionary<GameObject, bool>();
 
+	/// <summary> Flips active status of UI element and stores it </summary>
 	public void Toggle(GameObject obj) {
 		if (!uiActiveStatus.ContainsKey(obj))
 			uiActiveStatus.Add(obj, !obj.activeSelf);
@@ -28,7 +29,7 @@ public class UIController : Singleton<UIController> {
 	}
 
 	void Update() {
-		moneyText.text = $"{World.money:F2}";
+		moneyText.text = $"{World.money:F2}"; // technically we don't use money anymore?
 	}
 
 	public void IncrementTurn() => turnText.text = $"Year {++World.turn}";
@@ -38,6 +39,7 @@ public class UIController : Singleton<UIController> {
 		exitButton.gameObject.SetActive(!on);
 	}
 
+	// methods that start with UI are non-static methods for Unity Editor buttons
 	public void UIQuitGame(int status) => GameManager.Instance.QuitGame(status);
 
 	public void UITransition(string level) {
@@ -63,8 +65,8 @@ public class UIController : Singleton<UIController> {
 		print.text = "";
 		for (int i = 0; i < text.Length; i++) {
 			print.text += text[i];
-			// if (Input.GetMouseButtonDown(0))
-			// print.text = text.Substring(0, (i = text.Length - 2));
+			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) // mouse or space to skip
+				print.text = text.Substring(0, (i = text.Length - 2));
 			yield return WaitForRealSeconds(delay);
 		}
 	}

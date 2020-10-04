@@ -21,7 +21,7 @@ public class TitleScreen : MonoBehaviour {
 			SceneManager.sceneLoaded += SetOverWorldActive;
 		} else SetOverWorldActive(SceneManager.GetSceneByName("Overworld"), LoadSceneMode.Single);
 
-		AudioManager.Instance.Play("BGM_Menu");
+		AudioManager.Instance.Play("BGM_Menu"); // TODO: global sound name class
 
 		for (int i = 0; i < uiReveal.Length; i++) {
 			foreach (Graphic g in uiReveal[i].GetComponentsInChildren<Graphic>())
@@ -71,7 +71,7 @@ public class TitleScreen : MonoBehaviour {
 
 	IEnumerator PanUp(float time = 1) {
 		float startHeight = cam.transform.position.y;
-		for (var(start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
+		for (var (start, step) = (Time.time, 0f); step < time; step = Time.time - start) {
 			yield return null;
 			cam.transform.position = new Vector3(0, Mathf.Lerp(startHeight, 0, step / time), -10);
 		}

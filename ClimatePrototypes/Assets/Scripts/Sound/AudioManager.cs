@@ -5,13 +5,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class AudioManager : Singleton<AudioManager> {
-	public List<Sound> sounds; // maybe build on load and parse through all playables?
-	AudioSource sfxSource1,
-	sfxSource2,
-	sfxSource3,
-	musicSource;
+public class AudioManager : Singleton<AudioManager> { // TODO: ease transitions between music and sounds
 	public enum AudioType { SFX, Music }
+
+	public List<Sound> sounds; // maybe build on load and parse through all playables?
+	AudioSource sfxSource1,	sfxSource2,	sfxSource3,	musicSource;
 
 	public override void Awake() {
 		base.Awake();

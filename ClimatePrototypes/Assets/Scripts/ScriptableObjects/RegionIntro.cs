@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RegionIntro", menuName = "ScriptableObjects/RegionIntro", order = 1)]
-public class RegionIntro : ScriptableObject {
+public class RegionIntro : ScriptableObject { // TODO: refactor this into custom prefabs per visit
 	public string[] tutorial;
 	public string[] secondVisit;
 	public string[] thirdVisit;
