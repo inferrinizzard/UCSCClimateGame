@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using UnityEditor;
-
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerInteractions : MonoBehaviour {
+public class SubtropicsPlayer : MonoBehaviour {
 	[SerializeField] float speed = 10;
 	[Header("References")]
 	[SerializeField] Text leftWaterUI = default;
@@ -37,7 +35,8 @@ public class PlayerInteractions : MonoBehaviour {
 		// draw line
 		newLine = line.GetComponent<LineRenderer>();
 		//newLine.material = new Material(Shader.Find("Sprites/Default"));
-		newLine.material = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
+
+		newLine.material = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
 		newLine.material.SetTextureScale("_MainTex", new Vector2(10f, 1.0f));
 		newLine.widthMultiplier = 0.1f;
 

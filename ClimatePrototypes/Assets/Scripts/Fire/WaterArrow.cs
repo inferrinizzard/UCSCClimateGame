@@ -7,7 +7,6 @@ using UnityEngine;
 public class WaterArrow : MonoBehaviour {
 	Transform player;
 	public Vector3 waterPosition;
-	[SerializeField] int reservoirIndex = 0;
 	[SerializeField] float speed = 10f;
 
 	void Start() {

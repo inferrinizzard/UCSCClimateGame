@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GreenID : Tile {
-	[SerializeField] Sprite greenSprite = default;
+	// [SerializeField] Sprite greenSprite = default;
 
 	protected override void UpdateTile() {
 		if (idManager.id == IdentityManager.Identity.Green)

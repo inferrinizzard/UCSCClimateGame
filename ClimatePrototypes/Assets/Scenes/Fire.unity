@@ -214,7 +214,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterPosition: {x: 0, y: 0, z: 0}
-  reservoirIndex: 0
   speed: 180
 --- !u!1 &176388905
 GameObject:
@@ -225,7 +224,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 176388906}
-  - component: {fileID: 176388907}
   m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
@@ -249,18 +247,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &176388907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 176388905}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 274066db9f5023f42a8fa17079144d39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &228747836
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,7 +968,7 @@ SpriteRenderer:
   m_Size: {x: 20.48, y: 11.99}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &852522135
@@ -1030,7 +1016,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterPosition: {x: 0, y: 0, z: 0}
-  reservoirIndex: 1
   speed: 180
 --- !u!212 &852522138
 SpriteRenderer:
@@ -1258,7 +1243,7 @@ SpriteRenderer:
   m_Size: {x: 20.48, y: 11.99}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &944617411
@@ -1441,7 +1426,6 @@ MonoBehaviour:
   reflectionStrength: 0.7
   waveSpeed: 1.31
   dropInterval: 0.5
-  shader: {fileID: 4800000, guid: 162fe242d486f4dab90ed53db15b9c19, type: 3}
 --- !u!114 &944617416
 MonoBehaviour:
   m_ObjectHideFlags: 0
