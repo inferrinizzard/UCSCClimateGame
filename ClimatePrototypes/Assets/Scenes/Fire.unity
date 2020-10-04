@@ -145,13 +145,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 66539256}
-  m_LocalRotation: {x: -0, y: -0, z: -0.2585661, w: 0.96599364}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7372774, w: 0.67559016}
   m_LocalPosition: {x: 2.6800008, y: 0.07000003, z: 0}
   m_LocalScale: {x: 0.3392701, y: 0.50000024, z: 1}
   m_Children: []
   m_Father: {fileID: 438785188}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -29.97}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -95}
 --- !u!212 &66539258
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -213,7 +213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a939cc6117e7c647b674a176bf88a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heliTranform: {fileID: 498595634}
   waterPosition: {x: 0, y: 0, z: 0}
   reservoirIndex: 0
   speed: 180
@@ -272,6 +271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 228747838}
   - component: {fileID: 228747837}
+  - component: {fileID: 228747839}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -306,6 +306,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &228747839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228747836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3d797d8bd2f9341b6bc945ed7082c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _visited: 0
+  intro: {fileID: 11400000, guid: 8a22151f9d1db2b439334935bb13f4b4, type: 2}
+  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
+    type: 3}
+  timerText: {fileID: 2079942603}
+  damage: 0
+  paused: 0
+  region: 3
+  backgrounds: []
+  player: {fileID: 1650592828}
+  wind: {fileID: 0}
+  difficulty: 3
+  world: {fileID: 0}
 --- !u!1 &372556431
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,8 +473,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 867563142}
-  - {fileID: 66539257}
   - {fileID: 498595634}
+  - {fileID: 66539257}
   - {fileID: 852522136}
   m_Father: {fileID: 1650592830}
   m_RootOrder: 0
@@ -467,7 +492,6 @@ GameObject:
   - component: {fileID: 475960690}
   - component: {fileID: 475960692}
   - component: {fileID: 475960693}
-  - component: {fileID: 475960694}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -602,10 +626,10 @@ MonoBehaviour:
   reservoirTotalSize: 0
   spreadability: 3
   treeDensity: 90
-  topleftCell: {x: -18, y: 8, z: 0}
+  topLeftCell: {x: -36, y: 16, z: 0}
   topRightCell: {x: 16, y: 8, z: 0}
-  bottomleftCell: {x: -18, y: -10, z: 0}
-  bottomrightCell: {x: 16, y: -10, z: 0}
+  bottomLeftCell: {x: -36, y: -20, z: 0}
+  bottomRightCell: {x: 32, y: -20, z: 0}
   width: 0
   height: 0
 --- !u!114 &475960693
@@ -624,28 +648,6 @@ MonoBehaviour:
   WindDirArrow: {fileID: 1652024539}
   dir: 0
   windSpeed: 10
---- !u!114 &475960694
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 475960688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e3d797d8bd2f9341b6bc945ed7082c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  intro: {fileID: 11400000, guid: 8a22151f9d1db2b439334935bb13f4b4, type: 2}
-  introPrefab: {fileID: 7828951428166734627, guid: e57646aa12c95da46a24c8c6aaf3ee51,
-    type: 3}
-  timerText: {fileID: 2079942603}
-  damage: 0
-  paused: 0
-  region: 3
-  backgrounds: []
-  wind: {fileID: 0}
-  difficulty: 3
 --- !u!1 &498595633
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,7 +679,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 438785188}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &498595635
 SpriteRenderer:
@@ -1009,13 +1011,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852522135}
-  m_LocalRotation: {x: -0, y: -0, z: -0.2585661, w: 0.96599364}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7372774, w: 0.67559016}
   m_LocalPosition: {x: 2.6800008, y: 0.07000003, z: 0}
   m_LocalScale: {x: 0.3392701, y: 0.50000024, z: 1}
   m_Children: []
   m_Father: {fileID: 438785188}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -29.97}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -95}
 --- !u!114 &852522137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1028,9 +1030,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a939cc6117e7c647b674a176bf88a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heliTranform: {fileID: 498595634}
   waterPosition: {x: 0, y: 0, z: 0}
-  reservoirIndex: 0
+  reservoirIndex: 1
   speed: 180
 --- !u!212 &852522138
 SpriteRenderer:
@@ -1274,6 +1275,7 @@ GameObject:
   - component: {fileID: 944617412}
   - component: {fileID: 944617415}
   - component: {fileID: 944617416}
+  - component: {fileID: 944617417}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1454,6 +1456,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0839c67bda0bf4494bd1b13a616525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &944617417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944617411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9bbc62e1eb87ad4a82e5d22dfd311c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1120257511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1461,6 +1475,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5174851537695450224, guid: 91c0bc0f5c849914094e66a42dac4167,
+        type: 3}
+      propertyPath: currentRegion
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5174851537695450225, guid: 91c0bc0f5c849914094e66a42dac4167,
         type: 3}
       propertyPath: m_Name
@@ -1469,7 +1488,7 @@ PrefabInstance:
     - target: {fileID: 5174851537695450225, guid: 91c0bc0f5c849914094e66a42dac4167,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5174851537695450227, guid: 91c0bc0f5c849914094e66a42dac4167,
         type: 3}
@@ -2046,11 +2065,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  bladeAnimator: {fileID: 867563144}
   leftWaterUI: {fileID: 389145095}
   leftWaterBarUI: {fileID: 1483101053}
-  waterTR: {fileID: 498595636}
-  moving: 0
   line: {fileID: 1219017126}
 --- !u!212 &1650592829
 SpriteRenderer:

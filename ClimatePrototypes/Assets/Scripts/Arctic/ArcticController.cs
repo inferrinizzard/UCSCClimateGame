@@ -18,8 +18,7 @@ public class ArcticController : RegionController {
 	[HideInInspector] public Transform longWaveParent;
 	[HideInInspector] public float tempInfluence;
 
-	protected override void Start() {
-		base.Start();
+	void Start() {
 		longWaveParent = new GameObject("Long Wave Ray").transform;
 		tempInfluence = (float) (World.temp[2] - World.startingTemp[2]) / World.maxTempChange;
 		Debug.Log($"Arctic temp influence is: {tempInfluence}");

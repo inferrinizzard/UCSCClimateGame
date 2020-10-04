@@ -61,6 +61,7 @@ GameObject:
   - component: {fileID: 124}
   - component: {fileID: 217}
   - component: {fileID: 23}
+  - component: {fileID: 24}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -92,6 +93,20 @@ MonoBehaviour:
   cycle: {fileID: 252524349}
   buffers: []
   ice: {fileID: 680337532}
+  longWaveParent: {fileID: 0}
+  tempInfluence: 0
+--- !u!114 &24
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9bbc62e1eb87ad4a82e5d22dfd311c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &82
 Transform:
   m_ObjectHideFlags: 0

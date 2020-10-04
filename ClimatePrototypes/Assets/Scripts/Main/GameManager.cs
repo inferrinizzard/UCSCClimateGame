@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-// using System.Threading;
 
 using Newtonsoft.Json;
 
@@ -21,14 +20,18 @@ public class GameManager : Singleton<GameManager> {
 		base.Awake();
 		if (Instance.runModel && World.averageTemp == 0) {
 			World.Init();
-			World.ranges = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<double, List<double>>>>(Resources.Load<TextAsset>("ipcc").text);
+			// World.ranges = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<double, List<double>>>>(Resources.Load<TextAsset>("ipcc").text);
 		}
-		// SpeedTest.VectorAllocTest();
 	}
 
 	void Start() {
 		FindCurrentRegion(SceneManager.GetActiveScene());
 		SceneManager.activeSceneChanged += instance.InitScene;
+	}
+
+	public static void Restart() {
+		SceneManager.LoadScene("TitleScreen");
+		EBM.Reset();
 	}
 
 	public void QuitGame(int exitStatus = 0) {
@@ -72,13 +75,6 @@ public class GameManager : Singleton<GameManager> {
 		asyncLoad.allowSceneActivation = false;
 		float start = Time.realtimeSinceStartup;
 
-		// if (name == "Overworld" && Instance.runModel) {
-		// 	GameManager.Instance.runningModel = true;
-		// 	Thread calcThread = new Thread(() => { World.Calc(); GameManager.Instance.runningModel = false; });
-		// 	calcThread.Priority = System.Threading.ThreadPriority.AboveNormal;
-		// 	calcThread.Start();
-		// }
-
 		Instance.loadingScreen.SetActive(true);
 
 		while (!asyncLoad.isDone || GameManager.Instance.runningModel) {
@@ -90,7 +86,7 @@ public class GameManager : Singleton<GameManager> {
 				asyncLoad.allowSceneActivation = true;
 				if (name == "Overworld") {
 					UIController.Instance.IncrementTurn();
-					World.DetermineImpact();
+					// World.DetermineImpact();
 				}
 				UIController.Instance.SetPrompt(false);
 				Cursor.visible = true;

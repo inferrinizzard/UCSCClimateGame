@@ -6,33 +6,42 @@ using System.Linq;
 using UnityEngine;
 
 public class SubtropicsCloud : MonoBehaviour {
-	private Vector3 velocity;
-	public float speed;
+	[SerializeField] float speed = 0;
+	Vector2 worldMin, worldMax;
+	Vector2 velocity;
 
-	// Update is called once per frame
+	void Start() {
+		var world = SubtropicsController.World;
+		// Debug.Log(SubtropicsController.World.GetComponent<UnityEngine.Tilemaps.TilemapRenderer>().bounds);
+		worldMin = world.GetComponentInParent<GridLayout>().CellToWorld(world.bottomLeftCell);
+		worldMax = world.GetComponentInParent<GridLayout>().CellToWorld(world.topRightCell);
+	}
+
 	void Update() {
-		CheckVelocity();
-		CheckDestroyEvent();
-
-		transform.position += velocity * speed * Time.deltaTime;
+		transform.position += CheckVelocity() * speed * Time.deltaTime;
+		Wrap();
 	}
 
-	private void CheckVelocity() {
+	Vector3 CheckVelocity() =>
 		velocity = SubtropicsController.Instance.wind.dir.ToString()
-			.Select(d => (
-				new Dictionary<char, Vector3> { { 'S', Vector3.down },
-					{ 'N', Vector3.up },
-					{ 'W', Vector3.left },
-					{ 'E', Vector3.right }
-				}
-			) [d]).Aggregate((acc, d) => acc + d);
-	}
+		.Select(d => (
+			new Dictionary<char, Vector3> { 
+				{ 'S', Vector3.down },
+				{ 'N', Vector3.up },
+				{ 'W', Vector3.left },
+				{ 'E', Vector3.right }
+			}
+		) [d]).Aggregate((acc, d) => acc + d);
 
-	/// <summary> object pool for clouds, out of sight, destroy</summary>
-	void CheckDestroyEvent() {
-		if (transform.position.y < -7) {
-			//Destroy(gameObject);
-		}
+	void Wrap() {
+		Vector3 worldDist = (worldMax - worldMin) / 2;
+		if (transform.position.x > worldMax.x && velocity.x > 0)
+			transform.position = new Vector3(-worldDist.x * 1.5f, transform.position.y, transform.position.z);
+		if (transform.position.x < worldMin.x && velocity.x < 0)
+			transform.position = new Vector3(+worldDist.x * 1.5f, transform.position.y, transform.position.z);
+		if (transform.position.y > worldMax.y && velocity.y > 0)
+			transform.position = new Vector3(transform.position.x, -worldDist.y * 1.5f, transform.position.z);
+		if (transform.position.y < worldMin.y && velocity.y < 0)
+			transform.position = new Vector3(transform.position.x, +worldDist.y * 1.5f, transform.position.z);
 	}
-
 }

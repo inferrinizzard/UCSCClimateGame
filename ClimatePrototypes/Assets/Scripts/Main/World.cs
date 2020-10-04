@@ -16,14 +16,14 @@ public static class World {
 	public static double[] temp, energy, precip, startingTemp;
 	public static float maxTempChange = 10f;
 	public static double averageTemp { get => temp?.Average() ?? 0; }
-	public static Impact impact = Impact.Stage1;
 	public static Dictionary<string, Dictionary<double, List<double>>> ranges;
 
-	public enum Impact { Stage1, Stage2, Stage3, Stage4, Stage5 }
-
 	public static void DetermineImpact() {
-		var avgTemp = averageTemp;
-		impact = (Impact) Math.Max(0, ranges["temperature"].ToList().FindIndex(kvp => kvp.Value[turn] > avgTemp) - 1);
+		if (averageTemp > startingTemp.Average() + maxTempChange) {
+			Debug.Log("hey it's hot, you might wanna restart");
+			Debug.Break();
+			GameManager.Restart();
+		}
 	}
 
 	public enum Region { Arctic, City, Forest, Fire }
@@ -37,8 +37,8 @@ public static class World {
 			update = updateFunction;
 		}
 
-		public void Update(Region scene, Region? dest, double delta) {
-			lineToDraw.Add((scene, dest ?? Region.Forest, name));
+		public void Update(Region scene, double delta, Region? dest = null) {
+			lineToDraw.Add((scene, dest ?? Region.City, name));
 			Debug.Log($"change {verbose} by {delta}");
 			update.Invoke(delta);
 		}
@@ -71,7 +71,6 @@ public static class World {
 		Calc();
 		startingTemp = new double[temp.Length];
 		temp.CopyTo(startingTemp, 0);
-		// FinishCalc(StartCalc().Wait());
 	}
 
 	public static void Calc(bool useTemp = true, int years = 0, int steps = 0) {

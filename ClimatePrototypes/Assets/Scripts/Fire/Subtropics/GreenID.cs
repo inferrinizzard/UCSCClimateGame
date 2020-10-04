@@ -3,23 +3,16 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class GreenID : MonoBehaviour {
-	public Sprite greenSprite;
+public class GreenID : Tile {
+	[SerializeField] Sprite greenSprite = default;
 
-	private Color color = Color.clear;
-	private SpriteRenderer sr;
-	// Start is called before the first frame update
-	void Start() {
-		sr = GetComponent<SpriteRenderer>();
+	protected override void UpdateTile() {
+		if (idManager.id == IdentityManager.Identity.Green)
+			sr.color = Color.clear;
 	}
 
-	// Update is called once per frame
-	void Update() {
-		VFXUpdate();
-	}
-
-	void VFXUpdate() {
-		sr.color = color;
-		//sr.sprite = greenSprite;
+	void OnDisable() {
+		if (idManager.id != IdentityManager.Identity.Water)
+			sr.color = Color.white;
 	}
 }
