@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public abstract class RegionController : MonoBehaviour {
-	[HideInInspector] public int _visited = 0;
+	[HideInInspector] public int visits = 0;
 	public RegionIntro intro;
 	[SerializeField] GameObject introPrefab = default;
 	protected GameObject introBlock;
@@ -38,7 +38,7 @@ public abstract class RegionController : MonoBehaviour {
 
 	IEnumerator IntroRoutine(int visited, float time = .5f) {
 		yield return StartCoroutine(Camera.main.GetComponent<CameraFade>().FadeIn(time));
-		_visited = visited;
+		visits = visited;
 		if (intro[visited].Length == 0)
 			yield break;
 		SetPause(1);

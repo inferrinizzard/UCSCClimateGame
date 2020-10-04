@@ -66,7 +66,7 @@ public class GameManager : Singleton<GameManager> {
 				if (o.TryComponent<RegionController>(out currentRegion)) {
 					currentRegion.AssignRegion(s.name);
 					currentRegion.Intro(visits[currentRegion.region]++);
-					currentRegion._visited = visits[currentRegion.region];
+					currentRegion.visits = visits[currentRegion.region];
 					break;
 				}
 	}

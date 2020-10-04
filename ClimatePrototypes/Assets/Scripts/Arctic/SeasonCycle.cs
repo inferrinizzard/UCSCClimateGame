@@ -12,7 +12,7 @@ public class SeasonCycle : MonoBehaviour {
 	[SerializeField] float transitionTime = 1.5f;
 
 	void Start() {
-		isSummer = ArcticController.Instance._visited % 2 == 0;
+		isSummer = ArcticController.Instance.visits % 2 == 0;
 		var srs = GetComponentsInChildren<SpriteRenderer>();
 		(summerSR, winterSR) = (srs[0], srs[1]);
 
